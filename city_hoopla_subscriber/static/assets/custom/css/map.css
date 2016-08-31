@@ -1,0 +1,87 @@
+
+
+
+.gist {
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+.ui-autocomplete-input, .input input {
+
+  width: 100%;
+}
+
+
+
+.ui-autocomplete-input {
+  border: 1px solid #DDD !important;
+  padding-top: 0px !important;
+}
+
+.map-wrapper
+{
+  float:left;  
+  margin: 0 10px 0 10px;
+}
+
+#map {
+  border: 1px solid #DDD; 
+  width: 400px;
+  overflow: hidden;
+  height: 300px;
+  margin: 10px 0 10px 0;
+  -webkit-box-shadow: #AAA 0px 0px 15px;
+}
+
+
+.ui-menu .ui-menu-item  {
+  font-size: 12px;
+  padding: 2px;
+  background: #fff;
+  height: 40px;
+}
+
+.ui-menu .ui-menu-item :hover {
+  background: #f6f6f6;
+}
+
+.ui-menu .ui-menu-item a{
+  display:block;
+  color:#333;
+  text-decoration:none;
+  font-weight:700;
+  font-size:12px;
+  line-height:32px;
+  padding:0 15px;
+  font-family:"HelveticaNeue","Helvetica Neue",Helvetica,Arial,sans-serif
+}
+
+
+.ui-menu{
+    list-style:none;
+  position:relative;
+  float:left;
+  margin:0;
+  padding:0;
+  border: 1px solid #ccc;
+  overflow: hidden;
+  max-width: 50%;
+}
+
+
+.input-positioned
+{
+  padding: 35px 0 0 0;
+}
+
+.clearfix:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+ 
+
+

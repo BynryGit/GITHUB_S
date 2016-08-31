@@ -1,0 +1,280 @@
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$............URL............$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+#dashboard
+
+    url(r'^register-city/', 'Admin.consumer.register_city',name='register_city'),
+    url(r'^payment-city/', 'Admin.consumer.payment_city',name='payment_city'),
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$............views.py............$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def dashboard(request):
+    if not request.user.is_authenticated():
+        return redirect('backoffice')
+    else:
+        try:
+            temp_var0 = 0
+            temp_var1 = 0
+            temp_var2 = 0
+            temp_var3 = 0
+            data = {}
+
+            try:
+                ############################Last 1 week new subscription view###############################
+                current_date = datetime.now()
+                first = calendar.day_name[current_date.weekday()]
+
+                last_date = (datetime.now() - timedelta(days=7))
+                last_date2 = calendar.day_name[last_date.weekday()]
+
+                list = []
+                consumer_obj_list = Business.objects.filter(business_created_date__range=[last_date,current_date])
+                mon=tue=wen=thus=fri=sat=sun=0
+                if consumer_obj_list:
+                    for consumer_obj in consumer_obj_list:
+                        business_created_date=consumer_obj.business_created_date
+                        consumer_day = calendar.day_name[business_created_date.weekday()]
+                        if consumer_day== 'Monday' :
+                            mon = mon+1
+                        elif consumer_day== 'Tuesday' :
+                            tue = tue+1
+                        elif consumer_day== 'Wednesday' :
+                            wen = wen+1
+                        elif consumer_day== 'Thursday' :
+                            thus = thus+1
+                        elif consumer_day== 'Friday' :
+                            fri = fri+1
+                        elif consumer_day== 'Saturday' :
+                            sat = sat+1
+                        elif consumer_day== 'Sunday' :
+                            sun = sun+1
+                        else :
+                            pass
+
+                ############################Todays Payment collection view###############################
+
+                consumer_list0= PaymentDetail.objects.filter(payment_created_date__regex = '00:',payment_created_date__contains = str((datetime.now()).strftime("%Y-%m-%d")))
+                if consumer_list0:
+                    for consumer_obj in consumer_list0:
+
+                        total_amount0 = consumer_obj.total_amount
+
+                        temp_var0 = temp_var0 + int(total_amount0)
+
+                value_0 = str(temp_var0)
+
+
+
+                for hour in range(1,9):
+                    hour = ' 0'+ str(hour) + ':'
+                    consumer_obj_list1 = PaymentDetail.objects.filter(payment_created_date__regex = hour,payment_created_date__contains = str((datetime.now()).strftime("%Y-%m-%d")))
+
+                    
+                    if consumer_obj_list1:
+                        #print '........................consumer_obj_list..........next............................',consumer_obj_list1
+                        for consumer_obj in consumer_obj_list1:
+
+                            total_amount1 = consumer_obj.total_amount
+
+                            temp_var1 = temp_var1 + int(total_amount1)
+                            #print '....................total total_amount1 ................',temp_var1
+
+                value_1 = str(temp_var1)
+                #   print '......................value_1....................',value_1
+                
+                for hour in range(9,17):
+                    if hour == 9:
+                        hour = ' 0'+ str(hour) + ':'
+                    else:
+                        hour = ' '+ str(hour) + ':'
+                    
+                    consumer_obj_list = PaymentDetail.objects.filter(payment_created_date__contains = str((datetime.now()).strftime("%Y-%m-%d")),payment_created_date__regex= hour)
+                    
+                    if consumer_obj_list:
+                        for consumer_obj in consumer_obj_list:
+
+                            total_amount2 = consumer_obj.total_amount
+                            temp_var2 = temp_var2 + int(total_amount2)
+                            #print '....................total total_amount2 ................',temp_var2
+
+                value_2 = str(temp_var2)   
+
+
+                for hour in range(17,24):
+                    hour = ' '+ str(hour) + ':'
+                    consumer_obj_list = PaymentDetail.objects.filter(payment_created_date__contains = str((datetime.now()).strftime("%Y-%m-%d")),payment_created_date__regex= hour)
+                    if consumer_obj_list:
+                        for consumer_obj in consumer_obj_list:
+
+                            total_amount3 = consumer_obj.total_amount
+                            temp_var3 = temp_var3 + int(total_amount3)
+                            #print '....................total total_amount3 ................',temp_var3
+
+                value_3 = str(temp_var3)
+                #print '......................value_3....................',value_3
+
+                data = {'mon':mon,'tue':tue,'wen':wen,'thus':thus,'fri':fri,'sat':sat,'sun':sun,'success':'true','value_0':value_0,'value_1':value_1,'value_3':value_3,'value_2':value_2,'username':request.session['login_user'],'city_list':get_city_dashboard(request)     }
+
+
+            except IntegrityError as e:
+                print e
+                data = {'success':'false','message':'Error in  loading page. Please try after some time','username':request.session['login_user']}                
+
+        except MySQLdb.OperationalError, e:
+            print e
+        except Exception,e:
+            print 'Exception ',e
+        print data
+        return render(request,'Admin/index.html',data)
+
+
+
+def get_city_dashboard(request):
+   
+   city_list=[]
+   try:
+      city_objs=City.objects.filter(city_status='1')
+      for city in city_objs:
+         city_list.append({'city_id': city.city_id,'city': city.city_name})
+         #print city_list
+      data =  city_list
+      return data
+
+   except Exception, ke:
+      print ke
+      data={'city_list': 'none','message':'No city available'}
+   return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$............consumer.py.............$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+def payment_city(request):
+    if not request.user.is_authenticated():
+        return redirect('backoffice')
+    else:
+        try:
+            temp_var0 = 0
+            temp_var1 = 0
+            temp_var2 = 0
+            temp_var3 = 0
+            data = {}
+
+            try:
+                city_nm = request.GET.get('city_nm')
+                print '........city_nm........',city_nm
+
+                consumer_list0= PaymentDetail.objects.filter(payment_created_date__regex = '00:',payment_created_date__contains = str((datetime.now()).strftime("%Y-%m-%d")))
+                if consumer_list0:
+                    for consumer_obj in consumer_list0:
+
+                        city_nm1 = consumer_obj.business_id.supplier.city.city_id
+                        print '.......................city id .........',city_nm1
+
+                        if str(city_nm) == str(city_nm1):
+
+
+                            total_amount0 = consumer_obj.total_amount
+
+                            temp_var0 = temp_var0 + int(total_amount0)
+
+                value_0 = str(temp_var0)
+
+
+
+                for hour in range(1,9):
+                    hour = ' 0'+ str(hour) + ':'
+                    consumer_obj_list1 = PaymentDetail.objects.filter(payment_created_date__regex = hour,payment_created_date__contains = str((datetime.now()).strftime("%Y-%m-%d")))
+
+                    
+                    if consumer_obj_list1:
+                        #print '........................consumer_obj_list..........next............................',consumer_obj_list1
+                        for consumer_obj in consumer_obj_list1:
+                            city_nm1 = consumer_obj.business_id.supplier.city.city_id
+                            print '.......................city id .........',city_nm1
+                            
+                            if str(city_nm) == str(city_nm1):
+                                total_amount1 = consumer_obj.total_amount
+
+                                temp_var1 = temp_var1 + int(total_amount1)
+                            #print '....................total total_amount1 ................',temp_var1
+
+                value_1 = str(temp_var1)
+                #   print '......................value_1....................',value_1
+                
+                for hour in range(9,17):
+                    if hour == 9:
+                        hour = ' 0'+ str(hour) + ':'
+                    else:
+                        hour = ' '+ str(hour) + ':'
+                    
+                    consumer_obj_list = PaymentDetail.objects.filter(payment_created_date__contains = str((datetime.now()).strftime("%Y-%m-%d")),payment_created_date__regex= hour)
+                    
+                    if consumer_obj_list:
+                        for consumer_obj in consumer_obj_list:
+                            city_nm1 = consumer_obj.business_id.supplier.city.city_id
+                            print '.......................city id .........',city_nm1
+                            
+                            if str(city_nm) == str(city_nm1):
+
+                                total_amount2 = consumer_obj.total_amount
+                                temp_var2 = temp_var2 + int(total_amount2)
+                            #print '....................total total_amount2 ................',temp_var2
+
+                value_2 = str(temp_var2)   
+
+
+                for hour in range(17,24):
+                    hour = ' '+ str(hour) + ':'
+                    consumer_obj_list = PaymentDetail.objects.filter(payment_created_date__contains = str((datetime.now()).strftime("%Y-%m-%d")),payment_created_date__regex= hour)
+                    if consumer_obj_list:
+                        for consumer_obj in consumer_obj_list:
+                            city_nm1 = consumer_obj.business_id.supplier.city.city_id
+                            print '.......................city id .........',city_nm1
+                            
+                            if str(city_nm) == str(city_nm1):
+
+                                total_amount3 = consumer_obj.total_amount
+                                temp_var3 = temp_var3 + int(total_amount3)
+                            #print '....................total total_amount3 ................',temp_var3
+
+                value_3 = str(temp_var3)
+                #print '......................value_3....................',value_3
+
+                data = {'success':'true','value_0':value_0,'value_1':value_1,'value_3':value_3,'value_2':value_2,'username':request.session['login_user'],'city_places_list':get_city_places(request) }
+
+
+            except IntegrityError as e:
+                print e
+                data = {'success':'false','message':'Error in  loading page. Please try after some time','username':request.session['login_user']}                
+
+        except MySQLdb.OperationalError, e:
+            print e
+        except Exception,e:
+            print 'Exception ',e
+        print data
+        return HttpResponse(json.dumps(data), content_type='application/json')
+
+def get_city_places(request):
+   
+   city_list=[]
+   try:
+      city_objs=City.objects.filter(city_status='1')
+      for city in city_objs:
+         city_list.append({'city_id': city.city_id,'city': city.city_name})
+         #print city_list
+      data =  city_list
+      return data
+
+   except Exception, ke:
+      print ke
+      data={'city_list': 'none','message':'No city available'}
+   return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+
+
