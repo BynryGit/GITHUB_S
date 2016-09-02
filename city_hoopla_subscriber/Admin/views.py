@@ -209,19 +209,15 @@ def get_filter(request):
         try: 
             if request.GET.get('week_var') == 'month':
                 var1 = str(request.GET.get('week_var'))
-                print 'SSSSSSssssssssssssssSSSS',var1 
-                print '......$$.supplier_id....$$..',request.GET.get('supplier_id')
 
                 Supplier_obj = Supplier.objects.get(supplier_id=request.GET.get('supplier_id'))
-                print "..................Supplier_obj.........",Supplier_obj
 
                 logo= SERVER_URL + Supplier_obj.logo.url
 
                 #########.............Advert Stats.......For a Month..................#####
                 today_date = str(datetime.now())
                 one_month_date = str(datetime.now() - timedelta(days=30))
-                Advert_list = Advert.objects.filter(supplier_id=request.GET.get('supplier_id'),creation_date__range=[one_month_date,today_date])
-                print "..................Advert_list.........",Advert_list
+                Advert_list = Advert.objects.filter(supplier_id=request.GET.get('supplier_id'))
 
                 avail_discount_count = 0
                 avail_callbacks_count = 0
@@ -230,10 +226,10 @@ def get_filter(request):
 
                 for advert_obj in Advert_list:
                     advert_id = advert_obj.advert_id
-                    discount_count = CouponCode.objects.filter(advert_id=advert_id).count()
-                    callbacks_count = AdvertCallbacks.objects.filter(advert_id=advert_id).count()
-                    callsmade_count = AdvertCallsMade.objects.filter(advert_id=advert_id).count()
-                    shares_count = AdvertShares.objects.filter(advert_id=advert_id).count()
+                    discount_count = CouponCode.objects.filter(advert_id=advert_id,creation_date__range=[one_month_date,today_date]).count()
+                    callbacks_count = AdvertCallbacks.objects.filter(advert_id=advert_id,creation_date__range=[one_month_date,today_date]).count()
+                    callsmade_count = AdvertCallsMade.objects.filter(advert_id=advert_id,creation_date__range=[one_month_date,today_date]).count()
+                    shares_count = AdvertShares.objects.filter(advert_id=advert_id,creation_date__range=[one_month_date,today_date]).count()
 
 
                     avail_discount_count = avail_discount_count + discount_count
@@ -241,13 +237,12 @@ def get_filter(request):
                     avail_callsmade_count = avail_callsmade_count + callsmade_count
                     avail_shares_count = avail_shares_count + shares_count
 
-                print 'avail_discount_count1 ......................',avail_discount_count
                 
                 #######.................Total Bookings Graph....For a Month...........########
+                print '............Total Bookings Graph....For a Month....'
                 today = date.today()
                 date_cal=datetime(today.year,today.month,today.day)
                 numb = (date_cal.day-1)//7+1
-                print '......No of Week in month',numb
 
                 coupon_code_count1 = 0
                 coupon_code_count2 = 0
@@ -259,73 +254,159 @@ def get_filter(request):
                         start_date = date(today.year,today.month,01)
                         end_date = date(today.year,today.month,8) 
                         coupon_code_count1 = CouponCode.objects.filter(creation_date__range=[start_date,end_date]).count()
-                        print '...........coupon_code_count1......',coupon_code_count1
                     elif i==1:
                         start_date = date(today.year,today.month,8)
                         end_date = date(today.year,today.month,16) 
                         coupon_code_count2 = CouponCode.objects.filter(creation_date__range=[start_date,end_date]).count()
-                        print '...........coupon_code_count2......',coupon_code_count2
                     elif i==2:
                         start_date = date(today.year,today.month,16)
                         end_date = date(today.year,today.month,23) 
                         coupon_code_count3 = CouponCode.objects.filter(creation_date__range=[start_date,end_date]).count()
-                        print '...........coupon_code_count3......',coupon_code_count3
                     elif i==3:
                         start_date = date(today.year,today.month,23)
                         end_date = date(today.year,today.month,30) 
                         coupon_code_count4 = CouponCode.objects.filter(creation_date__range=[start_date,end_date]).count()
-                        print '...........coupon_code_count4......',coupon_code_count4
                     elif i==4:
                         start_date = date(today.year,today.month,30)
                         end_date = date(today.year,today.month,31) 
                         coupon_code_count5 = CouponCode.objects.filter(creation_date__range=[start_date,end_date]).count()
-                        print '...........coupon_code_count5......',coupon_code_count5
 
 
 
                 ##########..................Total Views Graph........for a month.............############
+                
+                print '.......Total Views Graph........for a month........'
                 today = date.today()
                 date_cal=datetime(today.year,today.month,today.day)
                 numb = (date_cal.day-1)//7+1
-                print '......No of Week in month',numb
 
-                coupon_code_count1 = 0
-                coupon_code_count2 = 0
-                coupon_code_count3 = 0
-                coupon_code_count4 = 0
-                coupon_code_count5 = 0
+                advert_total_count1 = 0
+                advert_total_count2 = 0
+                advert_total_count3 = 0
+                advert_total_count4 = 0
+                advert_total_count5 = 0
+
                 for i in range(0,numb):
                     if i==0:
                         start_date = date(today.year,today.month,01)
                         end_date = date(today.year,today.month,8) 
                         advert_total_count1 = AdvertTotalViews.objects.filter(creation_date__range=[start_date,end_date]).count()
-                        print '...........advert_total_count1......',advert_total_count1
                     elif i==1:
                         start_date = date(today.year,today.month,8)
                         end_date = date(today.year,today.month,16) 
                         advert_total_count2 = AdvertTotalViews.objects.filter(creation_date__range=[start_date,end_date]).count()
-                        print '...........advert_total_count2......',advert_total_count2
                     elif i==2:
                         start_date = date(today.year,today.month,16)
                         end_date = date(today.year,today.month,23) 
                         advert_total_count3 = AdvertTotalViews.objects.filter(creation_date__range=[start_date,end_date]).count()
-                        print '...........advert_total_count3......',advert_total_count3
                     elif i==3:
                         start_date = date(today.year,today.month,23)
                         end_date = date(today.year,today.month,30) 
                         advert_total_count4 = AdvertTotalViews.objects.filter(creation_date__range=[start_date,end_date]).count()
-                        print '...........advert_total_count4......',advert_total_count4
                     elif i==4:
                         start_date = date(today.year,today.month,30)
                         end_date = date(today.year,today.month,31) 
                         advert_total_count5 = AdvertTotalViews.objects.filter(creation_date__range=[start_date,end_date]).count()
-                        print '...........advert_total_count5......',advert_total_count5
+                data = {'var1':var1,'success':'true','logo':logo,'avail_callbacks_count':avail_callbacks_count,'avail_callsmade_count':avail_callsmade_count,'avail_shares_count':avail_shares_count,'avail_discount_count':avail_discount_count,
+                    'coupon_code_count1':coupon_code_count1,'coupon_code_count2':coupon_code_count2,'coupon_code_count3':coupon_code_count3,'coupon_code_count4':coupon_code_count4,'coupon_code_count5':coupon_code_count5,'advert_total_count1':advert_total_count1,'advert_total_count2':advert_total_count2,
+                   'advert_total_count3':advert_total_count3,'advert_total_count4':advert_total_count4,'advert_total_count5':advert_total_count5}
+
+            if request.GET.get('week_var') == 'week':
+                var1 = str(request.GET.get('week_var'))
+
+                Supplier_obj = Supplier.objects.get(supplier_id=request.GET.get('supplier_id'))
+
+                logo= SERVER_URL + Supplier_obj.logo.url
+
+                #########.............Advert Stats.......For a week..................#####
+                print '........Advert Stats.......For a week.....'
+                today_date = str(datetime.now())
+                one_month_date = str(datetime.now() - timedelta(days=7))
+                Advert_list = Advert.objects.filter(supplier_id=request.GET.get('supplier_id'))
+
+                avail_discount_count = 0
+                avail_callbacks_count = 0
+                avail_callsmade_count = 0
+                avail_shares_count = 0
+
+                for advert_obj in Advert_list:
+                    advert_id = advert_obj.advert_id
+                    discount_count = CouponCode.objects.filter(advert_id=advert_id,creation_date__range=[one_month_date,today_date]).count()
+                    callbacks_count = AdvertCallbacks.objects.filter(advert_id=advert_id,creation_date__range=[one_month_date,today_date]).count()
+                    callsmade_count = AdvertCallsMade.objects.filter(advert_id=advert_id,creation_date__range=[one_month_date,today_date]).count()
+                    shares_count = AdvertShares.objects.filter(advert_id=advert_id,creation_date__range=[one_month_date,today_date]).count()
 
 
+                    avail_discount_count = avail_discount_count + discount_count
+                    avail_callbacks_count = avail_callbacks_count + callbacks_count
+                    avail_callsmade_count = avail_callsmade_count + callsmade_count
+                    avail_shares_count = avail_shares_count + shares_count
 
-            data = {'var1':var1,'success':'true','logo':logo,'avail_callbacks_count':avail_callbacks_count,'avail_callsmade_count':avail_callsmade_count,'avail_shares_count':avail_shares_count,'avail_discount_count':avail_discount_count,
-                'coupon_code_count1':coupon_code_count1,'coupon_code_count2':coupon_code_count2,'coupon_code_count3':coupon_code_count3,'coupon_code_count4':coupon_code_count4,'coupon_code_count5':coupon_code_count5,'advert_total_count1':advert_total_count1,'advert_total_count2':advert_total_count2,
-               'advert_total_count3':advert_total_count3,'advert_total_count4':advert_total_count4,'advert_total_count5':advert_total_count5}
+                
+                #######.................Total Bookings Graph....For a week...........########
+                print '....Total Bookings Graph....For a week....'
+                current_date = datetime.now()
+                last_date = (datetime.now() - timedelta(days=7))
+
+                list = []
+                total_view_list = CouponCode.objects.filter(creation_date__range=[last_date,current_date])
+                mon1=tue1=wen1=thus1=fri1=sat1=sun1=0
+                if total_view_list:
+                    for view_obj in total_view_list:
+                        creation_date=view_obj.creation_date
+                        consumer_day = calendar.day_name[creation_date.weekday()]
+                        if consumer_day== 'Monday' :
+                            mon1 = mon1+1
+                        elif consumer_day== 'Tuesday' :
+                            tue1 = tue1+1
+                        elif consumer_day== 'Wednesday' :
+                            wen1 = wen1+1
+                        elif consumer_day== 'Thursday' :
+                            thus1 = thus1+1
+                        elif consumer_day== 'Friday' :
+                            fri1 = fri1+1
+                        elif consumer_day== 'Saturday' :
+                            sat1 = sat1+1
+                        elif consumer_day== 'Sunday' :
+                            sun1 = sun1+1
+                        else :
+                            pass
+
+                print ".........total Bookings Graph....For a week...",mon1,tue1,wen1,thus1,fri1,sat1,sun1
+
+                ##########..................Total Views Graph........for a week.............############
+
+                current_date = datetime.now()
+                last_date = (datetime.now() - timedelta(days=7))
+
+                list = []
+                total_view_list = AdvertTotalViews.objects.filter(creation_date__range=[last_date,current_date])
+                mon2=tue2=wen2=thus2=fri2=sat2=sun2=0
+                if total_view_list:
+                    for view_obj in total_view_list:
+                        creation_date=view_obj.creation_date
+                        consumer_day = calendar.day_name[creation_date.weekday()]
+                        if consumer_day== 'Monday' :
+                            mon2 = mon2+1
+                        elif consumer_day== 'Tuesday' :
+                            tue2 = tue2+1
+                        elif consumer_day== 'Wednesday' :
+                            wen2 = wen2+1
+                        elif consumer_day== 'Thursday' :
+                            thus2 = thus2+1
+                        elif consumer_day== 'Friday' :
+                            fri2 = fri2+1
+                        elif consumer_day== 'Saturday' :
+                            sat2 = sat2+1
+                        elif consumer_day== 'Sunday' :
+                            sun2 = sun2+1
+                        else :
+                            pass
+
+                data = {'var1':var1,'success':'true','logo':logo,'avail_callbacks_count':avail_callbacks_count,'avail_callsmade_count':avail_callsmade_count,'avail_shares_count':avail_shares_count,'avail_discount_count':avail_discount_count,
+                        'mon1':mon1,'tue1':tue1,'wen1':wen1,'thus1':thus1,'fri1':fri1,'sat1':sat1,
+                        'sun1':sun1,'mon2':mon2,'tue2':tue2,'wen2':wen2,'thus2':thus2,'fri2':fri2,'sat2':sat2,'sun2':sun2}
+
 
         except IntegrityError as e:
             print e
@@ -684,6 +765,200 @@ def subscriber_advert(request):
         print 'Exception ',e
     print data
     return render(request,'Admin/subscriber-advert.html',data)
+
+
+@csrf_exempt
+def subscriber_advert_stat(request):
+    try:
+        data = {}
+        final_list = []
+        final_list1 = []
+        final_list2 = []
+        print "----------------request--------------", request.GET
+        try:
+            supplier_id = request.GET.get('supplier_id')
+
+            Advert_list1 = Advert.objects.filter(supplier_id=request.GET.get('supplier_id'))
+            print "..................Advert_list1.........",Advert_list1
+
+          
+
+
+            Supplier_obj = Supplier.objects.get(supplier_id=request.GET.get('supplier_id'))
+            print "..................Supplier_obj.........",Supplier_obj
+
+            logo= SERVER_URL + Supplier_obj.logo.url
+
+            #######.................Total views Graph........for a year.......########
+            
+            FY_MONTH_LIST = [1,2,3,4,5,6,7,8,9,10,11,12]
+            today = date.today()
+            print '.......today.........',today
+            start_date = date(today.year,01,01)
+            print '...........start_date..........',start_date
+            end_date = date(today.year,12,31) 
+            monthly_count = []
+            # jan,feb,mar,apr,may,jun,jul,aug,sep,octo,nov,dec
+            coupon_code_list = Advert.objects.filter(creation_date__range=[start_date,end_date]).extra(select={'month': "EXTRACT(month FROM creation_date)"}).values('month').annotate(count=Count('advert_id'))
+            print "...........coupon_code_list.......",coupon_code_list
+            list={}
+
+
+            for sub_obj in coupon_code_list:
+                print "sub_obj.get('count')",sub_obj.get('count')
+                if sub_obj.get('month'):
+                    list[sub_obj.get('month')]=sub_obj.get('count') or '0.00'
+                    print list
+            
+
+            for i in FY_MONTH_LIST:
+                try:
+                    monthly_count.append(list[i])
+                except:
+                    monthly_count.append(0)
+                    
+            jan1=monthly_count[0]
+            print jan1
+            feb1=monthly_count[1]
+            print feb1
+            mar1=monthly_count[2]
+            print mar1
+            apr1=monthly_count[3]
+            may1=monthly_count[4]
+            jun1=monthly_count[5]
+            jul1=monthly_count[6]
+            aug1=monthly_count[7]
+            print aug1
+            sep1=monthly_count[8]
+            oct1=monthly_count[9]            
+            nov1=monthly_count[10]            
+            dec1=monthly_count[11]
+
+
+            #######.................Total Like Graph........for a year.......########
+            
+            FY_MONTH_LIST = [1,2,3,4,5,6,7,8,9,10,11,12]
+            today = date.today()
+            print '.......today......AdvertLike...',today
+            start_date = date(today.year,01,01)
+            print '...........start_date....AdvertLike......',start_date
+            end_date = date(today.year,12,31) 
+            monthly_count = []
+            # jan,feb,mar,apr,may,jun,jul,aug,sep,octo,nov,dec
+            coupon_code_list = AdvertLike.objects.filter(creation_date__range=[start_date,end_date]).extra(select={'month': "EXTRACT(month FROM creation_date)"}).values('month').annotate(count=Count('advert_id'))
+            print "...........coupon_code_list....AdvertLike...",coupon_code_list
+            list={}
+
+
+            for sub_obj in coupon_code_list:
+                print "sub_obj.get('count')",sub_obj.get('count')
+                if sub_obj.get('month'):
+                    list[sub_obj.get('month')]=sub_obj.get('count') or '0.00'
+                    print list
+            
+
+            for i in FY_MONTH_LIST:
+                try:
+                    monthly_count.append(list[i])
+                except:
+                    monthly_count.append(0)
+                    
+            jan2=monthly_count[0]
+            print jan2
+            feb2=monthly_count[1]
+            print feb2
+            mar2=monthly_count[2]
+            print mar2
+            apr2=monthly_count[3]
+            may2=monthly_count[4]
+            jun2=monthly_count[5]
+            jul2=monthly_count[6]
+            aug2=monthly_count[7]
+            print aug2
+            sep2=monthly_count[8]
+            oct2=monthly_count[9]            
+            nov2=monthly_count[10]            
+            dec2=monthly_count[11]
+
+
+            #######.................Total shares Graph........for a year.......########
+            
+            FY_MONTH_LIST = [1,2,3,4,5,6,7,8,9,10,11,12]
+            today = date.today()
+            print '.......today.........',today
+            start_date = date(today.year,01,01)
+            print '...........start_date..........',start_date
+            end_date = date(today.year,12,31) 
+            monthly_count = []
+            # jan,feb,mar,apr,may,jun,jul,aug,sep,octo,nov,dec
+            coupon_code_list = AdvertShares.objects.filter(creation_date__range=[start_date,end_date]).extra(select={'month': "EXTRACT(month FROM creation_date)"}).values('month').annotate(count=Count('advert_id'))
+            print "...........coupon_code_list.......",coupon_code_list
+            list={}
+
+
+            for sub_obj in coupon_code_list:
+                print "sub_obj.get('count')",sub_obj.get('count')
+                if sub_obj.get('month'):
+                    list[sub_obj.get('month')]=sub_obj.get('count') or '0.00'
+                    print list
+            
+
+            for i in FY_MONTH_LIST:
+                try:
+                    monthly_count.append(list[i])
+                except:
+                    monthly_count.append(0)
+                    
+            jan3=monthly_count[0]
+            print jan3
+            feb3=monthly_count[1]
+            print feb3
+            mar3=monthly_count[2]
+            print mar3
+            apr3=monthly_count[3]
+            may3=monthly_count[4]
+            jun3=monthly_count[5]
+            jul3=monthly_count[6]
+            aug3=monthly_count[7]
+            print aug3
+            sep3=monthly_count[8]
+            oct3=monthly_count[9]            
+            nov3=monthly_count[10]            
+            dec3=monthly_count[11]
+
+        #########################advert_views_total#############################
+            advert_views_total = 0
+            thumbs_count_total = 0
+            shares_count_total = 0
+
+            for advert_obj in Advert_list1:
+                print advert_obj
+                advert_id = advert_obj.advert_id
+                advert_views = int(advert_obj.advert_views)
+                thumbs_count = AdvertLike.objects.filter(advert_id=advert_id).count()
+                shares_count = AdvertShares.objects.filter(advert_id=advert_id).count()
+
+
+                advert_views_total = advert_views_total + advert_views
+                thumbs_count_total = thumbs_count_total + thumbs_count
+                shares_count_total = shares_count_total + shares_count
+                print '.................advert_views_total...........',advert_views_total
+                print '.................thumbs_count_total...........',thumbs_count_total
+                print '.................shares_count_total...........',shares_count_total
+
+            data = {'success':'true','supplier_id':supplier_id,'logo':logo,'advert_views_total':advert_views_total,'thumbs_count_total':thumbs_count_total,'shares_count_total':shares_count_total,'jan1':jan1,'feb1':feb1,'mar1':mar1,'apr1':apr1,'may1':may1,'jun1':jun1,'jul1':jul1,'aug1':aug1,'sep1':sep1,'oct1':oct1,'nov1':nov1,'dec1':dec1,
+                    'jan2':jan2,'feb2':feb2,'mar2':mar2,'apr2':apr2,'may2':may2,'jun2':jun2,'jul2':jul2,'aug2':aug2,'sep2':sep2,'oct2':oct2,'nov2':nov2,'dec2':dec2,
+                    'jan3':jan3,'feb3':feb3,'mar3':mar3,'apr3':apr3,'may3':may3,'jun3':jun3,'jul3':jul3,'aug3':aug3,'sep3':sep3,'oct3':oct3,'nov3':nov3,'dec3':dec3}
+
+        except IntegrityError as e:
+            print e
+            data = {'success':'false','message':'Error in  loading page. Please try after some time','username':request.session['login_user']}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception,e:
+        print 'Exception ',e
+    print './........777..........',data
+    return render(request,'Admin/subscriber-advert-stat.html',data)
 
 
 def subscriber_booking(request):

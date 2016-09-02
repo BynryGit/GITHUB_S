@@ -41,11 +41,11 @@
 
 
 
-        <style type="text/css">
-        
-        #eventForm .form-control-feedback {
-    top: 0;
-    right: -15px;
+  <style type="text/css">
+  
+  #eventForm .form-control-feedback {
+ top: 0;
+ right: -15px;
 }
 
 
@@ -230,7 +230,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
 
 
 </style>
-        </head>
+
     <!-- END HEAD -->
  
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
@@ -429,7 +429,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                       <a href="index.html" class="nav-link nav-toggle" style="background-color: #333;" >
 								
 								
-                          <span class="title" style="    margin-left: -46px;"><i class="fa fa-home" aria-hidden="true"></i> Dashboard</span>
+                          <span class="" style="    margin-left: -46px;"><i class="fa fa-home" aria-hidden="true"></i> Dashboard</span>
 <!--                             <span class="arrow"></span>                                 -->
 								
                       
@@ -440,7 +440,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                       <a href="advert-management.html" class="nav-link nav-toggle" style="background-color: #666;">
 						
 								
-                          <span class="title" style="    margin-left: -74px;"> <i class="fa fa-users" aria-hidden="true"></i> Advert</span>
+                          <span class="" style="    margin-left: -74px;"> <i class="fa fa-users" aria-hidden="true"></i> Advert</span>
                                 <span class="selected"></span>                                
 									
                       </a>
@@ -449,7 +449,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                       <a href="advert-management.html" class="nav-link nav-toggle" style="background-color: #666;">
 							
 						
-                          <span class="title" style="    margin-left: -61px;"> <i class="fa fa-user" aria-hidden="true"></i> Bookings </span>
+                          <span class="" style="    margin-left: -61px;"> <i class="fa fa-user" aria-hidden="true"></i> Bookings </span>
 						
                       </a>                            
                   </li>
@@ -503,7 +503,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
 																	    font-style: normal;
 																	    font-size: 30px;
 																	    color: #2F353B; padding-top: 19px;  " >
-												<center > <span id="disc">{{avail_discount_count}}</span> </center>
+												<center > <span id="disc1">{{avail_discount_count}}</span> </center>
 											</div>
 											<div style=" margin-top: 12px; font-family: 'Roboto Light', 'Roboto';">
 												<center>  Availed Discounts </center>
@@ -516,7 +516,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
 																	    font-style: normal;
 																	    font-size: 30px;
 																	    color: #2F353B; padding-top: 19px;  ">
-												<center> {{avail_callbacks_count}} </center>
+												<center> <span id="disc2"> {{avail_callbacks_count}} </span></center>
 											</div>
 											<div style=" margin-top: 12px; font-family: 'Roboto Light', 'Roboto';">
 												<center>  No of Callbacks </center>
@@ -529,7 +529,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
 																	    font-style: normal;
 																	    font-size: 30px;
 																	    color: #2F353B; padding-top: 19px;  ">
-												<center> {{avail_callsmade_count}} </center>
+												<center> <span id="disc3"> {{avail_callsmade_count}} </span> </center>
 											</div>
 											<div style=" margin-top: 12px; font-family: 'Roboto Light', 'Roboto';">
 												<center>  No of Calls Made </center>
@@ -542,7 +542,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
 																	    font-style: normal;
 																	    font-size: 30px;
 																	    color: #2F353B; padding-top: 19px;  ">
-												<center> {{avail_shares_count}} </center>
+												<center> <span id="disc4"> {{avail_shares_count}} </span> </center>
 											</div>
 											<div style=" margin-top: 12px; font-family: 'Roboto Light', 'Roboto';">
 												<center>  Shares </center>
@@ -718,7 +718,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
 function change_data(){
 
  week_var = $('#week :selected').val();
- alert(week_var);
+
 var supplier_id=110;
 
 	$.ajax({
@@ -730,9 +730,13 @@ var supplier_id=110;
 	     success: function (response) {
  		console.log(response);
 	     		if(response.var1=='month'){
-	     		    $('#disc').val({{avail_discount_count}});
-	     		  alert('YESS');
-					     		  			
+	     		    $('#disc1').text(response.avail_discount_count);
+	     		    $('#disc2').text(response.avail_callbacks_count);
+	     		    $('#disc3').text(response.avail_callsmade_count);
+	     		    $('#disc4').text(response.avail_shares_count);
+
+
+					     		  	//for bookings		
 				  			$("#highchart_1").highcharts({
 				                chart:{
 				                    style:{
@@ -748,7 +752,7 @@ var supplier_id=110;
 				                    title:{
 				                        text:""
 				                    },
-				                    categories:["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"]
+				                    categories:["Week 1","Week 2","Week 3","Week 4","Week 5"]
 				                },
 				                yAxis:{
 				                    tickInterval: 2,
@@ -767,13 +771,174 @@ var supplier_id=110;
 				                    borderWidth:0
 				                },
 				                series:[
-				                    {name: "Bookings",data:[{{jan}},{{feb}},{{mar}},{{apr}},{{may}},{{jun}},{{jul}},{{aug}},{{sep}},{{oct}},{{nov}},{{dec}}]},
+				                    {name: "Bookings",data:[response.coupon_code_count1,response.coupon_code_count2,response.coupon_code_count3,response.coupon_code_count4,response.coupon_code_count5]},
 				                ]
-				            })
+				            });
 				            
-            
-	     		  
+				           //for total view
+							var chart = AmCharts.makeChart( "Payment_Collection1", {
+							  "type": "serial",
+							  "theme": "light",
+							  "dataProvider": [ {
+							    "day": "Week 1",
+							    "visits": response.advert_total_count1
+							  }, {
+							    "day": "Week 2",
+							    "visits": response.advert_total_count2
+							  }, {
+							    "day": "Week 3",
+							    "visits": response.advert_total_count3
+							  }, {
+							    "day": "Week 4",
+							    "visits":response.advert_total_count4
+							  }, {
+							    "day": "Week 5",
+							    "visits":response.advert_total_count5
+							  }
+							  ],
+							  "valueAxes": [ {
+							    "gridColor": "#FFFFFF",
+							    "gridAlpha": 0.2,
+							    "dashLength": 0
+							  } ],
+							  "gridAboveGraphs": true,
+							  "startDuration": 1,
+							  "graphs": [ {
+							    "balloonText": "[[category]]: <b>[[value]]</b>",
+							    "fillAlphas": 0.8,
+							    "lineAlpha": 0.2,
+							    "type": "column",
+							    "autoColor": true,
+							    "valueField": "visits"
+							  } ],
+							  "chartCursor": {
+							    "categoryBalloonEnabled": false,
+							    "cursorAlpha": 0,
+							    "zoomable": false
+							  },
+							  "categoryField": "day",
+							  "categoryAxis": {
+							    "gridPosition": "start",
+							    "gridAlpha": 0,
+							    "tickPosition": "start",
+							    "tickLength": 20
+							  },
+							  "export": {
+							    "enabled": true
+							  }
+							
+							} ); 
 	     		
+	     		}
+	     		
+	     		else if (response.var1=='week') {
+	     		 	 $('#disc1').text(response.avail_discount_count);
+	     		    $('#disc2').text(response.avail_callbacks_count);
+	     		    $('#disc3').text(response.avail_callsmade_count);
+	     		    $('#disc4').text(response.avail_shares_count);
+	     		  			
+	     		  			$("#highchart_1").highcharts({
+				                chart:{
+				                    style:{
+				                        fontFamily:"Open Sans"
+				                    }
+				                },
+				                title:{
+				                    text:"",
+				                    x:-20
+				                },
+				                //subtitle:{text:"Source: WorldClimate.com",x:-20},
+				                xAxis:{
+				                    title:{
+				                        text:""
+				                    },
+				                    categories:["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
+				                },
+				                yAxis:{
+				                    tickInterval: 2,
+				                    title:{
+				                        text:""
+				                    },
+				                    plotLines:[{value:0,width:1,color:"#808080"}]
+				                },
+				                tooltip:{
+				                    valueSuffix:""
+				                },
+				                legend:{
+				                    layout:"vertical",
+				                    align:"right",
+				                    verticalAlign:"middle",
+				                    borderWidth:0
+				                },
+				                series:[
+				                    {name: "Bookings",data:[response.mon1,response.tue1,response.wen1,response.thus1,response.fri1,response.sat1,response.sun1]},
+				                ]
+				            });
+				            
+				           
+							var chart = AmCharts.makeChart( "Payment_Collection1", {
+							  "type": "serial",
+							  "theme": "light",
+							  "dataProvider": [ {
+							    "day": "Monday",
+							    "visits": response.mon2
+							  }, {
+							    "day": "Tuesday",
+							    "visits": response.tue2
+							  }, {
+							    "day": "Wednesday",
+							    "visits": response.wen2
+							  }, {
+							    "day": "Thursday",
+							    "visits":response.thus2
+							  }, {
+							    "day": "Friday",
+							    "visits":response.fri2
+							  }, {
+							    "day": "Saturday",
+							    "visits":response.sat2
+							  }, {
+							    "day": "Sunday",
+							    "visits":response.sun2
+							  }
+							  ],
+							  "valueAxes": [ {
+							    "gridColor": "#FFFFFF",
+							    "gridAlpha": 0.2,
+							    "dashLength": 0
+							  } ],
+							  "gridAboveGraphs": true,
+							  "startDuration": 1,
+							  "graphs": [ {
+							    "balloonText": "[[category]]: <b>[[value]]</b>",
+							    "fillAlphas": 0.8,
+							    "lineAlpha": 0.2,
+							    "type": "column",
+							    "autoColor": true,
+							    "valueField": "visits"
+							  } ],
+							  "chartCursor": {
+							    "categoryBalloonEnabled": false,
+							    "cursorAlpha": 0,
+							    "zoomable": false
+							  },
+							  "categoryField": "day",
+							  "categoryAxis": {
+							    "gridPosition": "start",
+							    "gridAlpha": 0,
+							    "tickPosition": "start",
+							    "tickLength": 20
+							  },
+							  "export": {
+							    "enabled": true
+							  }
+							
+							} ); 
+	     		
+	     		
+	     		
+	     		
+	     			
 	     		}
 	     		else {
 	     			$("#error-modal").modal('show');
@@ -827,12 +992,13 @@ var supplier_id=110;
                 series:[
                     {name: "Bookings",data:[{{jan}},{{feb}},{{mar}},{{apr}},{{may}},{{jun}},{{jul}},{{aug}},{{sep}},{{oct}},{{nov}},{{dec}}]},
                 ]
-            })
+            }) 
             
-            
-            
+          
 
 var chart = AmCharts.makeChart( "Payment_Collection1", {
+
+
   "type": "serial",
   "theme": "light",
   "dataProvider": [ {
@@ -858,6 +1024,11 @@ var chart = AmCharts.makeChart( "Payment_Collection1", {
     "visits":{{sun}}
   }],
   "valueAxes": [ {
+
+   //"autoMargins":"false", 
+  //"marginRight":"5",
+
+
     "gridColor": "#FFFFFF",
     "gridAlpha": 0.2,
     "dashLength": 0
@@ -891,7 +1062,7 @@ var chart = AmCharts.makeChart( "Payment_Collection1", {
 } );
 
 
-
+        
 
 
 

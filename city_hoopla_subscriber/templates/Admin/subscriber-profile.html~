@@ -215,7 +215,7 @@ div.dataTables_filter label {
 #u31 {
   position:absolute;
   left:120px;
-  top:374px;
+  top:379px;
   width:240px;
   height:16px;
   font-family:'Roboto Bold', 'Roboto';
@@ -235,7 +235,7 @@ div.dataTables_filter label {
 #u33 {
   position:absolute;
   left:120px;
-  top:428px;
+  top:399px;
   width:240px;
   height:16px;
   font-family:'Roboto Light', 'Roboto';
@@ -255,7 +255,7 @@ div.dataTables_filter label {
 #u35 {
   position:absolute;
   left:120px;
-  top:412px;
+  top:413px;
   width:240px;
   height:16px;
   font-family:'Roboto Light', 'Roboto';
@@ -455,7 +455,7 @@ div.dataTables_filter label {
 #u55 {
   position:absolute;
   left:120px;
-  top:444px;
+  top:428px;
   width:240px;
   height:16px;
   font-family:'Roboto Light', 'Roboto';
@@ -1169,7 +1169,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
 	                                                            <label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 12px;" class="control-label"> <br>Description  
 	                                                                <span class="required"> * </span>
 	                                                            </label>
-	                                                                <textarea class="form-control" id="business" maxlength="5000" value="" name="business" onkeyup="myFunction(this)" >{{business_details}}</textarea> 
+	                                                                <textarea style=" font-family: 'Roboto Light', 'Roboto'; " class="form-control" id="business" maxlength="5000" value="" name="business" onkeyup="myFunction(this)" >{{business_details}}</textarea> 
 	                                                          		                                                                                                             		                                                            
 	                                                   				<label style="float:right;font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 12px;">
 	                                                   				<span id="length_cal">{{business_details_length}}</span>

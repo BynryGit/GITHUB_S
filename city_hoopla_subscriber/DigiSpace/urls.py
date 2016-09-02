@@ -146,11 +146,13 @@ urlpatterns = patterns('',
 #subscriber-shubham
     url(r'^subscriber-profile/', 'Admin.views.subscriber_profile',name='subscriber_profile'),
     url(r'^subscriber-advert/', 'Admin.views.subscriber_advert',name='subscriber_advert'),
+    url(r'^subscriber-advert-stat/', 'Admin.views.subscriber_advert_stat',name='subscriber_advert_stat'),
     url(r'^subscriber-booking/', 'Admin.views.subscriber_booking',name='subscriber_booking'),
     url(r'^update-profile/', 'Admin.views.update_profile',name='update_profile'),
     url(r'^subscriber-dashboard/', 'Admin.views.subscriber_dashboard',name='subscriber_dashboard'),
     url(r'^get-state/', 'Admin.views.get_state',name='get_state'),
     url(r'^get-filter/', 'Admin.views.get_filter',name='get_filter'),
+
 
 
 
