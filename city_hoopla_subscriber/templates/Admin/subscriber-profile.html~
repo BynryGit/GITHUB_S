@@ -5,42 +5,58 @@
  <!-- BEGIN HEAD -->
 {% load staticfiles %}
     <head>
-        <meta charset="utf-8" />
-        <title>City Hoopla | View Booked Tickets</title>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
-        <meta content="width=device-width, initial-scale=1" name="viewport" />
-        <meta content="" name="description" />
-        <meta content="" name="author" />
-        <!-- BEGIN GLOBAL MANDATORY STYLES -->
-       <!-- BEGIN GLOBAL MANDATORY STYLES -->
-        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
-        <link href="{% static 'assets/global/plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'assets/global/plugins/simple-line-icons/simple-line-icons.min.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'assets/global/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'assets/global/plugins/uniform/css/uniform.default.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css' %}" rel="stylesheet" type="text/css" />
-        <!-- END GLOBAL MANDATORY STYLES -->
-                       <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        
-        <!-- BEGIN PAGE LEVEL PLUGINS -->
-        <link href="{% static 'assets/global/plugins/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'assets/global/plugins/select2/css/select2-bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
-        
-        <link href="{% static 'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'assets/global/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css' %}" rel="stylesheet" type="text/css" />
-        <!-- END PAGE LEVEL PLUGINS -->
-        <!-- BEGIN THEME GLOBAL STYLES -->
-        <link href="{% static 'assets/global/css/components.min.css' %}" rel="stylesheet" id="style_components" type="text/css" />
-        <link href="{% static 'assets/global/css/plugins.min.css' %}" rel="stylesheet" type="text/css" />
-        <!-- END THEME GLOBAL STYLES -->
-        <!-- BEGIN THEME LAYOUT STYLES -->
-        <link href="{% static 'assets/layouts/layout2/css/layout.min.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'assets/layouts/layout2/css/themes/blue.min.css' %}" rel="stylesheet" type="text/css" id="style_color" />
-        <link href="{% static 'assets/layouts/layout2/css/custom.min.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'vendor/bootstrap-fileinput/jasny-bootstrap.min.css' %}" rel="stylesheet" media="screen">
-        <!-- END THEME LAYOUT STYLES -->
-        <link rel="shortcut icon" href="favicon.ico" /> </head>
+    <meta charset="utf-8"/>
+    <title>City Hoopla | Edit Advert </title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <meta content="" name="description"/>
+    <meta content="" name="author"/>
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet"
+          type="text/css"/>
+    <link href="{% static 'assets/global/plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <link href="{% static 'assets/global/plugins/simple-line-icons/simple-line-icons.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <link href="{% static 'assets/global/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/global/plugins/uniform/css/uniform.default.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/global/plugins/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/global/plugins/select2/css/select2-bootstrap.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <!-- <link href="{% static 'assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css' %}" rel="stylesheet" type="text/css" /> -->
+    <link href="{% static 'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <link href="{% static 'assets/global/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <!-- END PAGE LEVEL PLUGINS -->
+    <!-- BEGIN THEME GLOBAL STYLES -->
+    <link href="{% static 'assets/global/css/components.min.css' %}" rel="stylesheet" id="style_components"
+          type="text/css"/>
+    <link href="{% static 'assets/global/css/plugins.min.css' %}" rel="stylesheet" type="text/css"/>
+    <!-- END THEME GLOBAL STYLES -->
+    <!-- BEGIN THEME LAYOUT STYLES -->
+    <link href="{% static 'assets/layouts/layout2/css/layout.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/layouts/layout2/css/themes/blue.min.css' %}" rel="stylesheet" type="text/css"
+          id="style_color"/>
+    <link href="{% static 'assets/layouts/layout2/css/custom.min.css' %}" rel="stylesheet" type="text/css"/>
+
+    <link href="{% static 'vendor/bootstrap-fileinput/jasny-bootstrap.min.css' %}" rel="stylesheet" media="screen">
+
+
+    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2016.2.504/styles/kendo.common-material.min.css"/>
+    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2016.2.504/styles/kendo.material.min.css"/>
+
+    <link href="{% static 'assets/pages/css/dropzone.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/custom/css/map.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/bootstrap-tagsinput.css' %}" rel="stylesheet" type="text/css"/>
+    <!-- END THEME LAYOUT STYLES --> </head>
     <!-- END HEAD -->
     <style type="text/css">
     
@@ -175,7 +191,7 @@ div.dataTables_filter label {
   font-family:'Roboto Light', 'Roboto';
   font-weight:300;
   font-style:normal;
-  font-size:16px;
+  font-size:18px;
   color:#2F353B;
 }
 #u27_img {
@@ -201,7 +217,7 @@ div.dataTables_filter label {
   font-family:'Roboto Light', 'Roboto';
   font-weight:300;
   font-style:normal;
-  font-size:12px;
+  font-size:16px;
   color:#2F353B;
 }
 
@@ -221,7 +237,7 @@ div.dataTables_filter label {
   font-family:'Roboto Bold', 'Roboto';
   font-weight:700;
   font-style:normal;
-  font-size:12px;
+  font-size:16px;
   color:#0D0D0D;
 }
 
@@ -229,7 +245,7 @@ div.dataTables_filter label {
   position:absolute;
   left:0px;
   top:0px;
-  width:240px;
+  width:350px;
   word-wrap:break-word;
 }
 #u33 {
@@ -241,7 +257,7 @@ div.dataTables_filter label {
   font-family:'Roboto Light', 'Roboto';
   font-weight:300;
   font-style:normal;
-  font-size:12px;
+  font-size:16px;
   color:#2F353B;
 }
 
@@ -261,7 +277,7 @@ div.dataTables_filter label {
   font-family:'Roboto Light', 'Roboto';
   font-weight:300;
   font-style:normal;
-  font-size:12px;
+  font-size:16px;
   color:#2F353B;
 }
 
@@ -276,12 +292,12 @@ div.dataTables_filter label {
   position:absolute;
   left:120px;
   top:68px;
-  width:520px;
+  width:340px;
   height:60px;
   font-family:'Roboto Light', 'Roboto';
   font-weight:300;
   font-style:normal;
-  font-size:12px;
+  font-size:16px;
   color:#2F353B;
 }
 
@@ -289,7 +305,7 @@ div.dataTables_filter label {
   position:absolute;
   left:0px;
   top:0px;
-  width:520px;
+  width:340px;
   word-wrap:break-word;
 }
 #u39 {
@@ -301,7 +317,7 @@ div.dataTables_filter label {
   font-family:'Roboto Bold', 'Roboto';
   font-weight:700;
   font-style:normal;
-  font-size:12px;
+  font-size:16px;
   color:#0D0D0D;
 }
 
@@ -309,19 +325,19 @@ div.dataTables_filter label {
   position:absolute;
   left:0px;
   top:0px;
-  width:240px;
+  width:180px;
   word-wrap:break-word;
 }
 #u41 {
   position:absolute;
   left:120px;
   top:146px;
-  width:240px;
+  width:180px;
   height:16px;
   font-family:'Roboto Light', 'Roboto';
   font-weight:300;
   font-style:normal;
-  font-size:12px;
+  font-size:16px;
   color:#2F353B;
 }
 
@@ -341,7 +357,7 @@ div.dataTables_filter label {
   font-family:'Roboto Bold', 'Roboto';
   font-weight:700;
   font-style:normal;
-  font-size:12px;
+  font-size:16px;
   color:#0D0D0D;
 }
 
@@ -361,7 +377,7 @@ div.dataTables_filter label {
   font-family:'Roboto Light', 'Roboto';
   font-weight:300;
   font-style:normal;
-  font-size:12px;
+  font-size:16px;
   color:#2F353B;
 }
 
@@ -381,7 +397,7 @@ div.dataTables_filter label {
   font-family:'Roboto Bold', 'Roboto';
   font-weight:700;
   font-style:normal;
-  font-size:12px;
+  font-size:18px;
   color:#0D0D0D;
 }
 
@@ -401,7 +417,7 @@ div.dataTables_filter label {
   font-family:'Roboto Light', 'Roboto';
   font-weight:300;
   font-style:normal;
-  font-size:12px;
+  font-size:16px;
   color:#2F353B;
 }
 
@@ -409,7 +425,7 @@ div.dataTables_filter label {
   position:absolute;
   left:0px;
   top:0px;
-  width:240px;
+  width:300px;
   word-wrap:break-word;
 }
 #u51 {
@@ -421,7 +437,7 @@ div.dataTables_filter label {
   font-family:'Roboto Bold', 'Roboto';
   font-weight:700;
   font-style:normal;
-  font-size:12px;
+  font-size:18px;
   color:#0D0D0D;
 }
 
@@ -441,7 +457,7 @@ div.dataTables_filter label {
   font-family:'Roboto Light', 'Roboto';
   font-weight:300;
   font-style:normal;
-  font-size:12px;
+  font-size:16px;
   color:#2F353B;
 }
 
@@ -456,12 +472,12 @@ div.dataTables_filter label {
   position:absolute;
   left:120px;
   top:428px;
-  width:240px;
+  width:300px;
   height:16px;
   font-family:'Roboto Light', 'Roboto';
   font-weight:300;
   font-style:normal;
-  font-size:12px;
+  font-size:16px;
   color:#2F353B;
 }
 
@@ -469,7 +485,7 @@ div.dataTables_filter label {
   position:absolute;
   left:0px;
   top:0px;
-  width:240px;
+  width:350px;
   word-wrap:break-word;
 }
 
@@ -566,233 +582,659 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
    font-size: 12px;
 
 }
+.has-success .control-label{
+	color : #333;
+}
+
+.has-success .form-control {
+	border: 1px solid #C2CAD8;
+}
+
+		div.dataTables_wrapper div.dataTables_info {
+    padding-top: 8px;
+    white-space: nowrap;
+    display: none;
+}
+div.dataTables_wrapper div.dataTables_length label {
+    font-weight: normal;
+    text-align: left;
+    white-space: nowrap;
+    display: none;
+}
+
+div.dataTables_filter label {
+    font-weight: normal;
+    white-space: nowrap;
+    text-align: left;
+    display: none;
+}
+
+.border_s{
+
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+.fa-lg {
+    font-size: 2.333333em;
+    line-height: .75em;
+    vertical-align: -15%;
+}
+
+div.checker span {
+    display: -moz-inline-box;
+    display: inline-block;
+    zoom: 1;
+    text-align: center;
+    background-position: 0 -260px;
+
+}
+
+#processing{
+    height: 100vh;
+    position: fixed;
+    width: 100%;
+    margin: 0px auto;
+    z-index: 9999;
+    background-color: #FFF;
+    background-image: none;
+    background-attachment: scroll;
+    background-position: 0% 0%;
+    background-clip: border-box;
+    background-origin: padding-box;
+    background-repeat: repeat;
+    background-size: inherit;
+    opacity: 0.5;
+}
+
+#loading{
+    width: 36%;
+    height: 22px;
+    position: absolute;
+    top: 26%;
+    left: 32%;
+    margin: -28px 0px 0px -25px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: #000;
+}
+
+.page-header.navbar .page-logo .logo-default {
+    margin: 2px 0 0;
+    width: 105px;
+    background: rgba(255, 255, 255, 0.48);
+}
+
+.page-header.navbar .page-logo {
+  /* fallback */
+  background-color: #0d67e6;
+  background-image: url(images/linear_bg_1.png);
+  background-repeat: repeat-y;
+
+  /* Safari 4-5, Chrome 1-9 */
+  background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a));
+
+  /* Safari 5.1, Chrome 10+ */
+  background: -webkit-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* Firefox 3.6+ */
+  background: -moz-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* IE 10 */
+  background: -ms-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* Opera 11.10+ */
+  background: -o-linear-gradient(left, #0d67e6, #11ca9a);
+}
+
+.page-sidebar .page-sidebar-menu>li>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu>li>a {
+  /* fallback */
+  background-color: #0d67e6;
+  background-image: url(images/linear_bg_1.png);
+  background-repeat: repeat-y;
+  color:#fff;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: 'Regular';
+
+  /* Safari 4-5, Chrome 1-9 */
+  background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a));
+
+  /* Safari 5.1, Chrome 10+ */
+  background: -webkit-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* Firefox 3.6+ */
+  background: -moz-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* IE 10 */
+  background: -ms-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* Opera 11.10+ */
+  background: -o-linear-gradient(left, #0d67e6, #11ca9a);
+}
+
+li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=fa-], li [class^=glyphicon-], li [class^=icon-] {
+    display: inline-block;
+    width: 2em;
+    font-size: 22px;
+}
+
+
+
+@media (max-width: 767px){
+.page-header.navbar {
+     background-color: #0d67e6;
+  background-image: url(images/linear_bg_1.png);
+  background-repeat: repeat-y;
+
+  /* Safari 4-5, Chrome 1-9 */
+  background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a));
+
+  /* Safari 5.1, Chrome 10+ */
+  background: -webkit-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* Firefox 3.6+ */
+  background: -moz-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* IE 10 */
+  background: -ms-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* Opera 11.10+ */
+  background: -o-linear-gradient(left, #0d67e6, #11ca9a);
+}
+}
+
+.form-height{
+height: 65px;
+}
+
+.user-image img {
+    max-width: 100%;
+}
+
+.fileinput .thumbnail>img {
+    height: 178px !important;
+}
+
+.fileinput-preview.thumbnail {
+    max-width: 278px;
+}
+
+.btn-azure:hover {
+    background-color: #0095C8;
+    border-color: #0095C8;
+    color: #ffffff;
+}
+
+.btn-file {
+    overflow: hidden;
+    position: relative;
+    vertical-align: middle;
+}
+
+.user-image .user-image-buttons {
+    position: static;
+
+    <!--top: 20%;-->
+    <!--left: 37%;-->
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+.btn-red:hover {
+    background-color: #da4f4a !important;
+    border-color: #da4f4a;
+    color: #ffffff;
+    display: none;
+}
+
+.btn-red{
+    display: none;
+}
+
+.btn-sm, .btn-group-sm>.btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+
+.btn {
+    transition: all 0.3s ease 0s !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    position: relative;
+}
+
+.fileinput .btn {
+    vertical-align: middle;
+}
+
+.bootstrap-tagsinput {
+    line-height: 35px;
+    width: 980px;
+}
+
+.error{
+    font-family: 'Roboto Bold', 'Roboto';
+    font-weight: 400;
+    font-style: normal;
+    font-size: 12px;
+}
+
+.form-wizard .steps > li.active > a.step .desc {
+    color: #2F353B;
+    font-weight: 700;
+    font-family: 'Roboto Bold', 'Roboto';
+}
+
+.portlet.light {
+    <!--padding: 0px 0px 4px;-->
+    <!--background-color: #eef1f5;-->
+}
+
+.form-wizard .steps, .form-wizard .steps > li > a.step {
+    <!--background-color: #eef1f5;-->
+    background-image: none;
+    border: 0;
+    box-shadow: none;
+    filter: none;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #6B6B6B;
+    border-bottom: 0;
+}
+
+
+#tab2 {
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.map-wrapper {
+    float: left;
+    margin: 0px 0px 0 0px;
+}
+
+#map {
+    border: 1px solid #DDD;
+    width: 292px;
+    overflow: hidden;
+    height: 223px;
+    margin: 10px 0 10px 0;
+    -webkit-box-shadow: #AAA 0px 0px 15px;
+}
+
+#my-awesome-dropzone-3{
+    border: 3px dashed black !important;
+    min-height: 224px !important;
+    background: #ffffff;
+}
+
+#my-active-dropzone{
+    border: 3px dashed black !important;
+    min-height: 224px !important;
+    background: #ffffff;
+}
+
+.dropzone .dz-preview .dz-details img, .dropzone-previews .dz-preview .dz-details img {
+    position: absolute;
+    top: 0px;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.dropzone .dz-preview, .dropzone-previews .dz-preview {
+    background: rgba(255,255,255,0.8);
+    position: relative;
+    display: inline-block;
+    margin: 4px;
+    vertical-align: top;
+    border: 1px solid #acacac;
+    padding: 6px 6px 6px 6px;
+}
+
+.sel2{
+    width: 100%;
+}
+
+.tab-active{
+    background: rgb(13, 103, 230) none repeat scroll 0% 0% !important;
+    color: rgb(16, 245, 182) !important;
+}
+
+.sel2{
+    width: 100%;
+}
+
+.div-border-top{
+    border: 1px solid #cccccc;
+    border-bottom: none;
+}
+
+.div-border-bottom{
+    border: 1px solid #cccccc;
+    border-top: none;
+}
+
+.div-border-left-right{
+    border: 1px solid #cccccc;
+    border-top: none;
+    border-bottom: none;
+}
+
+.div-border{
+    border: 1px solid #cccccc;
+}
+
+.div-color{
+    background: #f3f2f2;
+}
+
+.form-control {
+    border: 1px solid #c0c0c0;
+}
+
+.brad-crum-1{
+    font-size:16px;
+    color: #3eb199;
+}
+
+.brad-crum-2{
+    font-size:16px;
+    color: #00448b;
+}
+
+.brad-crum-3{
+    font-size:16px;
+    color: #00448b;
+    font-weight:700;
+}
+
+.page-sidebar .page-sidebar-menu > li > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li > a {
+    border-top: 1px solid #33b2c9;
+    padding-left: 0px;
+    padding-right: 0px;
+    font-size: 17px;
+}
+
+.page-sidebar .page-sidebar-menu > li:last-child > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li:last-child > a {
+    border-bottom: 1px solid #33b2c9 !important;
+}
+
+.page-sidebar, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover {
+
+    background-color: #0d67e6;
+    background-image: url(images/linear_bg_1.png);
+    background-repeat: repeat-y;
+    color: #ffffff;
+    font-weight:500;
+
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a));
+
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(left, #0d67e6, #11ca9a);
+
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(left, #0d67e6, #11ca9a);
+
+    /* IE 10 */
+    background: -ms-linear-gradient(left, #0d67e6, #11ca9a);
+
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(left, #0d67e6, #11ca9a);
+}
+
+.page-content-wrapper {
+    float: left;
+    width: 100%;
+    background-size: 16% auto !important;
+    background-color: #0d67e6;
+    background-image: url(images/linear_bg_1.png);
+    background-repeat: repeat-y;
+    font-weight:500;
+
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a));
+
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(left, #0d67e6, #11ca9a);
+
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(left, #0d67e6, #11ca9a);
+
+    /* IE 10 */
+    background: -ms-linear-gradient(left, #0d67e6, #11ca9a);
+
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(left, #0d67e6, #11ca9a);
+}
+
+.form-wizard .steps > li.active > a.step .number {
+    background-color: #0d67e6;
+    color: #fff;
+}
+
+.form-wizard .steps > li > a.step .number{
+  /* fallback */
+  background-color: #0d67e6;
+  background-image: url(images/linear_bg_1.png);
+  background-repeat: repeat-y;
+  color: #ffffff;
+  font-weight:500;
+
+  /* Safari 4-5, Chrome 1-9 */
+  background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a));
+
+  /* Safari 5.1, Chrome 10+ */
+  background: -webkit-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* Firefox 3.6+ */
+  background: -moz-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* IE 10 */
+  background: -ms-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* Opera 11.10+ */
+  background: -o-linear-gradient(left, #0d67e6, #11ca9a);
+}
+
+.page-sidebar .page-sidebar-menu > li > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li > a {
+    text-align: left !important;
+}
+
+.page-sidebar .page-sidebar-menu > li > a > .title, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li > a > .title {
+    text-align: left !important;
+}
+
+.grey_color{
+    border: 1px solid rgb(72, 72, 72);
+    color: rgb(255, 255, 255);
+    background: rgb(72, 72, 72) none repeat scroll 0% 0%;
+    border-radius: 20px !important;
+}
+
+.done_btn{
+    color: rgb(255, 255, 255);
+    border-radius: 20px !important;
+    background-color: #0d67e6;
+    background-image: url(images/linear_bg_1.png);
+    background-repeat: repeat-y;
+
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* IE 10 */
+    background: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+}
 </style>
 
    <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
-        <!-- BEGIN HEADER -->
-        <div class="page-header navbar navbar-fixed-top">
-        
-        
-        
-                 <!-- BEGIN HEADER INNER -->
-            	<div class="page-header-inner ">
-            
-             
-                <!-- BEGIN LOGO -->
-                <div class="page-logo">	
-                    <a href="/dashboard/">
-                         <img src="{% static 'assets/layouts/layout2/img/City_Hoopla_Logo.png' %}" alt="logo" class="logo-default" /> </a>
-                    <div class="menu-toggler sidebar-toggler">
-                        <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
-                    </div>
-                </div>
-                
-                
-                <!-- END LOGO -->
-                <!-- BEGIN RESPONSIVE MENU TOGGLER -->
-                <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"> </a>
-                <!-- END RESPONSIVE MENU TOGGLER -->
-                <!-- BEGIN PAGE TOP -->
-                <div class="page-top">
-                    <!-- BEGIN TOP NAVIGATION MENU -->
-                    
-                     <div class="input-group form-group" style="width: 257px;float: left; padding-left: 10px; padding-top: 17px;">
-                             <span class="input-group-btn">
-										<span style="border: none !important;"  class="btn btn btn-default">
-	                                        <span class="fa fa-search"></span>
-	                                    </span>
-									</span>
-                             <input style="border: none !important; padding-left: 0px ; font-family: 'Roboto Light', 'Roboto';" type="text" class="form-control " id="txtSearch"
-                                    placeholder="Search " name="s">
-									
-                         </div>
-                         
-                    <div class="top-menu">
-                    
- 						
-                        <ul class="nav navbar-nav pull-right">
-                        
-                        
-                                                    <!-- BEGIN NOTIFICATION DROPDOWN -->
-                            <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                             <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
-                                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                                    <i class="icon-bell"></i>
-                                    <span class="badge badge-default" style="    background-color: #d22917;"> 7 </span>
-                                </a>
-                               <!--  <ul class="dropdown-menu">
-                                    <li class="external">
-                                        <h3>
-                                            <span class="bold">12 pending</span> notifications</h3>
-                                        <a href="page_user_profile_1.html">view all</a>
-                                    </li>
-                                    <li>
-                                        <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <span class="time">just now</span>
-                                                    <span class="details">
-                                                        <span class="label label-sm label-icon label-success">
-                                                            <i class="fa fa-plus"></i>
-                                                        </span> New user registered. </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <span class="time">3 mins</span>
-                                                    <span class="details">
-                                                        <span class="label label-sm label-icon label-danger">
-                                                            <i class="fa fa-bolt"></i>
-                                                        </span> Server #12 overloaded. </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <span class="time">10 mins</span>
-                                                    <span class="details">
-                                                        <span class="label label-sm label-icon label-warning">
-                                                            <i class="fa fa-bell-o"></i>
-                                                        </span> Server #2 not responding. </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <span class="time">14 hrs</span>
-                                                    <span class="details">
-                                                        <span class="label label-sm label-icon label-info">
-                                                            <i class="fa fa-bullhorn"></i>
-                                                        </span> Application error. </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <span class="time">2 days</span>
-                                                    <span class="details">
-                                                        <span class="label label-sm label-icon label-danger">
-                                                            <i class="fa fa-bolt"></i>
-                                                        </span> Database overloaded 68%. </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <span class="time">3 days</span>
-                                                    <span class="details">
-                                                        <span class="label label-sm label-icon label-danger">
-                                                            <i class="fa fa-bolt"></i>
-                                                        </span> A user IP blocked. </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <span class="time">4 days</span>
-                                                    <span class="details">
-                                                        <span class="label label-sm label-icon label-warning">
-                                                            <i class="fa fa-bell-o"></i>
-                                                        </span> Storage Server #4 not responding dfdfdfd. </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <span class="time">5 days</span>
-                                                    <span class="details">
-                                                        <span class="label label-sm label-icon label-info">
-                                                            <i class="fa fa-bullhorn"></i>
-                                                        </span> System Error. </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <span class="time">9 days</span>
-                                                    <span class="details">
-                                                        <span class="label label-sm label-icon label-danger">
-                                                            <i class="fa fa-bolt"></i>
-                                                        </span> Storage server failed. </span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul> -->
-                            </li> 
-                            <!-- END NOTIFICATION DROPDOWN --> 
-                            
-                            <li class="dropdown dropdown-user">
-                                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                                     <img  style="    width: 40px;" alt="" class="img-circle" src="{{logo}}" > 
-                                    <span class="username username-hide-on-mobile"> shubham shirsode </span>
-                                    <i class="fa fa-angle-down"></i>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-default">
-                                    
-                                     <li>
-                                        <a href="/log-out/">
-                                            <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
-                                    </li>
-                                    <li>
-                                        <a href="/log-out/">
-                                            <i class="fa fa-sign-out" aria-hidden="true"></i> Sign Out </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <!-- END USER LOGIN DROPDOWN -->
-                        </ul>
-                    </div>
-                    
-                    
-                    
-                    <!-- END TOP NAVIGATION MENU -->
-                </div>
-                <!-- END PAGE TOP -->
+<div id="processing" style="display:none;">
+    <div id="loading">
+        <img src="{% static 'assets/loading-bars.gif' %}" style="height : 100px;">
+
+    </div>
+</div>
+<!-- BEGIN HEADER -->
+<div class="page-header navbar navbar-fixed-top">
+    <!-- BEGIN HEADER INNER -->
+    <div class="page-header-inner ">
+        <!-- BEGIN LOGO -->
+        <div class="page-logo">
+            <a href="index.html">
+                <img src="{% static 'assets/layouts/layout2/img/City_Hoopla_Logo.png' %}" alt="logo"
+                     class="logo-default"/> </a>
+            <div class="menu-toggler sidebar-toggler">
+                <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
             </div>
-            <!-- END HEADER INNER -->
         </div>
+        <!-- END LOGO -->
+        <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse"
+           data-target=".navbar-collapse"> </a>
+        <!-- END RESPONSIVE MENU TOGGLER -->
+        <!-- BEGIN PAGE TOP -->
+        <div class="page-top">
+            <!-- BEGIN TOP NAVIGATION MENU -->
+            <div style="display:inline-block;">
+                <ul class="nav navbar-nav pull-right">
+                    <li style="padding-top:15px;">
+                        <i class="fa fa-search"></i>
+                        <input type="text" style="border: none; font-size:20px; color:#484848;" placeholder="Search">
+                    </li>
+                </ul>
+            </div>
+            <div class="top-menu" style="display:inline-block;">
+                <ul class="nav navbar-nav pull-right">
+                    <!-- BEGIN NOTIFICATION DROPDOWN -->
+                    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                    <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
+                           data-close-others="true">
+                            <i class="icon-bell"></i>
+                            <span class="badge badge-default" style="    background-color: #d22917;"> 7 </span>
+                        </a>
+                    </li>
+                    <!-- END NOTIFICATION DROPDOWN -->
+                    <li class="dropdown dropdown-user">
+                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
+                           data-close-others="true">
+                            <img style="    width: 40px;" alt="" class="img-circle" src="{{logo}}">
+                            <span class="username username-hide-on-mobile"> Shubham Shirsode </span>
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-default">
+                            <li>
+                                <a href="/subscriber-portal/subscriber-profile/?supplier_id={{request.session.supplier_id}}">
+                                    <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
+                            </li>
+                            <li>
+                                <a href="/subscriber-portal/log-out/">
+                                    <i class="fa fa-sign-out" aria-hidden="true"></i> Sign Out </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- END USER LOGIN DROPDOWN -->
+                </ul>
+            </div>
+            <!-- END TOP NAVIGATION MENU -->
+        </div>
+        <!-- END PAGE TOP -->
+    </div>
+    <!-- END HEADER INNER -->
+</div>
         <!-- END HEADER -->
         
         <!-- BEGIN HEADER & CONTENT DIVIDER -->
         <div class="clearfix"> </div>
         <!-- END HEADER & CONTENT DIVIDER -->
-<!-- BEGIN CONTAINER -->
- <div class="page-container" style="background-color: #666;">
-   <!-- BEGIN SIDEBAR -->
-   <div class="page-sidebar-wrapper" >
-    <!-- END SIDEBAR -->
-     <div class="page-sidebar navbar-collapse collapse" style="background-color:#666">
-     <!-- BEGIN SIDEBAR MENU -->
-      <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
-                 <li class="nav-item " >
-                      <a href="index.html" class="nav-link nav-toggle" style="background-color: dimgrey;" >
-								
-								
-                          <span class="title" style="    margin-left: -46px;"><i class="fa fa-home" aria-hidden="true"></i> Dashboard</span>
-<!--                             <span class="arrow"></span>                                 -->
-								
-                      
-                      </a>                 
-                  </li>
+        
+ 
+ <!-- BEGIN CONTAINER -->
+ <div class="page-container">
+    <!-- BEGIN SIDEBAR -->
+    <div class="page-sidebar-wrapper">
+        <!-- END SIDEBAR -->
+        <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
+        <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+        <div class="page-sidebar navbar-collapse collapse" style="height: 56.5% !important;">
+        <!--<div class="page-sidebar navbar-collapse collapse" style="background-color:#333333">-->
+            <!-- BEGIN SIDEBAR MENU -->
+            <!-- DOC: Apply "page-sidebar-menu-light" class right after "page-sidebar-menu" to enable light sidebar menu style(without borders) -->
+            <!-- DOC: Apply "page-sidebar-menu-hover-submenu" class right after "page-sidebar-menu" to enable hoverable(hover vs accordion) sub menu mode -->
+            <!-- DOC: Apply "page-sidebar-menu-closed" class right after "page-sidebar-menu" to collapse("page-sidebar-closed" class must be applied to the body element) the sidebar sub menu mode -->
+            <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
+            <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
+            <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+            <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu "
+                data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+                <li class="nav-item ">
+                    <a href="index.html" class="nav-link nav-toggle" style="background-color: rgb(13, 103, 230);">
+                        <i class="fa fa-home" style="display: inline-block; color: #ffffff !important;" aria-hidden="true"></i>
+                        <span class="title" style="display: inline-block;"> Dashboard </span>
+                    </a>
+                </li>
 
-                  <li class="nav-item  ">
-                      <a href="advert-management.html" class="nav-link nav-toggle" style="background-color: #666;">
-						
-								
-                          <span class="title" style="    margin-left: -74px;"> <i class="fa fa-users" aria-hidden="true"></i> Advert</span>
-                                <span class="selected"></span>                                
-									
-                      </a>
-                  </li>
-                  <li class="nav-item">
-                      <a href="advert-management.html" class="nav-link nav-toggle" style="background-color: #666;">
-							
-						
-                          <span class="title" style="    margin-left: -61px;"> <i class="fa fa-user" aria-hidden="true"></i> Bookings </span>
-						
-                      </a>                            
-                  </li>
-                  
-              </ul>
-              <!-- END SIDEBAR MENU -->
-          </div>
-          <!-- END SIDEBAR -->
-      </div>
-      <!-- END SIDEBAR -->
+                <li class="nav-item  ">
+                    <a href="/subscriber-portal/subscriber-advert/?supplier_id={{request.session.supplier_id}}" class="nav-link nav-toggle tab-active"
+                       style="background-color: rgb(13, 103, 230);">
+                        <i class="fa fa-users" style="display: inline-block; color: rgb(16, 245, 182) !important;" aria-hidden="true"></i>
+                        <span class="title" style="display: inline-block; width: 72%;">  Advert
+                        <i class="fa fa-chevron-right" style="float:right; padding-top:7px;" aria-hidden="true"></i>
+                        </span>
+
+
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/subscriber-portal/subscriber-booking/?supplier_id={{request.session.supplier_id}}" class="nav-link nav-toggle"
+                       style="background-color: rgb(13, 103, 230);">
+                        <i class="fa fa-calendar-check-o" style="display: inline-block; color: #ffffff !important;" aria-hidden="true"></i>
+                        <span class="title" style="display: inline-block;">  Bookings </span>
+                    </a>
+                </li>
+
+            </ul>
+            <!-- END SIDEBAR MENU -->
+        </div>
+        <!-- END SIDEBAR -->
+    </div>
+    <!-- END SIDEBAR -->
             
             
             
@@ -800,10 +1242,10 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
   <div class="page-content-wrapper">
   <!-- BEGIN CONTENT BODY -->
    <div class="page-content">
-
-     <div class="row" style="font-family: 'Roboto Light', 'Roboto';  font-weight: 300; font-style: normal; font-size: 16px;color: #2F353B;margin-top: -25px;" >
+     <div class="portlet light" >
+    <div class="row" style="font-family: 'Roboto Light', 'Roboto';  font-weight: 300; font-style: normal; font-size: 24px;color: #2F353B;margin-top: -25px;" >
   				
-  				<div class="col-md-12" >
+  				<div class="col-sm-12" >
             <p> 
             <span> My Profile </span>
             </p> 
@@ -811,27 +1253,27 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
       </div>
 <div class="portlet-body form" id="profile_view">
   <!-- BEGIN FORM-->
-    <div class="row" style="background: #eef1f5; ">
-       <div class="col-lg-12" style="margin-top: -28px; margin-left: -19px; ">
+    <div class="row" >
+       <div class="col-sm-12" style="margin-top: -28px; margin-left: -19px; ">
           <div class="portlet-body">
              <form   class="form-vertical">
                 <div class="form-body">
-                  <div class="row">
-                    <div class="col-lg-8">
+                
+                    <div class="col-sm-8">
 				              <!-- BEGIN PROFILE SIDEBAR -->
 				              <div class="profile-sidebar"  >
                              <!-- PORTLET MAIN -->
-                             <div class="portlet light profile-sidebar-portlet " >
+                             <div class="portlet light profile-sidebar-portlet " style="background-color: #f3f2f2; border: 1px solid #cccccc;">
                                  <!-- SIDEBAR USERPIC sssss-->
                                <div class="row" >
-                                  <div class="col-md-12" style="margin-top: -10px;margin-left: -10px;  height: 1021px;">
+                                  <div class="col-xs-12" style="margin-left: -10px;  height: 525px;">
                          		
-                               		<div class="col-md-2" style="background-color: white;padding-top: 16px;padding-bottom: 16px; ">
+                               		<div class="col-xs-2" >
 		                                    <div class="profile-userpic">
-															<img src="{{logo}}" style="height: 76px; width: 211px;border-radius:100%!important; margin-top: -3px;margin-left: -8px;	" class="img-responsive" alt=""> 
+															<img src="{{logo}}" style="height: 76px; width: 211px;border-radius:100%!important; margin-left: -8px;	" class="img-responsive" alt=""> 
 		                                    </div>
                                     </div>
-				                           <div class="col-md-8" style="margin-left: -119px; margin-top: -26px;">  
+				                           <div class="col-xs-8" style="margin-left: -119px; margin-top: -26px;">  
 				             
 				             
 				                              <div class="form-group">
@@ -839,7 +1281,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
 				                                <div class="row" style="padding-left: 5%; padding-right: 5%;">
 
                                     				 	<div class="row">
-                                    				    <div class="col-md-12" id="u27">
+                                    				    <div class="col-xs-12" id="u27">
                                   						    <p> 
                                                          <span> {{business_name}} </span>
                                                          </p> 
@@ -848,7 +1290,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                                                    </div>
                                                   <div class="row">
                                                    <div id="u29">
-                                  							<div class="col-md-12" id="u30">
+                                  							<div class="col-xs-12" id="u30">
                                                          <p> 
                                                          <span> {{city}} </span>
                                                          </p> 
@@ -858,7 +1300,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                                                   
                                                   <div class="row"> 
                                                    <div id="u37">
-                                  							<div class="col-md-12" id="u38">
+                                  							<div class="col-xs-12" id="u38">
                                                          <p> 
                                                          <span> {{business_details}}  </span>
                                                          </p> 
@@ -868,7 +1310,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                                                   
                                                         
                                                     <div id="u39" >
-                                  								<div class="col-md-6" id="u40" >
+                                  								<div class="col-xs-6" id="u40" >
                                                          <p> 
                                                          <span>  Mobile Number  </span>
                                                          </p> 
@@ -876,7 +1318,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                                                      </div>
                                              
                                                       <div id="u41" >
-                                  								<div class="col-md-6" id="u42" >
+                                  								<div class="col-xs-6" id="u42" >
                                                          <p> 
                                                          <span>   {{phone_no}}  </span>
                                                          </p> 
@@ -885,7 +1327,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                                                     
                                            
                                                       <div id="u43"  >
-                                  								<div class="col-md-6" id="u44" >
+                                  								<div class="col-xs-6" id="u44" style="margin-left: -67px;" >
                                                          <p> 
                                                          <span>   Secondary Number  </span>
                                                          </p> 
@@ -893,7 +1335,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                                                      </div>
                                                      
                                                       <div id="u45" >
-                                  								<div class="col-md-6" id="u46" >
+                                  								<div class="col-xs-6" id="u46" style="margin-left: -67px;">
                                                          <p> 
                                                          <span>   {{secondary_phone_no}} </span>
                                                          </p> 
@@ -903,7 +1345,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                                                     
                                                      
                                                       <div id="u47" >
-                                  								<div class="col-md-6" id="u48" >
+                                  								<div class="col-xs-6" id="u48" >
                                                          <p> 
                                                          <span>  Primary Email   </span>
                                                          </p> 
@@ -911,7 +1353,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                                                      </div>
                                                      
                                                       <div id="u49" >
-                                  								<div class="col-md-6" id="u50" >
+                                  								<div class="col-xs-6" id="u50" >
                                                          <p> 
                                                          <span>  {{supplier_email}} </span>
                                                          </p> 
@@ -919,7 +1361,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                                                      </div>
                                                     
                                                      <div id="u51" >
-                                  								<div class="col-md-6" id="u52" >
+                                  								<div class="col-xs-6" id="u52" >
                                                          <p> 
                                                          <span>  Address </span>
                                                          </p> 
@@ -927,7 +1369,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                                                      </div>
                                                      
                                                      <div id="u53" >
-                                  								<div class="col-md-6" id="u54" >
+                                  								<div class="col-xs-6" id="u54" >
                                                          <p> 
                                                          <span> {{address1}} </span>
                                                          </p> 
@@ -935,7 +1377,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                                                      </div>
                                                      
                                                       <div id="u31" >
-                                  								<div class="col-md-12" id="u32" >
+                                  								<div class="col-xs-12" id="u32" >
                                                          <p> 
                                                          <span>  Primary Contact Details </span>
                                                          </p> 
@@ -943,7 +1385,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                                                      </div>
                                                      
                                                       <div id="u35" >
-                                  								<div class="col-md-12" id="u36" >
+                                  								<div class="col-xs-12" id="u36" >
                                                          <p> 
                                                          <span> {{contact_person}} </span>
                                                          </p> 
@@ -951,7 +1393,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                                                      </div>
                                                      
                                                       <div id="u33" >
-                                  								<div class="col-md-12" id="u34" >
+                                  								<div class="col-xs-12" id="u34" >
                                                          <p> 
                                                          <span> {{contact_no}}  </span>
                                                          </p> 
@@ -959,7 +1401,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                                                      </div>
                                                      
                                                      <div id="u55" >
-                                  								<div class="col-md-12" id="u56" >
+                                  								<div class="col-xs-12" id="u56" >
                                                          <p> 
                                                          <span>  {{contact_email}}  </span>
                                                                                                                   
@@ -971,11 +1413,15 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
 						                                 
 						                               </div> 
 						                           </div>
-						                           </div>       
-						                           <div class="col-md-2" style="padding-left: 611px;margin-top: -1022px;">
-				                                 <br>  <span> <i class="fa fa-pencil" aria-hidden="true" onclick="change_div();"></i> </span>
+						                              
+						                            <div class="col-xs-2" style="float: right; margin-top: -16px;">
+				                                 		<br> <a> <span> <i class="fa fa-pencil" aria-hidden="true" onclick="change_div();"></i> </span> </a>
 
 				                                  </div> 
+				                                  
+						                           </div>  
+						                       <!--     padding-left: 611px;margin-top: -1022px;  -->    
+						                        
 				                         
 				                   </div>
 				                <!-- END SIDEBAR USERPIC ssssssss -->
@@ -985,89 +1431,100 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
 
 						    
 						 </div>
-        				 <div class="col-lg-4">
+        				 <div class="col-sm-4">
                       <!-- BEGIN PROFILE CONTENT -->
-							 <div class="profile-content portlet light" style=" height: 1038px;">
+							 <div class="profile-content portlet light" style=" height: 556px;background-color:#f3f2f2;    border: 1px solid #cccccc;">
                            <div class="row">
-                              <div class="col-md-12" >
-                                 <h3 	 style="margin-top:0px;height: 16px;font-weight: 700;font-style: normal; font-size: 12px; color: #0D0D0D;left: 930px; top: 130px; width: 150px; font-family: 'Roboto Bold', 'Roboto';"><b>Preferences</b></h3>
+                              <div class="col-xs-12" >
+                                 <h3 	 style="margin-top:0px;height: 16px;font-weight: 700;font-style: normal; font-size: 16px; color: #0D0D0D;left: 930px; top: 130px; width: 150px; font-family: 'Roboto Bold', 'Roboto';"><b>Preferences</b></h3>
 
                               </div>
-                              <div class="col-md-6" >
+                            </div>
+                             <div class="row">
+                              <div class="col-xs-6" >
                                 	<h5 style=" font-family: 'Roboto Light', 'Roboto'; left: 930px; top: 168px;    font-weight: 300;
 											    font-style: normal;
-											    font-size: 12px;
+											    font-size: 16px;
 											    color: #2F353B; width: 140px;	">Notifications</h5>
                               </div>
-                              <div class="col-md-6 form-group" style="padding-left: 41px;  ">
+                              <div class="col-xs-6 form-group" style="padding-left: 41px;  ">
                                 	{% if notification_status == 'true' %}
                                 	<input type="checkbox" name=""  checked class="make-switch"   data-checkbox="Notifications">
                                 	{% else %}
                                 	<input type="checkbox" name="" class="make-switch"   data-checkbox="Notifications">
                                 	{% endif %}
                               </div>
+                             </div>
                                 	
-                             <div class="col-md-6">
+                              <div class="row">
+                             <div class="col-xs-6">
                                 	<h5 style=" font-family: 'Roboto Light', 'Roboto'; left: 930px; top: 168px;    font-weight: 300;
 											    font-style: normal;
-											    font-size: 12px;
+											    font-size: 16px;
 											    color: #2F353B; width: 140px;	">Reminders</h5>
                              </div>
-                             <div class="col-md-6 form-group" style="padding-left: 41px;">
+                             <div class="col-xs-6 form-group" style="padding-left: 41px;">
                                 	{% if reminders_status == 'true' %}
                                 	<input type="checkbox" name=""  checked class="make-switch" data-size="normal"  data-checkbox="Reminders">
                                  {% else %}
                                  <input type="checkbox" name="" class="make-switch" data-size="normal"  data-checkbox="Reminders">
                                 	{% endif %}
                              </div>
+                            </div>
                                 	
-                             <div class="col-md-6">
+                              <div class="row">
+                             <div class="col-xs-6">
                                 	<h5 style=" font-family: 'Roboto Light', 'Roboto'; left: 930px; top: 168px;    font-weight: 300;
 											    font-style: normal;
-											    font-size: 12px;
+											    font-size: 16px;
 											    color: #2F353B; width: 140px;	">Discounts</h5>
                              </div>
-                             <div class="col-md-6 form-group" style="padding-left: 41px;">
+                             <div class="col-xs-6 form-group" style="padding-left: 41px;">
                                 	{% if discounts_status == 'true' %}
                                 	<input type="checkbox" name=""  checked class="make-switch" data-size="normal"  data-checkbox="Discounts">
                                 	{% else %}
                                  <input type="checkbox" name="" class="make-switch" data-size="normal"  data-checkbox="Discounts">
                                 	{% endif %}
                              </div>
+                            </div>
                                 	
                                 	
-                             <div class="col-md-6">
+                              <div class="row">
+                             <div class="col-xs-6">
                                 	<h5 style=" font-family: 'Roboto Light', 'Roboto'; left: 930px; top: 168px;    font-weight: 300;
 											    font-style: normal;
-											    font-size: 12px;
+											    font-size: 16px;
 											    color: #2F353B; width: 140px;	">Request Call Back</h5>
                              </div>
-                             <div class="col-md-6 form-group" style="padding-left: 41px;">
+                             <div class="col-xs-6 form-group" style="padding-left: 41px;">
                                 	{% if request_call_back_status == 'true' %}
                                 	<input type="checkbox" name=""  checked class="make-switch" data-size="normal"  data-checkbox="Request_Call_Back">
                                  {% else %}
                                  <input type="checkbox" name="" class="make-switch" data-size="normal"  data-checkbox="Request_Call_Back">
                                 	{% endif %}
                              </div>
-                                	
-                              <div class="col-md-6">
+                            </div>
+                           
+                              <div class="row">   	
+                              <div class="col-xs-6">
                                 	<h5 style=" font-family: 'Roboto Light', 'Roboto'; left: 930px; top: 168px;    font-weight: 300;
 											    font-style: normal;
-											    font-size: 12px;
+											    font-size: 16px;
 											    color: #2F353B; width: 140px;	">No Call</h5>
                               </div>
-                              <div  class="col-md-6 form-group" style="padding-left: 41px;">
+                              <div  class="col-xs-6 form-group" style="padding-left: 41px;">
                                 	{% if no_call_status == 'true' %}
                                 	<input type="checkbox" id="my-checkbox " name=""  checked class="make-switch" data-size="normal" data-checkbox="No_Call"> 
 											{% else %}
                                  <input type="checkbox" name="" class="make-switch" data-size="normal"  data-checkbox="No_Call">
                                 	{% endif %}
                               </div> 
+                             </div>
                               		
                            </div>
 							   </div>
                     </div>
-				   </div>             
+				              
 				 </div>      
 			 </form>      
 	      </div>
@@ -1081,13 +1538,13 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
     
   <div class="portlet-body form" id="edit_view" style="display:none;">
   <!-- BEGIN FORM-->
-    <div class="row" style="background: #eef1f5; ">
-       <div class="col-lg-12" style="margin-top: -28px; margin-left: -19px; ">
+    <div class="row" >
+       <div class="col-sm-12" style="margin-top: -28px; margin-left: -19px; ">
           <div class="portlet-body">
              <form   class="form-vertical">
                 <div class="form-body">
-                  <div class="row">
-                    <div class="col-lg-8">
+                 
+                    <div class="col-sm-8">
 				 
 				           
 						    
@@ -1095,14 +1552,14 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
 						  <!-- BEGIN PROFILE SIDEBAR -->
 				              <div class="profile-sidebar"  id="edit_view"  >
                              <!-- PORTLET MAIN -->
-                             <div class="portlet light profile-sidebar-portlet " >
+                             <div class="portlet light profile-sidebar-portlet " style="background-color: #f3f2f2;    border: 1px solid #cccccc;" >
                                  <!-- SIDEBAR USERPIC sssss-->
                                <div class="row" >
-                                  <div class="col-md-12" style="margin-top: -10px;margin-left: -10px;  height: 1021px;">
+                                  <div class="col-xs-12" style="margin-top: -10px;margin-left: -10px;  height: 971px;">
                          	
-                               		 <div class="col-md-4" style="padding-left: 2.7%; ">
+                               		 <div class="col-xs-4" style="padding-left: 2.7%; ">
                                             <div class="row">
-                                                	 <div class="form-group" style="height: 18px; font-family: 'Roboto Bold', 'Roboto';   font-size: 13px;  color: #2F353B;">
+                                                	 <div class="form-group" style="height: 18px; font-family: 'Roboto Bold', 'Roboto';   font-size: 16px;  color: #2F353B;">
                      											<label class="control-label "><b>Business Logo </b></label>
                         							       </div>
                                                                         
@@ -1146,7 +1603,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                                                  </div>
 				                           
 				                           
-				                           <div class="col-md-8" > 
+				                           <div class="col-xs-8" > 
 				                           {% csrf_token %} 
 				                           <form id="cityform" role="form" enctype="multipart/form-data" name="city-form" ,method="POST">
 															
@@ -1155,8 +1612,8 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                                            
                                                         <div class="row">
                                                         		<div class="row">
-                                                        	 		<div class="col-md-12"  >
-	                                                            <label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 12px;" class="control-label">Business Name
+                                                        	 		<div class="col-xs-12"  >
+	                                                            <label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 16px;" class="control-label">Business Name
 	                                                                <span class="required"> * </span>
 	                                                            </label>
 	                                                                <input style=" font-family: 'Roboto Light', 'Roboto';" value="{{business_name}}" id="business_name"  class="form-control" />
@@ -1165,8 +1622,8 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                                                           	</div>
                                         
 	                                                        	<div class="row"> 
-	                                                        	 	<div class="col-lg-12">
-	                                                            <label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 12px;" class="control-label"> <br>Description  
+	                                                        	 	<div class="col-xs-12">
+	                                                            <label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 16px;" class="control-label"> <br>Description  
 	                                                                <span class="required"> * </span>
 	                                                            </label>
 	                                                                <textarea style=" font-family: 'Roboto Light', 'Roboto'; " class="form-control" id="business" maxlength="5000" value="" name="business" onkeyup="myFunction(this)" >{{business_details}}</textarea> 
@@ -1184,16 +1641,16 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
 	                                                          
 
 																				<div class="row">
-	                                                          	<div class="col-md-6">
-		                                                            <label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 12px;" class="control-label"> <br>Mobile Number
+	                                                          	<div class="col-xs-6">
+		                                                            <label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 16px;" class="control-label"> <br>Mobile Number
 		                                                                <span class="required"> * </span>
 		                                                            </label>
 		                                                             <input style=" font-family: 'Roboto Light', 'Roboto';" value="{{phone_no}}" id="phone_no" maxlength="10" class="form-control" onkeypress="return validateIntKeyPress(this,event);"  />
 	                                                          		<label class="error" style="color:red; display:none;"></label>                                                          	
 	                                                          	</div>
 	                                                       	
-	                                                          	<div class="col-md-6">
-		                                                            <label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 12px;" class="control-label"> <br>Secondary Number
+	                                                          	<div class="col-xs-6">
+		                                                            <label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 16px;" class="control-label"> <br>Secondary Number
 		                                                            </label>
 		                                                             <input style=" font-family: 'Roboto Light', 'Roboto';" value="{{secondary_phone_no}}" id="sec_phone_no" maxlength="10" class="form-control" onkeypress="return validateIntKeyPress(this,event);"  />
 	                                                          		<label class="error" style="color:red; display:none;"></label>                                                          	
@@ -1201,31 +1658,31 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
 	                                                          </div>
 	                                                          
 	                                                          <div class="row">	
-		                                                         <div class="col-md-6">
-	                                                            <label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 12px;" class="control-label"> <br>Primary Email 
+		                                                         <div class="col-xs-6">
+	                                                            <label style=" font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 16px;" class="control-label"> <br>Primary Email 
 	                                                                <span class="required"> * </span>
 	                                                            </label>
 	                                                                <input style=" font-family: 'Roboto Light', 'Roboto';" value="{{supplier_email}}" type="text" id="pri_email" class="form-control"  />  
 	                                                          		<label class="error" style="color:red; display:none;"></label>                                                          	                                                            
 	                                                            </div>
 	                                                          
-		                                                          <div class="col-md-6" style="margin-top: 15px ! important;">
-	                                                            <label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 12px;" class="control-label"> Secondary Email 
+		                                                          <div class="col-xs-6" style="margin-top: 21px ! important;">
+	                                                            <label style=" font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 16px;" class="control-label"> Secondary Email 
 	                                                            </label>
-	                                                                <input style=" font-family: 'Roboto Light', 'Roboto';margin-top: -5px;	" value="{{secondary_email}}" type="text" id="sec_email" class="form-control" />  
+	                                                                <input style=" font-family: 'Roboto Light', 'Roboto';	" value="{{secondary_email}}" type="text" id="sec_email" class="form-control" />  
 	                                                          		<label class="error" style="color:red; display:none;"></label>                                                          	                                                            
 	                                                            </div>
 	                                                          </div>
 	                                                          
 	                                                          <div class="row"> 
-	                                                            <div class="col-lg-12"> 
-	                                                         		<label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 12px;" class="control-label"><br> <b> Address </b> </label>
+	                                                            <div class="col-xs-12"> 
+	                                                         		<label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 16px;" class="control-label"><br> <b> Address </b> </label>
 	                                                         	</div>
 	                                                         </div>
 	                                                         
 	                                                       <div class="row">  	
-	                                                         <div class="col-lg-12">
-	                                                            <label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 12px;" class="control-label"><br>Address Line 1
+	                                                         <div class="col-xs-12">
+	                                                            <label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 16px;" class="control-label"><br>Address Line 1
 	                                                                <span class="required"> * </span>
 	                                                            </label>
 	                                                                <input style=" font-family: 'Roboto Light', 'Roboto';" value="{{address1}}" type="text" class="form-control"  id="address1" />
@@ -1234,8 +1691,8 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                                                         	</div>
                                                         	
                                                         	<div class="row">
-                                                        		 <div class="col-lg-12">
-	                                                            <label  style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 12px;" class="control-label"><br>Address Line 2
+                                                        		 <div class="col-xs-12">
+	                                                            <label  style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 16px;" class="control-label"><br>Address Line 2
 
 	                                                            </label>
 	                                                                <input style=" font-family: 'Roboto Light', 'Roboto';" value="{{address2}}" type="text" class="form-control"  id="address2" />
@@ -1246,8 +1703,8 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
                                                         	<div class="row">
                                                         		 
  																			 
- 																				 <div class="col-lg-6">
- 																				 		<label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 12px;" class="control-label"> <br> Country
+ 																				 <div class="col-xs-6">
+ 																				 		<label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 16px;" class="control-label"> <br> Country
 	                                                                <span class="required"> * </span>
 	                                                            </label>
 	                                                           
@@ -1261,8 +1718,8 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
 															                     <label class="error" style="color:red; display:none;"></label>
  																				 </div>
  																				 
- 																				 <div class="col-lg-6">
- 																				 		<label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 12px;" class="control-label"><br> State
+ 																				 <div class="col-xs-6">
+ 																				 		<label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 16px;" class="control-label"><br> State
 	                                                                <span class="required"> * </span>
 	                                                            </label>
 																						 
@@ -1283,8 +1740,8 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
  																			  </div>
  																			
  																			<div class="row">	 
- 																				<div class="col-lg-6">
- 																				 		<label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 12px;" class="control-label"> <br> City
+ 																				<div class="col-xs-6">
+ 																				 		<label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 16px;" class="control-label"> <br> City
 	                                                                <span class="required"> * </span>
 	                                                            </label>
 	                                                           
@@ -1298,12 +1755,12 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
 															                     <label class="error" style="color:red; display:none;"></label>
  																				 </div>
 
- 																			 <div class="col-lg-6" style="margin-top: 14px;">
- 																				 		<label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 12px;" class="control-label">Pincode
+ 																			 <div class="col-xs-6" style="margin-top: 21px;">
+ 																				 		<label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 16px;" class="control-label">Pincode
 	                                                                <span class="required"> * </span>
 	                                                            </label>
 	                                                            <input style=" font-family: 'Roboto Light', 'Roboto';" type="hidden" value="{{pincode}}" id="selectedPincode"/>
-                                                 					<select style=" font-family: 'Roboto Light', 'Roboto'; margin-top: -4px;" name="pincode" id="pincode" class="form-control" required="">
+                                                 					<select style=" font-family: 'Roboto Light', 'Roboto'; " name="pincode" id="pincode" class="form-control" required="">
                                                  					<option value="">Select Pincode</option>
 															                     		 			{% for pincode in pincode_list %}	
 																			                      
@@ -1317,14 +1774,14 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
  																		 </div>
  																				 
  																			<div class="row">
- 																				  <div class="col-lg-12">
- 																				  <label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 12px;" class="control-label"> <br> <b>Primary Contact Details </b></label>
+ 																				  <div class="col-xs-12">
+ 																				  <label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 16px;" class="control-label"> <br> <b>Primary Contact Details </b></label>
  																				  </div>
  																			</div>
  																			
  																				<div class="row">  
- 																				  <div class="col-lg-12">
- 																				 		<label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 12px;" class="control-label"><br>Name
+ 																				  <div class="col-xs-12">
+ 																				 		<label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 16px;" class="control-label"><br>Name
 	                                                                <span class="required"> * </span>
 	                                                            </label>
 	                                                                <input style=" font-family: 'Roboto Light', 'Roboto';" value="{{contact_person}}" type="text" id="user_name" class="form-control" name="name" />
@@ -1334,16 +1791,16 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
  																				
  																				
  																				 <div class="row">
- 																				 <div class="col-lg-6" >
- 																				 		<label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 12px;" class="control-label"><br>Contact No
+ 																				 <div class="col-xs-6" >
+ 																				 		<label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 16px;" class="control-label"><br>Contact No
 	                                                                <span class="required"> * </span>
 	                                                            </label>
 	                                                                <input style=" font-family: 'Roboto Light', 'Roboto';" value="{{contact_no}}" type="text" maxlength="10" id="user_contact_no" class="form-control" onkeypress="return validateIntKeyPress(this,event);" name="contact_no" />
  																				 		<label class="error" style="color:red; display:none;"></label>
  																				 </div>
  																				 
- 																				 <div class="col-lg-6" >
- 																				 		<label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 12px;" class="control-label"><br>Email
+ 																				 <div class="col-xs-6" >
+ 																				 		<label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 16px;" class="control-label"><br>Email
 
 	                                                            </label>
 	                                                                <input style=" font-family: 'Roboto Light', 'Roboto';" readonly value="{{contact_email}}" type="text" id="user_email" class="form-control" name="city" />
@@ -1353,11 +1810,11 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
  																		
                                                          </div> 	
                                                    </div>  
-                                                       <hr style="width: 666px; margin-left: -234px;">
+                                                       <hr style="width: 643px; margin-left: -226px;">
                                                       <div class="row">
-                                                       	<div class="col-lg-12 text-right">
+                                                       	<div class="col-xs-12 text-right">
                                                        	<input  value="{{supplier_id}}" type="hidden" id="supplier_id" class="form-control" />
-                                                       		<button style="background-color: #E0E1E3"   class="btn btn-outline " onclick="location.href = '/subscriber-profile/?supplier_id={{supplier_id}}';" >Cancel</button>
+                                                       		<button style="background-color: #E0E1E3"  type="button" class="btn btn-outline " onclick="location.href = '/subscriber-profile/?supplier_id={{supplier_id}}';" >Cancel</button>
                                                         	<button   style="background-color: #E0E1E3" type="button"  id="save-continue"  class="btn btn-outline" >Save </button>
                                                        	</div>
                                                        </div>
@@ -1373,89 +1830,100 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
 						    </div>
 						    
 						 </div>
-        				 <div class="col-lg-4">
+        				 <div class="col-sm-4">
                       <!-- BEGIN PROFILE CONTENT -->
-							 <div class="profile-content portlet light" style=" height: 1038px;">
+							 <div class="profile-content portlet light" style=" height: 989px;background-color:#f3f2f2;    border: 1px solid #cccccc;">
                            <div class="row">
-                              <div class="col-md-12" >
-                                 <h3 	 style="margin-top:0px;height: 16px;font-weight: 700;font-style: normal; font-size: 12px; color: #0D0D0D;left: 930px; top: 130px; width: 150px; font-family: 'Roboto Bold', 'Roboto';"><b>Preferences</b></h3>
+                              <div class="col-xs-12" >
+                                 <h3 	 style="margin-top:0px;height: 16px;font-weight: 700;font-style: normal; font-size: 16px; color: #0D0D0D;left: 930px; top: 130px; width: 150px; font-family: 'Roboto Bold', 'Roboto';"><b>Preferences</b></h3>
 
                               </div>
-                              <div class="col-md-6" >
+                             </div>
+                             
+                              <div class="row">
+                              <div class="col-xs-6" >
                                 	<h5 style=" font-family: 'Roboto Light', 'Roboto'; left: 930px; top: 168px;    font-weight: 300;
 											    font-style: normal;
-											    font-size: 12px;
+											    font-size: 16px;
 											    color: #2F353B; width: 140px;	">Notifications</h5>
                               </div>
-                              <div class="col-md-6 form-group" style="padding-left: 41px;  ">
+                              <div class="col-xs-6 form-group" style="padding-left: 41px;  ">
                                 	{% if notification_status == 'true' %}
                                 	<input type="checkbox" id="checkbox1" name="my-checkbox"  checked class="make-switch"   data-checkbox="Notifications">
                                 	{% else %}
                                 	<input type="checkbox" id="checkbox1" name="my-checkbox" class="make-switch"   data-checkbox="Notifications">
                                 	{% endif %}
                               </div>
+                             </div>
                                 	
-                             <div class="col-md-6">
+                             <div class="row">
+                             <div class="col-xs-6">
                                 	<h5 style=" font-family: 'Roboto Light', 'Roboto'; left: 930px; top: 168px;    font-weight: 300;
 											    font-style: normal;
-											    font-size: 12px;
+											    font-size: 16px;
 											    color: #2F353B; width: 140px;	">Reminders</h5>
                              </div>
-                             <div class="col-md-6 form-group" style="padding-left: 41px;">
+                             <div class="col-xs-6 form-group" style="padding-left: 41px;">
                                 	{% if reminders_status == 'true' %}
                                 	<input type="checkbox" id="checkbox2" name="my-checkbox"  checked class="make-switch" data-size="normal"  data-checkbox="Reminders">
                                  {% else %}
                                  <input type="checkbox" id="checkbox2" name="my-checkbox" class="make-switch" data-size="normal"  data-checkbox="Reminders">
                                 	{% endif %}
                              </div>
+                            </div>
                                 	
-                             <div class="col-md-6">
+                             <div class="row"> 
+                             <div class="col-xs-6">
                                 	<h5 style=" font-family: 'Roboto Light', 'Roboto'; left: 930px; top: 168px;    font-weight: 300;
 											    font-style: normal;
-											    font-size: 12px;
+											    font-size: 16px;
 											    color: #2F353B; width: 140px;	">Discounts</h5>
                              </div>
-                             <div class="col-md-6 form-group" style="padding-left: 41px;">
+                             <div class="col-xs-6 form-group" style="padding-left: 41px;">
                                 	{% if discounts_status == 'true' %}
                                 	<input type="checkbox" id="checkbox3" name="my-checkbox"  checked class="make-switch" data-size="normal"  data-checkbox="Discounts">
                                 	{% else %}
                                  <input type="checkbox" id="checkbox3" name="my-checkbox" class="make-switch" data-size="normal"  data-checkbox="Discounts">
                                 	{% endif %}
                              </div>
+                            </div>
                                 	
-                                	
-                             <div class="col-md-6">
+                            <div class="row">   	
+                             <div class="col-xs-6">
                                 	<h5 style=" font-family: 'Roboto Light', 'Roboto'; left: 930px; top: 168px;    font-weight: 300;
 											    font-style: normal;
-											    font-size: 12px;
+											    font-size: 16px;
 											    color: #2F353B; width: 140px;	">Request Call Back</h5>
                              </div>
-                             <div class="col-md-6 form-group" style="padding-left: 41px;">
+                             <div class="col-xs-6 form-group" style="padding-left: 41px;">
                                 	{% if request_call_back_status == 'true' %}
                                 	<input type="checkbox" id="checkbox4" name="my-checkbox"  checked class="make-switch" data-size="normal"  data-checkbox="Request_Call_Back">
                                  {% else %}
                                  <input type="checkbox" id="checkbox4" name="my-checkbox" class="make-switch" data-size="normal"  data-checkbox="Request_Call_Back">
                                 	{% endif %}
                              </div>
+                            </div>
                                 	
-                              <div class="col-md-6">
+                               <div class="row">
+                              <div class="col-xs-6">
                                 	<h5 style=" font-family: 'Roboto Light', 'Roboto'; left: 930px; top: 168px;    font-weight: 300;
 											    font-style: normal;
-											    font-size: 12px;
+											    font-size: 16px;
 											    color: #2F353B; width: 140px;	">No Call</h5>
                               </div>
-                              <div  class="col-md-6 form-group" style="padding-left: 41px;">
+                              <div  class="col-xs-6 form-group" style="padding-left: 41px;">
                                 	{% if no_call_status == 'true' %}
                                 	<input type="checkbox" id="checkbox5" name="my-checkbox"  checked class="make-switch" data-size="normal" data-checkbox="No_Call"> 
 											{% else %}
                                  <input type="checkbox" id="checkbox5" name="my-checkbox" class="make-switch" data-size="normal"  data-checkbox="No_Call">
                                 	{% endif %}
-                              </div> 
+                              </div>
+                             </div> 
                               		
                            </div>
 							   </div>
                     </div>
-				   </div>             
+			           
 				 </div>      
 			 </form>      
 	      </div>
@@ -1468,7 +1936,7 @@ li [class*=" fa-"], li [class*=" glyphicon-"], li [class*=" icon-"], li [class^=
     
     
  
-
+     </div>
     <!-- END CONTENT BODY -->
   </div>
    <!-- END CONTENT -->

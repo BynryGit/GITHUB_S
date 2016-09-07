@@ -28,7 +28,7 @@ urlpatterns = patterns('',
     url(r'^notification/', 'Admin.views.notification',name='notification'),
     url(r'^reference-data/', 'Admin.views.reference_data',name='reference_data'),
     url(r'^add-subscriber/', 'Admin.supplier.add_subscriber',name='add_subscriber'),
-    url(r'^signin/', 'Admin.views.signing_out',name='signin'),
+    url(r'^signin/', 'Admin.views.signin',name='signin'),
     url(r'^log-out/', 'Admin.views.signing_out',name='signing_out'),
     url(r'^add-user/', 'Admin.views.add_user',name='add_user'),
     url(r'^view-user-list/', 'Admin.views.view_user_list',name='view_user_list'),
@@ -150,9 +150,10 @@ urlpatterns = patterns('',
     url(r'^subscriber-booking/', 'Admin.views.subscriber_booking',name='subscriber_booking'),
     url(r'^update-profile/', 'Admin.views.update_profile',name='update_profile'),
     url(r'^subscriber-dashboard/', 'Admin.views.subscriber_dashboard',name='subscriber_dashboard'),
-    url(r'^get-state/', 'Admin.views.get_state',name='get_state'),
+    url(r'^get-state/', 'Admin.views.get_states',name='get_states'),
     url(r'^get-filter/', 'Admin.views.get_filter',name='get_filter'),
-
+    #forgot Password
+    url(r'^forgot-password/', 'Admin.views.forgot_password',name='forgot_password'),
 
 
 

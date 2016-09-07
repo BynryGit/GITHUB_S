@@ -41,6 +41,9 @@ from datetime import date
 import calendar
 from datetime import datetime
 from django.db.models import Count
+#forgot Pass
+import string
+import random
 
 
 SERVER_URL = "http://192.168.0.3:8080"   
@@ -789,152 +792,19 @@ def subscriber_advert_stat(request):
 
             logo= SERVER_URL + Supplier_obj.logo.url
 
-            #######.................Total views Graph........for a year.......########
-            
-            FY_MONTH_LIST = [1,2,3,4,5,6,7,8,9,10,11,12]
-            today = date.today()
-            print '.......today.........',today
-            start_date = date(today.year,01,01)
-            print '...........start_date..........',start_date
-            end_date = date(today.year,12,31) 
-            monthly_count = []
-            # jan,feb,mar,apr,may,jun,jul,aug,sep,octo,nov,dec
-            coupon_code_list = Advert.objects.filter(creation_date__range=[start_date,end_date]).extra(select={'month': "EXTRACT(month FROM creation_date)"}).values('month').annotate(count=Count('advert_id'))
-            print "...........coupon_code_list.......",coupon_code_list
-            list={}
-
-
-            for sub_obj in coupon_code_list:
-                print "sub_obj.get('count')",sub_obj.get('count')
-                if sub_obj.get('month'):
-                    list[sub_obj.get('month')]=sub_obj.get('count') or '0.00'
-                    print list
-            
-
-            for i in FY_MONTH_LIST:
-                try:
-                    monthly_count.append(list[i])
-                except:
-                    monthly_count.append(0)
-                    
-            jan1=monthly_count[0]
-            print jan1
-            feb1=monthly_count[1]
-            print feb1
-            mar1=monthly_count[2]
-            print mar1
-            apr1=monthly_count[3]
-            may1=monthly_count[4]
-            jun1=monthly_count[5]
-            jul1=monthly_count[6]
-            aug1=monthly_count[7]
-            print aug1
-            sep1=monthly_count[8]
-            oct1=monthly_count[9]            
-            nov1=monthly_count[10]            
-            dec1=monthly_count[11]
-
-
-            #######.................Total Like Graph........for a year.......########
-            
-            FY_MONTH_LIST = [1,2,3,4,5,6,7,8,9,10,11,12]
-            today = date.today()
-            print '.......today......AdvertLike...',today
-            start_date = date(today.year,01,01)
-            print '...........start_date....AdvertLike......',start_date
-            end_date = date(today.year,12,31) 
-            monthly_count = []
-            # jan,feb,mar,apr,may,jun,jul,aug,sep,octo,nov,dec
-            coupon_code_list = AdvertLike.objects.filter(creation_date__range=[start_date,end_date]).extra(select={'month': "EXTRACT(month FROM creation_date)"}).values('month').annotate(count=Count('advert_id'))
-            print "...........coupon_code_list....AdvertLike...",coupon_code_list
-            list={}
-
-
-            for sub_obj in coupon_code_list:
-                print "sub_obj.get('count')",sub_obj.get('count')
-                if sub_obj.get('month'):
-                    list[sub_obj.get('month')]=sub_obj.get('count') or '0.00'
-                    print list
-            
-
-            for i in FY_MONTH_LIST:
-                try:
-                    monthly_count.append(list[i])
-                except:
-                    monthly_count.append(0)
-                    
-            jan2=monthly_count[0]
-            print jan2
-            feb2=monthly_count[1]
-            print feb2
-            mar2=monthly_count[2]
-            print mar2
-            apr2=monthly_count[3]
-            may2=monthly_count[4]
-            jun2=monthly_count[5]
-            jul2=monthly_count[6]
-            aug2=monthly_count[7]
-            print aug2
-            sep2=monthly_count[8]
-            oct2=monthly_count[9]            
-            nov2=monthly_count[10]            
-            dec2=monthly_count[11]
-
-
-            #######.................Total shares Graph........for a year.......########
-            
-            FY_MONTH_LIST = [1,2,3,4,5,6,7,8,9,10,11,12]
-            today = date.today()
-            print '.......today.........',today
-            start_date = date(today.year,01,01)
-            print '...........start_date..........',start_date
-            end_date = date(today.year,12,31) 
-            monthly_count = []
-            # jan,feb,mar,apr,may,jun,jul,aug,sep,octo,nov,dec
-            coupon_code_list = AdvertShares.objects.filter(creation_date__range=[start_date,end_date]).extra(select={'month': "EXTRACT(month FROM creation_date)"}).values('month').annotate(count=Count('advert_id'))
-            print "...........coupon_code_list.......",coupon_code_list
-            list={}
-
-
-            for sub_obj in coupon_code_list:
-                print "sub_obj.get('count')",sub_obj.get('count')
-                if sub_obj.get('month'):
-                    list[sub_obj.get('month')]=sub_obj.get('count') or '0.00'
-                    print list
-            
-
-            for i in FY_MONTH_LIST:
-                try:
-                    monthly_count.append(list[i])
-                except:
-                    monthly_count.append(0)
-                    
-            jan3=monthly_count[0]
-            print jan3
-            feb3=monthly_count[1]
-            print feb3
-            mar3=monthly_count[2]
-            print mar3
-            apr3=monthly_count[3]
-            may3=monthly_count[4]
-            jun3=monthly_count[5]
-            jul3=monthly_count[6]
-            aug3=monthly_count[7]
-            print aug3
-            sep3=monthly_count[8]
-            oct3=monthly_count[9]            
-            nov3=monthly_count[10]            
-            dec3=monthly_count[11]
-
         #########################advert_views_total#############################
             advert_views_total = 0
             thumbs_count_total = 0
             shares_count_total = 0
 
+            jan1=feb1=mar1=apr1=may1=jun1=jul1=aug1=sep1=oct1=nov1=dec1=0
+            jan2=feb2=mar2=apr2=may2=jun2=jul2=aug2=sep2=oct2=nov2=dec2=0
+            jan3=feb3=mar3=apr3=may3=jun3=jul3=aug3=sep3=oct3=nov3=dec3=0
+
             for advert_obj in Advert_list1:
                 print advert_obj
                 advert_id = advert_obj.advert_id
-                advert_views = int(advert_obj.advert_views)
+                advert_views = Advert.objects.filter(advert_id=advert_id).count()
                 thumbs_count = AdvertLike.objects.filter(advert_id=advert_id).count()
                 shares_count = AdvertShares.objects.filter(advert_id=advert_id).count()
 
@@ -945,6 +815,150 @@ def subscriber_advert_stat(request):
                 print '.................advert_views_total...........',advert_views_total
                 print '.................thumbs_count_total...........',thumbs_count_total
                 print '.................shares_count_total...........',shares_count_total
+
+            #######.................Total views Graph........for a year.......########
+            
+                FY_MONTH_LIST = [1,2,3,4,5,6,7,8,9,10,11,12]
+                today = date.today()
+                print '.......today.........',today
+                start_date = date(today.year,01,01)
+                print '...........start_date..........',start_date
+                end_date = date(today.year,12,31) 
+                monthly_count = []
+                # jan,feb,mar,apr,may,jun,jul,aug,sep,octo,nov,dec
+
+                coupon_code_list = Advert.objects.filter(advert_id = advert_id,creation_date__range=[start_date,end_date]).extra(select={'month': "EXTRACT(month FROM creation_date)"}).values('month').annotate(count=Count('advert_id'))
+                print "...........coupon_code_list...11....",coupon_code_list
+                list={}
+
+
+                for sub_obj in coupon_code_list:
+                    # advert_id = sub_obj.advert_id
+                    # print 'SS advert SS',advert_id
+                    print "sub_obj.get('count')",sub_obj.get('count')
+                    if sub_obj.get('month'):
+                        list[sub_obj.get('month')]=sub_obj.get('count') or '0.00'
+                        print list
+                
+
+                for i in FY_MONTH_LIST:
+                    try:
+                        monthly_count.append(list[i])
+                    except:
+                        monthly_count.append(0)
+                        
+                jan1=jan1+monthly_count[0]
+                print jan1
+                feb1=feb1+monthly_count[1]
+                print feb1
+                mar1=mar1+monthly_count[2]
+                print mar1
+                apr1=apr1+monthly_count[3]
+                may1=may1+monthly_count[4]
+                jun1=jun1+monthly_count[5]
+                jul1=jul1+monthly_count[6]
+                aug1=aug1+monthly_count[7]
+                print aug1
+                sep1=sep1+monthly_count[8]
+                oct1=oct1+monthly_count[9]            
+                nov1=nov1+monthly_count[10]            
+                dec1=dec1+monthly_count[11]
+
+
+                #######.................Total Like Graph........for a year.......########
+                
+                FY_MONTH_LIST = [1,2,3,4,5,6,7,8,9,10,11,12]
+                today = date.today()
+                print '.......today......AdvertLike...',today
+                start_date = date(today.year,01,01)
+                print '...........start_date....AdvertLike......',start_date
+                end_date = date(today.year,12,31) 
+                monthly_count = []
+                # jan,feb,mar,apr,may,jun,jul,aug,sep,octo,nov,dec
+                coupon_code_list = AdvertLike.objects.filter(advert_id = advert_id,creation_date__range=[start_date,end_date]).extra(select={'month': "EXTRACT(month FROM creation_date)"}).values('month').annotate(count=Count('advert_id'))
+                print "...........coupon_code_list....AdvertLike...",coupon_code_list
+                list={}
+
+
+                for sub_obj in coupon_code_list:
+
+                    print "sub_obj.get('count')",sub_obj.get('count')
+                    if sub_obj.get('month'):
+                        list[sub_obj.get('month')]=sub_obj.get('count') or '0.00'
+                        print list
+                
+
+                for i in FY_MONTH_LIST:
+                    try:
+                        monthly_count.append(list[i])
+                    except:
+                        monthly_count.append(0)
+                        
+                jan2=jan2+monthly_count[0]
+                print jan2
+                feb2=feb2+monthly_count[1]
+                print feb2
+                mar2=mar2+monthly_count[2]
+                print mar2
+                apr2=apr2+monthly_count[3]
+                may2=may2+monthly_count[4]
+                jun2=jun2+monthly_count[5]
+                jul2=jul2+monthly_count[6]
+                print jul2
+                aug2=aug2+monthly_count[7]
+                print aug2
+                sep2=sep2+monthly_count[8]
+                oct2=oct2+monthly_count[9]            
+                nov2=nov2+monthly_count[10]            
+                dec2=dec2+monthly_count[11]
+
+
+            #######.................Total shares Graph........for a year.......########
+            
+                FY_MONTH_LIST = [1,2,3,4,5,6,7,8,9,10,11,12]
+                today = date.today()
+                print '.......today.........',today
+                start_date = date(today.year,01,01)
+                print '...........start_date..........',start_date
+                end_date = date(today.year,12,31) 
+                monthly_count = []
+                # jan,feb,mar,apr,may,jun,jul,aug,sep,octo,nov,dec
+                coupon_code_list = AdvertShares.objects.filter(advert_id = advert_id,creation_date__range=[start_date,end_date]).extra(select={'month': "EXTRACT(month FROM creation_date)"}).values('month').annotate(count=Count('advert_id'))
+                print "...........coupon_code_list.......",coupon_code_list
+                list={}
+
+
+                for sub_obj in coupon_code_list:
+                    print "sub_obj.get('count')",sub_obj.get('count')
+                    if sub_obj.get('month'):
+                        list[sub_obj.get('month')]=sub_obj.get('count') or '0.00'
+                        print list
+                
+
+                for i in FY_MONTH_LIST:
+                    try:
+                        monthly_count.append(list[i])
+                    except:
+                        monthly_count.append(0)
+                        
+                jan3=jan3+monthly_count[0]
+                print jan3
+                feb3=feb3+monthly_count[1]
+                print feb3
+                mar3=mar3+monthly_count[2]
+                print mar3
+                apr3=apr3+monthly_count[3]
+                may3=may3+monthly_count[4]
+                jun3=jun3+monthly_count[5]
+                jul3=jul3+monthly_count[6]
+                aug3=aug3+monthly_count[7]
+                print aug3
+                sep3=sep3+monthly_count[8]
+                oct3=oct3+monthly_count[9]            
+                nov3=nov3+monthly_count[10]            
+                dec3=dec3+monthly_count[11]
+
+
 
             data = {'success':'true','supplier_id':supplier_id,'logo':logo,'advert_views_total':advert_views_total,'thumbs_count_total':thumbs_count_total,'shares_count_total':shares_count_total,'jan1':jan1,'feb1':feb1,'mar1':mar1,'apr1':apr1,'may1':may1,'jun1':jun1,'jul1':jul1,'aug1':aug1,'sep1':sep1,'oct1':oct1,'nov1':nov1,'dec1':dec1,
                     'jan2':jan2,'feb2':feb2,'mar2':mar2,'apr2':apr2,'may2':may2,'jun2':jun2,'jul2':jul2,'aug2':aug2,'sep2':sep2,'oct2':oct2,'nov2':nov2,'dec2':dec2,
@@ -1349,6 +1363,8 @@ def deal_detail(request):
 def signin(request):
         data = {}
         try:
+            print '........................signin.........................'
+
             if request.POST:
                 form = CaptchaForm(request.POST)
                 print 'logs: login request with: ', request.POST
@@ -1396,7 +1412,110 @@ def signin(request):
         except Exception, e:
             print 'Exception ', e
             data= { 'success' : 'false', 'message':'Invalid Username or Password'}
+        print data
         return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def forgot_password(request):
+    #pdb.set_trace()
+    username = request.POST.get("email")
+    try:
+        if request.POST:
+            user_obj = None
+            try:
+                user_obj = Supplier.objects.get(username=username)
+                print '.........username......',user_obj.username
+                print '.........supplier_id......',user_obj.supplier_id
+                new_pass = id_generator()
+                print '......NEW PASS......',new_pass
+                user_obj.set_password(new_pass)
+                
+
+            except:
+                pass
+
+            if user_obj:
+                send_password_email(user_obj.contact_email,new_pass)
+                user_obj.save()
+                data = {'success': 'true', 'message': 'Login Successfully'}
+    except Exception as e:
+        print e
+        data = {'success': 'false', 'message': 'Invalid Username'}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    except Exception, e:
+        print 'Exception|view_py|forgot_pwd', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+@csrf_exempt
+def send_password_email(user_email_id,user_pass):
+    try:
+        #pdb.set_trace()
+
+        subject = "New password for login"
+        description ="Your new password is"
+
+        gmail_user =  "cityhoopla2016"
+        gmail_pwd ="cityhoopla@2016"
+        FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+        TO = [user_email_id]
+
+        TEXT = description+'='+user_pass
+        SUBJECT = subject
+        server = smtplib.SMTP_SSL()
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.ehlo()
+        server.starttls()
+
+        server.login(gmail_user, gmail_pwd)
+        message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
+        server.sendmail(FROM, TO, message)
+        server.quit()
+    except SMTPException,e:
+        print e
+    except Exception,e:
+        print 'exception',e
+
+    return 1
+
+# @csrf_exempt
+# def admin_send_email(request):
+#     consumer = request.POST.getlist('consumer')
+#     consumer01=consumer[0]
+
+#     print'================consumer===================',consumer
+#     print'================consumer===================',consumer01
+#     consumer_new = consumer01.split(',')
+
+#     subject = request.POST.get('subject')
+#     description = request.POST.get('description') 
+
+#     for usernm in consumer_new:
+#         print '------abc----',usernm
+#         gmail_user =  "cityhoopla2016"
+#         gmail_pwd =  "cityhoopla@2016"
+#         FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+#         TO = [usernm]
+
+#         #pdb.set_trace()
+#         try:
+#             TEXT = description
+#             SUBJECT = subject
+#             server = smtplib.SMTP_SSL()
+#             server = smtplib.SMTP("smtp.gmail.com", 587) 
+#             server.ehlo()
+#             server.starttls()
+
+#             server.login(gmail_user, gmail_pwd)
+#             message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
+#             server.sendmail(FROM, TO, message)
+#             server.quit()
+#         except SMTPException,e:
+#             print e
+#     data = {'success':'true','username':request.session['login_user']}
+#     return HttpResponse(json.dumps(data), content_type='application/json')
 
 def signing_out(request):
     logout(request)
@@ -1647,7 +1766,7 @@ def get_city(request):
 
 
 # TO GET THE STATE
-def get_state(request):
+def get_states(request):
    
    country_id=request.GET.get('country_id')
    print '.................country_id.....................',country_id
