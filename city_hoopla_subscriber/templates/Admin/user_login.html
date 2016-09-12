@@ -392,7 +392,7 @@
         event.preventDefault();
         $.ajax({
             type : 'POST',
-            url : '/forgot-password/',
+            url : '/subscriber-portal/forgot-password/',
             data : $("#forgot_pass").serialize(),
             success: function(response) {
                 if(response.success=='true'){

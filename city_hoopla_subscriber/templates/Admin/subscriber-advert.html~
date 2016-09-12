@@ -589,6 +589,15 @@ hr {
 
 }
 
+@media (min-width:992px) {
+    .col-sm-3 {
+        width:24% !important;
+    }
+    /*.col-xs-6 {
+        width: 46% !important;
+    }*/
+}
+
     </style>
 
     <!-- END HEAD -->
@@ -622,14 +631,7 @@ hr {
         <!-- BEGIN PAGE TOP -->
         <div class="page-top">
             <!-- BEGIN TOP NAVIGATION MENU -->
-            <div style="display:inline-block;">
-                <ul class="nav navbar-nav pull-right">
-                    <li style="padding-top:15px;">
-                        <i class="fa fa-search"></i>
-                        <input type="text" style="border: none; font-size:20px; color:#484848;" placeholder="Search">
-                    </li>
-                </ul>
-            </div>
+           
             <div class="top-menu" style="display:inline-block;">
                 <ul class="nav navbar-nav pull-right">
                     <!-- BEGIN NOTIFICATION DROPDOWN -->
@@ -737,7 +739,7 @@ hr {
                      <!-- BEGIN PAGE TITLE-->
                          <div class="row" style="font-family: 'Roboto Light', 'Roboto';  font-weight: 300; font-style: normal; font-size: 24px;color: #2F353B;margin-top: -25px;" >
   				
-						  				<div class="col-md-12" >
+						  				<div class="col-sm-12" >
 						            <p> 
 						            <span> Adverts </span>
 						            </p> 
@@ -755,19 +757,21 @@ hr {
 								                                        <span class="fa fa-search"></span>
 								                                    </span>
 																</span>
-							                             <input style=" font-size: 16px; font-family: 'Roboto Light', 'Roboto';" type="text" class="form-control " id="txtSearch"
+							                             <input style=" font-size: 14px; font-family: 'Roboto Light', 'Roboto';" type="text" class="form-control " id="txtSearch"
 							                                    placeholder="Search Advert" name="s">
 																
 							                         </div>	
 		                                </div>
 		                                
-		                                
+		                             <div class="col-sm-1" style="border: none !important;  margin-top: 7px;font-size: 16px;font-family: 'Roboto Light', 'Roboto';">
+		                             <span>Sort By:  </span>
+		                             </div>  
 		                                
                                    <div class="col-sm-3	 form-group" style="border: none !important;  margin-top: 3px;font-size: 16px;font-family: 'Roboto Light', 'Roboto';">
-                                     Sort By  :  <select name="cars" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" style="    height: 30px;width: 122px;margin-left: 7px; color: #797979;">
-												    <option value="newest_first">Newest First</option>
-												    <option value="oldest_first">Oldest First</option>
-																	</select>
+                                     <select id="sortby" class="form-control" style="color: #797979;">
+												    <option style="font-size: 14px" value="newest_first">Newest First</option>
+												    <option style="font-size: 14px" value="oldest_first">Oldest First</option>
+												  </select>
                    					  </div>
                    					                    		  
                    		  
@@ -779,7 +783,7 @@ hr {
                                                <a data-toggle="modal" style="border: none !important; padding-left: 0px ; font-size: 16px; font-family: 'Roboto Light', 'Roboto';"  href="#createNew" type="submit">Filters</a>
 		                                </div>
 		                                
-													 <div class="col-sm-3 form-group" >
+													 <div class="col-sm-2 form-group" >
 		                				    
 		                				        <div  class="pull-right " style="color: #797979;">
 <!-- 															<button  style="margin-right: -51px; height: 35px; padding-right: 34px; padding-left: 34px;  font-size: 12px; font-family: 'Roboto Light', 'Roboto';" onclick="location.href = '/#/';"  >Add Advert</button> -->
@@ -790,23 +794,23 @@ hr {
 		          </div>
 <hr class="hre">
   <div class="row">
-		<div class="col-lg-12">			
+		<div class="col-sm-12">			
 			<div class="portlet light  ">         
  				 <div class="portlet-body form">
           <!-- BEGIN FORM-->
 
-					       <div class="col-lg-12" style=" padding-left: 0px;" >
+					       <div class="col-sm-12" style=" padding-left: 0px;" >
 					     
 					 	     {% for consumer in final_list %}              
-					               <div class="col-md-3" style=" margin-top: 12px;width: 281px;border-radius: 15px !important;border: 1px solid #cccccc; background-color:#f3f2f2; margin-right: 16px;margin-left: 1px;">
+					               <div class="col-sm-3" style=" margin-top: 12px;border-radius: 15px !important;border: 1px solid #cccccc; background-color:#f3f2f2; margin-right: 3px;margin-left: 3px;">
 									          <div class="row" style="margin-top: 11px;"> 
 									               <div class="col-xs-12" >
 					                     			<div class="col-xs-2" style="    font-family: 'Roboto Bold', 'Roboto';
 									             {% if consumer.status_advert == 0 %}        
 																   
 																    font-style: normal;
-																    font-size: 20px;    color: white;
-																    background-color: #f10316;padding-left: 7px;border-radius: 11px !important;">
+																    font-size: 18px;    color: white;
+																    background-color: #f10316;padding-left: 0px;border-radius: 11px !important;">
 												 			{{consumer.advert_id}}
 					                     
 					                     			</div>
@@ -815,21 +819,21 @@ hr {
 																    font-weight: 250;
 																    font-style: normal;
 																    font-size: 20px;
-																    background-color: #89b32a;border-radius: 11px !important;">
+																    background-color: #89b32a;padding-left: 0px;border-radius: 11px !important;">
 												 			{{consumer.advert_id}}
 					                     
 					                     			</div>
 					                     	 {% endif %} 		
 					                     			
-					                     			<div class="col-xs-6" style="font-size: 18px; font-family: 'Roboto Light', 'Roboto'; ">
+					                     			<div class="col-xs-6" style="font-size: 14px; font-family: 'Roboto Light', 'Roboto'; ">
 					                      	
 					                              <b>{{consumer.advert_name}} </b>
 														 	
 													  		 <p   class="profile-text">{{consumer.address_line_1}} , {{consumer.area}} <br>{{consumer.category_name}} </p>
 					                              </div> 
 					                     				<div class="col-xs-4">
-					                     			    <i style="color: #10c0a1;font-size: 20px;" class="fa fa-pencil" aria-hidden="true"></i>|
-					                                  <i style="color: #10c0a1;font-size: 20px;" class="fa fa-trash-o" aria-hidden="true" style=""></i>
+					                     			    <i style="color: #10c0a1;font-size: 19px;" class="fa fa-pencil" aria-hidden="true"></i>
+					                                  <i style="color: #10c0a1;font-size: 19px;" class="fa fa-trash-o" aria-hidden="true" style=""></i>
 					                     			
 					                     			</div>
 					                     			</div>
@@ -837,11 +841,11 @@ hr {
            			   		         <div class="row" >    
 			           			   		
 			           			   			
-			           			   			<div class="col-md-12" style="">
+			           			   			<div class="col-xs-12" style="">
 					                          <div class="row" >
 					                          	 <a href="advert-detail.html">
 					                           	 <div class="item_image">
-					                          			 <img src="{{consumer.display_image}}" style="height: 158px; width: 278px;" class="img-responsive"> </img>
+					                          			 <img src="{{consumer.display_image}}" style="height: auto; width: 100%;" class="img-responsive"> </img>
 					                          		 </div> 
 					                         	</a>
 													 </div>
@@ -849,7 +853,7 @@ hr {
 													 
 													
 												</div>
-													 <div style="margin-top: 10px;  padding-left: 15px;">
+													 <div style="margin-top: 10px; margin-left: -6px;">
 													 <i class="fa fa-eye" aria-hidden="true"> {{consumer.advert_views}}</i>
 													 <i style="padding-left: 30px;" class="fa fa-thumbs-o-up" aria-hidden="true"> {{consumer.thumbs_count}}</i>
 
@@ -865,20 +869,20 @@ hr {
 																				    
 																				    font-weight: 700;
 																				    font-style: normal;
-																				    font-size: 16px;
+																				    font-size: 14px;
 																				    color: #2F353B;">											  
 																				<br>Subscription Expired 	
 																				
 																				
-																				<i  style="    margin-left: 46px;" class="fa fa-repeat" aria-hidden="true"></i>
-							                                 	 <a   href="add-advert.html" style="border: none !important; padding-left: 0px ; font-size: 14px; font-family: 'Roboto Light', 'Roboto';"> Renew		</a>
+																				<i  style="    margin-left: 5px;" class="fa fa-repeat" aria-hidden="true"></i>
+							                                 	 <a   href="add-advert.html" style="border: none !important;  font-size: 12px; font-family: 'Roboto Light', 'Roboto';"> Renew		</a>
 								
 																		 </div>
 																		 
 																    <div style="    font-family: 'Roboto Regular', 'Roboto';
 																	    font-weight: 400;
 																	    font-style: normal;
-																	    font-size: 14px;">	
+																	    font-size: 13px;">	
 																					  <p style="color: #f10316;">Expired on {{consumer.end_date5}}</p>	
 														   
 														  			 </div>
@@ -889,7 +893,7 @@ hr {
 																				    
 																				    font-weight: 700;
 																				    font-style: normal;
-																				    font-size: 16px;
+																				    font-size: 14px;
 																				    color: #2F353B;">											  
 																				<br>Basic Subscription :
 																				
@@ -915,7 +919,7 @@ hr {
 																				    
 																				    font-weight: 700;
 																				    font-style: normal;
-																				    font-size: 16px;
+																				    font-size: 14px;
 																				    color: #2F353B;">											  
 																				<br>Basic Subscription :
 																				
@@ -944,7 +948,7 @@ hr {
 											 <div style="font-family: 'Roboto Bold', 'Roboto';
 												    font-weight: 700;
 															 font-style: normal;
-															    font-size: 16px;
+															    font-size: 14px;
 															    color: #2F353B;">
 																  <b>Premium Services : <br></b> 		
 											</div>	   											  
@@ -962,7 +966,7 @@ hr {
 									    	  	    	 	 <div style="font-family: 'Roboto Bold', 'Roboto';
 												    font-weight: 700;
 															 font-style: normal;
-															    font-size: 16px;
+															    font-size: 14px;
 															    color: #2F353B;">
 																  <b>Premium Services : <br></b> 		
 											</div>	   											  
@@ -1053,13 +1057,13 @@ hr {
   		          <!-- END PORTLET-->
   		          
   		           
- <div class="model_style"> 	    	 
+<div class="model_style"> 	    	 
 <div class="modal fade bs-modal-lg" id="createNew" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content" style="width: 445px; margin-left: 168px;">
+        <div class="modal-content" style="width: 453px; margin-left: 168px;">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 style="font-family: 'Roboto Bold', 'Roboto'; font-size: 16px;"><b>Apply Filters</b></h4> 
+                <h4 style="font-family: 'Roboto Bold', 'Roboto'; font-size: 18px;">Apply Filters</h4> 
             </div>
  
       	          
@@ -1073,9 +1077,9 @@ hr {
       <div class="modal-body" >
            <div class="row">
               <div class="form-group col-lg-12" >
-                  <label > <b>Category </b> </label>
+                  <label style="font-family: 'Roboto Bold', 'Roboto'; font-size: 16px;"> Category </label>
 						<br>
-                   <select style=" width: 142px;font-size: 14px;color: #797979;height: 30px;" name="category_id" id="category_id">
+                   <select class="form-control" style=" width: 142px;font-size: 14px;color: #797979;" name="category_id" id="category_id">
 									<option  value=""><b> All categories </b></option>
 				                			
 				                          {% for obj_cat in final_list2 %}
@@ -1089,7 +1093,7 @@ hr {
                  </div>
                 
                <div class="form-group col-lg-12" >
-                  <label  > <b>Time </b></label>
+                  <label  style="font-family: 'Roboto Bold', 'Roboto'; font-size: 16px;"> Time </label>
 							<br>
 
 			
@@ -1115,7 +1119,7 @@ hr {
                     <div id="active_date" class="form-group col-md-12 " style=" margin-left: -14px;    margin-bottom: 0px;margin-top: -22px;">
                         
                         <div class="form-group col-md-1 ">
-                        <label for="" > From</label>
+                        <label style="font-family: 'Roboto Bold', 'Roboto'; font-size: 16px;" > From</label>
 								</div>
 								 <div class="form-group col-md-5 ">
                         
@@ -1128,9 +1132,9 @@ hr {
                       	</div>
                    	<div class="form-group col-md-1 ">
 
-                        <label for="" > To</label>
+                        <label style="font-family: 'Roboto Bold', 'Roboto'; font-size: 16px;"> To</label>
 							</div>
-							 <div class="form-group col-md-5 " style="margin-left: -17px;">
+							 <div class="form-group col-md-5 " style="">
                         
                              <div class="input-append date form_datetime">
 										<input placeholder="YY-MM-DD"  style="width: 124px;" name="endDate" id="endDate" size="16" type="text" value="" readonly>
@@ -1142,8 +1146,7 @@ hr {
 
                      </div>
                      
-
-                    <div   class="form-group col-md-12 ">
+                      <div   class="form-group col-md-12 ">
                     <label > <b>Status </b>	</label>
 							</div>
 
@@ -1162,19 +1165,23 @@ hr {
 							 </div>
                     
                      </div>
+                     
                 </div>
                 
 
 	                <div class="modal-footer">
-                             <button type="button" id="submit_btn" onclick="filter_advert();" >Apply</button>
-                 				  <button type="button"  data-dismiss="modal">Cancel</button>
+	                			   <button type="button" class="btn btn-outline grey_color " data-dismiss="modal">Cancel</button>
+                              <button type="button" id="submit_btn" onclick="filter_advert();" class="btn btn-outline done_btn" >Apply</button>
+                 				 
                   </div>
             </form> 
            
         </div>
     </div>
 </div>
-</div>                            
+</div>
+
+                            
 <!-- END CONTAINER -->
   <!-- BEGIN FOOTER -->
   <div class="page-footer">
@@ -1239,7 +1246,7 @@ function filter_advert() {
 	category_name_var = $('#category_id').val()
 	stat_var = $("input[name='stat']:checked").val()
 
-	location.href = '/subscriber-advert/?supplier_id=110&start_date_var='+startDate_var+'&end_date_var='+endDate_var+'&status_var='+stat_var+'&category_var	='+category_name_var+''
+	location.href = '/subscriber-portal/subscriber-advert/?supplier_id=110&start_date_var='+startDate_var+'&end_date_var='+endDate_var+'&status_var='+stat_var+'&category_var	='+category_name_var+''
 }
 
 

@@ -583,6 +583,14 @@ hr {
     border: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
 
 }
+@media (min-width:992px) {
+    .col-md-3 {
+        width:24% !important;
+    }
+    /*.col-xs-6 {
+        width: 46% !important;
+    }*/
+}
 
     </style>
 
@@ -617,14 +625,7 @@ hr {
         <!-- BEGIN PAGE TOP -->
         <div class="page-top">
             <!-- BEGIN TOP NAVIGATION MENU -->
-            <div style="display:inline-block;">
-                <ul class="nav navbar-nav pull-right">
-                    <li style="padding-top:15px;">
-                        <i class="fa fa-search"></i>
-                        <input type="text" style="border: none; font-size:20px; color:#484848;" placeholder="Search">
-                    </li>
-                </ul>
-            </div>
+         
             <div class="top-menu" style="display:inline-block;">
                 <ul class="nav navbar-nav pull-right">
                     <!-- BEGIN NOTIFICATION DROPDOWN -->
@@ -699,9 +700,9 @@ hr {
                 <li class="nav-item  ">
                     <a href="/subscriber-portal/subscriber-advert/?supplier_id={{request.session.supplier_id}}" class="nav-link nav-toggle"
                        style="background-color: rgb(13, 103, 230);">
-                        <i class="fa fa-users" style="display: inline-block; color: rgb(16, 245, 182) !important;" aria-hidden="true"></i>
+                        <i class="fa fa-users" style="display: inline-block;  color: #ffffff !important;" aria-hidden="true"></i>
                         <span class="title" style="display: inline-block; width: 72%;">  Advert
-                        <i class="fa fa-chevron-right" style="float:right; padding-top:7px;" aria-hidden="true"></i>
+
                         </span>
 
 
@@ -710,8 +711,10 @@ hr {
                 <li class="nav-item">
                     <a href="/subscriber-portal/subscriber-booking/?supplier_id={{request.session.supplier_id}}" class="nav-link nav-toggle tab-active"
                        style="background-color: rgb(13, 103, 230);">
-                        <i class="fa fa-calendar-check-o" style="display: inline-block; color: #ffffff !important;" aria-hidden="true"></i>
-                        <span class="title" style="display: inline-block;">  Bookings </span>
+                        <i class="fa fa-calendar-check-o" style="display: inline-block;color: rgb(16, 245, 182) !important;" aria-hidden="true"></i>
+                        <span class="title" style="display: inline-block;">  Bookings 
+                        <i class="fa fa-chevron-right" style="float:right; padding-top:7px;" aria-hidden="true"></i>                        
+                        </span>
                     </a>
                 </li>
 
@@ -760,13 +763,15 @@ hr {
 							                         </div>	
 		                                </div>
 		                                
+		                             <div class="col-sm-1" style="border: none !important;  margin-top: 7px;font-size: 16px;font-family: 'Roboto Light', 'Roboto';">
+		                             <span>Sort By:  </span>
+		                             </div>    
 		                                
-		                                
-                                   <div class="col-sm-3	 form-group" style="border: none !important;  margin-top: 3px;font-size: 16px;font-family: 'Roboto Light', 'Roboto';">
-                                     Sort By  :  <select name="cars" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" style="    height: 30px;width: 122px;margin-left: 7px; color: #797979;">
+                                   <div class="col-sm-3	 form-group" style="border: none !important; margin-top: 3px;font-size: 16px;font-family: 'Roboto Light', 'Roboto';">
+                                     <select id="sortby" class="form-control" style="color: #797979;">
 												    <option style="font-size: 14px" value="newest_first">Newest First</option>
-												    <option  style="font-size: 14px" value="oldest_first">Oldest First</option>
-																	</select>
+												    <option style="font-size: 14px" value="oldest_first">Oldest First</option>
+												 </select>
                    					  </div>
                    					                    		  
                    		  
@@ -791,7 +796,7 @@ hr {
 			     <div class="col-lg-12" style=" padding-left: 0px;" >
 			
 					 	     {% for consumer in final_list %}              
-					               <div class="col-md-3" style=" margin-top: 11px;background-color: rgb(221, 233, 228);  border: 1px solid #cccccc; margin-right: 16px; height: 353px;">
+					               <div class="col-md-3" style=" margin-top: 6px;background-color: rgb(221, 233, 228);  border: 1px solid #cccccc; margin-right: 3px;margin-left: 3px; height: 353px;">
 									            
 									           <div class="row" style="margin-top: 11px;">            
 					                     			<div class="col-xs-4">
@@ -807,7 +812,7 @@ hr {
 					                     			</div>
 					                     			<div class="col-xs-6">
 					                      	
-					                              <span style="width: 140px; height: 19px; font-family: 'Roboto Bold', 'Roboto';  font-weight: 700;font-size: 16px;">{{consumer.consumer_full_name}} </span>
+					                              <span style="width: 140px; height: 19px; font-family: 'Roboto Bold', 'Roboto';  font-weight: 700;font-size: 14px;">{{consumer.consumer_full_name}} </span>
 														 	<br>
 													  		 <span style=" width: 108px;
 															    height: 16px;
@@ -854,8 +859,8 @@ hr {
 												
 												<div class="row" style="padding-left: 10px; padding-right: 10px;" >    
 			           			   			<div class="col-md-12" style="background-color: white;">
-			           			   			 <div class="row" style=" padding-top: 11px; padding-left: 24px;">
-						                          <b>		<span> Coupon ID - {{consumer.coupon_code}} </span> </b>
+			           			   			 <div class="row" style=" padding-top: 11px; padding-left: 16px;">
+						                       <b>		<span> Coupon ID - {{consumer.coupon_code}} </span> </b> 
 						                       </div>    
 						                     	<div class="col-md-10" style=" margin-left: 11px;">
 
@@ -927,7 +932,7 @@ hr {
         <div class="modal-content" style="width: 453px; margin-left: 168px;">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 style="font-family: 'Roboto Bold', 'Roboto'; font-size: 14px;"><b>Apply Filters</b></h4> 
+                <h4 style="font-family: 'Roboto Bold', 'Roboto'; font-size: 18px;">Apply Filters</h4> 
             </div>
  
       	          
@@ -941,9 +946,9 @@ hr {
       <div class="modal-body" >
            <div class="row">
               <div class="form-group col-lg-12" >
-                  <label > <b>Category </b> </label>
+                  <label style="font-family: 'Roboto Bold', 'Roboto'; font-size: 16px;"> Category </label>
 						<br>
-                   <select style=" width: 142px;font-size: 12px;color: #797979;height: 30px;" name="category_id" id="category_id">
+                   <select class="form-control" style=" width: 142px;font-size: 14px;color: #797979;" name="category_id" id="category_id">
 									<option  value=""><b> All categories </b></option>
 				                			
 				                          {% for obj_cat in final_list2 %}
@@ -957,7 +962,7 @@ hr {
                  </div>
                 
                <div class="form-group col-lg-12" >
-                  <label  > <b>Time </b></label>
+                  <label  style="font-family: 'Roboto Bold', 'Roboto'; font-size: 16px;"> Time </label>
 							<br>
 
 			
@@ -983,7 +988,7 @@ hr {
                     <div id="active_date" class="form-group col-md-12 " style=" margin-left: -14px;    margin-bottom: 0px;margin-top: -22px;">
                         
                         <div class="form-group col-md-1 ">
-                        <label for="" > From</label>
+                        <label style="font-family: 'Roboto Bold', 'Roboto'; font-size: 16px;" > From</label>
 								</div>
 								 <div class="form-group col-md-5 ">
                         
@@ -996,9 +1001,9 @@ hr {
                       	</div>
                    	<div class="form-group col-md-1 ">
 
-                        <label for="" > To</label>
+                        <label style="font-family: 'Roboto Bold', 'Roboto'; font-size: 16px;"> To</label>
 							</div>
-							 <div class="form-group col-md-5 " style="margin-left: -17px;">
+							 <div class="form-group col-md-5 " style="">
                         
                              <div class="input-append date form_datetime">
 										<input placeholder="YY-MM-DD"  style="width: 124px;" name="endDate" id="endDate" size="16" type="text" value="" readonly>
@@ -1009,15 +1014,13 @@ hr {
                       	</div>
 
                      </div>
-                     
-
-                   
                 </div>
                 
 
 	                <div class="modal-footer">
-                             <button type="button" id="submit_btn" onclick="filter_advert();" >Apply</button>
-                 				  <button type="button"  data-dismiss="modal">Cancel</button>
+	                			   <button type="button" class="btn btn-outline grey_color " data-dismiss="modal">Cancel</button>
+                              <button type="button" id="submit_btn" onclick="filter_advert();" class="btn btn-outline done_btn" >Apply</button>
+                 				 
                   </div>
             </form> 
            
@@ -1091,7 +1094,7 @@ function filter_advert() {
 	//stat_var = $("input[name='stat']:checked").val()
 
 	
-		location.href = '/subscriber-booking/?supplier_id=110&start_date_var='+startDate_var+'&end_date_var='+endDate_var+'&category_var	='+category_name_var+''
+		location.href = '/subscriber-portal/subscriber-booking/?supplier_id=110&start_date_var='+startDate_var+'&end_date_var='+endDate_var+'&category_var	='+category_name_var+''
 	}
 
 

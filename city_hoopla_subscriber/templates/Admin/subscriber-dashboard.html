@@ -681,8 +681,9 @@ hr {
                 <li class="nav-item ">
                     <a href="index.html" class="nav-link nav-toggle tab-active" style="background-color: rgb(13, 103, 230);">
                         <i class="fa fa-home" style="display: inline-block;  color: rgb(16, 245, 182) !important;" aria-hidden="true"></i>
-                        <span class="title" style="display: inline-block;"> Dashboard </span>
+                        <span class="title" style="display: inline-block;"> Dashboard 
                         <i class="fa fa-chevron-right" style="float:right; padding-top:7px;" aria-hidden="true"></i>
+                        </span>
                     </a>
                 </li>
 
@@ -730,22 +731,22 @@ hr {
                          
                          <div class="row" >
   				
-						  		  <div class="col-md-12" style="margin-left: -14px;" >
+						  		 <div class="col-md-12" style="margin-left: -14px;" >
 						  			 <div class="col-md-2"  style="font-family: 'Roboto Light', 'Roboto';  font-weight: 300; font-style: normal; font-size: 24px;color: #2F353B;margin-top: -25px;">
 						            <p> 
 						            <span> Dashboard </span>
 						            </p> 
 						          </div>
-						        <div class="btn-group">
+						    
 						        <div class="col-lg-3" id="week" style="font-size: 12px;font-family: 'Roboto Light', 'Roboto';">
-                                 <select name="cars"  class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"  onchange="change_data();">
+                                 <select   class="form-control"  onchange="change_data();">
 
 												    <option   value="week" >Current Week</option>
 												    <option  value="month" >Current Month</option>
 
 											</select>
                    		    </div>
-                   		  </div>
+                   		
                    		       
                    		 </div>
 						      </div>
@@ -949,6 +950,7 @@ hr {
 <script type="text/javascript">
 
 
+
 function change_data(){
 
  week_var = $('#week :selected').val();
@@ -957,7 +959,7 @@ var supplier_id=110;
 
 	$.ajax({
   	  	  type	: "GET",
-		  url 	: '/get-filter/',
+		  url 	: '/subscriber-portal/get-filter/',
 		  data : {'week_var':week_var,'supplier_id':supplier_id},                       
 		  
 

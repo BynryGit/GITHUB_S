@@ -46,7 +46,7 @@ import string
 import random
 
 
-SERVER_URL = "http://192.168.0.3:8080"   
+SERVER_URL = "http://192.168.0.4:8080"   
 #SERVER_URL = "http://127.0.0.1:8000"
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)

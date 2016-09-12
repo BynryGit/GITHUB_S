@@ -38,7 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'digispaceapp',
-    'captcha'
+    'captcha',
+    'embed_video',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -130,3 +131,4 @@ MEDIA_URL ='/media/'
 CRONJOBS = [
     ('* * * * *', 'digispaceapp.cron_sms_digispace.my_scheduled_job'),
 ]
+
