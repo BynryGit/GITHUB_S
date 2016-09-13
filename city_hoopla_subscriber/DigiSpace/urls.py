@@ -6,7 +6,8 @@ from digispaceapp import views
 from django.conf.urls.static import static
 from DigiSpace import settings
 from mobileapp.mobile_urls import mobileapp_urlpattern
-
+from subscriberapp.subscriber_urls import subscriber_urlpattern
+from crmapp.urls import crm_urlpatterns
 
 #from django.views.generic import direct_to_template
 from django.views.generic import TemplateView
@@ -17,6 +18,8 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^mobileapp/', include(mobileapp_urlpattern)),
+    url(r'^CTI-CRM/', include(crm_urlpatterns)),
+    url(r'^subscriber-portal/', include(subscriber_urlpattern)),
     url(r'^captcha/', include('captcha.urls')),
     url(r'^rate-card/', 'Admin.views.rate_card',name='rate_card'),
     url(r'^backoffice/', 'Admin.views.backoffice',name='backoffice'),
@@ -41,6 +44,8 @@ urlpatterns = patterns('',
     url(r'^add-advert/', 'Admin.views.add_advert',name='add_advert'),
     url(r'^consumer-detail/', 'Admin.views.consumer_detail',name='consumer_detail'),
     url(r'^deal-detail/', 'Admin.views.deal_detail',name='deal_detail'),
+    url(r'^get-state/', 'Admin.views.get_state',name='get-state'),
+    url(r'^add-currency/', 'Admin.views.add_currency',name='add_currency'),
     url(r'^get-city/', 'Admin.views.get_city',name='get-city'),
     url(r'^get-pincode/', 'Admin.views.get_pincode',name='get_pincode'),  
     url(r'^save-supplier/', 'Admin.supplier.save_supplier',name='save_supplier'),  
@@ -49,7 +54,6 @@ urlpatterns = patterns('',
     url(r'^save-advert/', 'Admin.advert.save_advert',name='save_advert'),
     url(r'^upload-advert-image/', 'Admin.advert.main_listing_image_file_upload',name='main_listing_image_file_upload'),   
     url(r'^get-advert-list/', 'Admin.advert.get_advert_list',name='get_advert_list'),  
-
     url(r'^delete-advert/', 'Admin.advert.delete_advert',name='delete_advert'),
     url(r'^active-advert/', 'Admin.advert.active_advert',name='active_advert'),    
     url(r'^edit-advert/', 'Admin.advert.edit_advert',name='edit_advert'), 
@@ -59,6 +63,14 @@ urlpatterns = patterns('',
     url(r'^upload-advert-video/', 'Admin.advert.advert_video_upload',name='advert_video_upload'), 
     url(r'^update-advert-video/', 'Admin.advert.update_advert_video',name='update_advert_video'),   
     url(r'^remove-advert-video/', 'Admin.advert.remove_advert_video',name='remove_advert_video'), 
+
+    # Advert Book
+    url(r'^advert-booking-list/', 'Admin.advert.advert_booking_list',name='advert_booking_list'),
+
+#shubham
+
+    url(r'^register-city/', 'Admin.consumer.register_city',name='register_city'),
+    url(r'^payment-city/', 'Admin.consumer.payment_city',name='payment_city'),
 
 
     # ankita
@@ -70,6 +82,7 @@ urlpatterns = patterns('',
     url(r'^update-subscriber-detail/', 'Admin.supplier.update_subscriber_detail',name='update_subscriber_detail'),  
     
     # payal
+    url(r'^add-role/', 'Admin.views.add_role',name='add_role'),
     url(r'^add-user-role/', 'Admin.views.add_user_role',name='add_user_role'),
     url(r'^view-user-role-list/', 'Admin.views.view_user_role_list',name='view_user_role_list'),
     url(r'^edit-user-role/', 'Admin.views.edit_user_role',name='edit_user_role'),
@@ -89,9 +102,9 @@ urlpatterns = patterns('',
     url(r'^add-category/', 'Admin.category.add_category',name='add_category'),        
     url(r'^save-category/', 'Admin.category.save_category',name='save_category'),        
     url(r'^category-list/', 'Admin.category.category_list',name='category_list'),        
-    url(r'^delete-category/', 'Admin.category.delete_category',name='delete_category'), 
-    url(r'^delete-sub-category/', 'Admin.category.delete_sub_category',name='delete_sub_category'),
-    url(r'^active_category/', 'Admin.category.active_category',name='active_category'),
+    url(r'^delete-category/', 'Admin.category.delete_category',name='delete_category'),
+    url(r'^delete-sub-category/', 'Admin.category.delete_sub_category',name='delete_sub_category'), 
+    url(r'^active_category/', 'Admin.category.active_category',name='active_category'),          
     url(r'^edit-category/', 'Admin.category.edit_category',name='edit_category'),        
     url(r'^update-category/', 'Admin.category.update_category',name='update_category'),        
     url(r'^get_city/', 'Admin.category.get_city',name='get-city'),
@@ -113,6 +126,8 @@ urlpatterns = patterns('',
 
     #kumar
     url(r'^check-category/', 'Admin.advert.check_category',name='check_category'),        
+    url(r'^update-user-detail/', 'Admin.views.update_user_detail',name='update_user_detail'),   
+    url(r'^activate-user/', 'Admin.views.activate_user',name='activate_user'),
 
     # new urls
     url(r'^check-subscription/', 'Admin.advert.check_subscription',name='check_subscriptiono'), 
@@ -122,11 +137,11 @@ urlpatterns = patterns('',
     url(r'^save-subscriber-detail/', 'Admin.advert.save_subscriber_detail',name='save_subscriber_detail'), 
     url(r'^edit-subscriber-detail/', 'Admin.supplier.edit_subscriber_detail',name='edit_subscriber_detail'), 
 
-        #updated changes
+#updated changes
     url(r'^get-city-place/', 'Admin.advert.get_city_place',name='get-city-place'),
-    url(r'^get-pincode-place/', 'Admin.advert.get_pincode_place',name='get-pincode-place'),
+    url(r'^get-pincode-place/', 'Admin.advert.get_pincode_place',name='get-pincode-place'), 
 
-#Consumer urls-shubham
+#Consumer urls
     url(r'^consumer-list/', 'Admin.consumer.view_user_list',name='view_user_list'),
     url(r'^booking/', 'Admin.consumer.subscriber_bookings',name='subscriber_bookings'),
     url(r'^booking-list/', 'Admin.consumer.view_booking_list',name='view_booking_list'),
@@ -138,24 +153,16 @@ urlpatterns = patterns('',
     url(r'^admin-send-sms/', 'Admin.consumer.admin_send_sms',name='admin_send_sms'),
     url(r'^advert_booking/', 'Admin.consumer.advert_booking',name='advert_booking'),
 
-#dashboard-shubham
-
-    url(r'^register-city/', 'Admin.consumer.register_city',name='register_city'),
-    url(r'^payment-city/', 'Admin.consumer.payment_city',name='register_city'),
-
-#subscriber-shubham
-    url(r'^subscriber-profile/', 'Admin.views.subscriber_profile',name='subscriber_profile'),
-    url(r'^subscriber-advert/', 'Admin.views.subscriber_advert',name='subscriber_advert'),
-    url(r'^subscriber-advert-stat/', 'Admin.views.subscriber_advert_stat',name='subscriber_advert_stat'),
-    url(r'^subscriber-booking/', 'Admin.views.subscriber_booking',name='subscriber_booking'),
-    url(r'^update-profile/', 'Admin.views.update_profile',name='update_profile'),
-    url(r'^subscriber-dashboard/', 'Admin.views.subscriber_dashboard',name='subscriber_dashboard'),
-    url(r'^get-state/', 'Admin.views.get_states',name='get_states'),
-    url(r'^get-filter/', 'Admin.views.get_filter',name='get_filter'),
-    #forgot Password
-    url(r'^forgot-password/', 'Admin.views.forgot_password',name='forgot_password'),
-
-
-
+#Dashboard
+    url(r'^get_advert_list/', 'Admin.dashboard.get_advert_list',name='get_advert_list'),
+    url(r'^get_advert_date/', 'Admin.dashboard.get_advert_date',name='get_advert_date'),
+    url(r'^get_advert_health/', 'Admin.dashboard.get_advert_health',name='get_advert_health'),
+    url(r'^get_subscription_plan/', 'Admin.dashboard.get_subscription_plan',name='get_subscription_plan'),
+    url(r'^my_subscribers_list/', 'Admin.dashboard.my_subscribers_list',name='my_subscribers_list'),
+    url(r'^my_subscription_sale/', 'Admin.dashboard.my_subscription_sale',name='my_subscription_sale'),
+    url(r'^get_advert_databse/', 'Admin.dashboard.get_advert_databse',name='get_advert_databse'),
+    url(r'^get_new_registered_consumer/', 'Admin.dashboard.get_new_registered_consumer',name='get_new_registered_consumer'),
+    url(r'^get_consumer_activity/', 'Admin.dashboard.get_consumer_activity',name='get_consumer_activity'),
+    url(r'^get_consumer_usage/', 'Admin.dashboard.get_consumer_usage',name='get_consumer_usage'),
 
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

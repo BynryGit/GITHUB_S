@@ -1,6 +1,19 @@
 from django.contrib import admin
 from digispaceapp.models import *
 
+
+###############################
+# from django.contrib import admin
+# from embed_video.admin import AdminVideoMixin
+# from .models import MyModel
+
+# class MyModelAdmin(AdminVideoMixin, admin.ModelAdmin):
+#     pass
+
+# admin.site.register(MyModel, MyModelAdmin)
+##################################
+
+
 #class Category(admin.ModelAdmin):
     #list_display = ['category_name']
 class CategoryAdmin(admin.ModelAdmin):
@@ -53,8 +66,17 @@ admin.site.register(CategoryCityMap);
 admin.site.register(AdvertSubscriptionMap);
 admin.site.register(CouponCode);
 admin.site.register(Advert_Category_Map);
+admin.site.register(Product);
+admin.site.register(Privileges);
 admin.site.register(Country);
+admin.site.register(SellTicket);
+
+
+admin.site.register(AdvertView);
 admin.site.register(AdvertCallbacks);
 admin.site.register(AdvertCallsMade);
 admin.site.register(AdvertShares);
-admin.site.register(AdvertTotalViews);
+
+
+admin.site.register(Item);
+

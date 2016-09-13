@@ -99,12 +99,13 @@ def view_booking_list(request):
             user_list = CouponCode.objects.filter(user_id=request.GET.get('consumer_id'))
             print user_list
             for user_obj in user_list:
+                #role_id = user_obj.user_role.role_name
                 user_id = str(user_obj.user_id)
                 advert_id = str(user_obj.advert_id)
                 coupon_code = user_obj.coupon_code
                 creation_date = str((user_obj.creation_date).strftime("%m/%d/%Y"))
                 print '...........................creation date.....',creation_date
-                view = '<a  style="text-align: center;letter-spacing: 5px;width:24%;" title="Edit" class="edit" data-toggle="modal" href="/advert_booking/?coupon_id='+str(user_obj)+'"><i class="fa fa-eye"></i></a>'
+                view = '<a  style="text-align: center;letter-spacing: 5px;width:24%;" title="View" class="edit" data-toggle="modal" href="/advert_booking/?coupon_id='+str(user_obj)+'"><i class="fa fa-eye"></i></a>'
                 list = {'user_id':user_id,'advert_id':advert_id,'coupon_code':coupon_code,'creation_date':creation_date,'view':view}
                 final_list.append(list)
             data = {'success':'true','data':final_list}
@@ -137,6 +138,8 @@ def send_sms(request):
     if not request.user.is_authenticated():
         return redirect('backoffice')
     else:    
+        #data = {'username':request.session['login_user']}
+        #return render(request,'Admin/send_sms.html',data)
         try:
             data = {}
             final_list = []
@@ -144,9 +147,11 @@ def send_sms(request):
                 user_list = ConsumerProfile.objects.all()
                 print user_list
                 for user_obj in user_list:
+                    #role_id = user_obj.user_role.role_name
                     consumer_id = user_obj.consumer_id
                     consumer_full_name = user_obj.consumer_full_name
                     consumer_contact_no =user_obj.consumer_contact_no
+                    #view = '<a class="col-md-offset-2 col-md-1" id="'+str(user_obj)+'"  style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit" class="edit" data-toggle="modal" href="/booking/?consumer_id='+str(user_id)+'"><i class="fa fa-eye"></i></a>'
                     list = {'consumer_id':consumer_id,'consumer_full_name':consumer_full_name,'consumer_contact_no':consumer_contact_no}
                     final_list.append(list)
                 data = {'success':'true','final_list':final_list,'username':request.session['login_user']}
@@ -176,15 +181,59 @@ def send_email(request):
     if not request.user.is_authenticated():
         return redirect('backoffice')
     else:    
+        #login_user = {'username':request.session['login_user']}
         try:
             data = {}
             final_list = []
-            try:                       
+            try:
+                #today_date = str(datetime.now().strftime("%Y/%m/%d"))
+                # print '-----today-----',today_date
+                # next_week_date = str((datetime.now() + timedelta(days=7)).strftime("%Y/%m/%d"))
+                # print '-------next date-',next_week_date
+                # list = []
+                # consumer_obj_list = Business.objects.filter(end_date__range=[today_date,next_week_date])
+                # print '--------consumer_obj_list-----',consumer_obj_list
+
+                # if consumer_obj_list:
+                #     for consumer_obj in consumer_obj_list:
+                #         #supplier_obj = Supplier.objects.get(supplier_id=str(consumer_obj.supplier))
+                #     #email_id = supplier_obj.supplier_email 
+
+                #         email_id = consumer_obj.supplier.supplier_email 
+                #         list.append(str(email_id))
+                #     email_list = set(list)
+                #     print 'ssssssssssssssssssssssssssssssss',email_list
+
+                #     for email in email_list:
+                #         gmail_user =  "cityhoopla2016"
+                #         gmail_pwd =  "cityhoopla@2016"
+                #         FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+                #         TO = [email]
+
+                #         try:
+                #             TEXT = 'Your advert is going to expire'
+                #             SUBJECT = 'Welcome to City Hoopla'
+                #             server = smtplib.SMTP_SSL()
+                #             server = smtplib.SMTP("smtp.gmail.com", 587) 
+                #             server.ehlo()
+                #             server.starttls()
+
+                #             server.login(gmail_user, gmail_pwd)
+                #             message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
+                #             server.sendmail(FROM, TO, message)
+                #             server.quit()
+                #             print '==============Successfully Snt==============='
+                #         except SMTPException,e:
+                #             print e                
+             
+
                 user_list = ConsumerProfile.objects.all()
                 for user_obj in user_list:
+                    #role_id = user_obj.user_role.role_name
                     consumer_id = user_obj.consumer_id
                     consumer_full_name = user_obj.consumer_full_name
                     consumer_email_id = user_obj.consumer_email_id
+                    #view = '<a class="col-md-offset-2 col-md-1" id="'+str(user_obj)+'"  style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit" class="edit" data-toggle="modal" href="/booking/?consumer_id='+str(user_id)+'"><i class="fa fa-eye"></i></a>'
                     list = {'consumer_id':consumer_id,'consumer_full_name':consumer_full_name,'consumer_email_id':consumer_email_id}
                     final_list.append(list)
                 data = {'success':'true','final_list':final_list,'username':request.session['login_user']}
@@ -269,6 +318,15 @@ def admin_send_sms(request):
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
+
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# def advert_booking(request):
+#     if not request.user.is_authenticated():
+#         return redirect('backoffice')
+#     else:    
+#         data = {'username':request.session['login_user']}
+#         return render(request,'Admin/advert_booking.html',data)
+
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def advert_booking(request):
     #pdb.set_trace()
@@ -279,7 +337,70 @@ def advert_booking(request):
             print '=======request=====last====',request.GET.get('coupon_id')
             data = {}
             final_list = []
-            try:                     
+            try:
+                ##############################Last 1 week new subscription view###############################
+                # current_date = datetime.now()
+                # first = calendar.day_name[current_date.weekday()]
+                # print '------------------------current_date------------------------',first
+
+                # last_date = (datetime.now() - timedelta(days=7))
+                # #print '====time========last_date==============',last_date
+                # last_date2 = calendar.day_name[last_date.weekday()]
+                # print '============last_date==============',last_date2
+
+                # list = []
+                # consumer_obj_list = Business.objects.filter(business_created_date__range=[last_date,current_date])
+                # print'sssssssssssssss...consumer_obj_list...ssssssssssssssssssss',consumer_obj_list
+                # mon=tue=wen=thus=fri=sat=sun=0
+                # if consumer_obj_list:
+                #     for consumer_obj in consumer_obj_list:
+                #         business_created_date=consumer_obj.business_created_date
+                #         consumer_day = calendar.day_name[business_created_date.weekday()]
+                #         print '.....................consumer_day............',consumer_day
+                #         if consumer_day== 'Monday' :
+                #             mon = mon+1
+                #         elif consumer_day== 'Tuesday' :
+                #             tue = tue+1
+                #         elif consumer_day== 'Wednesday' :
+                #             wen = wen+1
+                #         elif consumer_day== 'Thursday' :
+                #             thus = thus+1
+                #         elif consumer_day== 'Friday' :
+                #             fri = fri+1
+                #         elif consumer_day== 'Saturday' :
+                #             sat = sat+1
+                #         elif consumer_day== 'Sunday' :
+                #             sun = sun+1
+                #         else :
+                #             pass
+                #         list = {'mon':mon,'tue':tue,'wen':wen,'thus':thus,'fri':fri,'sat':sat,'sun':sun}
+                #         final_list.append(list)
+                #         print final_list
+
+
+                ########################################Today payment collection########################
+                for i in range(0,11):
+                    today_time = str(datetime.now())
+                    
+                    first_time = str((datetime.now() - timedelta(hours=i)))
+                    print 'time==========first_time============',first_time
+
+                    next_time = str((datetime.now() - timedelta(hours=i+1)))
+                    print 'time========next_time==============',next_time
+
+                    list = []
+                    consumer_obj_list = PaymentDetail.objects.filter(payment_created_date__range=[next_time,first_time])
+                    print'sssssssssssssss...consumer_obj_list...ssssssssssssssssssss',consumer_obj_list
+                    
+                    if consumer_obj_list:
+                        for consumer_obj in consumer_obj_list:
+                            total_amount = consumer_obj.total_amount
+                            print '...................total_amount............',total_amount
+                            list.append(str(total_amount))
+                        amount_list = set(list)
+
+                      
+
                 consumer_obj = CouponCode.objects.get(id=request.GET.get('coupon_id'))
                 print "..................consumer_obj.........",consumer_obj
                 coupon_code = consumer_obj.coupon_code
@@ -311,81 +432,32 @@ def advert_booking(request):
 
 
 
-
-
-
-#@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def register_city(request):
-    if not request.user.is_authenticated():
-        return redirect('backoffice')
-    else:
+def pay_collection(request):
+    try:
+        data = {}
+        final_list = []
         try:
+            print '=========== in   pay_collection   function========'
+            today_date = str(datetime.now())
+            user_list = PaymentDetail.objects.filter(payment_created_date=today_date)
+            for user_obj in user_list:
+                total_amount = user_obj.total_amount
+                consumer_contact_no = user_obj.consumer_contact_no
+                consumer_email_id = user_obj.consumer_email_id
+                consumer_area = user_obj.consumer_area
 
-            temp_var1 = 0
-            temp_var2 = 0
-            temp_var3 = 0
-            temp_var4 = 0
-            data = {}
-            try:
-                ############################Last 1 week new subscription view###############################
-                city_nm = request.GET.get('city_nm')
-                print '................',city_nm
-                current_date = datetime.now()
-                first = calendar.day_name[current_date.weekday()]
-                print '------------------------current_date------------------------',first
-
-                last_date = (datetime.now() - timedelta(days=7))
-                last_date2 = calendar.day_name[last_date.weekday()]
-                print '============last_date==============',last_date2
-
-                list = []
-                consumer_obj_list = Business.objects.filter(business_created_date__range=[last_date,current_date])
-                
-                mon=tue=wen=thus=fri=sat=sun=0
-                if consumer_obj_list:
-                    for consumer_obj in consumer_obj_list:
-
-                        
-                        #city_nm1 = consumer_obj.supplier.city.city_name
-                        city_nm1 = consumer_obj.supplier.city.city_id
-                        print '......................city_nm1 ..........',city_nm1
-
-                        if str(city_nm) == str(city_nm1):
-                            print "match"
-                            business_created_date=consumer_obj.business_created_date
-                            consumer_day = calendar.day_name[business_created_date.weekday()]
-                            print '.....................consumer_day............',consumer_day
-                            if consumer_day== 'Monday' :
-                                mon = mon+1
-                            elif consumer_day== 'Tuesday' :
-                                tue = tue+1
-                            elif consumer_day== 'Wednesday' :
-                                wen = wen+1
-                            elif consumer_day== 'Thursday' :
-                                thus = thus+1
-                            elif consumer_day== 'Friday' :
-                                fri = fri+1
-                            elif consumer_day== 'Saturday' :
-                                sat = sat+1
-                            elif consumer_day== 'Sunday' :
-                                sun = sun+1
-                            else :
-                                pass
-                    data = {'success':'true','mon':mon,'tue':tue,'wen':wen,'thus':thus,'fri':fri,'sat':sat,'sun':sun,'success':'true','username':request.session['login_user'],'city_places_list':get_city_places(request)}
-
-
-            except IntegrityError as e:
-                print e
-                data = {'success':'false','message':'Error in  loading page. Please try after some time','username':request.session['login_user']}                
-
-        except MySQLdb.OperationalError, e:
+                list = {'consumer_id':consumer_id,'consumer_full_name':consumer_full_name,'consumer_contact_no':consumer_contact_no,'consumer_email_id':consumer_email_id,'consumer_area':consumer_area,'view':view}
+                final_list.append(list)
+            data = {'success':'true','data':final_list}
+        except IntegrityError as e:
             print e
-        except Exception,e:
-            print 'Exception ',e
-        print data
-        return HttpResponse(json.dumps(data), content_type='application/json')
-
-
+            data = {'success':'false','message':'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception,e:
+        print 'Exception ',e
+    print data
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 def payment_city(request):
@@ -494,18 +566,73 @@ def payment_city(request):
         print data
         return HttpResponse(json.dumps(data), content_type='application/json')
 
-def get_city_places(request):
-   
-   city_list=[]
-   try:
-      city_objs=City.objects.filter(city_status='1')
-      for city in city_objs:
-         city_list.append({'city_id': city.city_id,'city': city.city_name})
-         #print city_list
-      data =  city_list
-      return data
+#@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def register_city(request):
+    if not request.user.is_authenticated():
+        return redirect('backoffice')
+    else:
+        try:
 
-   except Exception, ke:
-      print ke
-      data={'city_list': 'none','message':'No city available'}
-   return HttpResponse(json.dumps(data), content_type='application/json')
+            temp_var1 = 0
+            temp_var2 = 0
+            temp_var3 = 0
+            temp_var4 = 0
+            data = {}
+            try:
+                ############################Last 1 week new subscription view###############################
+                city_nm = request.GET.get('city_nm')
+                print '................',city_nm
+                current_date = datetime.now()
+                first = calendar.day_name[current_date.weekday()]
+                print '------------------------current_date------------------------',first
+
+                last_date = (datetime.now() - timedelta(days=7))
+                last_date2 = calendar.day_name[last_date.weekday()]
+                print '============last_date==============',last_date2
+
+                list = []
+                consumer_obj_list = Business.objects.filter(business_created_date__range=[last_date,current_date])
+                
+                mon=tue=wen=thus=fri=sat=sun=0
+                if consumer_obj_list:
+                    for consumer_obj in consumer_obj_list:
+
+                        
+                        #city_nm1 = consumer_obj.supplier.city.city_name
+                        city_nm1 = consumer_obj.supplier.city.city_id
+                        print '......................city_nm1 ..........',city_nm1
+
+                        if str(city_nm) == str(city_nm1):
+                            print "match"
+                            business_created_date=consumer_obj.business_created_date
+                            consumer_day = calendar.day_name[business_created_date.weekday()]
+                            print '.....................consumer_day............',consumer_day
+                            if consumer_day== 'Monday' :
+                                mon = mon+1
+                            elif consumer_day== 'Tuesday' :
+                                tue = tue+1
+                            elif consumer_day== 'Wednesday' :
+                                wen = wen+1
+                            elif consumer_day== 'Thursday' :
+                                thus = thus+1
+                            elif consumer_day== 'Friday' :
+                                fri = fri+1
+                            elif consumer_day== 'Saturday' :
+                                sat = sat+1
+                            elif consumer_day== 'Sunday' :
+                                sun = sun+1
+                            else :
+                                pass
+                    data = {'success':'true','mon':mon,'tue':tue,'wen':wen,'thus':thus,'fri':fri,'sat':sat,'sun':sun,'success':'true','username':request.session['login_user'],'city_places_list':get_city_places(request)}
+
+
+            except IntegrityError as e:
+                print e
+                data = {'success':'false','message':'Error in  loading page. Please try after some time','username':request.session['login_user']}                
+
+        except MySQLdb.OperationalError, e:
+            print e
+        except Exception,e:
+            print 'Exception ',e
+        print data
+        return HttpResponse(json.dumps(data), content_type='application/json')

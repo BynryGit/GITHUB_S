@@ -13,6 +13,8 @@ mobileapp_urlpattern = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^signup/', 'mobileapp.views.consumer_signup',name='signup'),
+    url(r'^check-otp/', 'mobileapp.views.check_otp',name='check_otp'),
+    url(r'^resend-otp/', 'mobileapp.views.resend_otp',name='resend_otp'),
     url(r'^social-signup/', 'mobileapp.views.social_signup',name='social_signup'),
     url(r'^consumer-login/', 'mobileapp.views.consumer_login',name='login'),
     url(r'^forget-password/', 'mobileapp.views.forgot_password',name='forget-password'),
@@ -32,7 +34,14 @@ mobileapp_urlpattern = patterns('',
     url(r'^favourite-advert/', 'mobileapp.views.favourite_advert',name='favourite_advert'),
     url(r'^search-advert/', 'mobileapp.views.search_advert',name='search_advert'),
     url(r'^get-category/', 'mobileapp.views.get_category',name='get_category'),
+    url(r'^get-category-subcategory-list/', 'mobileapp.views.get_category_subcategory_list',name='get_category_subcategory_list'),
     url(r'^user-logout/', 'mobileapp.views.user_logout',name='user_logout'),
-   
+    url(r'^get-bottom-advert-list/', 'mobileapp.views.get_bottom_advert_list',name='get_bottom_advert_list'),
+    url(r'^get-top-advert/', 'mobileapp.views.get_top_advert',name='get_top_advert'),
+    url(r'^set-notification-settings/', 'mobileapp.views.set_notification_settings',name='set_notification_settings'),
+    url(r'^save-sellticket/', 'mobileapp.views.save_sellticket',name='save_sellticket'),
+    url(r'^view-list-sellticket/', 'mobileapp.views.view_list_sellticket',name='view_list_sellticket'),
+    url(r'^view-sellticket-detail/','mobileapp.views.view_sellticket_detail',name='view_sellticket_detail'),
 
+   
 ) + static( settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

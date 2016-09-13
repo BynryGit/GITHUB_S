@@ -353,110 +353,7 @@ div.dataTables_filter label {
                     <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
                     <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
                     <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
-                   <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
-                        <li class="nav-item">
-                            <a href="/dashboard/" class="nav-link nav-toggle">
-                                <i class="icon-home"></i>
-                                <span class="title">Dashboard</span>
-                                <span class="selected"></span>
-                                <span class="arrow open"></span>
-                            </a>                 
-                        </li>
-                        <li class="nav-item active ">
-                            <a href="javascript:;" class="nav-link nav-toggle">
-                                <i class="icon-users"></i>
-                                <span class="title">Customers </span>
-                                <span class="arrow"></span>
-                            </a>
-                            <ul class="sub-menu">
-                                <li class="nav-item start active">
-                                    <a href="/subscriber/" class="nav-link ">
-                                        <i class="icon-user"></i>
-                                        <span class="title">Subscribers</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item start ">
-                                    <a href="/consumer/" class="nav-link ">
-                                        <i class="icon-user"></i>
-                                        <span class="title">Consumers</span>
-                                        <span class="badge badge-success"></span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item  ">
-                            <a href="/user/" class="nav-link nav-toggle">
-                                        <i class="icon-user"></i>
-                                <span class="title">Admin </span>
-                                <span class="arrow"></span>
-                            </a>   
-                        </li>
-                         <li class="nav-item  ">
-                            <a href="/rate-card/" class="nav-link nav-toggle">
-                                <i class="icon-settings"></i>
-                                <span class="title">Rate Card </span>
-                                <span class="arrow"></span>
-                            </a>
-                        </li>
-                     <li class="nav-item  ">
-                            <a href="javascript:;" class="nav-link nav-toggle">
-                                <i class="icon-settings"></i>
-                                <span class="title">Notifications</span>
-                                <span class="arrow"></span>
-                            </a>
-                            <ul class="sub-menu">
-                                <li class="nav-item start ">
-                                    <a href="/send_sms/" class="nav-link ">
-												<i class="fa fa-envelope-o" aria-hidden="true"></i>
-                                           <span class="title">SMS</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item start ">
-                                    <a href="/send_email/" class="nav-link ">
-												<i class="fa fa-envelope-o" aria-hidden="true"></i>
-                                        <span class="title">Email</span>
-                                        <span class="badge badge-success"></span>
-                                    </a>
-                                </li>
-                                <li class="nav-item start ">
-                                    <a href="/sms/" class="nav-link ">
-												<i class="fa fa-envelope-o" aria-hidden="true"></i>
-                                        <span class="title">Push</span>
-                                        <span class="badge badge-success"></span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                         <li class="nav-item ">
-                            <a  class="nav-link nav-toggle">
-                                <i class="icon-bulb"></i>
-                                <span class="title">Reference Data </span>
-                                <span class="arrow"></span>
-                            </a>
-                            <ul class="sub-menu">
-                                <li class="nav-item start ">
-                                    <a href="/reference-data/" class="nav-link ">
-                                        <i class="icon-bar-chart"></i>
-                                        <span class="title"> City </span>
-                                    </a>
-                                </li>
-                                <li class="nav-item start ">
-                                    <a href="/category/" class="nav-link ">
-                                        <i class="icon-bulb"></i>
-                                        <span class="title"> Category </span>
-                                        <span class="badge badge-success"></span>
-                                    </a>
-                                </li>
-                                <li class="nav-item start ">
-                                    <a href="/user-role/" class="nav-link ">
-                                       <i class="icon-user"></i>
-                                        <span class="title"> User Role </span>
-                                        <span class="badge badge-success"></span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+                    {% include 'Admin/side-panel.html' %}
                     <!-- END SIDEBAR MENU -->
                 </div>
                 <!-- END SIDEBAR -->
@@ -858,6 +755,9 @@ div.dataTables_filter label {
         <!-- END THEME LAYOUT SCRIPTS -->
         
         <script type="text/javascript">
+
+        $("#customer_nav").addClass("active");
+        $("#supplier_nav").addClass("active");
 			
         $(document).ready(function(){
         $('#cnfrm_btn').hide();

@@ -36,6 +36,7 @@ from django.http import HttpResponseRedirect
 import string
 import random
 from django.views.decorators.cache import cache_control
+import urllib2
 
 # SERVER_URL = "http://192.168.0.180:9888"   
 
@@ -64,12 +65,45 @@ def add_service(request):
 			service_rate_card_updated_by = 'Admin'
 		)
 		card_obj.save()
-		rate_card_add_mail(card_obj)
-		data={
+
+        add_service_sms(card_obj)
+        rate_card_add_mail(card_obj)
+
+        data={
 			'success':'true',
 			'message':"Service added successfully"
 		}
 	return HttpResponse(json.dumps(data),content_type='application/json')
+
+def add_service_sms(card_obj):
+    
+    authkey = "118994AIG5vJOpg157989f23"
+    # user_obj = Supplier.objects.get(supplier_id=su_id)
+ #    contact_no = user_obj.contact_no
+ #    print '---------contact_no------',contact_no
+
+    mobiles = "+919403884595"
+    message = "Hi Admin,\n Service Rate Card has been added successfully"
+    sender = "DGSPCE"
+    route = "4"
+    country = "91"
+    values = {
+              'authkey' : authkey,
+              'mobiles' : mobiles,
+              'message' : message,
+              'sender' : sender,
+              'route' : route,
+              'country' : country
+              }
+
+    url = "http://api.msg91.com/api/sendhttp.php"
+    postdata = urllib.urlencode(values)
+    req = urllib2.Request(url, postdata)
+    response = urllib2.urlopen(req)
+    output = response.read()
+    print output
+    print "sagar"
+
 
 def service_list(request):
     print "===IN SERVICE LIST"
@@ -112,6 +146,7 @@ def delete_service(request):
             service_obj = ServiceRateCard.objects.get(service_rate_card_id=request.POST.get('service_id'))
             service_obj.service_rate_card_status = '0'
             service_obj.save()
+            delete_service_sms(service_obj)
             rate_card_delete_mail(service_obj)
             data = {'message': 'Service Inactivated Successfully', 'success':'true'}
 
@@ -120,6 +155,36 @@ def delete_service(request):
         except Exception,e:
             print e
         return HttpResponse(json.dumps(data), content_type='application/json')
+
+def delete_service_sms(card_obj):
+    
+    authkey = "118994AIG5vJOpg157989f23"
+    # user_obj = Supplier.objects.get(supplier_id=su_id)
+ #    contact_no = user_obj.contact_no
+ #    print '---------contact_no------',contact_no
+
+    mobiles = "+919403884595"
+    message = "Hi Admin,\n Service Rate Card has been deactivated successfully"
+    sender = "DGSPCE"
+    route = "4"
+    country = "91"
+    values = {
+              'authkey' : authkey,
+              'mobiles' : mobiles,
+              'message' : message,
+              'sender' : sender,
+              'route' : route,
+              'country' : country
+              }
+
+    url = "http://api.msg91.com/api/sendhttp.php"
+    postdata = urllib.urlencode(values)
+    req = urllib2.Request(url, postdata)
+    response = urllib2.urlopen(req)
+    output = response.read()
+    print output
+    print "sagar"
+
 
 @csrf_exempt
 def active_service(request):
@@ -220,12 +285,45 @@ def add_premium_service(request):
 			advert_rate_card_updated_by = 'Admin'
 		)
 		card_obj.save()
-		premium_rate_card_add_mail(card_obj)
-		data={
+
+        add_premium_service_sms(card_obj)
+        premium_rate_card_add_mail(card_obj)
+
+        data={
 			'success':'true',
 			'message':"Service added successfully"
 		}
 	return HttpResponse(json.dumps(data),content_type='application/json')
+
+
+def add_premium_service_sms(card_obj):
+    
+    authkey = "118994AIG5vJOpg157989f23"
+    # user_obj = Supplier.objects.get(supplier_id=su_id)
+ #    contact_no = user_obj.contact_no
+ #    print '---------contact_no------',contact_no
+
+    mobiles = "+919403884595"
+    message = "Hi Admin,\n Premium Service Rate Card has been added successfully"
+    sender = "DGSPCE"
+    route = "4"
+    country = "91"
+    values = {
+              'authkey' : authkey,
+              'mobiles' : mobiles,
+              'message' : message,
+              'sender' : sender,
+              'route' : route,
+              'country' : country
+              }
+
+    url = "http://api.msg91.com/api/sendhttp.php"
+    postdata = urllib.urlencode(values)
+    req = urllib2.Request(url, postdata)
+    response = urllib2.urlopen(req)
+    output = response.read()
+    print output
+    print "sagar"
 
 
 def premium_service_list(request):
@@ -268,6 +366,7 @@ def delete_premium_service(request):
             service_obj.advert_rate_card_status = '0'
             service_obj.save()
             premium_rate_card_delete_mail(service_obj)
+            delete_premium_service_sms(service_obj)
             data = {'message': 'Service Inactivated Successfully', 'success':'true'}
 
         except IntegrityError as e:
@@ -275,6 +374,36 @@ def delete_premium_service(request):
         except Exception,e:
             print e
         return HttpResponse(json.dumps(data), content_type='application/json')	
+
+
+def delete_premium_service_sms(card_obj):
+    
+    authkey = "118994AIG5vJOpg157989f23"
+    # user_obj = Supplier.objects.get(supplier_id=su_id)
+ #    contact_no = user_obj.contact_no
+ #    print '---------contact_no------',contact_no
+
+    mobiles = "+919403884595"
+    message = "Hi Admin,\n Premium Service Rate Card has been deactivated successfully"
+    sender = "DGSPCE"
+    route = "4"
+    country = "91"
+    values = {
+              'authkey' : authkey,
+              'mobiles' : mobiles,
+              'message' : message,
+              'sender' : sender,
+              'route' : route,
+              'country' : country
+              }
+
+    url = "http://api.msg91.com/api/sendhttp.php"
+    postdata = urllib.urlencode(values)
+    req = urllib2.Request(url, postdata)
+    response = urllib2.urlopen(req)
+    output = response.read()
+    print output
+    print "sagar"
 
 
 def premium_rate_card_add_mail(rate_card_obj):
@@ -430,6 +559,7 @@ def update_service(request):
                 
                 data = {'success':'true'}
                 update_service_rate_card(service_object)
+                update_service_sms(service_object)
             else:
                 data = {'success':'false'}
         except:
@@ -442,6 +572,7 @@ def update_service(request):
             service_object.service_rate_card_updated_by = 'Admin'
             service_object.save()
             update_service_rate_card(service_object)
+            update_service_sms(service_object)
             data={
             'success':'true',
             }
@@ -453,6 +584,35 @@ def update_service(request):
     print '========data====================',data        
     return HttpResponse(json.dumps(data),content_type='application/json')  
 
+
+def update_service_sms(card_obj):
+    
+    authkey = "118994AIG5vJOpg157989f23"
+    # user_obj = Supplier.objects.get(supplier_id=su_id)
+ #    contact_no = user_obj.contact_no
+ #    print '---------contact_no------',contact_no
+
+    mobiles = "+919403884595"
+    message = "Hi Admin,\n Service Rate Card has been updated successfully"
+    sender = "DGSPCE"
+    route = "4"
+    country = "91"
+    values = {
+              'authkey' : authkey,
+              'mobiles' : mobiles,
+              'message' : message,
+              'sender' : sender,
+              'route' : route,
+              'country' : country
+              }
+
+    url = "http://api.msg91.com/api/sendhttp.php"
+    postdata = urllib.urlencode(values)
+    req = urllib2.Request(url, postdata)
+    response = urllib2.urlopen(req)
+    output = response.read()
+    print output
+    print "sagar"
 
 
 
@@ -505,6 +665,7 @@ def update_premium_service(request):
                 service_object.advert_rate_card_updated_date = datetime.now()
                 service_object.advert_rate_card_updated_by = 'Admin'
                 service_object.save()
+                update_premium_service_sms(service_object)
                 update_advert_rate_card(service_object)
                 data = {'success':'true'}
             else:
@@ -520,6 +681,7 @@ def update_premium_service(request):
             service_object.advert_rate_card_updated_date = datetime.now()
             service_object.advert_rate_card_updated_by = 'Admin'
             service_object.save()
+            update_premium_service_sms(service_object)
             update_advert_rate_card(service_object)
             data={
                 'success':'true',
@@ -531,6 +693,36 @@ def update_premium_service(request):
             }
     print '========data====================',data 
     return HttpResponse(json.dumps(data),content_type='application/json') 
+
+
+def update_premium_service_sms(card_obj):
+    
+    authkey = "118994AIG5vJOpg157989f23"
+    # user_obj = Supplier.objects.get(supplier_id=su_id)
+ #    contact_no = user_obj.contact_no
+ #    print '---------contact_no------',contact_no
+
+    mobiles = "+919403884595"
+    message = "Hi Admin,\n Premium Service Rate Card has been updated successfully"
+    sender = "DGSPCE"
+    route = "4"
+    country = "91"
+    values = {
+              'authkey' : authkey,
+              'mobiles' : mobiles,
+              'message' : message,
+              'sender' : sender,
+              'route' : route,
+              'country' : country
+              }
+
+    url = "http://api.msg91.com/api/sendhttp.php"
+    postdata = urllib.urlencode(values)
+    req = urllib2.Request(url, postdata)
+    response = urllib2.urlopen(req)
+    output = response.read()
+    print output
+    print "sagar"
 
 
 

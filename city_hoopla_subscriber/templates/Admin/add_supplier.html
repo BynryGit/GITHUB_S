@@ -424,7 +424,7 @@ div.dataTables_filter label {
                     <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
                     <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
                     <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
-                        <li class="nav-item start  open">
+                        <li class="nav-item ">
                             <a href="/dashboard/" class="nav-link nav-toggle">
                                 <i class="icon-home"></i>
                                 <span class="title">Dashboard</span>
@@ -726,20 +726,39 @@ div.dataTables_filter label {
                                                         
                                                         <div class="form-group">
                                                         	 <div class="row">
- 																				 <div class="col-lg-4">
+                                                        	       <div class="col-lg-3">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label ">Country
+
+                                                                            <span class="required"> * </span>
+                                                                        </label>
+                                                                        <select id="country" name="country"
+                                                                                class="form-control">
+                                                                            <option value="">Select Country</option>
+                                                                            {% for countr in country_list %}
+                                                                            <option value="{{ countr.country_id }}">
+                                                                                {{countr.country_name }}
+                                                                            </option>
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                        <label class="error" id="state_error"
+                                                                               style="color:red; display:none;"></label>
+                                                                    </div>
+                                                                </div>
+ 																				 <div class="col-lg-3">
  																				 		<label class="control-label">State
 	                                                                <span class="required"> * </span>
 	                                                            </label>
 	                                                                <select id="state" name="state" class="form-control" required> 
 																						 	<option value="">Select State</option>                        
-															                        {% for state in state_list %}	
-															                        <option value="{{ state.state_id }}"> {{ state.state_name }}</option>
-															                        {% endfor %}
+															                        {% for state in state_list %}
+                                                                        <option value="{{ state.state_id }}">{{ state.state_name }}</option>
+                                                                        {% endfor %}
 															                     </select>
 															               <label class="error" style="color:red; display:none;"></label>                                                          	                                                        		
  																				 </div>
  																				 
- 																				 <div class="col-lg-4">
+ 																				 <div class="col-lg-3">
  																				 		<label class="control-label">City
 	                                                                <span class="required"> * </span>
 	                                                            </label>
@@ -749,7 +768,7 @@ div.dataTables_filter label {
 															                     <label class="error" style="color:red; display:none;"></label>
  																				 </div>
  																				 
- 																				 <div class="col-lg-4">
+ 																				 <div class="col-lg-3">
  																				 		<label class="control-label">Pincode
 	                                                                <span class="required"> * </span>
 	                                                            </label>
@@ -1202,15 +1221,47 @@ div.dataTables_filter label {
 				                                                        </li>  
 				                                                       <li>   
 				                                                        <label>
-				                                                            <input type="radio" class="radio" name="payment_mode" value="cheque" /> Cheque </label>
-			                                                            <label>
-			                                                            <input type="radio" class="radio" name="payment_mode" value="bank_transfer" /> Bank Transfer </label>
+				                                                            <input type="radio" id="cheque" 
+                                                                            class="radio" name="payment_mode" value="cheque" /> Cheque </label>
+			                                                            <!-- <label>
+			                                                            <input type="radio" class="radio" name="payment_mode" value="bank_transfer" /> Bank Transfer </label> -->
 				                                                       </li>     
 				                                                    </ul>
 
                                                               </div>
                                                                   <label class="error col-md-12" style="color:red; display:none;"></label>
                                                               </div>
+
+                                                              <div class="row" id="che">
+                                                    <label class="control-label" style="margin-left: 14px;">Cheque Details </label>  
+                                                        <div class="form-group">
+                                                              <div class="row" style="margin-left: 1px;">
+                                                                    <div class="col-lg-3">
+                                                                    <label class="control-label"> Bank Name
+                                                                        <span class="required"> * </span>
+                                                                    </label>
+                                                                    <input type="text" class="form-control" id="bank_name" name="g_amount" />
+                                                                    <label class="error" style="color:red; display:none;"></label>
+                                                                </div> 
+                                                                
+                                                                <div class="col-lg-3">
+                                                                    <label class="control-label"> Bank Branch Name
+                                                                        <span class="required"> * </span>
+                                                                    </label>
+                                                                    <input type="text" class="form-control" id="bank_branch_name" name="g_amount" />
+                                                                    <label class="error" style="color:red; display:none;"></label>
+                                                                </div> 
+                                                                
+                                                                <div class="col-lg-3">
+                                                                    <label class="control-label"> Cheque Number
+                                                                        <span class="required"> * </span>
+                                                                    </label>
+                                                                    <input type="text" onkeypress="return validateFloatKeyPresss(this,event);" class="form-control" id="cheque_number" name="g_amount" />
+                                                                    <label class="error" style="color:red; display:none;"></label>
+                                                                </div>
+                                                            </div>    
+                                                        </div>  
+                                                  </div> 
 																			                                                           
                                                                 
 
@@ -1661,11 +1712,16 @@ $(document).ready(function(){
   $("#state").select2({
    
 });
+  $("#country").select2({
+   
+});
  $(".days").select2({  
  width: '100%' 
 });
  
- 
+ 			    $("#country").change(function () {
+    getState();
+});
 $("#state").change(function () {
 	getCity();
 });
@@ -1713,6 +1769,17 @@ selected_tax_type = ''
 $("input[name='duration']").on("change", function () {
 $('#duration').find('input:text').val('');
 }); 
+
+$("#che").hide();
+ $('input[type="radio"]').click(function() {
+       if($(this).attr('id') == 'cheque') {
+            $('#che').show();           
+       }
+
+       else {
+            $('#che').hide();   
+       }
+   });
 
 
  
@@ -1880,61 +1947,83 @@ $(this).parent('div').next('div').next('div').find('input').val(date);
 });
 
 
-function getPincode(){
-			$('#pincode').select2('val','');
-        city_id = $('#city :selected').val();
-        if (city_id) {
-            $.ajax({
-                type: 'GET',
-                url: '/get-pincode/',
-                data: {'city_id': city_id},
-                 success: function (response) {
-                    $('#pincode').html('');
-                    $.each(response.pincode_list, function (index, item) {
-                        $('#pincode').append(item);
-                    });
-                    $('#pincode').val("");
-                },
-                error: function (response) {
-                    alert("Error!");
-                },
+ function getPincode(){
+			        city_id = $('#city :selected').val();
+			        if (city_id) {
+			            $.ajax({
+			                type: 'GET',
+			                url: '/get-pincode-place/',
+			                data: {'city_id': city_id},
+			                 success: function (response) {
+			                    $('#pincode').html('');
+			                    $.each(response.pincode_list, function (index, item) {
+			                        $('#pincode').append(item);
+			                    });
+			                    $('#pincode').val("");
+			                },
+			                error: function (response) {
+			                    alert("Error!");
+			                },
 
-            });
-        }
-        else {
-            $('#city').val("");
-        }
+			            });
+			        }
+			        else {
+			            $('#city').val("");
+			        }
+			    }
+
+
+				function getCity() {
+				        state_id = $('#state :selected').val();
+				        if (state_id) {
+				            $.ajax({
+				                type: 'GET',
+				                url: '/get-city-place/',
+				                data: {'state_id': state_id},
+				                success: function (response) {
+				                		//alert('success');
+				                    $('#city').html('');
+				                    $.each(response.city_list, function (index, item) {
+				                        $('#city').append(item);
+				                    });
+				                    $('#city').val("");
+				                },
+				                error: function (response) {
+				                    alert("Error!");
+				                },
+
+				            });
+				        }
+				        else {
+				            $('#city').val("");
+				        }
+				    }
+    
+    function getState() {
+     country_id = $('#country :selected').val();
+    if (country_id) {
+        $.ajax({
+            type: 'GET',
+            url: '/get-state/',
+            data: {'country_id': country_id},
+            success: function (response) {
+                    //alert('success');
+                $('#state').html('');
+                $.each(response.state_list, function (index, item) {
+                    $('#state').append(item);
+                });
+                $('#state').val("");
+            },
+            error: function (response) {
+                alert("Error!");
+            },
+
+        });
     }
-
-
-function getCity() {
-			$('#city').select2('val','');
-			$('#pincode').select2('val','');
-        state_id = $('#state :selected').val();
-        if (state_id) {
-            $.ajax({
-                type: 'GET',
-                url: '/get-city/',
-                data: {'state_id': state_id},
-                success: function (response) {
-                		//alert('success');
-                    $('#city').html('');
-                    $.each(response.city_list, function (index, item) {
-                        $('#city').append(item);
-                    });
-                    $('#city').val("");
-                },
-
-                error: function (response) {
-                    alert("Error!");
-                },
-
-            });
-        }
-        else {
-            $('#city').val("");
-        }
+    else {
+        $('#city').val("");
     }
+}
 
 function checkBusinessName(business_name){
 	businessName = $(business_name).val()   
@@ -2051,6 +2140,22 @@ function checkaddress(address1){
    }
 }
 
+		function checkcountry(country){
+
+  if($(country).val()!='' && $(country).val()!= null)
+   {
+
+   	
+    $(country).parent().children('.error').css("display", "none");
+   return true;
+   }else{
+
+    $(country).parent().children('.error').css("display", "block");
+    $(country).parent().children('.error').text("Please select Country");
+   return false; 
+   }
+}
+
 function checkState(state){
 
 
@@ -2155,7 +2260,7 @@ function checkUserEmail(user_email){
 
 function validateData(){
 
-	if(checkBusinessName("#business_name")&checkNumber("#phone_no")&checkSecNumber("#sec_phone_no")&checkEmail("#pri_email")&checkSecEmail("#sec_email")&checkLogo("#logo")&checkaddress("#address1")&checkState("#state")&checkCity("#city")&checkPincode("#pincode")&checkBusiness('#business')&checkUserName('#user_name')&checkUserEmail('#user_email')&checkUserContactNo('#user_contact_no')){
+	if(checkBusinessName("#business_name")&checkNumber("#phone_no")&checkSecNumber("#sec_phone_no")&checkEmail("#pri_email")&checkSecEmail("#sec_email")&checkLogo("#logo")&checkaddress("#address1")&checkcountry("#country")  &checkState("#state")&checkCity("#city")&checkPincode("#pincode")&checkBusiness('#business')&checkUserName('#user_name')&checkUserEmail('#user_email')&checkUserContactNo('#user_contact_no')){
 		return true;	
 	}
 	return false;
@@ -2178,6 +2283,7 @@ $("#save-quit").click(function(event)  {
 		formData.append("sec_email",$('#sec_email').val());
 		formData.append("address1",$('#address1').val());
 		formData.append("address2",$('#address2').val());
+		formData.append("country",$('#country').val());
 		formData.append("state",$('#state').val());
 		formData.append("city",$('#city').val());
 		formData.append("pincode",$('#pincode').val());
@@ -2248,6 +2354,7 @@ if(validateData()){
 		formData.append("sec_email",$('#sec_email').val());
 		formData.append("address1",$('#address1').val());
 		formData.append("address2",$('#address2').val());
+		formData.append("country",$('#country').val());
 		formData.append("state",$('#state').val());
 		formData.append("city",$('#city').val());
 		formData.append("pincode",$('#pincode').val());
@@ -2725,7 +2832,7 @@ else{
 
 function check_data()
 {
-if(checkTax("#tax_type")&checkPaymentMode()&checkNote("#note")&checkPaidAmount('#paid_amount')){
+if(checkTax("#tax_type")&checkPaymentMode()&checkbank()& checkbankbranch()&checknumber()&checkNote("#note")&checkPaidAmount('#paid_amount')){
 		return true;	
 	}
 	return false;
@@ -2764,6 +2871,88 @@ else
 	$("#payment_mode").parent().find('.error').css("display", "block");
    $("#payment_mode").parent().find('.error').text("Please select Payment mode");
    return false; 
+}
+}
+
+function checkbank()
+{
+payment_mode = $("input[name='payment_mode']:checked").val()
+var namePattern = /^[0-9]*$/;
+var bank =  $("#bank_name").val();
+if(payment_mode=="cheque")
+{ 
+        if($("#bank_name").val()==""){
+            $("#bank_name").parent().find('.error').css("display", "block");
+        $("#bank_name").parent().find('.error').text("Please enter Bank Name");
+        return false;
+}else{
+        
+        if(namePattern.test(bank)){
+        $("#bank_name").parent().find('.error').css("display", "block");
+        $("#bank_name").parent().find('.error').text("Please enter valid Bank Name");
+        return false;
+        
+        }else{
+
+            $("#bank_name").parent().find('.error').css("display", "none");
+        return true;
+        }
+}
+
+}
+else
+{
+   return true; 
+}
+}
+
+function checkbankbranch()
+{
+payment_mode = $("input[name='payment_mode']:checked").val()
+var namePattern = /^[0-9]*$/;
+var bankbranch =    $("#bank_branch_name").val();
+if(payment_mode=="cheque")
+{ 
+        if($("#bank_branch_name").val()==""){
+            $("#bank_branch_name").parent().find('.error').css("display", "block");
+        $("#bank_branch_name").parent().find('.error').text("Please enter Bank Branch Name");
+        return false;
+}else{
+    if(namePattern.test(bankbranch)){
+        $("#bank_branch_name").parent().find('.error').css("display", "block");
+        $("#bank_branch_name").parent().find('.error').text("Please enter valid Bank Branch Name");
+        return false;
+    }else{
+        $("#bank_branch_name").parent().find('.error').css("display", "none");
+   return true;
+   }
+}
+
+}
+else
+{
+   return true; 
+}
+}
+
+function checknumber()
+{
+payment_mode = $("input[name='payment_mode']:checked").val()
+if(payment_mode=="cheque")
+{ 
+        if($("#cheque_number").val()==""){
+            $("#cheque_number").parent().find('.error').css("display", "block");
+        $("#cheque_number").parent().find('.error').text("Please enter Cheque Number");
+        return false;
+}else{
+ $("#cheque_number").parent().find('.error').css("display", "none");
+   return true;
+}
+
+}
+else
+{
+   return true; 
 }
 }
 
@@ -2822,6 +3011,9 @@ if(check_data()){
 
 		formData.append("generated_amount",$('#generated_amount').val());
 		formData.append("payable_amount",$('#payable_amount').val());
+        formData.append("cheque_number",$('#cheque_number').val());
+        formData.append("bank_branch_name",$('#bank_branch_name').val());
+        formData.append("bank_name",$('#bank_name').val());
 		formData.append("paid_amount",$('#paid_amount').val());
 		formData.append("note",$('#note').val());
 		formData.append("selected_tax_type",selected_tax_type);
@@ -2922,6 +3114,9 @@ if(check_data()){
 
 		formData.append("generated_amount",$('#generated_amount').val());
 		formData.append("payable_amount",$('#payable_amount').val());
+        formData.append("cheque_number",$('#cheque_number').val());
+        formData.append("bank_branch_name",$('#bank_branch_name').val());
+        formData.append("bank_name",$('#bank_name').val());
 		formData.append("paid_amount",$('#paid_amount').val());
 		formData.append("note",$('#note').val());
 		formData.append("selected_tax_type",selected_tax_type);

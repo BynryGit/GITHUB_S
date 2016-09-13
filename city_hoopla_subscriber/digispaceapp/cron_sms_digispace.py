@@ -64,7 +64,6 @@ from django.http import HttpResponseRedirect
 
 def my_scheduled_job():
     MAILTO=""
-    
     today_date = str(datetime.now())
     next_week_date = str(datetime.now() + timedelta(days=7))
     list = []

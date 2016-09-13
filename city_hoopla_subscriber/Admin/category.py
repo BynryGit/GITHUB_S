@@ -36,9 +36,10 @@ import string
 import random
 from django.views.decorators.cache import cache_control
 import ast
+import urllib2
 
-#SERVER_URL = "http://52.40.205.128"
-SERVER_URL = "http://192.168.0.151:9090"
+SERVER_URL = "http://52.40.205.128"
+#SERVER_URL = "http://192.168.0.151:9090"
 
 
 # SERVER_URL = "http://52.40.205.128"
@@ -211,9 +212,43 @@ def save_category(request):
                 'success': 'true',
                 'message': "Category added successfully",
             }
+            category_obj = Category.objects.get(category_name=request.POST.get('cat_name'))
+
+            add_category_sms(category_obj)
+
     except Exception as e:
         print e
     return HttpResponse(json.dumps(data), content_type='application/json')
+
+def add_category_sms(category_obj):
+
+    authkey = "118994AIG5vJOpg157989f23"
+    #mobiles = "7507542642"
+    mobiles = "+919403884595"
+
+    category_name= category_obj.category_name
+    print '....................category_name.......',category_name
+    message = "Hi Admin,"+'\n'+"Category "+category_name+" has been added successfully"
+    sender = "DGSPCE"
+    route = "4"
+    country = "91"
+
+    values = {
+              'authkey' : authkey,
+              'mobiles' : mobiles,
+              'message' : message,
+              'sender' : sender,
+              'route' : route,
+              'country' : country
+              }
+
+    url = "http://api.msg91.com/api/sendhttp.php"
+    postdata = urllib.urlencode(values)
+    req = urllib2.Request(url, postdata)
+    response = urllib2.urlopen(req)
+    output = response.read()
+
+
 
 def create_city_map_obj(city_list,sequence_list,cat_obj):
     try:
@@ -263,9 +298,28 @@ def category_list(request):
         data = {}
         final_list = []
         try:
-            category_list = Category.objects.filter(category_status='1')
+            category_list = Category.objects.all()
             for cat_obj in category_list:
                 category_id = str(cat_obj.category_id)
+                active_advert = 'No'
+                advert_obj_list = Advert.objects.filter(category_id=category_id)
+                obj_count = Advert.objects.filter(category_id=category_id).count()
+                inactive_count = Advert.objects.filter(category_id=category_id,status='0').count()
+                if advert_obj_list:
+                    if obj_count == inactive_count:
+                        active_advert = 'No'
+                    else:
+                        for advert_obj in advert_obj_list:
+                            advert_id = str(advert_obj.advert_id)
+                            pre_date = datetime.now().strftime("%m/%d/%Y")
+                            pre_date = datetime.strptime(pre_date, "%m/%d/%Y")
+                            advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=advert_id)
+                            end_date = advert_sub_obj.business_id.end_date
+                            end_date = datetime.strptime(end_date, "%m/%d/%Y")
+                            date_gap = end_date - pre_date
+                            if int(date_gap.days) >= 0:
+                                active_advert = 'Yes'
+
                 category_name = cat_obj.category_name
                 city_name = CategoryCityMap.objects.filter(category_id=cat_obj)
                 city_list = ''
@@ -273,12 +327,17 @@ def category_list(request):
                     for city in city_name:
                         city_list = str(city.city_place_id.city_id.city_name) + ',' + city_list
                     city_list = city_list[:-1]
+                if not city_list:
+                    city_list = 'All'
                 creation_date = str(cat_obj.category_created_date).split()[0]
                 updation_date = str(cat_obj.category_updated_date).split()[0]
                 if (cat_obj.category_status == '1'):
                     status = 'Active'
-                    delete = '<a id="' + str(
-                        category_id) + '" onclick="delete_category(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Delete"  ><i class="fa fa-trash"></i></a>'
+                    if active_advert == 'No':
+                        delete = '<a id="' + str(
+                            category_id) + '" onclick="delete_category(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Delete"  ><i class="fa fa-trash"></i></a>'
+                    else:
+                        delete = ''
                     edit = '<a  id="' + str(category_id) + '" href="/edit-category/?category_id=' + str(
                         category_id) + '" style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit" class="edit" data-toggle="modal" href="#edit_subscription"><i class="fa fa-pencil"></i></a>'
                     actions = edit + delete
@@ -288,7 +347,7 @@ def category_list(request):
                         cat_obj) + '" onclick="active_service(this.id);" style="text-align: center;letter-spacing: 5px;width:15%;margin-left: 36px !important;" title="Activate" class="edit" data-toggle="modal" href="#edit_subscription"><i class="fa fa-repeat"></i></a>'
                     actions = active
                 list = {'status': status, 'category_name': category_name, 'actions': actions, 'city_name': city_list,
-                        'creation_date': creation_date, 'updation_date': updation_date}
+                        'creation_date': creation_date, 'updation_date': updation_date, 'updated_by':cat_obj.category_updated_by}
                 final_list.append(list)
             data = {'success': 'true', 'data': final_list}
         except IntegrityError as e:
@@ -310,12 +369,42 @@ def delete_category(request):
         cat_obj.save()
         data = {'message': 'User Role De-activeted Successfully', 'success': 'true'}
         inactive_category_mail(cat_obj)
+        delete_category_sms(cat_obj)
+
     except IntegrityError as e:
         print e
     except Exception, e:
         print e
         print "Final Data: ", data
     return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def delete_category_sms(cat_obj):
+    print 'sssssssssssssssssssssss'
+    
+    category_name= cat_obj.category_name
+    authkey = "118994AIG5vJOpg157989f23"
+    mobiles = "+919403884595"
+    message = "Hi Admin,"+'\n'+"Category "+category_name+" has been deactivated successfully "
+    sender = "DGSPCE"
+    route = "4"
+    country = "91"
+    values = {
+              'authkey' : authkey,
+              'mobiles' : mobiles,
+              'message' : message,
+              'sender' : sender,
+              'route' : route,
+              'country' : country
+              }
+
+    url = "http://api.msg91.com/api/sendhttp.php"
+    postdata = urllib.urlencode(values)
+    req = urllib2.Request(url, postdata)
+    response = urllib2.urlopen(req)
+    output = response.read()
+
+
 
 @csrf_exempt
 def delete_sub_category(request):
@@ -387,11 +476,29 @@ def edit_category(request):
                 category_name = str(category.category_name)
                 city_name = CategoryCityMap.objects.filter(category_id=category)
                 sequence_list = ['1', '2', '3', '4', '5']
+
                 for city in city_name:
                     selected_city_list.append(str(city.city_place_id.city_id.city_name))
                     selected_sequence_list.append(str(city.sequence))
 
                 city_sequence_list = zip(selected_city_list, selected_sequence_list)
+
+                active_advert = 'No'
+
+                advert_obj_list = Advert.objects.filter(category_id = category_id)
+                for advert_obj in advert_obj_list:
+                    advert_id = str(advert_obj.advert_id)
+                    pre_date = datetime.now().strftime("%m/%d/%Y")
+                    pre_date = datetime.strptime(pre_date, "%m/%d/%Y")
+                    advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=advert_id)
+                    end_date = advert_sub_obj.business_id.end_date
+                    end_date = datetime.strptime(end_date, "%m/%d/%Y")
+                    date_gap = end_date - pre_date
+                    if int(date_gap.days) >= 0:
+                        active_advert = 'Yes'
+
+                print "=====active_advert=====",active_advert
+
                 print '=====category=======', category
                 sub_category1 = CategoryLevel1.objects.filter(parent_category_id=category)
                 if sub_category1:
@@ -410,8 +517,8 @@ def edit_category(request):
 
                         sub_category1_list.append(category1_list)
                 length1 = len(sub_category1_list)
-                print '=====category1======='
-                sub_category2 = CategoryLevel2.objects.filter(parent_category_id=sub_category1)
+                print '=====category1=======',sub_category1
+                sub_category2 = CategoryLevel2.objects.filter(parent_category_id__in=sub_category1)
                 if sub_category2:
                     for cat in sub_category2:
                         sub_category3 = CategoryLevel3.objects.filter(parent_category_id=cat)
@@ -428,7 +535,7 @@ def edit_category(request):
                         sub_category2_list.append(category2_list)
                 length2 = len(sub_category2_list)
                 print '=====category2======='
-                sub_category3 = CategoryLevel3.objects.filter(parent_category_id=sub_category2)
+                sub_category3 = CategoryLevel3.objects.filter(parent_category_id__in=sub_category2)
                 if sub_category3:
                     for cat in sub_category3:
                         sub_category4 = CategoryLevel4.objects.filter(parent_category_id=cat)
@@ -445,7 +552,7 @@ def edit_category(request):
                         sub_category3_list.append(category3_list)
                 length3 = len(sub_category3_list)
                 print '=====category3======='
-                sub_category4 = CategoryLevel4.objects.filter(parent_category_id=sub_category3)
+                sub_category4 = CategoryLevel4.objects.filter(parent_category_id__in=sub_category3)
                 if sub_category4:
                     for cat in sub_category4:
                         sub_category5 = CategoryLevel5.objects.filter(parent_category_id=cat)
@@ -462,7 +569,7 @@ def edit_category(request):
                         sub_category4_list.append(category4_list)
                 length4 = len(sub_category4_list)
                 print '=====category4======='
-                sub_category5 = CategoryLevel5.objects.filter(parent_category_id=sub_category4)
+                sub_category5 = CategoryLevel5.objects.filter(parent_category_id__in=sub_category4)
                 if sub_category5:
                     for cat in sub_category5:
                         category5_list = {
@@ -479,7 +586,7 @@ def edit_category(request):
                         'category_id': category_id, 'city_sequence_list': city_sequence_list, 'city_list': city_list,
                         'success': 'true', 'sub_category5_list': sub_category5_list,'cat_img':SERVER_URL + category.category_image.url,
                         'sub_category4_list': sub_category4_list, 'sub_category3_list': sub_category3_list,
-                        'sub_category2_list': sub_category2_list, 'category_name': category_name,
+                        'sub_category2_list': sub_category2_list, 'category_name': category_name,'active_advert':active_advert,
                         'sub_category1_list': sub_category1_list, 'cat_color':str(category.category_color) or '#000000'}
 
             except IntegrityError as e:
@@ -490,7 +597,6 @@ def edit_category(request):
         except Exception, e:
             print 'Exception ', e
         return render(request, 'Admin/edit_category.html', data)
-
 
 @csrf_exempt
 def update_category(request):
@@ -526,7 +632,9 @@ def update_category(request):
     try:
         cat_obj = Category.objects.get(category_id=category_id)
         cat_obj.category_name = cat_name
-        cat_obj.category_color = cat_color
+        cat_obj.category_updated_date = datetime.now()
+        cat_obj.category_updated_by = request.session['login_user']
+        cat_obj.updated_by = cat_color
         cat_obj.save()
         if image:
             cat_obj.category_image = request.FILES['img']
@@ -638,10 +746,44 @@ def update_category(request):
             'message': "Category added successfully",
         }
         edit_category_mail(cat_obj)
+        edit_category_sms(cat_obj)
     except Exception, e:
         print "==============EXCEPTION+++++++++++++++++++++++++++++++++++++", e
         data = {'success': 'false'}
     return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def edit_category_sms(cat_obj):
+
+    authkey = "118994AIG5vJOpg157989f23"
+    mobiles = "+919403884595"
+
+    category_name= cat_obj.category_name
+    print '....................category_name.......',category_name
+    message = "Hi Admin,"+'\n'+"Category "+category_name+" has been updated successfully"
+    sender = "DGSPCE"
+    route = "4"
+    country = "91"
+    print 'kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk'
+
+
+
+    values = {
+              'authkey' : authkey,
+              'mobiles' : mobiles,
+              'message' : message,
+              'sender' : sender,
+              'route' : route,
+              'country' : country
+              }
+
+    url = "http://api.msg91.com/api/sendhttp.php"
+    postdata = urllib.urlencode(values)
+    req = urllib2.Request(url, postdata)
+    response = urllib2.urlopen(req)
+    output = response.read()
+    print output
+
 
 def add_category_mail(cat_obj):
     gmail_user = "cityhoopla2016"

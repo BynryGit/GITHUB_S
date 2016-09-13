@@ -38,9 +38,16 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'digispaceapp',
+    'subscriberapp',
     'captcha',
-    'embed_video',
+    'push_notifications',
+    'digispaceapp.templatetags.my_template_tag',
+    'embed_video'
 )
+
+PUSH_NOTIFICATIONS_SETTINGS = {
+    "GCM_API_KEY": "AIzaSyAdxzP7nuEVzuWg18S5TdnyhGdEBVWtEOc",
+}
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -67,7 +74,7 @@ WSGI_APPLICATION = 'DigiSpace.wsgi.application'
 '''DATABASES = {
    'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'digispacedb',
+            'NAME': 'digispace_db',
             'USER': 'root',
             'PASSWORD': 'root',
             'HOST': '127.0.0.1',
@@ -80,7 +87,7 @@ WSGI_APPLICATION = 'DigiSpace.wsgi.application'
 # DATABASES = {
 #     'default': {
 #              'ENGINE': 'django.db.backends.mysql',
-#              'NAME': 'digispace_prod_db',
+#              'NAME': 'digispace_parallel',
 #              'USER': 'root',
 #              'PASSWORD': 'root1234',
 #              'HOST': 'newdigispace.cdaktz8aqmgo.us-west-2.rds.amazonaws.com',
@@ -93,12 +100,13 @@ WSGI_APPLICATION = 'DigiSpace.wsgi.application'
 DATABASES = {
     'default': {
              'ENGINE': 'django.db.backends.mysql',
-             'NAME': 'digispacedb',
+             'NAME': 'digispace_new',
              'USER': 'root',
              'PASSWORD': 'root',
              'HOST': 'localhost',
-             'PORT': '3306',
-             'TIME_ZONE':'Asia/Kolkata',
+             'PORT': '3306'
+             #'TIME_ZONE': 'Asia/Kolkata',
+
     }
  }
 
@@ -107,17 +115,23 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Asia/Kolkata'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = False
+USE_TZ = True
 
 TEMPLATE_DIRS = (
     BASE_DIR+'/templates',
 )
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.request',
+    'django.contrib.auth.context_processors.auth',
+)
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
@@ -129,6 +143,5 @@ MEDIA_ROOT = BASE_DIR+'/media/'
 MEDIA_URL ='/media/'
 
 CRONJOBS = [
-    ('* * * * *', 'digispaceapp.cron_sms_digispace.my_scheduled_job'),
+    ('0 0 * * *', 'digispaceapp.cron_sms_digispace.my_scheduled_job'),
 ]
-

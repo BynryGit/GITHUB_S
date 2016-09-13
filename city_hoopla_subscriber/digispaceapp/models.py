@@ -1,4 +1,6 @@
 from django.db import models
+from embed_video.fields import EmbedVideoField
+
 from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.shortcuts import render
@@ -33,6 +35,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 from datetime import datetime
 import uuid
 from django.db.models.signals import class_prepared
+import django
 # Create your models here.
 status = (
     ('1','1'),
@@ -41,12 +44,30 @@ status = (
 
 preference_status = (
     ('true','true'),
-    ('false','false'),   
+    ('false','false'),
+)
+
+flag = (
+    ('true','true'),
+    ('false','false'),
 )
 
 USER_IMAGES_PATH ='images/user_images/' 
 COMPANY_LOGO_PATH ='images/user_images/' 
 CATEGORY_PATH ='images/user_images/'
+
+class Operator(User):
+    operator_id                        =       models.AutoField(primary_key=True, editable=False)
+    operator_name                      =       models.CharField(max_length=100,default=None,blank=True,null=True)
+    operator_email_id                  =       models.CharField(blank=True,null=True,max_length=100,default=None)
+    operator_status                    =       models.CharField(default="1",null=True,max_length=100, choices=status);
+    user_created_date              =       models.DateTimeField(null=True,blank=True)
+    user_created_by                =       models.CharField(max_length=100,null=True,blank=True)
+    user_updated_by                =       models.CharField(max_length=100,null=True,blank= True)
+    user_updated_date              =       models.DateTimeField(null=True,blank=True)
+
+    def __unicode__(self):
+        return unicode(self.operator_id)
 
 class ConsumerProfile(User):
     consumer_id                        =       models.AutoField(primary_key=True, editable=False)
@@ -57,15 +78,26 @@ class ConsumerProfile(User):
     consumer_created_date              =       models.DateTimeField(null=True,blank=True)
     consumer_created_by                =       models.CharField(max_length=100,null=True,blank=True)
     consumer_updated_by                =       models.CharField(max_length=100,null=True,blank= True)
+    consumer_otp                       =       models.CharField(max_length=100,null=True,blank= True)
     consumer_updated_date              =       models.DateTimeField(null=True,blank=True)
     sign_up_source                     =       models.CharField(max_length=20,null=True,blank= True) 
     consumer_profile_pic               =       models.ImageField("Image",upload_to=USER_IMAGES_PATH,max_length=500, default=None)
     device_token                       =       models.CharField(max_length=20,null=True,blank= True)  
     online                             =       models.CharField(default="1",null=True,max_length=100, choices=status) 
     last_time_login                    =       models.DateTimeField(default=datetime.now,null=True,blank=True)
-    latitude = models.FloatField(blank=True, null=True, max_length=20, default=None)
-    longitude = models.FloatField(blank=True, null=True, max_length=20, default=None)
-    consumer_area = models.CharField(max_length=100, default=None, blank=True, null=True)
+    latitude                           =       models.FloatField(blank=True, null=True, max_length=20, default=None)
+    longitude                          =       models.FloatField(blank=True, null=True, max_length=20, default=None)
+    consumer_area                      =       models.CharField(max_length=100, default=None, blank=True, null=True)
+    user_verified                      =       models.CharField(default="false", null=True, max_length=100, choices=flag)
+    notification_status                =       models.CharField(default="true", null=True, max_length=100, choices=flag)
+    push_review_status                 =       models.CharField(default="true", null=True, max_length=100, choices=flag)
+    push_post_status                   =       models.CharField(default="true", null=True, max_length=100, choices=flag)
+    push_social_status                 =       models.CharField(default="true", null=True, max_length=100, choices=flag)
+    email_review_status                =       models.CharField(default="true", null=True, max_length=100, choices=flag)
+    newsletter_status                  =       models.CharField(default="true", null=True, max_length=100, choices=flag)
+    email_social_status                =       models.CharField(default="true", null=True, max_length=100, choices=flag)
+    no_of_login                        =       models.CharField(max_length=100, default=None, blank=True, null=True)
+        
 
     def __unicode__(self):
         return unicode(self.consumer_id)
@@ -76,7 +108,7 @@ class Consumer_Feedback(models.Model):
     consumer_feedback                  =  models.CharField(max_length=1000,null=True,blank=True)    
     
     def __unicode__(self):
-        return unicode(self.feedback_id)  
+        return unicode(self.feedback_id) 
 
 class Country(models.Model):
     country_id      =       models.AutoField(primary_key=True, editable=False)
@@ -88,12 +120,26 @@ class Country(models.Model):
     country_status    =       models.CharField(max_length=15,null=True,blank=True,default="1",choices=status)
 
     def __unicode__(self):
-        return unicode(self.country_name)
+        return unicode(self.country_name) 
+
+class Currency(models.Model):
+    currency_id = models.AutoField(primary_key=True)
+    currency = models.CharField(max_length=150, null=True)
+    country_id =models.ForeignKey(Country,blank=True)
+    status = models.CharField(max_length=150, null=True, default="1", choices=status)
+    created_by = models.CharField(max_length=150,blank= True, null=True)
+    created_date = models.DateTimeField(null=True,blank= True)
+    updated_by = models.CharField(max_length=150,blank= True, null=True)
+    updated_date = models.DateTimeField(null=True,blank= True)
+
+    def __unicode__(self):
+        return unicode(self.currency)
+
 
 class State(models.Model):
     state_id        =       models.AutoField(primary_key=True, editable=False)
     state_name      =       models.CharField(max_length=500,null=True,blank=True)
-    country_id        =       models.ForeignKey(Country,blank=True,null=True)
+    country_id        =       models.ForeignKey(Country,blank=True)
     creation_date   =       models.DateTimeField(null=True,blank=True)
     created_by      =       models.CharField(max_length=500,null=True,blank=True)
     updated_by      =       models.CharField(max_length=500,null=True,blank= True)
@@ -105,7 +151,7 @@ class State(models.Model):
 
 class City(models.Model):
     city_id         =       models.AutoField(primary_key=True, editable=False)
-    city_name          =       models.CharField(max_length=100,null=True,blank=True)
+    city_name       =       models.CharField(max_length=100,null=True,blank=True)
     state_id        =       models.ForeignKey(State,blank=True)
     creation_date   =       models.DateTimeField(null=True,blank=True)
     created_by      =       models.CharField(max_length=500,null=True,blank=True)
@@ -121,7 +167,9 @@ class City_Place(models.Model):
     city_place_id         =       models.AutoField(primary_key=True, editable=False)
     city_id         =       models.ForeignKey(City,blank=True)
     #city_name       =       models.CharField(max_length=100,null=True,blank=True)
+    country_id       =models.ForeignKey(Country,blank=True,null=True)
     state_id        =       models.ForeignKey(State,blank=True)
+    currency        =       models.CharField(max_length=500,null=True,blank=True)
     about_city      =       models.CharField(max_length=1000,null=True,blank=True)
     city_image      =       models.FileField(upload_to=USER_IMAGES_PATH, max_length=500, null=True, blank=True)
     climate         =       models.CharField(max_length=500,null=True,blank=True)
@@ -175,7 +223,19 @@ class UserRole(models.Model):
     role_updated_by         =       models.CharField(max_length=30,null=True,blank= True)
     role_updated_date       =       models.DateTimeField(null=True,blank=True)
     def __unicode__(self):
-        return unicode(self.role_name)
+        return unicode(self.role_id)
+
+class Privileges(models.Model):
+    privilege_id            =       models.AutoField(primary_key=True, editable=False)
+    role_id                 =       models.ForeignKey(UserRole,related_name='userroleid',blank=True,null=True)
+    privilage               =       models.CharField(blank=True,null=True,max_length=100,default=None)
+    created_date            =           models.DateTimeField(default=datetime.now,null=True,blank=True)
+    created_by              =           models.CharField(max_length=30,default=None,blank=True,null=True)
+    updated_date            =           models.DateTimeField(default=datetime.now,null=True,blank=True)
+    updated_by              =           models.CharField(max_length=30,default=None,blank=True,null=True)
+
+    def __unicode__(self):
+        return unicode(self.privilege_id)
 
 class UserProfile(User):
     user_id                        =       models.AutoField(primary_key=True, editable=False)
@@ -274,8 +334,8 @@ class CategoryLevel5(models.Model):
     category_updated_date = models.DateTimeField(null=True, blank=True)
 
     def __unicode__(self):
-        return unicode(self.category_id)
-
+        return unicode(self.category_id) 
+    
 class PhoneCategory(models.Model):
     phone_category_id                 =       models.AutoField(primary_key=True, editable=False)
     phone_category_name           	  =       models.CharField(max_length=15)
@@ -286,118 +346,111 @@ class PhoneCategory(models.Model):
     phone_category_updated_date       =       models.DateTimeField(null=True,blank=True)
     def __unicode__(self):
         return unicode(self.phone_category_name)
-
-
     
 
-class Currency(models.Model):
-    currency_id = models.AutoField(primary_key=True)
-    currency = models.CharField(max_length=150, null=True)
-    status = models.CharField(max_length=150, null=True, default=None, choices=status)
-    Currency_created_by = models.CharField(max_length=150, null=True)
-    Currency_created_date = models.DateTimeField(null=True)
-    Currency_updated_by = models.CharField(max_length=150, null=True)
-    Currency_updated_date = models.DateTimeField(null=True)
-
-    def __unicode__(self):
-        return unicode(self.currency)
-
 class Supplier(User):
-    supplier_id               =       models.AutoField(primary_key=True, editable=False)
-    business_name             =       models.CharField(max_length=100,default=None,blank=True,null=True)
-    phone_no                  =       models.CharField(blank=True,null=True,max_length=200,default=None)
-    secondary_phone_no        =       models.CharField(blank=True,null=True,max_length=100,default=None)
+    supplier_id                        =       models.AutoField(primary_key=True, editable=False)
+    business_name                =       models.CharField(max_length=100,default=None,blank=True,null=True)
+    phone_no                =       models.CharField(blank=True,null=True,max_length=200,default=None)
+    secondary_phone_no                  =       models.CharField(blank=True,null=True,max_length=100,default=None)
     supplier_email                  =       models.CharField(blank=True,null=True,max_length=100,default=None)
     secondary_email                  =       models.CharField(blank=True,null=True,max_length=100,default=None)
     logo                      =      models.ImageField(upload_to=COMPANY_LOGO_PATH,default=None,null=True,blank=True)
     address1                  =       models.CharField(blank=True,null=True,max_length=100,default=None)
     address2                  =       models.CharField(blank=True,null=True,max_length=100,default=None)
-    city                      =       models.ForeignKey(City,blank=True,null=True)
+    country_id =models.ForeignKey(Country,blank=True,null=True)
+    city_place_id                     = models.ForeignKey(City_Place,blank=True,null=True)
+    area                  =       models.CharField(blank=True,null=True,max_length=100,default=None)
+    # city                      =       models.ForeignKey(City,blank=True,null=True)
     state                     =       models.ForeignKey(State,blank=True,null=True)
     pincode                     =       models.ForeignKey(Pincode,blank=True,null=True)
-    country        =       models.ForeignKey(Country,blank=True,null=True)
     business_details                  =       models.CharField(blank=True,null=True,max_length=10000,default=None)
     contact_person              = models.CharField(blank=True,null=True,max_length=100,default=None)
     contact_no                = models.CharField(blank=True,null=True,max_length=100,default=None)
     contact_email                = models.CharField(blank=True,null=True,max_length=100,default=None)
     supplier_status                    =       models.CharField(default="1",null=True,max_length=100, choices=status);
-    supplier_created_date              =       models.DateTimeField(null=True,blank=True)
+    supplier_created_date              =       models.DateTimeField(null=True,blank=True,default=django.utils.timezone.now)
     supplier_created_by                =       models.CharField(max_length=100,null=True,blank=True)
     supplier_updated_by                =       models.CharField(max_length=100,null=True,blank= True)
     supplier_updated_date              =       models.DateTimeField(null=True,blank=True)
-    notification_status                    =       models.CharField(default="true",null=True,max_length=100, choices=preference_status)
-    reminders_status                    =       models.CharField(default="true",null=True,max_length=100, choices=preference_status)
-    discounts_status                    =       models.CharField(default="true",null=True,max_length=100, choices=preference_status)
-    request_call_back_status                    =       models.CharField(default="true",null=True,max_length=100, choices=preference_status)
-    no_call_status                    =       models.CharField(default="true",null=True,max_length=100, choices=preference_status)
+    notification_status = models.CharField(default="true", null=True, max_length=100, choices=preference_status)
+    reminders_status = models.CharField(default="true", null=True, max_length=100, choices=preference_status)
+    discounts_status = models.CharField(default="true", null=True, max_length=100, choices=preference_status)
+    request_call_back_status = models.CharField(default="true", null=True, max_length=100, choices=preference_status)
+    no_call_status = models.CharField(default="true", null=True, max_length=100, choices=preference_status)
 
     def __unicode__(self):
         return unicode(self.supplier_id)
-
-
+    
+    
 class Advert(models.Model):
-    advert_id = models.AutoField(primary_key=True, editable=False)
-    supplier_id = models.ForeignKey(Supplier, blank=True, null=True)
+    advert_id                   = models.AutoField(primary_key=True, editable=False)
+    supplier_id                 = models.ForeignKey(Supplier,blank=True,null=True)
     category_id = models.ForeignKey(Category, blank=True, null=True)
     category_level_1 = models.ForeignKey(CategoryLevel1, blank=True, null=True)
     category_level_2 = models.ForeignKey(CategoryLevel2, blank=True, null=True)
     category_level_3 = models.ForeignKey(CategoryLevel3, blank=True, null=True)
     category_level_4 = models.ForeignKey(CategoryLevel4, blank=True, null=True)
     category_level_5 = models.ForeignKey(CategoryLevel5, blank=True, null=True)
-    status = models.CharField(max_length=150, null=True, default="1", choices=status)
-    advert_name = models.CharField(max_length=50, blank=True, null=True)
-    website = models.CharField(max_length=50, blank=True, null=True)
-    latitude = models.CharField(max_length=50, blank=True, null=True)
-    longitude = models.CharField(max_length=50, blank=True, null=True)
-    short_description = models.CharField(max_length=5000, blank=True, null=True)
-    product_description = models.CharField(max_length=5000, blank=True, null=True)
-    discount_description = models.CharField(max_length=5000, blank=True, null=True)
-    currency_id = models.ForeignKey(Currency, blank=True, null=True)
+    status                      = models.CharField(max_length=150, null=True, default="1", choices=status)
+    advert_name                 = models.CharField(max_length=50,blank=True,null=True)
+    contact_name                = models.CharField(max_length=50,blank=True,null=True)
+    contact_no                  = models.CharField(max_length=50,blank=True,null=True)
+    website                     = models.CharField(max_length=50,blank=True,null=True)
+    latitude                    = models.CharField(max_length=50,blank=True,null=True)
+    longitude                   = models.CharField(max_length=50,blank=True,null=True)
+    short_description           = models.CharField(max_length=5000,blank=True,null=True)
+    product_description         = models.CharField(max_length=5000,blank=True,null=True)
+    discount_description        = models.CharField(max_length=5000,blank=True,null=True)
+    country_id =models.ForeignKey(Country,blank=True,null=True)
+    currency                    = models.CharField(max_length=50,blank=True,null=True)
     # product_price               = models.CharField(max_length=50,blank=True,null=True)
-    display_image = models.FileField(upload_to=USER_IMAGES_PATH, max_length=500, null=True, blank=True)
-    address_line_1 = models.CharField(max_length=50, blank=True, null=True)
-    address_line_2 = models.CharField(max_length=50, blank=True, null=True)
-    state_id = models.ForeignKey(State, blank=True, null=True)
-    city_place_id = models.ForeignKey(City_Place, blank=True, null=True)
-    pincode_id = models.ForeignKey(Pincode, blank=True, null=True)
-    area = models.CharField(max_length=50, blank=True, null=True)
-    landmark = models.CharField(max_length=50, blank=True, null=True)
-    email_primary = models.CharField(max_length=50, blank=True, null=True)
-    email_secondary = models.CharField(max_length=50, blank=True, null=True)
-    property_market_rate = models.CharField(max_length=50, blank=True, null=True)
-    possesion_status = models.CharField(max_length=50, blank=True, null=True)
-    date_of_delivery = models.CharField(max_length=50, blank=True, null=True)
-    any_other_details = models.CharField(max_length=5000, blank=True, null=True)
-    speciality = models.CharField(max_length=5000, blank=True, null=True)
-    happy_hour_offer = models.CharField(max_length=5000, blank=True, null=True)
-    course_duration = models.CharField(max_length=5000, blank=True, null=True)
-    affilated_to = models.CharField(max_length=5000, blank=True, null=True)
-    facility = models.CharField(max_length=5000, blank=True, null=True)
-    image_video_space_used = models.CharField(max_length=200, blank=True, null=True)
-    distance_frm_railway_station = models.CharField(max_length=50, blank=True, null=True)
-    distance_frm_railway_airport = models.CharField(max_length=50, blank=True, null=True)
-    creation_date = models.DateTimeField(null=True, blank=True)
-    created_by = models.CharField(max_length=500, null=True, blank=True)
-    updated_by = models.CharField(max_length=500, null=True, blank=True)
-    updation_date = models.DateTimeField(null=True, blank=True)
-    advert_views = models.CharField(max_length=10, null=True, blank=True)
-
+    display_image               = models.FileField(upload_to=USER_IMAGES_PATH, max_length=500, null=True, blank=True)
+    address_line_1              = models.CharField(max_length=50,blank=True,null=True)
+    address_line_2              = models.CharField(max_length=50,blank=True,null=True)
+    state_id                    = models.ForeignKey(State,blank=True,null=True)
+    city_place_id                     = models.ForeignKey(City_Place,blank=True,null=True)
+    pincode_id                  = models.ForeignKey(Pincode,blank=True,null=True)
+    area                        = models.CharField(max_length=50,blank=True,null=True) 
+    landmark                    = models.CharField(max_length=50,blank=True,null=True)
+    email_primary               = models.CharField(max_length=50,blank=True,null=True)
+    email_secondary             = models.CharField(max_length=50,blank=True,null=True)
+    property_market_rate        = models.CharField(max_length=50,blank=True,null=True)
+    possesion_status            = models.CharField(max_length=50,blank=True,null=True)
+    other_projects              = models.CharField(max_length=5000,blank=True,null=True)
+    date_of_delivery             = models.CharField(max_length=50,blank=True,null=True)
+    any_other_details             = models.CharField(max_length=5000,blank=True,null=True)  
+    speciality                  = models.CharField(max_length=5000,blank=True,null=True)
+    happy_hour_offer            = models.CharField(max_length=5000,blank=True,null=True)
+    course_duration                  = models.CharField(max_length=5000,blank=True,null=True)
+    affilated_to                  = models.CharField(max_length=5000,blank=True,null=True)
+    facility                  = models.CharField(max_length=5000,blank=True,null=True) 
+    image_video_space_used      = models.CharField(max_length=200,blank=True,null=True)  
+    distance_frm_railway_station = models.CharField(max_length=50,blank=True,null=True)
+    distance_frm_railway_airport = models.CharField(max_length=50,blank=True,null=True)    
+    creation_date               = models.DateTimeField(null=True,blank=True)
+    created_by                  = models.CharField(max_length=500,null=True,blank=True)
+    updated_by                  = models.CharField(max_length=500,null=True,blank= True)
+    updation_date               = models.DateTimeField(null=True,blank=True)
+    advert_views                = models.CharField(max_length=10,null=True,blank=True)
+    keywords                    = models.CharField(max_length=1000, blank=True, null=True)
+    
     def __unicode__(self):
         return unicode(self.advert_id)
 
-
 class Product(models.Model):
-    product_id = models.AutoField(primary_key=True, editable=False)
-    advert_id = models.ForeignKey(Advert, blank=True, null=True)
-    product_name = models.CharField(max_length=50, blank=True, null=True)
-    product_price = models.CharField(max_length=50, blank=True, null=True)
-    creation_date = models.DateTimeField(null=True, blank=True)
-    created_by = models.CharField(max_length=500, null=True, blank=True)
-    updated_by = models.CharField(max_length=500, null=True, blank=True)
-    updation_date = models.DateTimeField(null=True, blank=True)
-
+    product_id                  = models.AutoField(primary_key=True, editable=False)
+    advert_id                   = models.ForeignKey(Advert,blank=True,null=True)
+    product_name                = models.CharField(max_length=50,blank=True,null=True)   
+    product_price               = models.CharField(max_length=50,blank=True,null=True)
+    creation_date               = models.DateTimeField(null=True,blank=True)
+    created_by                  = models.CharField(max_length=500,null=True,blank=True)
+    updated_by                  = models.CharField(max_length=500,null=True,blank= True)
+    updation_date               = models.DateTimeField(null=True,blank=True)
+    
     def __unicode__(self):
         return unicode(self.product_id)
+    
 
 class PhoneNo(models.Model):
     phone_no_id                 = models.AutoField(primary_key=True, editable=False)
@@ -540,8 +593,7 @@ class Advert_Category_Map(models.Model):
     category_level              =       models.CharField(max_length=30,null=True,blank= True)
 
     def __unicode__(self):
-        return unicode(self.adv_cat_id)
-
+        return unicode(self.adv_cat_id)    
 class ServiceRateCard(models.Model):
     service_rate_card_id                 =       models.AutoField(primary_key=True, editable=False)
     service_name               =       models.CharField(max_length=30)
@@ -573,16 +625,16 @@ class AdvertRateCard(models.Model):
 class Business(models.Model):
     business_id                 =       models.AutoField(primary_key=True, editable=False)
     supplier                      =       models.ForeignKey(Supplier,blank=True,null=True)
-    category                    =       models.ForeignKey(Category,blank=True,null=True)
+    category             =       models.ForeignKey(Category,blank=True,null=True)
     service_rate_card_id             =       models.ForeignKey(ServiceRateCard,blank=True,null=True)
     duration               =       models.CharField(max_length=30)
     transaction_code               =       models.CharField(max_length=30,blank=True,null=True)
-    start_date              = models.CharField(max_length=30,blank=True,null=True)
+    start_date = models.CharField(max_length=30,blank=True,null=True)
     end_date = models.CharField(max_length=30,blank=True,null=True)
-    business_created_date       =       models.DateTimeField(null=True,blank=True)
+    business_created_date       =       models.DateTimeField(default=datetime.now,null=True,blank=True)
     business_created_by         =       models.CharField(max_length=30,null=True,blank=True)
     business_updated_by         =       models.CharField(max_length=30,null=True,blank= True)
-    business_updated_date       =       models.DateTimeField(null=True,blank=True)
+    business_updated_date       =       models.DateTimeField(default=datetime.now,null=True,blank=True)
     is_active       =      models.CharField(max_length=2,null=True,blank=True)
     def __unicode__(self):
         return unicode(self.business_id)
@@ -593,14 +645,15 @@ class PremiumService(models.Model):
     premium_service_id                 =       models.AutoField(primary_key=True, editable=False)
     premium_service_name               =       models.CharField(max_length=30)
     no_of_days                         =        models.CharField(max_length=30)
-    start_date                         = models.CharField(max_length=30,blank=True,null=True)
-    end_date                           = models.CharField(max_length=30,blank=True,null=True)
-    business_id                        =       models.ForeignKey(Business,blank=True,null=True)    
+    category_id                        =       models.ForeignKey(Category,blank=True,null=True)
+    start_date = models.CharField(max_length=30,blank=True,null=True)
+    end_date = models.CharField(max_length=30,blank=True,null=True)
+    business_id                      =       models.ForeignKey(Business,blank=True,null=True)    
     premium_service_status             =       models.CharField(max_length=15,null=True,blank=True,default="1",choices=status)
-    premium_service_created_date       =       models.DateTimeField(null=True,blank=True)
+    premium_service_created_date       =       models.DateTimeField(default=datetime.now,null=True,blank=True)
     premium_service_created_by         =       models.CharField(max_length=30,null=True,blank=True)
     premium_service_updated_by         =       models.CharField(max_length=30,null=True,blank= True)
-    premium_service_updated_date       =       models.DateTimeField(null=True,blank=True)
+    premium_service_updated_date       =       models.DateTimeField(default=datetime.now,null=True,blank=True)
     def __unicode__(self):
         return unicode(self.premium_service_id)   
 
@@ -617,10 +670,13 @@ class PaymentDetail(models.Model):
     payment_id                 =       models.AutoField(primary_key=True, editable=False)
     payment_code               =       models.CharField(max_length=30)
     payment_mode               =        models.CharField(max_length=30)
-    paid_amount                =       models.CharField(max_length=30,null=True,blank=True)
-    payable_amount             =       models.CharField(max_length=30,null=True,blank=True)
-    total_amount               =       models.CharField(max_length=30,null=True,blank=True)
-    tax_type                   =       models.ForeignKey(Tax,null=True,blank=True)    
+    bank_name                  =      models.CharField(max_length=50,null=True,blank=True)
+    branch_name                =    models.CharField(max_length=50,null=True,blank=True)
+    cheque_number              =    models.CharField(max_length=50,null=True,blank=True)
+    paid_amount         =       models.CharField(max_length=30,null=True,blank=True)
+    payable_amount         =       models.CharField(max_length=30,null=True,blank=True)
+    total_amount         =       models.CharField(max_length=30,null=True,blank=True)
+    tax_type             =       models.ForeignKey(Tax,null=True,blank=True)    
     payment_created_date       =       models.DateTimeField(null=True,blank=True)
     payment_created_by         =       models.CharField(max_length=30,null=True,blank=True)
     payment_updated_by         =       models.CharField(max_length=30,null=True,blank= True)
@@ -633,10 +689,10 @@ class PaymentDetail(models.Model):
 
 
 class CategoryCityMap(models.Model):
-    map_id                    = models.AutoField(primary_key=True, editable=False)
-    city_place_id             = models.ForeignKey(City_Place,blank=True,null=True)
-    category_id               = models.ForeignKey(Category,blank=True,null=True) 
-    sequence                  = models.CharField(max_length=500,null=True,blank=True)
+    map_id                 = models.AutoField(primary_key=True, editable=False)
+    city_place_id                  = models.ForeignKey(City_Place,blank=True,null=True)
+    category_id                    = models.ForeignKey(Category,blank=True,null=True) 
+    sequence                = models.CharField(max_length=500,null=True,blank=True)
     creation_date               = models.DateTimeField(null=True,blank=True)
     created_by                  = models.CharField(max_length=500,null=True,blank=True)
     updated_by                  = models.CharField(max_length=500,null=True,blank= True)
@@ -645,53 +701,55 @@ class CategoryCityMap(models.Model):
     def __unicode__(self):
         return unicode(self.map_id)
     
-    
+ 
+
 class AdvertLike(models.Model):
-    id                 = models.AutoField(primary_key=True, editable=False)
-    user_id                  = models.ForeignKey(ConsumerProfile,blank=True,null=True)
-    advert_id                    = models.ForeignKey(Advert,blank=True,null=True) 
-    creation_date               = models.DateTimeField(null=True,blank=True)
-    
+    id = models.AutoField(primary_key=True, editable=False)
+    user_id = models.ForeignKey(ConsumerProfile, blank=True, null=True)
+    advert_id = models.ForeignKey(Advert, blank=True, null=True)
+    creation_date = models.DateTimeField(null=True, blank=True)
+
     def __unicode__(self):
         return unicode(self.id)
+
+class AdvertView(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    user_id = models.ForeignKey(ConsumerProfile, blank=True, null=True)
+    advert_id = models.ForeignKey(Advert, blank=True, null=True)
+    creation_date = models.DateTimeField(null=True, blank=True)
+
+    def __unicode__(self):
+        return unicode(self.id)
+
 
 class AdvertCallbacks(models.Model):
-    id                 = models.AutoField(primary_key=True, editable=False)
-    user_id                  = models.ForeignKey(ConsumerProfile,blank=True,null=True)
-    advert_id                    = models.ForeignKey(Advert,blank=True,null=True) 
-    creation_date               = models.DateTimeField(null=True,blank=True)
-    
+    id = models.AutoField(primary_key=True, editable=False)
+    user_id = models.ForeignKey(ConsumerProfile, blank=True, null=True)
+    advert_id = models.ForeignKey(Advert, blank=True, null=True)
+    creation_date = models.DateTimeField(null=True, blank=True)
+
     def __unicode__(self):
         return unicode(self.id)
+
 
 class AdvertCallsMade(models.Model):
-    id                 = models.AutoField(primary_key=True, editable=False)
-    user_id                  = models.ForeignKey(ConsumerProfile,blank=True,null=True)
-    advert_id                    = models.ForeignKey(Advert,blank=True,null=True) 
-    creation_date               = models.DateTimeField(null=True,blank=True)
-    
+    id = models.AutoField(primary_key=True, editable=False)
+    user_id = models.ForeignKey(ConsumerProfile, blank=True, null=True)
+    advert_id = models.ForeignKey(Advert, blank=True, null=True)
+    creation_date = models.DateTimeField(null=True, blank=True)
+
     def __unicode__(self):
         return unicode(self.id)
+
 
 class AdvertShares(models.Model):
-    id                 = models.AutoField(primary_key=True, editable=False)
-    user_id                  = models.ForeignKey(ConsumerProfile,blank=True,null=True)
-    advert_id                    = models.ForeignKey(Advert,blank=True,null=True) 
-    creation_date               = models.DateTimeField(null=True,blank=True)
-    
+    id = models.AutoField(primary_key=True, editable=False)
+    user_id = models.ForeignKey(ConsumerProfile, blank=True, null=True)
+    advert_id = models.ForeignKey(Advert, blank=True, null=True)
+    creation_date = models.DateTimeField(null=True, blank=True)
+
     def __unicode__(self):
         return unicode(self.id)
-
-class AdvertTotalViews(models.Model):
-    id                 = models.AutoField(primary_key=True, editable=False)
-    user_id                  = models.ForeignKey(ConsumerProfile,blank=True,null=True)
-    advert_id                    = models.ForeignKey(Advert,blank=True,null=True) 
-    creation_date               = models.DateTimeField(null=True,blank=True)
-    
-    def __unicode__(self):
-        return unicode(self.id)
-
-
 
 class AdvertFavourite(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
@@ -719,3 +777,84 @@ class CouponCode(models.Model):
 
     def __unicode__(self):
         return unicode(self.id) 
+
+class SellTicket(models.Model):
+    sellticket_id = models.AutoField(primary_key=True, editable=False)
+    user_id       = models.ForeignKey(ConsumerProfile,blank=True,null=True)
+    event_name    = models.CharField(max_length=50, null=True, blank=True)
+    event_venue   = models.CharField(max_length=50, null=True, blank=True)
+    start_date    = models.DateTimeField(null=True, blank=True)
+    start_time    = models.CharField(max_length=50, null=True, blank=True)
+    select_activation_date=models.CharField(max_length=50, null=True, blank=True)
+    other_comments =models.CharField(max_length=5000,null=True,blank= True)
+    ticket_class   =models.CharField(max_length=50, null=True, blank=True)
+    no_of_tickets  =models.CharField(max_length=50, null=True, blank=True)
+    original_price =models.CharField(max_length=50, null=True, blank=True)
+    asking_price   =models.CharField(max_length=50, null=True, blank=True)
+    contact_number =models.CharField(max_length=20, null=True, blank=True)
+    image_one     =models.ImageField("Image",upload_to=USER_IMAGES_PATH,max_length=500, default=None)
+    image_two     =models.ImageField("Image",upload_to=USER_IMAGES_PATH,max_length=500, default=None)
+    image_three     =models.ImageField("Image",upload_to=USER_IMAGES_PATH,max_length=500, default=None)
+    image_four     =models.ImageField("Image",upload_to=USER_IMAGES_PATH,max_length=500, default=None)
+    created_date   =models.DateTimeField(default=datetime.now,null=True,blank=True)
+
+    def __unicode__(self):
+        return unicode(self.sellticket_id)
+
+class CallerDetails(models.Model):
+    CallerID             =       models.AutoField(primary_key=True, editable=False)
+    first_name           =       models.CharField(max_length=100,default=None,blank=True,null=True)
+    last_name            =       models.CharField(max_length=100,default=None,blank=True,null=True)
+    IncomingTelNo        =       models.CharField(blank=True,null=True,max_length=200,default=None)
+    email                =       models.CharField(blank=True,null=True,max_length=200,default=None)
+    CallerArea           =       models.CharField(blank=True,null=True,max_length=100,default=None)
+    CallerPincode        =       models.ForeignKey(Pincode,blank=True,null=True)
+    CallerCity           =       models.ForeignKey(City,blank=True,null=True)
+    caller_created_date  =       models.DateTimeField(null=True,blank=True)
+    caller_created_by    =       models.CharField(max_length=100,null=True,blank=True)
+    caller_updated_by    =       models.CharField(max_length=100,null=True,blank= True)
+    caller_updated_date  =       models.DateTimeField(null=True,blank=True)
+
+    def __unicode__(self):
+        return unicode(self.CallerID)
+
+class EnquiryDetails(models.Model):
+    EnquiryID                        =       models.AutoField(primary_key=True, editable=False)
+    CallerID                =       models.ForeignKey(CallerDetails,blank=True,null=True)
+    enquiryFor                  =       models.CharField(blank=True,null=True,max_length=100,default=None)
+    SelectedArea                     =       models.CharField(max_length=100,default=None,blank=True,null=True)
+    SelectedPincode                      =       models.ForeignKey(Pincode,blank=True,null=True)
+    SelectedCity                      =       models.ForeignKey(City,blank=True,null=True)
+    category_id = models.ForeignKey(Category, blank=True, null=True)
+    subcategory_id1 = models.ForeignKey(CategoryLevel1, blank=True, null=True)
+    subcategory_id2 = models.ForeignKey(CategoryLevel2, blank=True, null=True)
+    created_date              =       models.DateTimeField(null=True,blank=True)
+    created_by                =       models.CharField(max_length=100,null=True,blank=True)
+    updated_by                =       models.CharField(max_length=100,null=True,blank= True)
+    updated_date              =       models.DateTimeField(null=True,blank=True)
+
+    def __unicode__(self):
+        return unicode(self.EnquiryID)
+
+class CallInfo(models.Model):
+    UCID                    =       models.CharField(max_length=100,default=None,blank=True,null=True)
+    CallerID                =       models.CharField(max_length=100,default=None,blank=True,null=True)
+    CalledNo                =       models.CharField(max_length=100,default=None,blank=True,null=True)
+    CallStartTime                =       models.DateTimeField(null=True,blank=True)
+    DialStartTime                =       models.DateTimeField(null=True,blank=True)
+    DialEndTime                  =       models.DateTimeField(null=True,blank=True)
+    DisconnectType                      =       models.CharField(max_length=100,default=None,blank=True,null=True)
+    CallStatus                      =       models.CharField(max_length=100,default=None,blank=True,null=True)
+    CallDuration                      =       models.CharField(max_length=100,default=None,blank=True,null=True)
+    CallType                      =       models.CharField(max_length=100,default=None,blank=True,null=True)
+    AudioRecordingURL                      =       models.CharField(max_length=100,default=None,blank=True,null=True)
+    DialedNumber                      =       models.CharField(max_length=100,default=None,blank=True,null=True)
+    Department                      =       models.CharField(max_length=100,default=None,blank=True,null=True)
+    Extn                      =       models.CharField(max_length=100,default=None,blank=True,null=True)
+
+
+    def __unicode__(self):
+        return unicode(self.UCID)
+
+class Item(models.Model):
+    video = EmbedVideoField()  # same like models.URLField()
