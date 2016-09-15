@@ -56,7 +56,7 @@
     <link href="{% static 'assets/pages/css/dropzone.css' %}" rel="stylesheet" type="text/css"/>
     <link href="{% static 'assets/custom/css/map.css' %}" rel="stylesheet" type="text/css"/>
     <link href="{% static 'assets/bootstrap-tagsinput.css' %}" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+<!--     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"> -->
     <!-- END THEME LAYOUT STYLES --> </head>
     <!-- END HEAD -->
 <style type="text/css">
@@ -840,7 +840,7 @@ hr {
     </div>
     <!-- END SIDEBAR -->
             
-<!--    {% load embed_video_tags %}
+<!--  {% load embed_video_tags %}
 
 
 {% video item.video as my_video %}
@@ -849,7 +849,7 @@ hr {
   Backend: {{ my_video.backend }}
 
   {% video my_video "large" %}
-{% endvideo %} -->         
+{% endvideo %}   -->      
             
   <!-- BEGIN CONTENT -->
   <div class="page-content-wrapper">
@@ -888,10 +888,20 @@ hr {
 		                                    </div>
                                     </div>
 				                           <div class="col-xs-8" >  
-				             
-				             
+				                      
 
-                                    				 	<div class="row">
+											 {% for item in final_list2 %}
+												   <iframe width="420" height="315" controls preload="none"
+														src="{{item.video_s}}">
+														</iframe>
+											 {% endfor %} 
+											 
+											{% for item in final_list2 %}
+											 <video   width="465" height="315" controls="controls" >
+											    <source src="{{item.video_s}}" type="video/mp4">
+											 </video>
+										  {% endfor %}
+	                               				 	<div class="row">
                                     				    <div class="col-xs-12"  style="font-family:'Roboto Light', 'Roboto';  font-size:18px;">
                                   						    <p> 
                                                          <span><b> {{business_name}} </b></span>
@@ -1604,6 +1614,8 @@ hr {
   <script type="text/javascript">
   
   
+  
+  
   $('#country').val({{country_id}}).change();
   
   	setTimeout(function(){ 
@@ -1633,6 +1645,8 @@ function change_div() {
    
    
 $(document).ready(function(){
+
+
 
   $("#city").select2({   
 });

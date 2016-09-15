@@ -41,6 +41,10 @@ subscriber_urlpattern = patterns('',
     url(r'^update-profile/', 'subscriberapp.views.update_profile',name='update_profile'),
     #forgot Password Shubham
     url(r'^forgot-password/', 'subscriberapp.views.forgot_password',name='forgot_password'),
+    
+    #Dashboard Admin 
+    url(r'^subscriber-dashboard2/', 'subscriberapp.views.subscriber_dashboard2',name='subscriber_dashboard2'),
+    url(r'^get-admin-filter/', 'subscriberapp.views.get_admin_filter',name='get_admin_filter'),
 
 
     url(r'^renew-subscription/', 'subscriberapp.views.renew_subscription',name='renew_subscription'),

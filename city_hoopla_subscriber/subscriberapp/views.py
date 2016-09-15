@@ -1831,8 +1831,19 @@ def subscriber_profile(request):
         data = {}
         final_list = []
         final_list1 = []
+        final_list2 = []
 
         try:
+            Item_list = Item.objects.all()
+
+            for Item_obj in Item_list:
+                Item_video_id = Item_obj.Item_video_id
+                video_s= SERVER_URL + Item_obj.Item_video_name.url
+                #Item_video_name = Item_obj.Item_video_name
+                print '------$$$---Item_video_name----video_s--',video_s
+                list2= {'Item_video_id':Item_video_id,'video_s':video_s}
+                final_list2.append(list2)
+
             supplier_id = request.GET.get('supplier_id')
             print '=======request======first===',supplier_id 
             Supplier_obj = Supplier.objects.get(supplier_id=request.GET.get('supplier_id'))
@@ -1924,7 +1935,7 @@ def subscriber_profile(request):
             request_call_back_status = Supplier_obj.request_call_back_status
             no_call_status = Supplier_obj.no_call_status
            
-            data = {'country_list':country_list,'country_id':country_id, 'state_id':state_id, 'city_place_id':city_place_id, 'pincode_id':pincode_id,
+            data = {'final_list2':final_list2,'country_list':country_list,'country_id':country_id, 'state_id':state_id, 'city_place_id':city_place_id, 'pincode_id':pincode_id,
             'business_details_length':business_details_length,'pincode_list':pincode_list,'city_list':city_list,'state_list':state_list,'address2':address2,'pincode':pincode,'notification_status':notification_status,'reminders_status':reminders_status,'discounts_status':discounts_status,'request_call_back_status':request_call_back_status,'no_call_status':no_call_status,'supplier_id':supplier_id,'final_list1':final_list1,'final_list':final_list,'success':'true','logo':logo,'business_name':business_name,'city':city,'business_details':business_details,'phone_no':phone_no,'secondary_phone_no':secondary_phone_no,'supplier_email':supplier_email,'secondary_email':secondary_email,'address1':address1,'contact_person':contact_person,'contact_no':contact_no,'contact_email':contact_email }
 
         except IntegrityError as e:
@@ -1934,7 +1945,7 @@ def subscriber_profile(request):
         print e
     except Exception,e:
         print 'Exception ',e
-    print data
+    print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@',data
     return render(request,'Subscriber/subscriber-profile.html',data)
 
 
@@ -2540,9 +2551,813 @@ def subscriber_dashboard(request):
     return render(request,'Subscriber/subscriber-dashboard.html',data)
 
 @csrf_exempt
+def subscriber_dashboard2(request):
+    try:
+        data = {}
+        final_list = []
+        final_list1 = []
+        try:
+            print '......$$.supplier_id....$$..',request.GET.get('supplier_id')
+
+            Supplier_obj = Supplier.objects.get(supplier_id=request.session['supplier_id'])
+            print "..................Supplier_obj.........",Supplier_obj
+
+            logo= SERVER_URL + Supplier_obj.logo.url
+
+            #########.............Advert Stats.........................#####
+            Advert_list = Advert.objects.filter(supplier_id=request.session['supplier_id'])
+            print "..................Advert_list.........",Advert_list
+
+            avail_discount_count = 0
+            avail_callbacks_count = 0
+            avail_callsmade_count = 0
+            avail_shares_count = 0
+
+            for advert_obj in Advert_list:
+                advert_id = advert_obj.advert_id
+                discount_count = CouponCode.objects.filter(advert_id=advert_id).count()
+                callbacks_count = AdvertCallbacks.objects.filter(advert_id=advert_id).count()
+                callsmade_count = AdvertCallsMade.objects.filter(advert_id=advert_id).count()
+                shares_count = AdvertShares.objects.filter(advert_id=advert_id).count()
+
+
+                avail_discount_count = avail_discount_count + discount_count
+                avail_callbacks_count = avail_callbacks_count + callbacks_count
+                avail_callsmade_count = avail_callsmade_count + callsmade_count
+                avail_shares_count = avail_shares_count + shares_count
+
+
+            #######.............Total subscription  Graph......(1)....########
+            
+            FY_MONTH_LIST = [1,2,3,4,5,6,7,8,9,10,11,12]
+            today = date.today()
+            start_date = date(today.year,01,01)
+            end_date = date(today.year,12,31) 
+            monthly_count = []
+            # jan,feb,mar,apr,may,jun,jul,aug,sep,octo,nov,dec
+            subscriptions = Business.objects.filter(business_created_date__range=[start_date,end_date]).extra(select={'month': "EXTRACT(month FROM business_created_date)"}).values('month').annotate(count=Count('business_id'))
+            print "subscriptions",subscriptions
+            list={}
+
+
+            for sub in subscriptions:
+                print "sub.get('count')",sub.get('count')
+                if sub.get('month'):
+                    list[sub.get('month')]=sub.get('count') or '0.00'
+            
+
+            for m in FY_MONTH_LIST:
+                try:
+                    monthly_count.append(list[m])
+                except:
+                    monthly_count.append(0)
+                    
+            jan=monthly_count[0]
+            feb=monthly_count[1]
+            mar=monthly_count[2]
+            apr=monthly_count[3]
+            may=monthly_count[4]
+            jun=monthly_count[5]
+            jul=monthly_count[6]
+            aug=monthly_count[7]
+            sep=monthly_count[8]
+            octo=monthly_count[9]
+            nov=monthly_count[10]
+            dec=monthly_count[11]
+
+            ##########..................Today's Payment received.....(2)................############
+
+            current_date = datetime.now()
+            print '...........current_date.........',current_date
+            first = calendar.day_name[current_date.weekday()]
+            print '...........first.........',first
+
+            last_date = (datetime.now() - timedelta(days=7))
+            print '...........last_date.........',last_date
+            last_date2 = calendar.day_name[last_date.weekday()]
+            print '...........last_date2.........',last_date2
+
+            list = []
+            consumer_list = PaymentDetail.objects.filter(payment_created_date__range=[last_date,current_date])
+            mon=tue=wen=thus=fri=sat=sun=0
+            if consumer_list:
+                for view_obj in consumer_list:
+                    payment_created_date=view_obj.payment_created_date
+                    consumer_day = calendar.day_name[payment_created_date.weekday()]
+                    if consumer_day== 'Monday' :
+                        mon = mon+1
+                    elif consumer_day== 'Tuesday' :
+                        tue = tue+1
+                    elif consumer_day== 'Wednesday' :
+                        wen = wen+1
+                    elif consumer_day== 'Thursday' :
+                        thus = thus+1
+                    elif consumer_day== 'Friday' :
+                        fri = fri+1
+                    elif consumer_day== 'Saturday' :
+                        sat = sat+1
+                    elif consumer_day== 'Sunday' :
+                        sun = sun+1
+                    else :
+                        pass
+
+            print "$$$",mon,tue,wen,thus,fri,sat,sun
+
+            ############################...Todays Login.....(3)....###############################
+            count_zero = 0
+            count_first = 0
+            count_second = 0
+            count_third = 0
+
+            consumer_list0= ConsumerProfile.objects.filter(last_time_login__regex = ' 0:').count()
+            count_zero = count_zero + consumer_list0
+
+            for hour in range(0,9):
+                print "HOur",hour
+                hour = ' 0'+ str(hour) + ':'
+                print "hour",hour
+                consumer_list= ConsumerProfile.objects.filter(last_time_login__regex = hour).count()
+                count_first = count_first + consumer_list
+            count_1 = str(count_first)
+
+            for hour in range(9,17):
+                if hour == 9:
+                    hour = ' 0'+ str(hour) + ':'
+                else:
+                    hour = ' '+ str(hour) + ':'
+                consumer_list1= ConsumerProfile.objects.filter(last_time_login__regex = hour).count()
+                count_second = count_second + consumer_list1
+            count_2 = str(count_second)
+
+            for hour in range(17,24):
+                hour = ' '+ str(hour) + ':'
+                consumer_list2= ConsumerProfile.objects.filter(last_time_login__regex = hour).count()
+                count_third = count_third + consumer_list2
+            count_3 = str(count_third)
+
+            today_date = datetime.now().strftime("%m/%d/%Y")
+            dates = today_date.split('/')
+            if dates[0] == '1':
+                dates[0] = 12
+            else:
+                dates[0] = int(dates[0]) - 1
+                if int(dates[0]) < 10:
+                    dates[0] = '0'+str(dates[0])
+            pre_date = str(dates[0]) +'/'+dates[1]+'/'+dates[2]
+
+            print '..........pre_date..........',pre_date
+            print '..........count_zero..........',count_zero
+            print '..........count_1..........',count_1
+            print '..........count_2..........',count_2
+            print '..........count_3..........',count_3
+
+            ###########################....... New subscription view...(4).....######################
+            current_date = datetime.now()
+            first = calendar.day_name[current_date.weekday()]
+
+            last_date = (datetime.now() - timedelta(days=7))
+            last_date2 = calendar.day_name[last_date.weekday()]
+
+            list = []
+            consumer_obj_list = Business.objects.filter(business_created_date__range=[last_date,current_date])
+            mon1=tue1=wen1=thus1=fri1=sat1=sun1=0
+            if consumer_obj_list:
+                for consumer_obj in consumer_obj_list:
+                    business_created_date=consumer_obj.business_created_date
+                    consumer_day = calendar.day_name[business_created_date.weekday()]
+                    if consumer_day== 'Monday' :
+                        mon1 = mon1+1
+                    elif consumer_day== 'Tuesday' :
+                        tue1 = tue1+1
+                    elif consumer_day== 'Wednesday' :
+                        wen1 = wen1+1
+                    elif consumer_day== 'Thursday' :
+                        thus1 = thus1+1
+                    elif consumer_day== 'Friday' :
+                        fri1 = fri1+1
+                    elif consumer_day== 'Saturday' :
+                        sat1 = sat1+1
+                    elif consumer_day== 'Sunday' :
+                        sun1 = sun1+1
+                    else :
+                        pass
+
+
+
+            data = {'success':'true','count_zero':count_zero,'count_1':count_1,'count_2':count_2,'count_3':count_3,'logo':logo,'avail_callbacks_count':avail_callbacks_count,'avail_callsmade_count':avail_callsmade_count,'avail_shares_count':avail_shares_count,'avail_discount_count':avail_discount_count,'jan':jan,'feb':feb,'mar':mar,'apr':apr,'may':may,'jun':jun,'jul':jul,
+               'aug':aug,'sep':sep,'oct':octo,'nov':nov,'dec':dec,'mon':mon,'tue':tue,'wen':wen,'thus':thus,'fri':fri,'sat':sat,'sun':sun,'mon1':mon1,'tue1':tue1,'wen1':wen1,'thus1':thus1,'fri1':fri1,'sat1':sat1,'sun1':sun1,'city_places_list':get_city_places(request)}
+
+        except IntegrityError as e:
+            print e
+            data = {'success':'false','message':'Error in  loading page. Please try after some time','username':request.session['login_user']}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception,e:
+        print 'Exception ',e
+
+    print data
+    return render(request,'Subscriber/subscriber-dashboard2.html',data)
+
+# TO GET THE CITY
+def get_city_places(request):
+   
+    city_list=[]
+    try:
+        city_objs=City_Place.objects.filter(city_status='1')
+        for city in city_objs:
+            city_list.append({'city_place_id': city.city_place_id,'city': city.city_id.city_name})
+            print '............city List..........PPP',city_list
+        data =  city_list
+        return data
+
+    except Exception, ke:
+        print ke
+        data={'city_list': 'none','message':'No city available'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def get_admin_filter(request):
+    try:
+        data = {}
+        final_list = []
+        final_list1 = []
+        try: 
+            if request.GET.get('week_var') == 'month':
+                var1 = str(request.GET.get('week_var'))
+                city_front = request.GET.get('citys_var')
+                print '//...........city_front......//',city_front
+
+                Supplier_obj = Supplier.objects.get(supplier_id=request.GET.get('supplier_id'))
+
+                logo= SERVER_URL + Supplier_obj.logo.url
+
+                #########.............Advert Stats.......For a Month..................#####
+                print '..........Advert Stats.......For a Month.......'
+                today_date = str(datetime.now())
+                one_month_date = str(datetime.now() - timedelta(days=30))
+                Advert_list = Advert.objects.filter(supplier_id=request.GET.get('supplier_id'))
+
+                avail_discount_count = 0
+                avail_callbacks_count = 0
+                avail_callsmade_count = 0
+                avail_shares_count = 0
+
+                for advert_obj in Advert_list:
+                    advert_id = advert_obj.advert_id
+                    discount_count = CouponCode.objects.filter(advert_id=advert_id,creation_date__range=[one_month_date,today_date]).count()
+                    callbacks_count = AdvertCallbacks.objects.filter(advert_id=advert_id,creation_date__range=[one_month_date,today_date]).count()
+                    callsmade_count = AdvertCallsMade.objects.filter(advert_id=advert_id,creation_date__range=[one_month_date,today_date]).count()
+                    shares_count = AdvertShares.objects.filter(advert_id=advert_id,creation_date__range=[one_month_date,today_date]).count()
+
+
+                    avail_discount_count = avail_discount_count + discount_count
+                    avail_callbacks_count = avail_callbacks_count + callbacks_count
+                    avail_callsmade_count = avail_callsmade_count + callsmade_count
+                    avail_shares_count = avail_shares_count + shares_count
+
+                                
+                #######.........Total subscription  Graph......(1)...For a Month...........########
+                print '.......Total subscription  Graph......(1)...For a Month....'
+                today = date.today()
+                date_cal=datetime(today.year,today.month,today.day)
+                numb = (date_cal.day-1)//7+1
+
+                total_subscription_count1 = 0
+                total_subscription_count2 = 0
+                total_subscription_count3 = 0
+                total_subscription_count4 = 0
+                total_subscription_count5 = 0
+                for i in range(0,numb):
+                    if i==0:
+                        start_date = date(today.year,today.month,01)
+                        end_date = date(today.year,today.month,8) 
+                        total_subscription_list = Business.objects.filter(business_created_date__range=[start_date,end_date])
+
+                        if total_subscription_list:
+                            for consumer_obj in total_subscription_list:
+
+                                #city_nm1 = consumer_obj.supplier.city.city_name
+                                city_id = consumer_obj.supplier.city_place_id.city_id
+                                print '......................city_id ....11......',city_id
+
+                                if str(city_front) == str(city_id):
+                                    total_subscription_count1 = total_subscription_count1 + 1
+                                else :
+                                    pass
+
+                    elif i==1:
+                        start_date = date(today.year,today.month,8)
+                        end_date = date(today.year,today.month,16) 
+                        total_subscription_list = Business.objects.filter(business_created_date__range=[start_date,end_date])
+
+                        if total_subscription_list:
+                            for consumer_obj in total_subscription_list:
+
+                                #city_nm1 = consumer_obj.supplier.city.city_name
+                                city_id = consumer_obj.supplier.city_place_id.city_id
+                                print '......................city_id ....11......',city_id
+
+                                if str(city_front) == str(city_id):
+                                    total_subscription_count2 = total_subscription_count2 + 1
+                                else :
+                                    pass
+
+                    elif i==2:
+                        start_date = date(today.year,today.month,16)
+                        end_date = date(today.year,today.month,23) 
+                        total_subscription_list = Business.objects.filter(business_created_date__range=[start_date,end_date])
+
+                        if total_subscription_list:
+                            for consumer_obj in total_subscription_list:
+
+                                #city_nm1 = consumer_obj.supplier.city.city_name
+                                city_id = consumer_obj.supplier.city_place_id.city_id
+                                print '......................city_id .....11.....',city_id
+
+                                if str(city_front) == str(city_id):
+                                    total_subscription_count3 = total_subscription_count3 + 1
+                                else :
+                                    pass
+
+                    elif i==3:
+                        start_date = date(today.year,today.month,23)
+                        end_date = date(today.year,today.month,30) 
+                        total_subscription_list = Business.objects.filter(business_created_date__range=[start_date,end_date])
+
+                        if total_subscription_list:
+                            for consumer_obj in total_subscription_list:
+
+                                #city_nm1 = consumer_obj.supplier.city.city_name
+                                city_id = consumer_obj.supplier.city_place_id.city_id
+                                print '......................city_id ....11......',city_id
+
+                                if str(city_front) == str(city_id):
+                                    total_subscription_count4 = total_subscription_count4 + 1
+                                else :
+                                    pass
+
+                    elif i==4:
+                        start_date = date(today.year,today.month,30)
+                        end_date = date(today.year,today.month,31) 
+
+                        total_subscription_list = Business.objects.filter(business_created_date__range=[start_date,end_date])
+
+                        if total_subscription_list:
+                            for consumer_obj in total_subscription_list:
+
+                                #city_nm1 = consumer_obj.supplier.city.city_name
+                                city_id = consumer_obj.supplier.city_place_id.city_id
+                                print '......................city_id ...11.......',city_id
+
+                                if str(city_front) == str(city_id):
+                                    total_subscription_count5 = total_subscription_count5 + 1
+                                else :
+                                    pass
+
+                print '//...........total_subscription_count1......//',total_subscription_count1
+                print '//...........total_subscription_count2......//',total_subscription_count2
+                print '//...........total_subscription_count3......//',total_subscription_count3
+                print '//...........total_subscription_count4......//',total_subscription_count4
+                print '//...........total_subscription_count5......//',total_subscription_count5
+
+  
+
+                ##########.......Todays Payment received.....(2)....for a month.............############
+                
+                print '........Todays Payment received...(2)....for a month......'
+                today = date.today()
+                date_cal=datetime(today.year,today.month,today.day)
+                numb = (date_cal.day-1)//7+1
+
+                payment_count1 = 0
+                payment_count2 = 0
+                payment_count3 = 0
+                payment_count4 = 0
+                payment_count5 = 0
+
+                for i in range(0,numb):
+                    if i==0:
+                        start_date = date(today.year,today.month,01)
+                        end_date = date(today.year,today.month,8) 
+
+                        payment_list = PaymentDetail.objects.filter(payment_created_date__range=[start_date,end_date])
+
+                        if payment_list:
+                            for consumer_obj in payment_list:
+
+                                #city_nm1 = consumer_obj.supplier.city.city_name
+                                city_id = consumer_obj.business_id.supplier.city_place_id.city_id
+                                print '......................city_id ....22......',city_id
+
+                                if str(city_front) == str(city_id):
+                                    payment_count1 = payment_count1 + 1
+                                else :
+                                    pass
+
+                    elif i==1:
+                        start_date = date(today.year,today.month,8)
+                        end_date = date(today.year,today.month,16) 
+                        payment_list = PaymentDetail.objects.filter(payment_created_date__range=[start_date,end_date])
+
+                        if payment_list:
+                            for consumer_obj in payment_list:
+
+                                #city_nm1 = consumer_obj.supplier.city.city_name
+                                city_id = consumer_obj.business_id.supplier.city_place_id.city_id
+                                print '......................city_id ....22......',city_id
+
+                                if str(city_front) == str(city_id):
+                                    payment_count2 = payment_count2 + 1
+                                else :
+                                    pass                        
+
+                    elif i==2:
+                        start_date = date(today.year,today.month,16)
+                        end_date = date(today.year,today.month,23) 
+                        payment_list = PaymentDetail.objects.filter(payment_created_date__range=[start_date,end_date])
+
+                        if payment_list:
+                            for consumer_obj in payment_list:
+
+                                #city_nm1 = consumer_obj.supplier.city.city_name
+                                city_id = consumer_obj.business_id.supplier.city_place_id.city_id
+                                print '......................city_id ....22......',city_id
+
+                                if str(city_front) == str(city_id):
+                                    payment_count3 = payment_count3 + 1
+                                else :
+                                    pass
+
+                    elif i==3:
+                        start_date = date(today.year,today.month,23)
+                        end_date = date(today.year,today.month,30) 
+                        payment_list = PaymentDetail.objects.filter(payment_created_date__range=[start_date,end_date])
+
+                        if payment_list:
+                            for consumer_obj in payment_list:
+
+                                #city_nm1 = consumer_obj.supplier.city.city_name
+                                city_id = consumer_obj.business_id.supplier.city_place_id.city_id
+                                print '......................city_id ....22......',city_id
+
+                                if str(city_front) == str(city_id):
+                                    payment_count4 = payment_count4 + 1
+                                else :
+                                    pass
+
+                    elif i==4:
+                        start_date = date(today.year,today.month,30)
+                        end_date = date(today.year,today.month,31) 
+                        payment_list = PaymentDetail.objects.filter(payment_created_date__range=[start_date,end_date])
+
+                        if payment_list:
+                            for consumer_obj in payment_list:
+
+                                #city_nm1 = consumer_obj.supplier.city.city_name
+                                city_id = consumer_obj.business_id.supplier.city_place_id.city_id
+                                print '......................city_id ....22......',city_id
+
+                                if str(city_front) == str(city_id):
+                                    payment_count5 = payment_count5 + 1
+                                else :
+                                    pass
+                
+
+                print '//...........payment_count1......//',payment_count1
+                print '//...........payment_count2......//',payment_count2
+                print '//...........payment_count3......//',payment_count3
+                print '//...........payment_count4......//',payment_count4
+                print '//...........payment_count5......//',payment_count5
+
+
+                ##########........Todays Login.(3).....for a month.............############
+                
+                print '.......Todays Login.....(3)......for a month........'
+                today = date.today()
+                date_cal=datetime(today.year,today.month,today.day)
+                numb = (date_cal.day-1)//7+1
+
+                login_count1 = 0
+                login_count2 = 0
+                login_count3 = 0
+                login_count4 = 0
+                login_count5 = 0
+
+                for i in range(0,numb):
+                    if i==0:
+                        start_date = date(today.year,today.month,01)
+                        end_date = date(today.year,today.month,8) 
+                        login_count1 = ConsumerProfile.objects.filter(last_time_login__range=[start_date,end_date]).count()
+                    elif i==1:
+                        start_date = date(today.year,today.month,8)
+                        end_date = date(today.year,today.month,16) 
+                        login_count2 = ConsumerProfile.objects.filter(last_time_login__range=[start_date,end_date]).count()
+                    elif i==2:
+                        start_date = date(today.year,today.month,16)
+                        end_date = date(today.year,today.month,23) 
+                        login_count3 = ConsumerProfile.objects.filter(last_time_login__range=[start_date,end_date]).count()
+                    elif i==3:
+                        start_date = date(today.year,today.month,23)
+                        end_date = date(today.year,today.month,30) 
+                        login_count4 = ConsumerProfile.objects.filter(last_time_login__range=[start_date,end_date]).count()
+                    elif i==4:
+                        start_date = date(today.year,today.month,30)
+                        end_date = date(today.year,today.month,31) 
+                        login_count5 = ConsumerProfile.objects.filter(last_time_login__range=[start_date,end_date]).count()
+                
+
+                print '//...........login_count1......//',login_count1
+                print '//...........login_count2......//',login_count2
+                print '//...........login_count3......//',login_count3
+                print '//...........login_count4......//',login_count4
+                print '//...........login_count5......//',login_count5
+
+                ##########....... New subscription view...(4).....for a month.............############
+                
+                print '.....New subscription view...(4)......for a month........'
+                today = date.today()
+                date_cal=datetime(today.year,today.month,today.day)
+                numb = (date_cal.day-1)//7+1
+
+                subscription_count1 = 0
+                subscription_count2 = 0
+                subscription_count3 = 0
+                subscription_count4 = 0
+                subscription_count5 = 0
+
+                for i in range(0,numb):
+                    if i==0:
+                        start_date = date(today.year,today.month,01)
+                        end_date = date(today.year,today.month,8) 
+                        subscription_list = Business.objects.filter(business_created_date__range=[start_date,end_date])
+
+                        if subscription_list:
+                            for consumer_obj in subscription_list:
+
+                                #city_nm1 = consumer_obj.supplier.city.city_name
+                                city_id = consumer_obj.supplier.city_place_id.city_id
+                                print '......................city_id ....44......',city_id
+
+                                if str(city_front) == str(city_id):
+                                    subscription_count1 = subscription_count1 + 1
+                                else :
+                                    pass                    
+
+                    elif i==1:
+                        start_date = date(today.year,today.month,8)
+                        end_date = date(today.year,today.month,16) 
+                        subscription_list = Business.objects.filter(business_created_date__range=[start_date,end_date])
+
+                        if subscription_list:
+                            for consumer_obj in subscription_list:
+
+                                #city_nm1 = consumer_obj.supplier.city.city_name
+                                city_id = consumer_obj.supplier.city_place_id.city_id
+                                print '......................city_id ....44......',city_id
+
+                                if str(city_front) == str(city_id):
+                                    subscription_count2 = subscription_count2 + 1
+                                else :
+                                    pass
+
+                    elif i==2:
+                        start_date = date(today.year,today.month,16)
+                        end_date = date(today.year,today.month,23) 
+                        subscription_list = Business.objects.filter(business_created_date__range=[start_date,end_date])
+
+                        if subscription_list:
+                            for consumer_obj in subscription_list:
+
+                                #city_nm1 = consumer_obj.supplier.city.city_name
+                                city_id = consumer_obj.supplier.city_place_id.city_id
+                                print '......................city_id ....44......',city_id
+
+                                if str(city_front) == str(city_id):
+                                    subscription_count3 = subscription_count3 + 1
+                                else :
+                                    pass
+
+                    elif i==3:
+                        start_date = date(today.year,today.month,23)
+                        end_date = date(today.year,today.month,30) 
+                        subscription_list = Business.objects.filter(business_created_date__range=[start_date,end_date])
+
+                        if subscription_list:
+                            for consumer_obj in subscription_list:
+
+                                #city_nm1 = consumer_obj.supplier.city.city_name
+                                city_id = consumer_obj.supplier.city_place_id.city_id
+                                print '......................city_id ....44......',city_id
+
+                                if str(city_front) == str(city_id):
+                                    subscription_count4 = subscription_count4 + 1
+                                else :
+                                    pass
+
+                    elif i==4:
+                        start_date = date(today.year,today.month,30)
+                        end_date = date(today.year,today.month,31) 
+                        subscription_list = Business.objects.filter(business_created_date__range=[start_date,end_date])
+
+                        if subscription_list:
+                            for consumer_obj in subscription_list:
+
+                                #city_nm1 = consumer_obj.supplier.city.city_name
+                                city_id = consumer_obj.supplier.city_place_id.city_id
+                                print '......................city_id ....44......',city_id
+
+                                if str(city_front) == str(city_id):
+                                    subscription_count5 = subscription_count5 + 1
+                                else :
+                                    pass
+                
+
+                print '//...........subscription_count1......//',subscription_count1
+                print '//...........subscription_count2......//',subscription_count2
+                print '//...........subscription_count3......//',subscription_count3
+                print '//...........subscription_count4......//',subscription_count4
+                print '//...........subscription_count5......//',subscription_count5
+
+
+                data = {'var1':var1,'success':'true','logo':logo,'avail_callbacks_count':avail_callbacks_count,'avail_callsmade_count':avail_callsmade_count,'avail_shares_count':avail_shares_count,'avail_discount_count':avail_discount_count,
+                    'total_subscription_count1':total_subscription_count1,'total_subscription_count2':total_subscription_count2,'total_subscription_count3':total_subscription_count3,'total_subscription_count4':total_subscription_count4,'total_subscription_count5':total_subscription_count5,'payment_count1':payment_count1,'payment_count2':payment_count2,
+                   'payment_count3':payment_count3,'payment_count4':payment_count4,'payment_count5':payment_count5,'login_count1':login_count1,'login_count2':login_count2,'login_count3':login_count3,'login_count4':login_count4,'login_count5':login_count5,
+                   'subscription_count1':subscription_count1,'subscription_count2':subscription_count2,'subscription_count3':subscription_count3,'subscription_count4':subscription_count4,'subscription_count5':subscription_count5 }
+
+
+
+            if request.GET.get('week_var') == 'week':
+                var1 = str(request.GET.get('week_var'))
+
+                Supplier_obj = Supplier.objects.get(supplier_id=request.GET.get('supplier_id'))
+
+                logo= SERVER_URL + Supplier_obj.logo.url
+
+                #########.............Advert Stats.......For a week..................#####
+                print '........Advert Stats.......For a week.....'
+                today_date = str(datetime.now())
+                one_month_date = str(datetime.now() - timedelta(days=7))
+                Advert_list = Advert.objects.filter(supplier_id=request.GET.get('supplier_id'))
+
+                avail_discount_count = 0
+                avail_callbacks_count = 0
+                avail_callsmade_count = 0
+                avail_shares_count = 0
+
+                for advert_obj in Advert_list:
+                    advert_id = advert_obj.advert_id
+                    discount_count = CouponCode.objects.filter(advert_id=advert_id,creation_date__range=[one_month_date,today_date]).count()
+                    callbacks_count = AdvertCallbacks.objects.filter(advert_id=advert_id,creation_date__range=[one_month_date,today_date]).count()
+                    callsmade_count = AdvertCallsMade.objects.filter(advert_id=advert_id,creation_date__range=[one_month_date,today_date]).count()
+                    shares_count = AdvertShares.objects.filter(advert_id=advert_id,creation_date__range=[one_month_date,today_date]).count()
+
+
+                    avail_discount_count = avail_discount_count + discount_count
+                    avail_callbacks_count = avail_callbacks_count + callbacks_count
+                    avail_callsmade_count = avail_callsmade_count + callsmade_count
+                    avail_shares_count = avail_shares_count + shares_count
+
+
+                
+                #######...........Total subscription  Graph......(1)....For a week...........########
+                print '.....Total subscription  Graph......(1)...For a week....'
+                current_date = datetime.now()
+                last_date = (datetime.now() - timedelta(days=7))
+
+                list = []
+                total_view_list = Business.objects.filter(business_created_date__range=[last_date,current_date])
+                mon1=tue1=wen1=thus1=fri1=sat1=sun1=0
+                if total_view_list:
+                    for view_obj in total_view_list:
+                        business_created_date=view_obj.business_created_date
+                        consumer_day = calendar.day_name[business_created_date.weekday()]
+                        if consumer_day== 'Monday' :
+                            mon1 = mon1+1
+                        elif consumer_day== 'Tuesday' :
+                            tue1 = tue1+1
+                        elif consumer_day== 'Wednesday' :
+                            wen1 = wen1+1
+                        elif consumer_day== 'Thursday' :
+                            thus1 = thus1+1
+                        elif consumer_day== 'Friday' :
+                            fri1 = fri1+1
+                        elif consumer_day== 'Saturday' :
+                            sat1 = sat1+1
+                        elif consumer_day== 'Sunday' :
+                            sun1 = sun1+1
+                        else :
+                            pass
+
+                print "...........Total subscription  Graph......(1)...For a week...",mon1,tue1,wen1,thus1,fri1,sat1,sun1
+
+                ##########................Todays Payment received.....(2).......for a week.............############
+
+                current_date = datetime.now()
+                last_date = (datetime.now() - timedelta(days=7))
+
+                list = []
+                total_view_list = PaymentDetail.objects.filter(payment_created_date__range=[last_date,current_date])
+                mon2=tue2=wen2=thus2=fri2=sat2=sun2=0
+                if total_view_list:
+                    for view_obj in total_view_list:
+                        payment_created_date=view_obj.payment_created_date
+                        consumer_day = calendar.day_name[payment_created_date.weekday()]
+                        if consumer_day== 'Monday' :
+                            mon2 = mon2+1
+                        elif consumer_day== 'Tuesday' :
+                            tue2 = tue2+1
+                        elif consumer_day== 'Wednesday' :
+                            wen2 = wen2+1
+                        elif consumer_day== 'Thursday' :
+                            thus2 = thus2+1
+                        elif consumer_day== 'Friday' :
+                            fri2 = fri2+1
+                        elif consumer_day== 'Saturday' :
+                            sat2 = sat2+1
+                        elif consumer_day== 'Sunday' :
+                            sun2 = sun2+1
+                        else :
+                            pass
+
+                ##########.....Todays Login.(3)... for a week  ##########
+                current_date = datetime.now()
+                last_date = (datetime.now() - timedelta(days=7))
+
+                list = []
+                total_view_list = ConsumerProfile.objects.filter(last_time_login__range=[last_date,current_date])
+                mon3=tue3=wen3=thus3=fri3=sat3=sun3=0
+                if total_view_list:
+                    for view_obj in total_view_list:
+                        last_time_login=view_obj.last_time_login
+                        consumer_day = calendar.day_name[last_time_login.weekday()]
+                        if consumer_day== 'Monday' :
+                            mon3 = mon3+1
+                        elif consumer_day== 'Tuesday' :
+                            tue3 = tue3+1
+                        elif consumer_day== 'Wednesday' :
+                            wen3 = wen3+1
+                        elif consumer_day== 'Thursday' :
+                            thus3 = thus3+1
+                        elif consumer_day== 'Friday' :
+                            fri3 = fri3+1
+                        elif consumer_day== 'Saturday' :
+                            sat3 = sat3+1
+                        elif consumer_day== 'Sunday' :
+                            sun3 = sun3+1
+                        else :
+                            pass
+
+
+                ##########..... New subscription view...(4).... for a week  ##########
+                current_date = datetime.now()
+                last_date = (datetime.now() - timedelta(days=7))
+
+                list = []
+                total_view_list = Business.objects.filter(business_created_date__range=[last_date,current_date])
+                mon4=tue4=wen4=thus4=fri4=sat4=sun4=0
+                if total_view_list:
+                    for view_obj in total_view_list:
+                        business_created_date=view_obj.business_created_date
+                        consumer_day = calendar.day_name[business_created_date.weekday()]
+                        if consumer_day== 'Monday' :
+                            mon4 = mon4+1
+                        elif consumer_day== 'Tuesday' :
+                            tue4 = tue4+1
+                        elif consumer_day== 'Wednesday' :
+                            wen4 = wen4+1
+                        elif consumer_day== 'Thursday' :
+                            thus4 = thus4+1
+                        elif consumer_day== 'Friday' :
+                            fri4 = fri4+1
+                        elif consumer_day== 'Saturday' :
+                            sat4 = sat4+1
+                        elif consumer_day== 'Sunday' :
+                            sun4 = sun4+1
+                        else :
+                            pass
+
+                data = {'var1':var1,'success':'true','logo':logo,'avail_callbacks_count':avail_callbacks_count,'avail_callsmade_count':avail_callsmade_count,'avail_shares_count':avail_shares_count,'avail_discount_count':avail_discount_count,
+                        'mon1':mon1,'tue1':tue1,'wen1':wen1,'thus1':thus1,'fri1':fri1,'sat1':sat1,
+                        'sun1':sun1,'mon2':mon2,'tue2':tue2,'wen2':wen2,'thus2':thus2,'fri2':fri2,'sat2':sat2,'sun2':sun2,
+                        'mon3':mon3,'tue3':tue3,'wen3':wen3,'thus3':thus3,'fri3':fri3,'sat3':sat3,'sun3':sun3,
+                        'mon4':mon4,'tue4':tue4,'wen4':wen4,'thus4':thus4,'fri4':fri4,'sat4':sat4,'sun4':sun4}
+
+             
+
+        except IntegrityError as e:
+            print e
+            data = {'success':'false','message':'Error in  loading page. Please try after some time','username':request.session['login_user']}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception,e:
+        print 'Exception ',e
+
+    print data
+    return HttpResponse(json.dumps(data),content_type='application/json')
+
+@csrf_exempt
 def get_filter(request):
     try:
-        print 'SASASA'
         data = {}
         final_list = []
         final_list1 = []

@@ -55,6 +55,7 @@ flag = (
 USER_IMAGES_PATH ='images/user_images/' 
 COMPANY_LOGO_PATH ='images/user_images/' 
 CATEGORY_PATH ='images/user_images/'
+VIDEO_PATH ='static/'
 
 class Operator(User):
     operator_id                        =       models.AutoField(primary_key=True, editable=False)
@@ -856,5 +857,14 @@ class CallInfo(models.Model):
     def __unicode__(self):
         return unicode(self.UCID)
 
+
 class Item(models.Model):
-    video = EmbedVideoField()  # same like models.URLField()
+    Item_video_id             = models.AutoField(primary_key=True, editable=False)
+    Item_video_name           = models.FileField(upload_to=VIDEO_PATH, max_length=500, null=True, blank=True)
+    creation_date               = models.DateTimeField(null=True,blank=True)
+    created_by                  = models.CharField(max_length=500,null=True,blank=True)
+    updated_by                  = models.CharField(max_length=500,null=True,blank= True)
+    updation_date               = models.DateTimeField(null=True,blank=True)
+    
+    def __unicode__(self):
+        return unicode(self.Item_video_id)
