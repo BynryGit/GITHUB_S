@@ -333,7 +333,7 @@ th{
                             {% if request.session.privileges|check_list:'View Dashboard Details,All' == 'true' %}
                               <li><a data-toggle="tab" href="#analytical">Analytical Data</a></li>
                             {% endif %}
-                        </ul>
+                            </ul>
                     </div>
                     <div class="tab-content">
                         {% if request.session.privileges|check_list:'View Dashboard Details,All' == 'true' %}

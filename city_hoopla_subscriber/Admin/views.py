@@ -110,6 +110,8 @@ def dashboard(request):
         octo=monthly_count[9]
         nov=monthly_count[10]
         dec=monthly_count[11]
+        
+
         count_zero = 0
         count_first = 0
         count_second = 0
@@ -150,6 +152,7 @@ def dashboard(request):
             if int(dates[0]) < 10:
                 dates[0] = '0'+str(dates[0])
         pre_date = str(dates[0]) +'/'+dates[1]+'/'+dates[2]
+        
         temp_var0 = 0
         temp_var1 = 0
         temp_var2 = 0

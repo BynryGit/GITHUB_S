@@ -2557,34 +2557,46 @@ def subscriber_dashboard2(request):
         final_list = []
         final_list1 = []
         try:
+            # to find out subscriber list
+            subscriber_obj = Supplier.objects.filter(supplier_status = '1')
             print '......$$.supplier_id....$$..',request.GET.get('supplier_id')
 
+            # to find last 1 month previous date
+            today_date = datetime.now().strftime("%m/%d/%Y")
+            dates = today_date.split('/')
+            if dates[0] == '1':
+                dates[0] = 12
+            else:
+                dates[0] = int(dates[0]) - 1
+                if int(dates[0]) < 10:
+                    dates[0] = '0'+str(dates[0])
+            pre_date = str(dates[0]) +'/'+dates[1]+'/'+dates[2]
+
+            #to find out logo of supplier
             Supplier_obj = Supplier.objects.get(supplier_id=request.session['supplier_id'])
             print "..................Supplier_obj.........",Supplier_obj
 
             logo= SERVER_URL + Supplier_obj.logo.url
 
-            #########.............Advert Stats.........................#####
-            Advert_list = Advert.objects.filter(supplier_id=request.session['supplier_id'])
-            print "..................Advert_list.........",Advert_list
+            #########.............Dashboard Stats.........................#####
+            total_payment_count = 0
+            total_new_subscriber = 0
+            total_new_booking = 0
+            total_advert_expiring = 0
 
-            avail_discount_count = 0
-            avail_callbacks_count = 0
-            avail_callsmade_count = 0
-            avail_shares_count = 0
+            paymentdetail_list = PaymentDetail.objects.all()
+            for pay_obj in paymentdetail_list:
+                total_amount = pay_obj.total_amount
+                #print 'total_amount',total_amount
+                #     total_payment_count = total_payment_count + total_amount
+                
+                # print 'total_payment_count',total_payment_count
+            
+            # business_list = Business.objects.all()
+            # for bus_obj in business_list:
+            #     total_amount = pay_obj.total_amount
 
-            for advert_obj in Advert_list:
-                advert_id = advert_obj.advert_id
-                discount_count = CouponCode.objects.filter(advert_id=advert_id).count()
-                callbacks_count = AdvertCallbacks.objects.filter(advert_id=advert_id).count()
-                callsmade_count = AdvertCallsMade.objects.filter(advert_id=advert_id).count()
-                shares_count = AdvertShares.objects.filter(advert_id=advert_id).count()
 
-
-                avail_discount_count = avail_discount_count + discount_count
-                avail_callbacks_count = avail_callbacks_count + callbacks_count
-                avail_callsmade_count = avail_callsmade_count + callsmade_count
-                avail_shares_count = avail_shares_count + shares_count
 
 
             #######.............Total subscription  Graph......(1)....########
@@ -2744,7 +2756,8 @@ def subscriber_dashboard2(request):
 
 
 
-            data = {'success':'true','count_zero':count_zero,'count_1':count_1,'count_2':count_2,'count_3':count_3,'logo':logo,'avail_callbacks_count':avail_callbacks_count,'avail_callsmade_count':avail_callsmade_count,'avail_shares_count':avail_shares_count,'avail_discount_count':avail_discount_count,'jan':jan,'feb':feb,'mar':mar,'apr':apr,'may':may,'jun':jun,'jul':jul,
+            data = {'success':'true','subscriber_data':subscriber_obj,'today_date':today_date,'pre_date':pre_date,'count_zero':count_zero,'count_1':count_1,'count_2':count_2,'count_3':count_3,'logo':logo,'total_payment_count':total_payment_count,'total_new_subscriber':total_new_subscriber,
+                'total_new_booking':total_new_booking,'total_advert_expiring':total_advert_expiring,'jan':jan,'feb':feb,'mar':mar,'apr':apr,'may':may,'jun':jun,'jul':jul,
                'aug':aug,'sep':sep,'oct':octo,'nov':nov,'dec':dec,'mon':mon,'tue':tue,'wen':wen,'thus':thus,'fri':fri,'sat':sat,'sun':sun,'mon1':mon1,'tue1':tue1,'wen1':wen1,'thus1':thus1,'fri1':fri1,'sat1':sat1,'sun1':sun1,'city_places_list':get_city_places(request)}
 
         except IntegrityError as e:
@@ -2755,7 +2768,7 @@ def subscriber_dashboard2(request):
     except Exception,e:
         print 'Exception ',e
 
-    print data
+    #print data
     return render(request,'Subscriber/subscriber-dashboard2.html',data)
 
 # TO GET THE CITY
@@ -3188,6 +3201,7 @@ def get_admin_filter(request):
 
             if request.GET.get('week_var') == 'week':
                 var1 = str(request.GET.get('week_var'))
+                city_front = request.GET.get('citys_var')
 
                 Supplier_obj = Supplier.objects.get(supplier_id=request.GET.get('supplier_id'))
 
@@ -3229,21 +3243,22 @@ def get_admin_filter(request):
                 mon1=tue1=wen1=thus1=fri1=sat1=sun1=0
                 if total_view_list:
                     for view_obj in total_view_list:
+                        city_nm = view_obj.supplier.city_place_id.city_id
                         business_created_date=view_obj.business_created_date
                         consumer_day = calendar.day_name[business_created_date.weekday()]
-                        if consumer_day== 'Monday' :
+                        if consumer_day== 'Monday' and str(city_front) == str(city_nm) :
                             mon1 = mon1+1
-                        elif consumer_day== 'Tuesday' :
+                        elif consumer_day== 'Tuesday' and str(city_front) == str(city_nm) :
                             tue1 = tue1+1
-                        elif consumer_day== 'Wednesday' :
+                        elif consumer_day== 'Wednesday' and str(city_front) == str(city_nm) :
                             wen1 = wen1+1
-                        elif consumer_day== 'Thursday' :
+                        elif consumer_day== 'Thursday' and str(city_front) == str(city_nm) :
                             thus1 = thus1+1
-                        elif consumer_day== 'Friday' :
+                        elif consumer_day== 'Friday' and str(city_front) == str(city_nm) :
                             fri1 = fri1+1
-                        elif consumer_day== 'Saturday' :
+                        elif consumer_day== 'Saturday' and str(city_front) == str(city_nm) :
                             sat1 = sat1+1
-                        elif consumer_day== 'Sunday' :
+                        elif consumer_day== 'Sunday' and str(city_front) == str(city_nm) :
                             sun1 = sun1+1
                         else :
                             pass
@@ -3260,21 +3275,22 @@ def get_admin_filter(request):
                 mon2=tue2=wen2=thus2=fri2=sat2=sun2=0
                 if total_view_list:
                     for view_obj in total_view_list:
+                        city_nm = view_obj.business_id.supplier.city_place_id.city_id
                         payment_created_date=view_obj.payment_created_date
                         consumer_day = calendar.day_name[payment_created_date.weekday()]
-                        if consumer_day== 'Monday' :
+                        if consumer_day== 'Monday' and str(city_front) == str(city_nm) :
                             mon2 = mon2+1
-                        elif consumer_day== 'Tuesday' :
+                        elif consumer_day== 'Tuesday' and str(city_front) == str(city_nm) :
                             tue2 = tue2+1
-                        elif consumer_day== 'Wednesday' :
+                        elif consumer_day== 'Wednesday' and str(city_front) == str(city_nm):
                             wen2 = wen2+1
-                        elif consumer_day== 'Thursday' :
+                        elif consumer_day== 'Thursday' and str(city_front) == str(city_nm):
                             thus2 = thus2+1
-                        elif consumer_day== 'Friday' :
+                        elif consumer_day== 'Friday' and str(city_front) == str(city_nm):
                             fri2 = fri2+1
-                        elif consumer_day== 'Saturday' :
+                        elif consumer_day== 'Saturday' and str(city_front) == str(city_nm):
                             sat2 = sat2+1
-                        elif consumer_day== 'Sunday' :
+                        elif consumer_day== 'Sunday' and str(city_front) == str(city_nm):
                             sun2 = sun2+1
                         else :
                             pass
@@ -3292,17 +3308,17 @@ def get_admin_filter(request):
                         consumer_day = calendar.day_name[last_time_login.weekday()]
                         if consumer_day== 'Monday' :
                             mon3 = mon3+1
-                        elif consumer_day== 'Tuesday' :
+                        elif consumer_day== 'Tuesday':
                             tue3 = tue3+1
-                        elif consumer_day== 'Wednesday' :
+                        elif consumer_day== 'Wednesday':
                             wen3 = wen3+1
-                        elif consumer_day== 'Thursday' :
+                        elif consumer_day== 'Thursday':
                             thus3 = thus3+1
-                        elif consumer_day== 'Friday' :
+                        elif consumer_day== 'Friday':
                             fri3 = fri3+1
-                        elif consumer_day== 'Saturday' :
+                        elif consumer_day== 'Saturday':
                             sat3 = sat3+1
-                        elif consumer_day== 'Sunday' :
+                        elif consumer_day== 'Sunday':
                             sun3 = sun3+1
                         else :
                             pass
@@ -3317,21 +3333,22 @@ def get_admin_filter(request):
                 mon4=tue4=wen4=thus4=fri4=sat4=sun4=0
                 if total_view_list:
                     for view_obj in total_view_list:
+                        city_nm = view_obj.supplier.city_place_id.city_id
                         business_created_date=view_obj.business_created_date
                         consumer_day = calendar.day_name[business_created_date.weekday()]
-                        if consumer_day== 'Monday' :
+                        if consumer_day== 'Monday' and str(city_front) == str(city_nm):
                             mon4 = mon4+1
-                        elif consumer_day== 'Tuesday' :
+                        elif consumer_day== 'Tuesday' and str(city_front) == str(city_nm):
                             tue4 = tue4+1
-                        elif consumer_day== 'Wednesday' :
+                        elif consumer_day== 'Wednesday' and str(city_front) == str(city_nm):
                             wen4 = wen4+1
-                        elif consumer_day== 'Thursday' :
+                        elif consumer_day== 'Thursday' and str(city_front) == str(city_nm):
                             thus4 = thus4+1
-                        elif consumer_day== 'Friday' :
+                        elif consumer_day== 'Friday' and str(city_front) == str(city_nm):
                             fri4 = fri4+1
-                        elif consumer_day== 'Saturday' :
+                        elif consumer_day== 'Saturday' and str(city_front) == str(city_nm):
                             sat4 = sat4+1
-                        elif consumer_day== 'Sunday' :
+                        elif consumer_day== 'Sunday' and str(city_front) == str(city_nm):
                             sun4 = sun4+1
                         else :
                             pass

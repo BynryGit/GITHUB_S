@@ -82,6 +82,7 @@ def get_advert_health(request):
         final_list = []
         try:
             if request.GET.get('advert_id'):
+                print '???????????....request.GET.get(advert_id).....????',request.GET.get('advert_id')
                 from_date = request.GET.get('from_date')
                 to_date = request.GET.get('to_date')
                 from_date = datetime.strptime(from_date, "%m/%d/%Y")
@@ -336,7 +337,7 @@ def my_subscribers_list(request):
                     'poc_name': supplier.contact_person,
                     'poc_no': supplier.contact_no,
                     'area': '',
-                    'city': supplier.city.city_name,
+                    'city': supplier.city_place_id.city_id.city_name,
                     'created_date': supplier.date_joined.strftime('%m/%d/%Y'),
                     'total_amount': total_amount,
                     'status': status
@@ -445,7 +446,7 @@ def get_advert_databse(request):
         final_list = []
 
         try:
-            print request.GET.get('city_id')
+            print '..>>><<<...????.......<<<>>>>',request.GET.get('city_id')
             category_list = []
             if request.GET.get('city_id') and request.GET.get('city_id') != '0':
                 cat_list = CategoryCityMap.objects.filter(city_place_id = request.GET.get('city_id'))
@@ -461,16 +462,20 @@ def get_advert_databse(request):
             else:
                 category_list = Category.objects.filter(category_status='1')
             for category in category_list:
-
+                print '...........category_list........',category_list
                 category_name = category.category_name
+                print '...........category_name........',category_name
                 business_obj = Business.objects.filter(category_id=str(category.category_id))
                 count = 0
                 for business in business_obj:
                     advert_sub_obj = AdvertSubscriptionMap.objects.get(business_id=str(business.business_id))
+                    print '..........advert_sub_obj..........',advert_sub_obj
                     pre_date = datetime.now().strftime("%m/%d/%Y")
                     pre_date = datetime.strptime(pre_date, "%m/%d/%Y")
+                    print 'pre_date>>>>>>>>',pre_date
                     end_date = advert_sub_obj.business_id.end_date
                     end_date = datetime.strptime(end_date, "%m/%d/%Y")
+                    print 'end_date>>>>>>>',end_date
                     date_gap = end_date - pre_date
                     if int(date_gap.days) >= 0:
                         count = count + 1
@@ -479,6 +484,8 @@ def get_advert_databse(request):
                         'count': str(count)
                     }
                     final_list.append(advert_data)
+                print 'HHH................final_list..............HHHH',final_list
+
 
             data = {'success': 'true', 'data': final_list}
         except IntegrityError as e:
@@ -488,6 +495,7 @@ def get_advert_databse(request):
         print e
     except Exception, e:
         print 'Exception ', e
+    print 'HHH................DATA..............HHHH',data
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 def get_new_registered_consumer(request):
@@ -496,7 +504,7 @@ def get_new_registered_consumer(request):
         final_list = []
         area = ''
         city = ''
-        print "=========================================================="
+        print "==========================SS=====get_new_registered_consumer================"
         try:
             from_date = request.GET.get('from_date')
             to_date = request.GET.get('to_date')
@@ -566,6 +574,7 @@ def get_consumer_activity(request):
         data = {}
         final_list = []
         try:
+            print "==========================SS2=====get_consumer_activity================"
             from_date = request.GET.get('from_date')
             to_date = request.GET.get('to_date')
             print from_date,to_date
@@ -627,6 +636,7 @@ def get_consumer_activity(request):
         print e
     except Exception, e:
         print 'Exception ', e
+    #   print data
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
@@ -635,6 +645,7 @@ def get_consumer_usage(request):
         data = {}
         final_list = []
         try:
+            print "==========================SS3=====get_consumer_usage================"        
             from_date = request.GET.get('from_date')
             to_date = request.GET.get('to_date')
             print from_date,to_date
