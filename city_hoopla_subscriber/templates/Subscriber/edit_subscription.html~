@@ -740,7 +740,7 @@ License: You must have a valid license purchased only from themeforest(the above
             <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu "
                 data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
                 <li class="nav-item ">
-                    <a href="/subscriber-portal/subscriber-dashboard/?supplier_id={{request.session.supplier_id}}" class="nav-link nav-toggle" style="background-color: rgb(13, 103, 230);">
+                    <a href="index.html" class="nav-link nav-toggle" style="background-color: rgb(13, 103, 230);">
                         <i class="fa fa-home" style="display: inline-block; color: #ffffff !important;"
                            aria-hidden="true"></i>
                         <span class="title" style="display: inline-block;"> Dashboard </span>

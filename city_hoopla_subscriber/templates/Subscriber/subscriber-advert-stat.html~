@@ -710,7 +710,7 @@ hr {
                     <a href="index.html" class="nav-link nav-toggle" style="background-color: rgb(13, 103, 230);">
                         <i class="fa fa-home" style="display: inline-block; color: #ffffff !important;"
                            aria-hidden="true"></i>
-                        <span class="title" style="display: inline-block;"> Dashboard </span>
+                        <span class="title" style="display: inline-block;width: 72%;"> Dashboard </span>
                     </a>
                 </li>
 
@@ -733,7 +733,7 @@ hr {
                        style="background-color: rgb(13, 103, 230);">
                         <i class="fa fa-calendar-check-o" style="display: inline-block; color: #ffffff !important;"
                            aria-hidden="true"></i>
-                        <span class="title" style="display: inline-block;">  Bookings </span>
+                        <span class="title" style="display: inline-block;width: 72%;">  Bookings </span>
                     </a>
                 </li>
 

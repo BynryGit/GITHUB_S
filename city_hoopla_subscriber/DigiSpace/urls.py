@@ -165,4 +165,5 @@ urlpatterns = patterns('',
     url(r'^get_consumer_activity/', 'Admin.dashboard.get_consumer_activity',name='get_consumer_activity'),
     url(r'^get_consumer_usage/', 'Admin.dashboard.get_consumer_usage',name='get_consumer_usage'),
 
+
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

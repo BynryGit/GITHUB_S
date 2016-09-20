@@ -58,6 +58,8 @@
     <link href="{% static 'assets/pages/css/dropzone.css' %}" rel="stylesheet" type="text/css"/>
     <link href="{% static 'assets/custom/css/map.css' %}" rel="stylesheet" type="text/css"/>
     <link href="{% static 'assets/bootstrap-tagsinput.css' %}" rel="stylesheet" type="text/css"/>
+            <link href="{% static 'assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css'%}" rel="stylesheet" type="text/css" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/css/bootstrap-datepicker.css" rel="stylesheet" type="text/css" />
     <!-- END THEME LAYOUT STYLES -->
   
   
@@ -680,6 +682,8 @@ hr {
         -ms-transform: translateY(-50%);
         transform: translateY(-50%);
     }
+    
+
 
 </style>
 
@@ -702,7 +706,7 @@ hr {
             <a href="index.html">
                 <img src="{% static 'assets/layouts/layout2/img/City_Hoopla_Logo.png' %}" alt="logo"
                      class="logo-default"/> </a>
-            <div class="">
+            <div class="menu-toggler sidebar-toggler">
                 <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
             </div>
         </div>
@@ -768,7 +772,7 @@ hr {
         <!-- END SIDEBAR -->
         <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
         <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
-        <div class="page-sidebar navbar-collapse collapse" style="height: 56.5% !important;">
+        <div class="page-sidebar navbar-collapse collapse" style="height: 1.5% !important;position: fixed;">
             <!--<div class="page-sidebar navbar-collapse collapse" style="background-color:#333333">-->
             <!-- BEGIN SIDEBAR MENU -->
             <!-- DOC: Apply "page-sidebar-menu-light" class right after "page-sidebar-menu" to enable light sidebar menu style(without borders) -->
@@ -828,8 +832,13 @@ hr {
       <!-- BEGIN Dashboard CONTENT -->
 	
 	   <div class="row">
-			<div class="col-lg-12">			
-				<div class="portlet light  ">
+			<div class="col-lg-12">		
+			
+       
+                        
+
+
+					<div class="portlet light ">
 			
 				       <!-- BEGIN PAGE HEADER-->
 
@@ -844,8 +853,35 @@ hr {
 						            </p> 
 						          </div>
 						    
-						        <div class="col-lg-3" id="week" style="font-size: 12px;font-family: 'Roboto Light', 'Roboto';">
+						        <div class="col-lg-3" id="citys" style="font-size: 12px;font-family: 'Roboto Light', 'Roboto';">
                                  <select   class="form-control"  onchange="change_data();">
+                                 
+													 <option   value="all" > All</option>													 
+													 {% for city in city_places_list %}
+												    
+												    <option   value="{{ city.city }}" > {{ city.city }}</option>
+
+													  {% endfor %}
+											</select>
+											
+                   		    </div>
+                   		
+                   		       
+                   		 </div>
+						      </div>
+						      <br>
+						      
+						       <div class="row" >
+  				
+						  		 <div class="col-md-12" style="margin-left: -14px;" >
+						  			 <div class="col-md-1"  style="font-family: 'Roboto Light', 'Roboto';  font-weight: 300; font-style: normal; font-size: 17px;color: #2F353B;margin-top: -25px;">
+						            <p> 
+						            <span> Statistics </span>
+						            </p> 
+						          </div>
+						    
+						        <div class="col-lg-3" id="week" style="font-size: 12px;font-family: 'Roboto Light', 'Roboto';">
+                                 <select   class="form-control"  onchange="change_data1();">
 
 												    <option   value="week" >Current Week</option>
 												    <option  value="month" >Current Month</option>
@@ -865,55 +901,55 @@ hr {
 
 							<div class="row">
 					       <div class="col-lg-12"  >
-					     			<div class="col-lg-2" style="border:1px solid #cccccc; margin-right: 23px;height: 110px; width: 210px;box-shadow: 2px 2px 5px #bdbcbc;">
+					     			<div class="col-lg-2" style="margin-top: 9px;border:1px solid #cccccc; margin-right: 23px;height: 110px; width: 210px;box-shadow: 2px 2px 5px #bdbcbc;">
 											<div  style="font-family: 'Roboto Light', 'Roboto';
 																	    font-weight: 300;
 																	    font-style: normal;
 																	    font-size: 30px;
 																	    color: #2F353B; padding-top: 19px;  " >
-												<center > <span id="disc1">{{avail_discount_count}}</span> </center>
+												<center > <span id="disc1">{{total_payment_count}}</span> </center>
 											</div>
 											<div style=" margin-top: 12px; font-family: 'Roboto Light', 'Roboto';">
-												<center>  Availed Discounts </center>
+												<center>  Payment Received </center>
 											</div>   			
 					     			</div>
-					     			<div class="col-lg-2" style="border:1px solid #cccccc;margin-right: 23px;height: 110px; width: 210px;box-shadow: 2px 2px 5px #bdbcbc;">
+					     			<div class="col-lg-2" style="margin-top: 9px;border:1px solid #cccccc;margin-right: 23px;height: 110px; width: 210px;box-shadow: 2px 2px 5px #bdbcbc;">
 											    
 											    <div style="font-family: 'Roboto Light', 'Roboto';
 																	    font-weight: 300;
 																	    font-style: normal;
 																	    font-size: 30px;
 																	    color: #2F353B; padding-top: 19px;  ">
-												<center> <span id="disc2"> {{avail_callbacks_count}} </span></center>
+												<center> <span id="disc2"> {{total_new_subscriber}} </span></center>
 											</div>
 											<div style=" margin-top: 12px; font-family: 'Roboto Light', 'Roboto';">
-												<center>  No of Callbacks </center>
+												<center>  New Subscribers </center>
 											</div> 
 																     			
 					     			</div>
-					     			<div class="col-lg-2" style="border:1px solid #cccccc;margin-right: 23px;height: 110px; width: 210px;box-shadow: 2px 2px 5px #bdbcbc;" >
+					     			<div class="col-lg-2" style="margin-top: 9px;border:1px solid #cccccc;margin-right: 23px;height: 110px; width: 210px;box-shadow: 2px 2px 5px #bdbcbc;" >
 					     					    <div style="font-family: 'Roboto Light', 'Roboto';
 																	    font-weight: 300;
 																	    font-style: normal;
 																	    font-size: 30px;
 																	    color: #2F353B; padding-top: 19px;  ">
-												<center> <span id="disc3"> {{avail_callsmade_count}} </span> </center>
+												<center> <span id="disc3"> {{total_new_booking}} </span> </center>
 											</div>
 											<div style=" margin-top: 12px; font-family: 'Roboto Light', 'Roboto';">
-												<center>  No of Calls Made </center>
+												<center>  New Bookings </center>
 											</div> 
 											
 					     			</div>
-					     			<div class="col-lg-2" style="border:1px solid #cccccc;margin-right: 23px;height: 110px; width: 210px;box-shadow: 2px 2px 5px #bdbcbc;">
+					     			<div class="col-lg-2" style="margin-top: 9px;border:1px solid #cccccc;margin-right: 23px;height: 110px; width: 210px;box-shadow: 2px 2px 5px #bdbcbc;">
 					     					<div style="font-family: 'Roboto Light', 'Roboto';
 																	    font-weight: 300;
 																	    font-style: normal;
 																	    font-size: 30px;
 																	    color: #2F353B; padding-top: 19px;  ">
-												<center> <span id="disc4"> {{avail_shares_count}} </span> </center>
+												<center> <span id="disc4"> {{total_advert_expiring}} </span> </center>
 											</div>
 											<div style=" margin-top: 12px; font-family: 'Roboto Light', 'Roboto';">
-												<center>  Shares </center>
+												<center>  Adverts Expiring </center>
 											</div> 
 											
 					     			</div>
@@ -923,8 +959,22 @@ hr {
 					       </div>
 					     </div>
 					     
+					    <br>
+					     
+					   <div class="row" >
+  				
+						  		 <div class="col-md-12">
+						  			 <div   style="font-family: 'Roboto Light', 'Roboto';  font-weight: 300; font-style: normal; font-size: 17px;color: #2F353B;">
+						            <p> 
+						            <span> Charts </span>
+						            </p> 
+						          </div>
+						     
+                   		</div>
+					</div>
+					     
 					   <div class="row">
-					       <div class="col-lg-12" style="margin-left: -14px; margin-top: 41px;">
+					       <div class="col-lg-12" style="margin-left: -14px;">
 					     		                          
                           <div class="col-md-6 col-sm-6" style="width: 476px;">
                                 <!-- BEGIN PORTLET-->
@@ -932,7 +982,7 @@ hr {
                                     <div class="portlet-title">
                                         <div class="">
                                            <!--  <i class="icon-bar-chart font-green"></i> -->
-                                            <span  style="font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 14px;">Total Bookings</span>
+                                            <span  style="font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 14px;">Total Subscriptions</span>
                                             
                                             <!-- <span class="caption-helper">daily stats</span> -->
                                        
@@ -957,8 +1007,9 @@ hr {
                                 <div class="portlet-title" >
                                     <div class="">
                                         <i class="icon-share font-red-sunglo hide"></i>
-                                        <span style="font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 14px;">Total Views</span>
+                                        <span style="font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 14px;">Payment Received</span>
                                         <!-- <span class="caption-helper">daily stats</span> -->
+                                        <span style="float: right;  font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 12px;" > Last 7 days</span>
                                     </div>
                                  
                                 </div>
@@ -968,14 +1019,55 @@ hr {
                             </div>
 
                         </div>
+                        
+                          <div class="col-md-6 col-sm-6" style="width: 476px;">
+
+                                <div class="portlet light " style="border:1px solid #cccccc; box-shadow: 2px 2px 5px #bdbcbc;">
+                                    <div class="portlet-title">
+                                        <div class="">
+
+                                            <span  style="font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 14px;">Today's Login</span>
+                                            
+                                        <span style="float: right;  font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 12px;" > Last 24 hours</span>
+                                      </div>
+                                    
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="portlet-body">
+                                            <div id="highchart_2" style="height:290px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        
+                         <div class="col-md-6 col-sm-6" style="width: 476px;padding-left: 0px;">
+
+                            <div class="portlet light " style="border:1px solid #cccccc; box-shadow: 2px 2px 5px #bdbcbc;">
+                                <div class="portlet-title" >
+                                    <div class="">
+                                        <i class="icon-share font-red-sunglo hide"></i>
+                                        <span style="font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 14px;">New Subscribers</span>
+
+                                        <span style="float: right;  font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 12px;" > Last 7 days</span>
+                                    </div>
+                                 
+                                </div>
+                                <div class="portlet-body">
+                                        <div id="Payment_Collection2" style="height: 300px;"> </div>
+                                </div>
+                            </div>
+
+                        </div> 
 			
 					       </div>
 					     </div>
+				       </div>
+			        </div>
+					             
 				</div>
 			</div>
 		</div>
-	</div>
-</div>
  </div>       <!-- END PORTLET--> 
   	    	 
                                     
@@ -1030,9 +1122,10 @@ hr {
         <script src="{% static 'assets/global/plugins/datatables/datatables.min.js'%}" type="text/javascript"></script>
         <script src="{% static 'assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js'%}" type="text/javascript"></script>
         <script src="{% static 'assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js'%}" type="text/javascript"></script>
-<!--         <script src="{% static 'assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js'%}" type="text/javascript"></script> -->
-<!-- 	        <script src="{% static 'assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js'%}" type="text/javascript"></script> -->
-<!--         <script src="{% static 'assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'%}" type="text/javascript"></script> -->
+         <script src="{% static 'assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js'%}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js'%}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'%}" type="text/javascript"></script>
+       
         <!-- END PAGE LEVEL PLUGINS -->
         <!-- BEGIN THEME GLOBAL SCRIPTS -->
         <script src="{% static 'assets/global/scripts/app.min.js'%}" type="text/javascript"></script>
@@ -1055,233 +1148,236 @@ hr {
         
 <script type="text/javascript">
 
+function change_data1(){
 
 
+week_var = $('#week :selected').val();
+citys_var = $('#citys :selected').val();
+
+var supplier_id={{request.session.supplier_id}};
+	
+	
+	$.ajax({
+  	  	  type	: "GET",
+		  url 	: '/subscriber-portal/get-admin-stat/',
+			data : {'citys_var':citys_var,'week_var':week_var,'supplier_id':supplier_id},
+	
+
+	     success: function (response) {
+	     		console.log(response);
+	     		if(response.var1=='month'){
+	     		
+	     		 	 $('#disc1').text(response.total_payment_count);
+	     		    $('#disc2').text(response.total_new_subscriber);
+	     		    $('#disc3').text(response.total_new_booking);
+	     		    $('#disc4').text(response.total_advert_expiring);
+
+	     		}
+	     		else if (response.var1=='week') {
+ 					 
+ 					 $('#disc1').text(response.total_payment_count);
+	     		    $('#disc2').text(response.total_new_subscriber);
+	     		    $('#disc3').text(response.total_new_booking);
+	     		    $('#disc4').text(response.total_advert_expiring);
+	     		}
+	      },
+	      error : function(response){
+	         	alert("_Error");
+	   	},
+	                  
+	  });
+}
+	     		    
 function change_data(){
 
- week_var = $('#week :selected').val();
+ citys_var = $('#citys :selected').val();
 
 var supplier_id={{request.session.supplier_id}};
 
 	$.ajax({
   	  	  type	: "GET",
-		  url 	: '/subscriber-portal/get-filter/',
-		  data : {'week_var':week_var,'supplier_id':supplier_id},                       
+		  url 	: '/subscriber-portal/get-admin-filter/',
+		  data : {'citys_var':citys_var,'supplier_id':supplier_id},                       
 		  
 
-	     success: function (response) {
- 		console.log(response);
-	     		if(response.var1=='month'){
-	     		    $('#disc1').text(response.avail_discount_count);
-	     		    $('#disc2').text(response.avail_callbacks_count);
-	     		    $('#disc3').text(response.avail_callsmade_count);
-	     		    $('#disc4').text(response.avail_shares_count);
-
-
-					     		  	//for bookings		
-				  			$("#highchart_1").highcharts({
-				                chart:{
-				                    style:{
-				                        fontFamily:"Open Sans"
-				                    }
-				                },
-				                title:{
-				                    text:"",
-				                    x:-20
-				                },
-				                //subtitle:{text:"Source: WorldClimate.com",x:-20},
-				                xAxis:{
-				                    title:{
-				                        text:""
-				                    },
-				                    categories:["Week 1","Week 2","Week 3","Week 4","Week 5"]
-				                },
-				                yAxis:{
-				                    tickInterval: 2,
-				                    title:{
-				                        text:""
-				                    },
-				                    plotLines:[{value:0,width:1,color:"#808080"}]
-				                },
-				                tooltip:{
-				                    valueSuffix:""
-				                },
-				                legend:{
-				                    layout:"vertical",
-				                    align:"right",
-				                    verticalAlign:"middle",
-				                    borderWidth:0
-				                },
-				                series:[
-				                    {name: "Bookings",data:[response.coupon_code_count1,response.coupon_code_count2,response.coupon_code_count3,response.coupon_code_count4,response.coupon_code_count5]},
-				                ]
-				            });
+	      success: function (response) {
+ 			console.log(response);
+	     		if(response.success=='true'){
+	   
+	   					     		  	//for bookings		
+			$("#highchart_1").highcharts({
+                chart:{
+                    style:{
+                        fontFamily:"Open Sans"
+                    }
+                },
+                title:{
+                    text:"",
+                    x:-20
+                },
+                //subtitle:{text:"Source: WorldClimate.com",x:-20},
+                xAxis:{
+                    title:{
+                        text:""
+                    },
+                    categories:["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"]
+                },
+                yAxis:{
+                    tickInterval: 2,
+                    title:{
+                        text:""
+                    },
+                    plotLines:[{value:0,width:1,color:"#808080"}]
+                },
+                tooltip:{
+                    valueSuffix:""
+                },
+                legend:{
+                    layout:"vertical",
+                    align:"right",
+                    verticalAlign:"middle",
+                    borderWidth:0
+                },
+                series:[
+                    {name: "Subscriptions",data:[response.jan1,response.feb1,response.mar1,response.apr1,response.may1,response.jun1,response.jul1,response.aug1,response.sep1,response.oct1,response.nov1,response.dec1]},
+                ]
+            }) 
+            
+          
+	var chart = AmCharts.makeChart( "Payment_Collection1", {
+				
+				
+				  "type": "serial",
+				  "theme": "light",
+				  "dataProvider": [ {
+				    "day": "Monday",
+				    "visits": response.mon2
+				  }, {
+				    "day": "Tuesday",
+				    "visits": response.tue2
+				  }, {
+				    "day": "Wednesday",
+				    "visits": response.wen2
+				  }, {
+				    "day": "Thursday",
+				    "visits":response.thus2
+				  }, {
+				    "day": "Friday",
+				    "visits":response.fri2
+				  }, {
+				    "day": "Saturday",
+				    "visits":response.sat2
+				  }, {
+				    "day": "Sunday",
+				    "visits":response.sun2
+				  }],
+				  "valueAxes": [ {
+				
+				   //"autoMargins":"false", 
+				  //"marginRight":"5",
+				
+				
+				    "gridColor": "#FFFFFF",
+				    "gridAlpha": 0.2,
+				    "dashLength": 0
+				  } ],
+				  "gridAboveGraphs": true,
+				  "startDuration": 1,
+				  "graphs": [ {
+				    "balloonText": "[[category]]: <b>[[value]]</b>",
+				    "fillAlphas": 0.8,
+				    "lineAlpha": 0.2,
+				    "type": "column",
+				    "autoColor": true,
+				    "valueField": "visits"
+				  } ],
+				  "chartCursor": {
+				    "categoryBalloonEnabled": false,
+				    "cursorAlpha": 0,
+				    "zoomable": false
+				  },
+				  "categoryField": "day",
+				  "categoryAxis": {
+				    "gridPosition": "start",
+				    "gridAlpha": 0,
+				    "tickPosition": "start",
+				    "tickLength": 20
+				  },
+				  "export": {
+				    "enabled": true
+				  }
+				
+				} );
+				
+				
+	var chart = AmCharts.makeChart( "Payment_Collection2", {
+				
+				
+				  "type": "serial",
+				  "theme": "light",
+				  "dataProvider": [ {
+				    "day": "Monday",
+				    "visits": response.mon4
+				  }, {
+				    "day": "Tuesday",
+				    "visits": response.tue4
+				  }, {
+				    "day": "Wednesday",
+				    "visits": response.wen4
+				  }, {
+				    "day": "Thursday",
+				    "visits":response.thus4
+				  }, {
+				    "day": "Friday",
+				    "visits":response.fri4
+				  }, {
+				    "day": "Saturday",
+				    "visits":response.sat4
+				  }, {
+				    "day": "Sunday",
+				    "visits":response.sun4
+				  }],
+				  "valueAxes": [ {
+				
+				   //"autoMargins":"false", 
+				  //"marginRight":"5",
+				
+				
+				    "gridColor": "#FFFFFF",
+				    "gridAlpha": 0.2,
+				    "dashLength": 0
+				  } ],
+				  "gridAboveGraphs": true,
+				  "startDuration": 1,
+				  "graphs": [ {
+				    "balloonText": "[[category]]: <b>[[value]]</b>",
+				    "fillAlphas": 0.8,
+				    "lineAlpha": 0.2,
+				    "type": "column",
+				    "autoColor": true,
+				    "valueField": "visits"
+				  } ],
+				  "chartCursor": {
+				    "categoryBalloonEnabled": false,
+				    "cursorAlpha": 0,
+				    "zoomable": false
+				  },
+				  "categoryField": "day",
+				  "categoryAxis": {
+				    "gridPosition": "start",
+				    "gridAlpha": 0,
+				    "tickPosition": "start",
+				    "tickLength": 20
+				  },
+				  "export": {
+				    "enabled": true
+				  }
+				
+				} );
 				            
-				           //for total view
-							var chart = AmCharts.makeChart( "Payment_Collection1", {
-							  "type": "serial",
-							  "theme": "light",
-							  "dataProvider": [ {
-							    "day": "Week 1",
-							    "visits": response.advert_total_count1
-							  }, {
-							    "day": "Week 2",
-							    "visits": response.advert_total_count2
-							  }, {
-							    "day": "Week 3",
-							    "visits": response.advert_total_count3
-							  }, {
-							    "day": "Week 4",
-							    "visits":response.advert_total_count4
-							  }, {
-							    "day": "Week 5",
-							    "visits":response.advert_total_count5
-							  }
-							  ],
-							  "valueAxes": [ {
-							    "gridColor": "#FFFFFF",
-							    "gridAlpha": 0.2,
-							    "dashLength": 0
-							  } ],
-							  "gridAboveGraphs": true,
-							  "startDuration": 1,
-							  "graphs": [ {
-							    "balloonText": "[[category]]: <b>[[value]]</b>",
-							    "fillAlphas": 0.8,
-							    "lineAlpha": 0.2,
-							    "type": "column",
-							    "autoColor": true,
-							    "valueField": "visits"
-							  } ],
-							  "chartCursor": {
-							    "categoryBalloonEnabled": false,
-							    "cursorAlpha": 0,
-							    "zoomable": false
-							  },
-							  "categoryField": "day",
-							  "categoryAxis": {
-							    "gridPosition": "start",
-							    "gridAlpha": 0,
-							    "tickPosition": "start",
-							    "tickLength": 20
-							  },
-							  "export": {
-							    "enabled": true
-							  }
-							
-							} ); 
 	     		
 	     		}
 	     		
-	     		else if (response.var1=='week') {
-	     		 	 $('#disc1').text(response.avail_discount_count);
-	     		    $('#disc2').text(response.avail_callbacks_count);
-	     		    $('#disc3').text(response.avail_callsmade_count);
-	     		    $('#disc4').text(response.avail_shares_count);
-	     		  			
-	     		  			$("#highchart_1").highcharts({
-				                chart:{
-				                    style:{
-				                        fontFamily:"Open Sans"
-				                    }
-				                },
-				                title:{
-				                    text:"",
-				                    x:-20
-				                },
-				                //subtitle:{text:"Source: WorldClimate.com",x:-20},
-				                xAxis:{
-				                    title:{
-				                        text:""
-				                    },
-				                    categories:["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
-				                },
-				                yAxis:{
-				                    tickInterval: 2,
-				                    title:{
-				                        text:""
-				                    },
-				                    plotLines:[{value:0,width:1,color:"#808080"}]
-				                },
-				                tooltip:{
-				                    valueSuffix:""
-				                },
-				                legend:{
-				                    layout:"vertical",
-				                    align:"right",
-				                    verticalAlign:"middle",
-				                    borderWidth:0
-				                },
-				                series:[
-				                    {name: "Bookings",data:[response.mon1,response.tue1,response.wen1,response.thus1,response.fri1,response.sat1,response.sun1]},
-				                ]
-				            });
-				            
-				           
-							var chart = AmCharts.makeChart( "Payment_Collection1", {
-							  "type": "serial",
-							  "theme": "light",
-							  "dataProvider": [ {
-							    "day": "Monday",
-							    "visits": response.mon2
-							  }, {
-							    "day": "Tuesday",
-							    "visits": response.tue2
-							  }, {
-							    "day": "Wednesday",
-							    "visits": response.wen2
-							  }, {
-							    "day": "Thursday",
-							    "visits":response.thus2
-							  }, {
-							    "day": "Friday",
-							    "visits":response.fri2
-							  }, {
-							    "day": "Saturday",
-							    "visits":response.sat2
-							  }, {
-							    "day": "Sunday",
-							    "visits":response.sun2
-							  }
-							  ],
-							  "valueAxes": [ {
-							    "gridColor": "#FFFFFF",
-							    "gridAlpha": 0.2,
-							    "dashLength": 0
-							  } ],
-							  "gridAboveGraphs": true,
-							  "startDuration": 1,
-							  "graphs": [ {
-							    "balloonText": "[[category]]: <b>[[value]]</b>",
-							    "fillAlphas": 0.8,
-							    "lineAlpha": 0.2,
-							    "type": "column",
-							    "autoColor": true,
-							    "valueField": "visits"
-							  } ],
-							  "chartCursor": {
-							    "categoryBalloonEnabled": false,
-							    "cursorAlpha": 0,
-							    "zoomable": false
-							  },
-							  "categoryField": "day",
-							  "categoryAxis": {
-							    "gridPosition": "start",
-							    "gridAlpha": 0,
-							    "tickPosition": "start",
-							    "tickLength": 20
-							  },
-							  "export": {
-							    "enabled": true
-							  }
-							
-							} ); 
-	     		
-	     		
-	     		
-	     		
-	     			
-	     		}
 	     		else {
 	     			$("#error-modal").modal('show');
 	     		}
@@ -1336,6 +1432,43 @@ var supplier_id={{request.session.supplier_id}};
                 ]
             }) 
             
+  $("#highchart_2").highcharts({
+                chart:{
+                    style:{
+                        fontFamily:"Open Sans"
+                    }
+                },
+                title:{
+                    text:"",
+                    x:-20
+                },
+                //subtitle:{text:"Source: WorldClimate.com",x:-20},
+                xAxis:{
+                    title:{
+                        text:""
+                    },
+                    categories:["00.00","08.00","16.00","23.59"]
+                },
+                yAxis:{
+                    tickInterval: 2,
+                    title:{
+                        text:""
+                    },
+                    plotLines:[{value:0,width:1,color:"#808080"}]
+                },
+                tooltip:{
+                    valueSuffix:""
+                },
+                legend:{
+                    layout:"vertical",
+                    align:"right",
+                    verticalAlign:"middle",
+                    borderWidth:0
+                },
+                series:[
+                    {name: "Registered Users",data:[{{count_zero}},{{count_1}},{{count_2}},{{count_3}}]},
+                ]
+            }) 
           
 
 var chart = AmCharts.makeChart( "Payment_Collection1", {
@@ -1404,8 +1537,70 @@ var chart = AmCharts.makeChart( "Payment_Collection1", {
 } );
 
 
-        
+var chart = AmCharts.makeChart( "Payment_Collection2", {
 
+
+  "type": "serial",
+  "theme": "light",
+  "dataProvider": [ {
+    "day": "Monday",
+    "visits": {{mon1}}
+  }, {
+    "day": "Tuesday",
+    "visits": {{tue1}}
+  }, {
+    "day": "Wednesday",
+    "visits": {{wen1}}
+  }, {
+    "day": "Thursday",
+    "visits":{{thus1}}
+  }, {
+    "day": "Friday",
+    "visits":{{fri1}}
+  }, {
+    "day": "Saturday",
+    "visits":{{sat1}}
+  }, {
+    "day": "Sunday",
+    "visits":{{sun1}}
+  }],
+  "valueAxes": [ {
+
+   //"autoMargins":"false", 
+  //"marginRight":"5",
+
+
+    "gridColor": "#FFFFFF",
+    "gridAlpha": 0.2,
+    "dashLength": 0
+  } ],
+  "gridAboveGraphs": true,
+  "startDuration": 1,
+  "graphs": [ {
+    "balloonText": "[[category]]: <b>[[value]]</b>",
+    "fillAlphas": 0.8,
+    "lineAlpha": 0.2,
+    "type": "column",
+    "autoColor": true,
+    "valueField": "visits"
+  } ],
+  "chartCursor": {
+    "categoryBalloonEnabled": false,
+    "cursorAlpha": 0,
+    "zoomable": false
+  },
+  "categoryField": "day",
+  "categoryAxis": {
+    "gridPosition": "start",
+    "gridAlpha": 0,
+    "tickPosition": "start",
+    "tickLength": 20
+  },
+  "export": {
+    "enabled": true
+  }
+
+} );
 
 
 </script>        
