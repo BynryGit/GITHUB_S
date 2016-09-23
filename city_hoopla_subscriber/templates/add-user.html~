@@ -828,247 +828,130 @@ hr {
  <div class="page-content-wrapper" >
     <!-- BEGIN CONTENT BODY -->
        <div class="page-content">
- 
-      <!-- BEGIN Dashboard CONTENT -->
-	
-	   <div class="row">
-			<div class="col-lg-12">		
-			
        
-                        
-
-
-					<div class="portlet light ">
-			
-				       <!-- BEGIN PAGE HEADER-->
-
-                    <!-- BEGIN PAGE TITLE-->
-                         
-                         <div class="row" >
-  				
-						  		 <div class="col-md-12" style="margin-left: -14px;" >
-						  			 <div class="col-md-2"  style="font-family: 'Roboto Light', 'Roboto';  font-weight: 300; font-style: normal; font-size: 24px;color: #2F353B;margin-top: -25px;">
-						            <p> 
-						            <span> Dashboard </span>
-						            </p> 
-						          </div>
-						    
-						        <div class="col-lg-3" id="citys" style="font-size: 12px;font-family: 'Roboto Light', 'Roboto';">
-                                 <select   class="form-control"  onchange="change_data();">
-                                 
-													 <option   value="all" > All</option>													 
-													 {% for city in city_places_list %}
-												    
-												    <option   value="{{ city.city }}" > {{ city.city }}</option>
-
-													  {% endfor %}
-											</select>
-											
-                   		    </div>
-                   		
-                   		       
-                   		 </div>
-						      </div>
-						      <br>
-						      
-						       <div class="row" >
-  				
-						  		 <div class="col-md-12" style="margin-left: -14px;" >
-						  			 <div class="col-md-1"  style="font-family: 'Roboto Light', 'Roboto';  font-weight: 300; font-style: normal; font-size: 17px;color: #2F353B;margin-top: -25px;">
-						            <p> 
-						            <span> Statistics </span>
-						            </p> 
-						          </div>
-						    
-						        <div class="col-lg-3" id="week" style="font-size: 12px;font-family: 'Roboto Light', 'Roboto';">
-                                 <select   class="form-control"  onchange="change_data1();">
-
-												    <option   value="week" >Current Week</option>
-												    <option  value="month" >Current Month</option>
-
-											</select>
-                   		    </div>
-                   		
-                   		       
-                   		 </div>
-						      </div>
-						     
-                    <!-- END PAGE TITLE-->
-                    <!-- END PAGE HEADER-->
+                		<h3 class="page-title"> Users
+                    </h3>
+                    <!-- BEGIN PAGE HEADER-->
+                   <div class="page-bar">
+                        <ul class="page-breadcrumb">
+                            <li>
+                                <span>Admin</span>
+                                <i class="fa fa-angle-right"></i>
+                            </li>
+                            <li>
+                                <span>Usersss</span>
+                            </li>
+                        </ul>
+                    </div>
                     
-  			<div class="portlet-body form">
-          <!-- BEGIN FORM-->
-
-							<div class="row">
-					       <div class="col-lg-12"  >
-					     			<div class="col-lg-2" style="margin-top: 9px;border:1px solid #cccccc; margin-right: 23px;height: 110px; width: 210px;box-shadow: 2px 2px 5px #bdbcbc;">
-											<div  style="font-family: 'Roboto Light', 'Roboto';
-																	    font-weight: 300;
-																	    font-style: normal;
-																	    font-size: 30px;
-																	    color: #2F353B; padding-top: 19px;  " >
-												<center > <span id="disc1">{{total_payment_count}}</span> </center>
-											</div>
-											<div style=" margin-top: 12px; font-family: 'Roboto Light', 'Roboto';">
-												<center>  Payment Received </center>
-											</div>   			
-					     			</div>
-					     			<div class="col-lg-2" style="margin-top: 9px;border:1px solid #cccccc;margin-right: 23px;height: 110px; width: 210px;box-shadow: 2px 2px 5px #bdbcbc;">
-											    
-											    <div style="font-family: 'Roboto Light', 'Roboto';
-																	    font-weight: 300;
-																	    font-style: normal;
-																	    font-size: 30px;
-																	    color: #2F353B; padding-top: 19px;  ">
-												<center> <span id="disc2"> {{total_new_subscriber}} </span></center>
-											</div>
-											<div style=" margin-top: 12px; font-family: 'Roboto Light', 'Roboto';">
-												<center>  New Subscribers </center>
-											</div> 
-																     			
-					     			</div>
-					     			<div class="col-lg-2" style="margin-top: 9px;border:1px solid #cccccc;margin-right: 23px;height: 110px; width: 210px;box-shadow: 2px 2px 5px #bdbcbc;" >
-					     					    <div style="font-family: 'Roboto Light', 'Roboto';
-																	    font-weight: 300;
-																	    font-style: normal;
-																	    font-size: 30px;
-																	    color: #2F353B; padding-top: 19px;  ">
-												<center> <span id="disc3"> {{total_new_booking}} </span> </center>
-											</div>
-											<div style=" margin-top: 12px; font-family: 'Roboto Light', 'Roboto';">
-												<center>  New Bookings </center>
-											</div> 
-											
-					     			</div>
-					     			<div class="col-lg-2" style="margin-top: 9px;border:1px solid #cccccc;margin-right: 23px;height: 110px; width: 210px;box-shadow: 2px 2px 5px #bdbcbc;">
-					     					<div style="font-family: 'Roboto Light', 'Roboto';
-																	    font-weight: 300;
-																	    font-style: normal;
-																	    font-size: 30px;
-																	    color: #2F353B; padding-top: 19px;  ">
-												<center> <span id="disc4"> {{total_advert_expiring}} </span> </center>
-											</div>
-											<div style=" margin-top: 12px; font-family: 'Roboto Light', 'Roboto';">
-												<center>  Adverts Expiring </center>
-											</div> 
-											
-					     			</div>
-			
-									              
-								
-					       </div>
-					     </div>
-					     
-					    <br>
-					     
-					   <div class="row" >
-  				
-						  		 <div class="col-md-12">
-						  			 <div   style="font-family: 'Roboto Light', 'Roboto';  font-weight: 300; font-style: normal; font-size: 17px;color: #2F353B;">
-						            <p> 
-						            <span> Charts </span>
-						            </p> 
-						          </div>
-						     
-                   		</div>
-					</div>
-					     
-					   <div class="row">
-					       <div class="col-lg-12" style="margin-left: -14px;">
-					     		                          
-                          <div class="col-md-6 col-sm-6" style="width: 476px;">
-                                <!-- BEGIN PORTLET-->
-                                <div class="portlet light " style="border:1px solid #cccccc; box-shadow: 2px 2px 5px #bdbcbc;">
-                                    <div class="portlet-title">
-                                        <div class="">
-                                           <!--  <i class="icon-bar-chart font-green"></i> -->
-                                            <span  style="font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 14px;">Total Subscriptions</span>
-                                            
-                                            <!-- <span class="caption-helper">daily stats</span> -->
-                                       
-                                        <span style="float: right;  font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 12px;" > Last 12 months</span>
-                                      </div>
-                                    
+                    <!-- END PAGE HEADER-->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="portlet light  ">
+                                 <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="icon-social-dribbble font-green"></i>
+                                        <span class="caption-subject font-green bold uppercase">User List</span>
                                     </div>
-                                    <div class="portlet-body">
-                                        <div class="portlet-body">
-                                            <div id="highchart_1" style="height:290px;"></div>
+                                    <!-- <div class="actions">
+                                        <div class="btn-group btn-group-devided" data-toggle="buttons">
+                                            <label class="btn btn-transparent dark btn-outline btn-circle btn-sm ">
+                                                <input type="radio" name="options" class="toggle" id="option1">Actions</label>
+                                            <label class="btn btn-transparent dark btn-outline btn-circle btn-sm">
+                                                <input type="radio" name="options" class="toggle" id="option2">Settings</label>
                                         </div>
+                                    </div> -->
+                                    <!-- <div class="actions">
+                                        <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;">
+                                            <i class="icon-cloud-upload"></i>
+                                        </a>
+                                        <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;">
+                                            <i class="icon-wrench"></i>
+                                        </a>
+                                        <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;">
+                                            <i class="icon-trash"></i>
+                                        </a>
+                                    </div> -->
+                                </div> 
+                                <div class="portlet-body form">
+                                    <!-- BEGIN FORM-->
+                                    <form action="" >
+                                        	<div class="row ">
+				                                <div class="col-lg-10 form-group">
+				                                    <form action="">
+				                                        <div class="input-group form-group">
+				                                            <input type="text" class="form-control " id="txtSearch"
+				                                                   placeholder="Search User" name="s"/>
+																		<span class="input-group-btn">
+																			<span class="btn btn btn-default">
+										                                        <span class="fa fa-search"></span>
+										                                    </span>
+																		</span>
+				                                        </div>
+				                                    </form>
+				                                </div>
+				                                <div class="col-lg-2 form-group">
+				                                    <div  class="pull-right ">
+				                                        <a class="btn btn-success" data-toggle="modal" href="#large" type="submit">Add User</a>
+				                                    </div>
+				                                </div>
+                            					</div>
+                                    </form>
+                                    <div class="row">
+                                    	<div class="col-lg-12">
+                                    			<div class="portlet-body">
+				                                    <div class="table-toolbar">
+				                                        <div class="row">
+				                                            <div class="col-md-6">
+				                                            </div>
+				                                            <div class="col-md-6">
+				                                                <!-- <div class="btn-group pull-right">
+				                                                    <button class="btn green  btn-outline dropdown-toggle" data-toggle="dropdown">Tools
+				                                                        <i class="fa fa-angle-down"></i>
+				                                                    </button>
+				                                                    <ul class="dropdown-menu pull-right">
+				                                                        <li>
+				                                                            <a href="javascript:;">
+				                                                                <i class="fa fa-print"></i> Print </a>
+				                                                        </li>
+				                                                        <li>
+				                                                            <a href="javascript:;">
+				                                                                <i class="fa fa-file-pdf-o"></i> Save as PDF </a>
+				                                                        </li>
+				                                                        <li>
+				                                                            <a href="javascript:;">
+				                                                                <i class="fa fa-file-excel-o"></i> Export to Excel </a>
+				                                                        </li>
+				                                                    </ul>
+				                                                </div> -->
+				                                            </div>
+				                                        </div>
+				                                    </div>
+                                    <table class="table table-striped table-bordered table-hover table-checkable order-column" id="user_table">
+                                        <thead>
+                                            <tr>
+                                                <th width="40%"> Username </th>
+                                                <th> Email </th>
+                                                <th> Contact No </th>
+                                                <th> Role </th>
+                                                <th class="text-center"> Action </th>
+                                            </tr>
+                                        </thead>
+                                    	 	</table> 	
+                                    	</div>
                                     </div>
-                                </div>
-                                <!-- END PORTLET-->
-                            </div>
-                        
-                        
-                        
-                          <div class="col-md-6 col-sm-6" style="width: 476px;padding-left: 0px;">
-                            <!-- BEGIN PORTLET-->
-                            <div class="portlet light " style="border:1px solid #cccccc; box-shadow: 2px 2px 5px #bdbcbc;">
-                                <div class="portlet-title" >
-                                    <div class="">
-                                        <i class="icon-share font-red-sunglo hide"></i>
-                                        <span style="font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 14px;">Payment Received</span>
-                                        <!-- <span class="caption-helper">daily stats</span> -->
-                                        <span style="float: right;  font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 12px;" > Last 7 days</span>
-                                    </div>
-                                 
-                                </div>
-                                <div class="portlet-body">
-                                        <div id="Payment_Collection1" style="height: 300px;"> </div>
+                                    <!-- END FORM-->
                                 </div>
                             </div>
-
+                            <!-- END PORTLET-->
                         </div>
-                        
-                          <div class="col-md-6 col-sm-6" style="width: 476px;">
-
-                                <div class="portlet light " style="border:1px solid #cccccc; box-shadow: 2px 2px 5px #bdbcbc;">
-                                    <div class="portlet-title">
-                                        <div class="">
-
-                                            <span  style="font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 14px;">Today's Login</span>
-                                            
-                                        <span style="float: right;  font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 12px;" > Last 24 hours</span>
-                                      </div>
-                                    
-                                    </div>
-                                    <div class="portlet-body">
-                                        <div class="portlet-body">
-                                            <div id="highchart_2" style="height:290px;"></div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        
-                         <div class="col-md-6 col-sm-6" style="width: 476px;padding-left: 0px;">
-
-                            <div class="portlet light " style="border:1px solid #cccccc; box-shadow: 2px 2px 5px #bdbcbc;">
-                                <div class="portlet-title" >
-                                    <div class="">
-                                        <i class="icon-share font-red-sunglo hide"></i>
-                                        <span style="font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 14px;">New Subscribers</span>
-
-                                        <span style="float: right;  font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 12px;" > Last 7 days</span>
-                                    </div>
-                                 
-                                </div>
-                                <div class="portlet-body">
-                                        <div id="Payment_Collection2" style="height: 300px;"> </div>
-                                </div>
-                            </div>
-
-                        </div> 
-			
-					       </div>
-					     </div>
-				       </div>
-			        </div>
-					             
-				</div>
-			</div>
-		</div>
- </div>       <!-- END PORTLET--> 
+                    </div>
+                </div>
+                <!-- END CONTENT BODY -->
+            </div>
+            <!-- END CONTENT -->
+    </div>       
+<!-- END PORTLET--> 
   	    	 
                                     
 <!-- END CONTAINER -->
@@ -1146,463 +1029,365 @@ hr {
         <script src="{% static 'assets/global/plugins/highcharts/js/highcharts-more.js'%}" type="text/javascript"></script>
         <!-- END THEME LAYOUT SCRIPTS -->
         
-<script type="text/javascript">
+		<script type="text/javascript">
 
-function change_data1(){
+        $("#admin_nav").addClass("active");
+
+        $(document).ready(function(){
+        alert('hi');
+			 var oTable = $('#user_table').dataTable({
+			   "bFilter": true,
+               "bLengthChange": false,
+               //"scrollX": true,
+               "iDisplayLength": 20,
+            	//"sScrollY":"380px",
+            	'bScrollCollapse':true,
+                 "ajax": "/view-user-list/",
+                  "columns": [
+                {"data": "user_name"},
+                {"data": "usre_email_id"},
+                {"data": "user_contact_no"},
+                {"data": "role_id"},
+                {"data": "actions","sClass": "text-center"},
+		            ],
+		             "order": [[0, "asc"]],
+		            "cache": false 
+        })
+   
+			$("#txtSearch").keyup(function() {
+				oTable.fnFilter($("#txtSearch").val());
+			});           
+ 		});  
+
+	var xyz;
+    function delete_user_detail(id) {
+        xyz = id;
+        $("#delete_user").modal('show');
+   }
+
+   function reactivate_user(id){
+        xyz = id;
+        $("#reactivate_user").modal('show');    
+   }
 
 
-week_var = $('#week :selected').val();
-citys_var = $('#citys :selected').val();
-
-var supplier_id={{request.session.supplier_id}};
-	
-	
-	$.ajax({
-  	  	  type	: "GET",
-		  url 	: '/subscriber-portal/get-admin-stat/',
-			data : {'citys_var':citys_var,'week_var':week_var,'supplier_id':supplier_id},
-	
-
-	     success: function (response) {
-	     		console.log(response);
-	     		if(response.var1=='month'){
-	     		
-	     		 	 $('#disc1').text(response.total_payment_count);
-	     		    $('#disc2').text(response.total_new_subscriber);
-	     		    $('#disc3').text(response.total_new_booking);
-	     		    $('#disc4').text(response.total_advert_expiring);
-
-	     		}
-	     		else if (response.var1=='week') {
- 					 
- 					 $('#disc1').text(response.total_payment_count);
-	     		    $('#disc2').text(response.total_new_subscriber);
-	     		    $('#disc3').text(response.total_new_booking);
-	     		    $('#disc4').text(response.total_advert_expiring);
-	     		}
-	      },
-	      error : function(response){
-	         	alert("_Error");
-	   	},
-	                  
-	  });
+function checkUserName(username){
+	user_name = $(username).val()
+    var regex = /^[a-zA-Z0-9]+$/;    
+    if($(username).val()!=''){
+ 	$(username).parent().children('.error').css("display", "none");
+    if(regex.test(user_name)){
+    //alert('regex if');
+    $(username).parent().children('.error').css("display", "none");
+   return true;
+   }
+   else{
+    //alert('regex else');
+    //alert($(username).parent().children('.error').html());
+    $(username).parent().children('.error').css("display", "block");
+    $(username).parent().children('.error').text("No spaces and special characters allowed");
+    return false;
+   } 
+   //return true;
+   }else{
+    $(username).parent().children('.error').css("display", "block");
+    $(username).parent().children('.error').text("Please enter username");
+   return false; 
+   }
 }
-	     		    
-function change_data(){
 
- citys_var = $('#citys :selected').val();
 
-var supplier_id={{request.session.supplier_id}};
+function checkContactNo(contact_no){
+	
+   var phoneNumberPattern = /^[789]\d{9}$/; 
+	contactno = $(contact_no).val()  
+   if(phoneNumberPattern.test(contactno)){
 
-	$.ajax({
-  	  	  type	: "GET",
-		  url 	: '/subscriber-portal/get-admin-filter/',
-		  data : {'citys_var':citys_var,'supplier_id':supplier_id},                       
-		  
+ 	$(contact_no).parent().children('.error').css("display", "none");
+   return true;
+   }else{
 
-	      success: function (response) {
- 			console.log(response);
-	     		if(response.success=='true'){
-	   
-	   					     		  	//for bookings		
-			$("#highchart_1").highcharts({
-                chart:{
-                    style:{
-                        fontFamily:"Open Sans"
-                    }
-                },
-                title:{
-                    text:"",
-                    x:-20
-                },
-                //subtitle:{text:"Source: WorldClimate.com",x:-20},
-                xAxis:{
-                    title:{
-                        text:""
-                    },
-                    categories:["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"]
-                },
-                yAxis:{
-                    tickInterval: 2,
-                    title:{
-                        text:""
-                    },
-                    plotLines:[{value:0,width:1,color:"#808080"}]
-                },
-                tooltip:{
-                    valueSuffix:""
-                },
-                legend:{
-                    layout:"vertical",
-                    align:"right",
-                    verticalAlign:"middle",
-                    borderWidth:0
-                },
-                series:[
-                    {name: "Subscriptions",data:[response.jan1,response.feb1,response.mar1,response.apr1,response.may1,response.jun1,response.jul1,response.aug1,response.sep1,response.oct1,response.nov1,response.dec1]},
-                ]
-            }) 
-            
-          
-	var chart = AmCharts.makeChart( "Payment_Collection1", {
-				
-				
-				  "type": "serial",
-				  "theme": "light",
-				  "dataProvider": [ {
-				    "day": "Monday",
-				    "visits": response.mon2
-				  }, {
-				    "day": "Tuesday",
-				    "visits": response.tue2
-				  }, {
-				    "day": "Wednesday",
-				    "visits": response.wen2
-				  }, {
-				    "day": "Thursday",
-				    "visits":response.thus2
-				  }, {
-				    "day": "Friday",
-				    "visits":response.fri2
-				  }, {
-				    "day": "Saturday",
-				    "visits":response.sat2
-				  }, {
-				    "day": "Sunday",
-				    "visits":response.sun2
-				  }],
-				  "valueAxes": [ {
-				
-				   //"autoMargins":"false", 
-				  //"marginRight":"5",
-				
-				
-				    "gridColor": "#FFFFFF",
-				    "gridAlpha": 0.2,
-				    "dashLength": 0
-				  } ],
-				  "gridAboveGraphs": true,
-				  "startDuration": 1,
-				  "graphs": [ {
-				    "balloonText": "[[category]]: <b>[[value]]</b>",
-				    "fillAlphas": 0.8,
-				    "lineAlpha": 0.2,
-				    "type": "column",
-				    "autoColor": true,
-				    "valueField": "visits"
-				  } ],
-				  "chartCursor": {
-				    "categoryBalloonEnabled": false,
-				    "cursorAlpha": 0,
-				    "zoomable": false
-				  },
-				  "categoryField": "day",
-				  "categoryAxis": {
-				    "gridPosition": "start",
-				    "gridAlpha": 0,
-				    "tickPosition": "start",
-				    "tickLength": 20
-				  },
-				  "export": {
-				    "enabled": true
-				  }
-				
-				} );
-				
-				
-	var chart = AmCharts.makeChart( "Payment_Collection2", {
-				
-				
-				  "type": "serial",
-				  "theme": "light",
-				  "dataProvider": [ {
-				    "day": "Monday",
-				    "visits": response.mon4
-				  }, {
-				    "day": "Tuesday",
-				    "visits": response.tue4
-				  }, {
-				    "day": "Wednesday",
-				    "visits": response.wen4
-				  }, {
-				    "day": "Thursday",
-				    "visits":response.thus4
-				  }, {
-				    "day": "Friday",
-				    "visits":response.fri4
-				  }, {
-				    "day": "Saturday",
-				    "visits":response.sat4
-				  }, {
-				    "day": "Sunday",
-				    "visits":response.sun4
-				  }],
-				  "valueAxes": [ {
-				
-				   //"autoMargins":"false", 
-				  //"marginRight":"5",
-				
-				
-				    "gridColor": "#FFFFFF",
-				    "gridAlpha": 0.2,
-				    "dashLength": 0
-				  } ],
-				  "gridAboveGraphs": true,
-				  "startDuration": 1,
-				  "graphs": [ {
-				    "balloonText": "[[category]]: <b>[[value]]</b>",
-				    "fillAlphas": 0.8,
-				    "lineAlpha": 0.2,
-				    "type": "column",
-				    "autoColor": true,
-				    "valueField": "visits"
-				  } ],
-				  "chartCursor": {
-				    "categoryBalloonEnabled": false,
-				    "cursorAlpha": 0,
-				    "zoomable": false
-				  },
-				  "categoryField": "day",
-				  "categoryAxis": {
-				    "gridPosition": "start",
-				    "gridAlpha": 0,
-				    "tickPosition": "start",
-				    "tickLength": 20
-				  },
-				  "export": {
-				    "enabled": true
-				  }
-				
-				} );
-				            
-	     		
-	     		}
-	     		
-	     		else {
-	     			$("#error-modal").modal('show');
-	     		}
-	      },
-	      error : function(response){
-	         	alert("_Error");
-	   	},
-	   		complete: function() {
-           		$("#job-post-form").show();
-   			   $("#processing").css('display','none');
-   	    }               
-	  });
-
+    $(contact_no).parent().children('.error').css("display", "block");
+    $(contact_no).parent().children('.error').text("Please enter valid contact number");
+   return false; 
+   }
 }
-	
-	
-  $("#highchart_1").highcharts({
-                chart:{
-                    style:{
-                        fontFamily:"Open Sans"
-                    }
-                },
-                title:{
-                    text:"",
-                    x:-20
-                },
-                //subtitle:{text:"Source: WorldClimate.com",x:-20},
-                xAxis:{
-                    title:{
-                        text:""
-                    },
-                    categories:["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"]
-                },
-                yAxis:{
-                    tickInterval: 2,
-                    title:{
-                        text:""
-                    },
-                    plotLines:[{value:0,width:1,color:"#808080"}]
-                },
-                tooltip:{
-                    valueSuffix:""
-                },
-                legend:{
-                    layout:"vertical",
-                    align:"right",
-                    verticalAlign:"middle",
-                    borderWidth:0
-                },
-                series:[
-                    {name: "Subscriptions",data:[{{jan}},{{feb}},{{mar}},{{apr}},{{may}},{{jun}},{{jul}},{{aug}},{{sep}},{{oct}},{{nov}},{{dec}}]},
-                ]
-            }) 
-            
-  $("#highchart_2").highcharts({
-                chart:{
-                    style:{
-                        fontFamily:"Open Sans"
-                    }
-                },
-                title:{
-                    text:"",
-                    x:-20
-                },
-                //subtitle:{text:"Source: WorldClimate.com",x:-20},
-                xAxis:{
-                    title:{
-                        text:""
-                    },
-                    categories:["00.00","08.00","16.00","23.59"]
-                },
-                yAxis:{
-                    tickInterval: 2,
-                    title:{
-                        text:""
-                    },
-                    plotLines:[{value:0,width:1,color:"#808080"}]
-                },
-                tooltip:{
-                    valueSuffix:""
-                },
-                legend:{
-                    layout:"vertical",
-                    align:"right",
-                    verticalAlign:"middle",
-                    borderWidth:0
-                },
-                series:[
-                    {name: "Registered Users",data:[{{count_zero}},{{count_1}},{{count_2}},{{count_3}}]},
-                ]
-            }) 
-          
 
-var chart = AmCharts.makeChart( "Payment_Collection1", {
+function checkEmail(email){
+	Email = $(email).val()
+   var namePattern = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;  
+ if(namePattern.test(Email)){
+      $(email).parent().children('.error').css("display", "none");
+   return true;
+   }else{
+ 	$(email).parent().children('.error').css("display", "block");
+   $(email).parent().children('.error').text("Please enter valid email");
+   return false; 
+   }
+}
+
+function checkRole(user_role){
+	if($(user_role).val()!='')
+   {
+    $(user_role).parent().children('.error').css("display", "none");
+   return true;
+   }else{
+    $(user_role).parent().children('.error').css("display", "block");
+    $(user_role).parent().children('.error').text("Please select an item from list");
+   return false; 
+   }
+}
 
 
-  "type": "serial",
-  "theme": "light",
-  "dataProvider": [ {
-    "day": "Monday",
-    "visits": {{mon}}
-  }, {
-    "day": "Tuesday",
-    "visits": {{tue}}
-  }, {
-    "day": "Wednesday",
-    "visits": {{wen}}
-  }, {
-    "day": "Thursday",
-    "visits":{{thus}}
-  }, {
-    "day": "Friday",
-    "visits":{{fri}}
-  }, {
-    "day": "Saturday",
-    "visits":{{sat}}
-  }, {
-    "day": "Sunday",
-    "visits":{{sun}}
-  }],
-  "valueAxes": [ {
+function validateData(){
+	if(checkUserName("#username")&&checkContactNo("#contact_no")&&checkEmail("#email")&&checkRole("#user_role")&&checkPassword("#password")&&checkRePassword("#re-password")){
+		return true;	
+	}
+	return false;
+}
 
-   //"autoMargins":"false", 
-  //"marginRight":"5",
+function validateData_edit(){
+    if(checkUserName("#e_username")&&checkContactNo("#e_contact_no")&&checkEmail("#e_email")&&checkRole("#e_user_role")&&checkPassword("#e_re_password")&&checkRePassword("#re_cnf_password")){
+        return true;    
+    }
+    return false;
+}
 
+function checkPassword(password){
+   if($(password).val()!='')
+   {
 
-    "gridColor": "#FFFFFF",
-    "gridAlpha": 0.2,
-    "dashLength": 0
-  } ],
-  "gridAboveGraphs": true,
-  "startDuration": 1,
-  "graphs": [ {
-    "balloonText": "[[category]]: <b>[[value]]</b>",
-    "fillAlphas": 0.8,
-    "lineAlpha": 0.2,
-    "type": "column",
-    "autoColor": true,
-    "valueField": "visits"
-  } ],
-  "chartCursor": {
-    "categoryBalloonEnabled": false,
-    "cursorAlpha": 0,
-    "zoomable": false
-  },
-  "categoryField": "day",
-  "categoryAxis": {
-    "gridPosition": "start",
-    "gridAlpha": 0,
-    "tickPosition": "start",
-    "tickLength": 20
-  },
-  "export": {
-    "enabled": true
-  }
+    $(password).parent().children('.error').css("display", "none");
+   return true;
+   }else{
 
-} );
+    $(password).parent().children('.error').css("display", "block");
+    $(password).parent().children('.error').text("Please enter password");
+   return false; 
+   }
+}
+
+function checkRePassword(re_password){
+   if($(re_password).val()!="")
+   {
+    $(re_password).parent().children('.error').css("display", "none");
+   return true;
+   }else{
+
+    $(re_password).parent().children('.error').css("display", "block");
+    $(re_password).parent().children('.error').text("Please re enter password");
+   return false; 
+   }
+}
 
 
-var chart = AmCharts.makeChart( "Payment_Collection2", {
+function user_register() {
+    //alert('fdhg');
+	if(validateData()){	
+		 	var password = $('#password').val();
+ 		var re_password = $('#re-password').val();
+	   if (password != re_password) {
+	 			$("#pwd_macth").modal('show');
+ 				return false;	
+	 		}
+	formData=$("#add_new_userform").serialize();
+	//alert(formData);
+	$.ajax({
+		type : 'POST',
+		url : '/add-user/',
+		data : formData,
+		success: function(response) {
+			if(response.success=='true'){
+				$('#large').modal('hide');
+				$("#success_modal").modal('show');
+			}
+		else{		
+		$("#error-modal").modal('show');
+			}
+		},
+        beforeSend: function () {
+            //alert('before');
+   $("#processing").css('display','block');
+   },
+   complete: function () {
+    //alert('after');
+       $("#processing").css('display','none');
+   },
+		error: function(response){
+			alert('error');
+		}
+	});
+	}
+}	
 
+function inactive_user() {
+        var user_id = xyz;
+        $.ajax({
+            type: 'POST',
+            url: '/delete-user/',
+            data: {'user_id': user_id},
+            success: function (response) {
+            console.log(response);
+                if (response.success == 'true') {
+                	$("#delete_user").modal('hide');
+                  $("#remove_user").modal('show');
+                }
+                if (response.success == 'false') {
+                    alert(response.message);
+                }
+            },
+            beforeSend: function () {
+   $("#processing").css('display','block');
+   },
+   complete: function () {
+       $("#processing").css('display','none');
+   },
+            error: function (response) {
+            console.log(response);
+                alert('error');
+            },
+        });    
+    }
 
-  "type": "serial",
-  "theme": "light",
-  "dataProvider": [ {
-    "day": "Monday",
-    "visits": {{mon1}}
-  }, {
-    "day": "Tuesday",
-    "visits": {{tue1}}
-  }, {
-    "day": "Wednesday",
-    "visits": {{wen1}}
-  }, {
-    "day": "Thursday",
-    "visits":{{thus1}}
-  }, {
-    "day": "Friday",
-    "visits":{{fri1}}
-  }, {
-    "day": "Saturday",
-    "visits":{{sat1}}
-  }, {
-    "day": "Sunday",
-    "visits":{{sun1}}
-  }],
-  "valueAxes": [ {
+    function activate_user() {
+        var  user_id = xyz;
+        $.ajax({
+            type: 'POST',
+            url: '/activate-user/',
+            data: {'user_id': user_id},
+            success: function (response) {
+            console.log(response);
+                if (response.success == 'true') {
+                    $("#reactivate_user").modal('hide');
+                  $("#user_active_modal").modal('show');
+                }
+                if (response.success == 'false') {
+                    alert(response.message);
+                }
+            },
+            beforeSend: function () {
+   $("#processing").css('display','block');
+   },
+   complete: function () {
+       $("#processing").css('display','none');
+   },
+            error: function (response) {
+            console.log(response);
+                alert('error');
+            },
+        });    
+    }
+    
+   function edit_user_detail(id) {
+        //alert(id);
+        
+        $.ajax({
+            type: 'GET',
+            url: '/view-user-detail/',
+            data: {'user_id': id},
+            success: function (response) {
+                if (response.success == 'true') {
+                    //alert(response.role_id)
+                	 $('#e_user_role').select2('val',response.role_id);
+				       $('#e_username').val(response.user_name);
+			          $('#e_contact_no').val(response.user_contact_no);
+			          $('#e_email').val(response.user_email_id);
+			          $("#edit-user").modal('show');
+                }
+                else {
+                    console.log('ERRORS: ' + response.error_message);
+                }
+            },
+            beforeSend: function () {
+   $("#processing").css('display','block');
+   },
+   complete: function () {
+       $("#processing").css('display','none');
+   },
+            error: function (response) {
+                alert('error');
+            },
+        });
+    }      
+ 
+ 
+ $('#edit_user').submit(function(e) {
+    e.preventDefault();
+    //alert('Updating...')
+    if(validateData_edit()){             
+ 		var password = $('#e_re_password').val(); 
+        console.log(password);	
+		var re_password = $('#re_cnf_password').val(); 
+        console.log(re_password);		
+ 		if (password != re_password) {
+            //alert('if');
+	 			$("#pwd_macth").modal('show');
+ 				return false;	
+	 		}
+	 		else{		
+            //alert('in else');		
+ 	 		$.ajax({
+            type: 'POST',
+            url: '/update-user-detail/',
+            data: $("#edit_user").serialize(),
 
-   //"autoMargins":"false", 
-  //"marginRight":"5",
+            success: function (response) {
+                //alert(response);
+                if (response.success == 'true') {
+                    $("#edit-user").modal('hide');
+                    $("#update_user").modal('show');
+                }
+                if (response.success == 'pass') {
+                		$("#edit-user").modal('hide');
+	           			$("#pwd_null").modal('show');
+							$("#pwd_msg").text(response.message);
+                 		}	
+                
+                if (response.success == "false") {
+               		$("#edit-user").modal('hide');
+                		$("#error-modal").modal('show'); 
+               }
+            },
+            beforeSend: function () {
+   $("#processing").css('display','block');
+   },
+   complete: function () {
+       $("#processing").css('display','none');
+   },
+            error: function (response) {
+                alert('error');
+            },
+        });        
+ 		}
+        }		 		
+ });
+        
+ function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57 || charCode == 43 || charCode == 45 ))
+            return false;
+        return true;
+    }
 
+    function validateFloatKeyPresss(el, evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        var number = el.value.split('+');
+        var number1 = el.value.split('-');
+        if (charCode != 45 && charCode != 43 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        //just one dot
+        if (number.length > 1 && charCode == 43) {
+            return false;
+        }
+        if (number1.length > 1 && charCode == 45) {
+            return false;
+        }
+        return true;
+    }
 
-    "gridColor": "#FFFFFF",
-    "gridAlpha": 0.2,
-    "dashLength": 0
-  } ],
-  "gridAboveGraphs": true,
-  "startDuration": 1,
-  "graphs": [ {
-    "balloonText": "[[category]]: <b>[[value]]</b>",
-    "fillAlphas": 0.8,
-    "lineAlpha": 0.2,
-    "type": "column",
-    "autoColor": true,
-    "valueField": "visits"
-  } ],
-  "chartCursor": {
-    "categoryBalloonEnabled": false,
-    "cursorAlpha": 0,
-    "zoomable": false
-  },
-  "categoryField": "day",
-  "categoryAxis": {
-    "gridPosition": "start",
-    "gridAlpha": 0,
-    "tickPosition": "start",
-    "tickLength": 20
-  },
-  "export": {
-    "enabled": true
-  }
-
-} );
-
-
-</script>        
+    
+</script> 
+       
  </body>
 </html>

@@ -41,6 +41,9 @@ from geopy.geocoders import Nominatim
 import datetime
 from datetime import datetime
 from datetime import date, timedelta
+import calendar
+from django.db.models import Count
+
 
 #SERVER_URL = "http://52.40.205.128"
 SERVER_URL = "http://192.168.0.151:9090"
@@ -326,9 +329,9 @@ def my_subscribers_list(request):
     try:
         data = {}
         final_list = []
-        total_amount = 0
+        last_total_amount = 0
         sub_city_id = request.GET.get('sub_city')
-        print 'SHUB..........sub_city_id...........',sub_city_id
+        print '..........sub_city_id...........',sub_city_id
         from_date = request.GET.get('from_date')
         to_date = request.GET.get('to_date')
         from_date = datetime.strptime(from_date, "%d/%m/%Y")
@@ -345,16 +348,21 @@ def my_subscribers_list(request):
                     else:
                         status = '<a class="btn btn-danger">Inactive<a>'
                     business_obj = Business.objects.filter(supplier=str(supplier.supplier_id))
+
+                    total_amount = 0
+
                     for business in business_obj:
                         try:
                             payment_obj = PaymentDetail.objects.get(business_id=str(business.business_id))
                             if payment_obj.paid_amount:
-                                total_amount = total_amount + int(payment_obj.paid_amount)
+                                total_amount = total_amount + int(payment_obj.paid_amount) 
+                                last_total_amount = last_total_amount + int(payment_obj.paid_amount)
                             else:
                                 total_amount = total_amount + 0
+                                last_total_amount = last_total_amount + 0
                         except Exception as e:
                             print e
-                            total_amount = 0
+
                     subscriber_data = {
                         'subscriber_id': str(supplier.supplier_id),
                         'business_name': supplier.business_name,
@@ -367,6 +375,20 @@ def my_subscribers_list(request):
                         'status': status
                     }
                     final_list.append(subscriber_data)
+                print '.......last_total_amount..last..',last_total_amount
+                subscriber_data = {
+                    'subscriber_id': '',
+                    'business_name': '',
+                    'poc_name': '',
+                    'poc_no': '',
+                    'area': '',
+                    'city': '',
+                    'created_date': '',
+                    'total_amount': last_total_amount,
+                    'status': ''
+                }
+                final_list.append(subscriber_data)
+
             else :
                 supplier_obj = Supplier.objects.filter(date_joined__range=[from_date, to_date])
                 print "===========Supplier=================",supplier_obj
@@ -376,16 +398,21 @@ def my_subscribers_list(request):
                     else:
                         status = '<a class="btn btn-danger">Inactive<a>'
                     business_obj = Business.objects.filter(supplier=str(supplier.supplier_id))
+
+                    total_amount = 0
                     for business in business_obj:
                         try:
                             payment_obj = PaymentDetail.objects.get(business_id=str(business.business_id))
                             if payment_obj.paid_amount:
                                 total_amount = total_amount + int(payment_obj.paid_amount)
+                                last_total_amount = last_total_amount + int(payment_obj.paid_amount)
+                            
                             else:
                                 total_amount = total_amount + 0
+                                last_total_amount = last_total_amount + 0
+
                         except Exception as e:
                             print e
-                            total_amount = 0
                     subscriber_data = {
                         'subscriber_id': str(supplier.supplier_id),
                         'business_name': supplier.business_name,
@@ -398,6 +425,18 @@ def my_subscribers_list(request):
                         'status': status
                     }
                     final_list.append(subscriber_data)
+                subscriber_data = {
+                    'subscriber_id': '',
+                    'business_name': '',
+                    'poc_name': '',
+                    'poc_no': '',
+                    'area': '',
+                    'city': '',
+                    'created_date': '',
+                    'total_amount': last_total_amount,
+                    'status': ''
+                }
+                final_list.append(subscriber_data)
 
             data = {'success': 'true', 'data': final_list}
 
@@ -414,8 +453,9 @@ def my_subscription_sale(request):
     try:
         data = {}
         final_list = []
-        print "----------------------"
+        print "-----------EE-----------"
 
+        sale_city_id = request.GET.get('sale_city')
         from_date = request.GET.get('from_date')
         to_date = request.GET.get('to_date')
         print from_date,to_date
@@ -425,68 +465,203 @@ def my_subscription_sale(request):
         to_date = to_date.strftime("%Y-%m-%d")
 
         try:
-            supplier_list = Supplier.objects.filter(supplier_status = '1')
-            for supplier in supplier_list:
-                business_obj = Business.objects.filter(supplier=str(supplier.supplier_id),business_created_date__range=[from_date, to_date])
-                for business in business_obj:
-                    try:
-                        advert_sub_obj = AdvertSubscriptionMap.objects.get(business_id=str(business.business_id))
-                        start_date = advert_sub_obj.business_id.start_date
-                        end_date = advert_sub_obj.business_id.end_date
+            if sale_city_id != '':
 
-                        pre_ser_obj_list = PremiumService.objects.filter(business_id=str(advert_sub_obj.business_id))
-                        premium_service, advert_slider, top_advert = 'N/A', 'No', 'No'
-                        premium_start_date, slider_start_date, top_advert_start_date = 'N/A', 'N/A', 'N/A'
-                        premium_end_date, slider_end_date, top_advert_end_date = 'N/A', 'N/A', 'N/A'
-
-                        for pre_ser_obj in pre_ser_obj_list:
-                            if pre_ser_obj.premium_service_name != "Advert Slider" and pre_ser_obj.premium_service_name != "Top Advert":
-                                premium_service = pre_ser_obj.premium_service_name
-                                premium_start_date = pre_ser_obj.start_date
-                                premium_end_date = pre_ser_obj.end_date
-                            if pre_ser_obj.premium_service_name == "Advert Slider":
-                                advert_slider = 'Yes'
-                                slider_start_date = pre_ser_obj.start_date
-                                slider_end_date = pre_ser_obj.end_date
-                            if pre_ser_obj.premium_service_name == "Top Advert":
-                                top_advert = 'No'
-                                top_advert_start_date = pre_ser_obj.start_date
-                                top_advert_end_date = pre_ser_obj.end_date
+                supplier_list = Supplier.objects.filter(supplier_status = '1',city_place_id=sale_city_id)
+                total_paid_amount = 0
+                last_total_amount = 0
+                for supplier in supplier_list:
+                    business_obj = Business.objects.filter(supplier=str(supplier.supplier_id),business_created_date__range=[from_date, to_date])
+                    for business in business_obj:
                         try:
-                            payment_obj = PaymentDetail.objects.get(business_id=str(advert_sub_obj.business_id))
-                            total_amount = payment_obj.total_amount 
-                            if payment_obj.paid_amount:
-                                paid_amount = payment_obj.paid_amount
-                            else:
-                                paid_amount = 0
-                        except Exception as e:
-                            total_amount = 0
-                            paid_amount = 0
+                            advert_sub_obj = AdvertSubscriptionMap.objects.get(business_id=str(business.business_id))
+                            start_date = advert_sub_obj.business_id.start_date
+                            end_date = advert_sub_obj.business_id.end_date
 
-                        advert_data={
-                            'advert_title':advert_sub_obj.advert_id.advert_name,
-                            'business_name':supplier.business_name,
-                            'area':advert_sub_obj.advert_id.area,
-                            'city':advert_sub_obj.advert_id.city_place_id.city_id.city_name,
-                            'category':advert_sub_obj.advert_id.category_id.category_name,
-                            'subs_start_date':start_date,
-                            'subs_end_date':end_date,
-                            'premium_service':premium_service,
-                            'premium_start_date':premium_start_date,
-                            'premium_end_date':premium_end_date,
-                            'advert_slider':advert_slider,
-                            'slider_start_date':slider_start_date,
-                            'slider_end_date':slider_end_date,
-                            'top_advert':top_advert,
-                            'top_advert_start_date':top_advert_start_date,
-                            'top_advert_end_date':top_advert_end_date,
-                            'total_service_cost':total_amount,
-                            'total_amount_paid':paid_amount
-                        }
-                        final_list.append(advert_data)
-                    except Exception as e:
-                        print e
-                        pass
+                            pre_ser_obj_list = PremiumService.objects.filter(business_id=str(advert_sub_obj.business_id))
+                            premium_service, advert_slider, top_advert = 'N/A', 'No', 'No'
+                            premium_start_date, slider_start_date, top_advert_start_date = 'N/A', 'N/A', 'N/A'
+                            premium_end_date, slider_end_date, top_advert_end_date = 'N/A', 'N/A', 'N/A'
+
+                            for pre_ser_obj in pre_ser_obj_list:
+                                if pre_ser_obj.premium_service_name != "Advert Slider" and pre_ser_obj.premium_service_name != "Top Advert":
+                                    premium_service = pre_ser_obj.premium_service_name
+                                    premium_start_date = pre_ser_obj.start_date
+                                    premium_end_date = pre_ser_obj.end_date
+                                if pre_ser_obj.premium_service_name == "Advert Slider":
+                                    advert_slider = 'Yes'
+                                    slider_start_date = pre_ser_obj.start_date
+                                    slider_end_date = pre_ser_obj.end_date
+                                if pre_ser_obj.premium_service_name == "Top Advert":
+                                    top_advert = 'No'
+                                    top_advert_start_date = pre_ser_obj.start_date
+                                    top_advert_end_date = pre_ser_obj.end_date
+                            try:
+                                payment_obj = PaymentDetail.objects.get(business_id=str(advert_sub_obj.business_id))
+                                 
+                                if payment_obj.total_amount:
+                                    total_amount = payment_obj.total_amount
+                                    last_total_amount = last_total_amount + int(payment_obj.total_amount)
+                                else:
+                                    total_amount = 0
+                                    last_total_amount = last_total_amount + 0
+
+                                if payment_obj.paid_amount:
+                                    paid_amount = payment_obj.paid_amount
+                                    total_paid_amount = total_paid_amount + int(payment_obj.paid_amount)
+                                else:
+                                    paid_amount = 0
+                                    total_paid_amount = total_paid_amount + 0
+                            except Exception as e:
+                                total_amount = 0
+                                paid_amount = 0
+
+                            advert_data={
+                                'advert_title':advert_sub_obj.advert_id.advert_name,
+                                'business_name':supplier.business_name,
+                                'area':advert_sub_obj.advert_id.area,
+                                'city':advert_sub_obj.advert_id.city_place_id.city_id.city_name,
+                                'category':advert_sub_obj.advert_id.category_id.category_name,
+                                'subs_start_date':start_date,
+                                'subs_end_date':end_date,
+                                'premium_service':premium_service,
+                                'premium_start_date':premium_start_date,
+                                'premium_end_date':premium_end_date,
+                                'advert_slider':advert_slider,
+                                'slider_start_date':slider_start_date,
+                                'slider_end_date':slider_end_date,
+                                'top_advert':top_advert,
+                                'top_advert_start_date':top_advert_start_date,
+                                'top_advert_end_date':top_advert_end_date,
+                                'total_service_cost':total_amount,
+                                'total_amount_paid':paid_amount
+                            }
+                            final_list.append(advert_data)
+                        except Exception as e:
+                            print e
+                            pass
+
+                advert_data={
+                    'advert_title':'',
+                    'business_name':'',
+                    'area':'',
+                    'city':'',
+                    'category':'',
+                    'subs_start_date':'',
+                    'subs_end_date':'',
+                    'premium_service':'',
+                    'premium_start_date':'',
+                    'premium_end_date':'',
+                    'advert_slider':'',
+                    'slider_start_date':'',
+                    'slider_end_date':'',
+                    'top_advert':'',
+                    'top_advert_start_date':'',
+                    'top_advert_end_date':'',
+                    'total_service_cost':last_total_amount,
+                    'total_amount_paid':total_paid_amount
+                }
+                final_list.append(advert_data)
+
+
+            else :
+                supplier_list = Supplier.objects.filter(supplier_status = '1')
+                total_paid_amount = 0
+                last_total_amount = 0
+                for supplier in supplier_list:
+                    business_obj = Business.objects.filter(supplier=str(supplier.supplier_id),business_created_date__range=[from_date, to_date])
+                    for business in business_obj:
+                        try:
+                            advert_sub_obj = AdvertSubscriptionMap.objects.get(business_id=str(business.business_id))
+                            start_date = advert_sub_obj.business_id.start_date
+                            end_date = advert_sub_obj.business_id.end_date
+
+                            pre_ser_obj_list = PremiumService.objects.filter(business_id=str(advert_sub_obj.business_id))
+                            premium_service, advert_slider, top_advert = 'N/A', 'No', 'No'
+                            premium_start_date, slider_start_date, top_advert_start_date = 'N/A', 'N/A', 'N/A'
+                            premium_end_date, slider_end_date, top_advert_end_date = 'N/A', 'N/A', 'N/A'
+
+                            for pre_ser_obj in pre_ser_obj_list:
+                                if pre_ser_obj.premium_service_name != "Advert Slider" and pre_ser_obj.premium_service_name != "Top Advert":
+                                    premium_service = pre_ser_obj.premium_service_name
+                                    premium_start_date = pre_ser_obj.start_date
+                                    premium_end_date = pre_ser_obj.end_date
+                                if pre_ser_obj.premium_service_name == "Advert Slider":
+                                    advert_slider = 'Yes'
+                                    slider_start_date = pre_ser_obj.start_date
+                                    slider_end_date = pre_ser_obj.end_date
+                                if pre_ser_obj.premium_service_name == "Top Advert":
+                                    top_advert = 'No'
+                                    top_advert_start_date = pre_ser_obj.start_date
+                                    top_advert_end_date = pre_ser_obj.end_date
+                            try:
+                                payment_obj = PaymentDetail.objects.get(business_id=str(advert_sub_obj.business_id))
+                           
+                                if payment_obj.total_amount:
+                                    total_amount = payment_obj.total_amount
+                                    last_total_amount = last_total_amount + int(payment_obj.total_amount)
+                                else:
+                                    total_amount = 0
+                                    last_total_amount = last_total_amount + 0
+
+                                if payment_obj.paid_amount:
+                                    paid_amount = payment_obj.paid_amount
+                                    total_paid_amount = total_paid_amount + int(payment_obj.paid_amount)
+                                else:
+                                    paid_amount = 0
+                                    total_paid_amount = total_paid_amount + 0
+
+                            except Exception as e:
+                                total_amount = 0
+                                paid_amount = 0
+
+                            advert_data={
+                                'advert_title':advert_sub_obj.advert_id.advert_name,
+                                'business_name':supplier.business_name,
+                                'area':advert_sub_obj.advert_id.area,
+                                'city':advert_sub_obj.advert_id.city_place_id.city_id.city_name,
+                                'category':advert_sub_obj.advert_id.category_id.category_name,
+                                'subs_start_date':start_date,
+                                'subs_end_date':end_date,
+                                'premium_service':premium_service,
+                                'premium_start_date':premium_start_date,
+                                'premium_end_date':premium_end_date,
+                                'advert_slider':advert_slider,
+                                'slider_start_date':slider_start_date,
+                                'slider_end_date':slider_end_date,
+                                'top_advert':top_advert,
+                                'top_advert_start_date':top_advert_start_date,
+                                'top_advert_end_date':top_advert_end_date,
+                                'total_service_cost':total_amount,
+                                'total_amount_paid':paid_amount
+                            }
+                            final_list.append(advert_data)
+                        except Exception as e:
+                            print e
+                            pass
+
+                advert_data={
+                    'advert_title':'',
+                    'business_name':'',
+                    'area':'',
+                    'city':'',
+                    'category':'',
+                    'subs_start_date':'',
+                    'subs_end_date':'',
+                    'premium_service':'',
+                    'premium_start_date':'',
+                    'premium_end_date':'',
+                    'advert_slider':'',
+                    'slider_start_date':'',
+                    'slider_end_date':'',
+                    'top_advert':'',
+                    'top_advert_start_date':'',
+                    'top_advert_end_date':'',
+                    'total_service_cost':last_total_amount,
+                    'total_amount_paid':total_paid_amount
+                }
+                final_list.append(advert_data)
+
             data = {'success': 'true', 'data': final_list}
         except IntegrityError as e:
             print e
@@ -519,30 +694,31 @@ def get_advert_databse(request):
             else:
                 category_list = Category.objects.filter(category_status='1')
             for category in category_list:
-                print '...........category_list........',category_list
                 category_name = category.category_name
-                print '...........category_name........',category_name
                 business_obj = Business.objects.filter(category_id=str(category.category_id))
                 count = 0
-                for business in business_obj:
-                    advert_sub_obj = AdvertSubscriptionMap.objects.get(business_id=str(business.business_id))
-                    print '..........advert_sub_obj..........',advert_sub_obj
-                    pre_date = datetime.now().strftime("%d/%m/%Y")
-                    pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
-                    print 'pre_date>>>>>>>>',pre_date
-                    end_date = advert_sub_obj.business_id.end_date
-                    end_date = datetime.strptime(end_date, "%d/%m/%Y")
-                    print 'end_date>>>>>>>',end_date
-                    date_gap = end_date - pre_date
-                    if int(date_gap.days) >= 0:
-                        count = count + 1
+                try :
+                    for business in business_obj:
+                        advert_sub_obj = AdvertSubscriptionMap.objects.get(business_id=str(business.business_id))
+                        print '..........advert_sub_obj..........',advert_sub_obj
+                        pre_date = datetime.now().strftime("%m/%d/%Y")
+                        pre_date = datetime.strptime(pre_date, "%m/%d/%Y")
+                        print 'pre_date>>>>>>>>',pre_date
+                        end_date = advert_sub_obj.business_id.end_date
+                        end_date = datetime.strptime(end_date, "%m/%d/%Y")
+                        print 'end_date>>>>>>>',end_date
+                        date_gap = end_date - pre_date
+                        if int(date_gap.days) >= 0:
+                            count = count + 1
                     advert_data = {
                         'category': category_name,
                         'count': str(count)
                     }
                     final_list.append(advert_data)
-                print 'HHH................final_list..............HHHH',final_list
 
+                except Exception as e:
+                    print e
+                    pass
 
             data = {'success': 'true', 'data': final_list}
         except IntegrityError as e:
@@ -740,7 +916,7 @@ def get_consumer_usage(request):
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
-#############$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#################
+####################%%%%%%%$$$$$$$$$$$$$$%%%%%%%%%%%##########
 
 @csrf_exempt
 def admin_dashboard(request):
@@ -764,11 +940,11 @@ def admin_dashboard(request):
             pre_date = str(dates[0]) +'/'+dates[1]+'/'+dates[2]
 
             #to find out logo of supplier
-            Supplier_obj = Supplier.objects.get(supplier_id=request.session['supplier_id'])
-            print "..................Supplier_obj.........",Supplier_obj
-            supplier_id = Supplier_obj.supplier_id
+            # Supplier_obj = Supplier.objects.get(supplier_id=request.session['supplier_id'])
+            # print "..................Supplier_obj.........",Supplier_obj
+            # supplier_id = Supplier_obj.supplier_id
 
-            logo= SERVER_URL + Supplier_obj.logo.url
+            # logo= SERVER_URL + Supplier_obj.logo.url
 
             #########.............Dashboard Stats.........................#####
             total_payment_count = 0
@@ -848,14 +1024,10 @@ def admin_dashboard(request):
             ##########..................Today's Payment received.....(2)................############
 
             current_date = datetime.now()
-            print '...........current_date.........',current_date
             first = calendar.day_name[current_date.weekday()]
-            print '...........first.........',first
 
             last_date = (datetime.now() - timedelta(days=7))
-            print '...........last_date.........',last_date
             last_date2 = calendar.day_name[last_date.weekday()]
-            print '...........last_date2.........',last_date2
 
             list = []
             consumer_list = PaymentDetail.objects.filter(payment_created_date__range=[last_date,current_date])
@@ -865,23 +1037,30 @@ def admin_dashboard(request):
                     payment_created_date=view_obj.payment_created_date
                     consumer_day = calendar.day_name[payment_created_date.weekday()]
                     if consumer_day== 'Monday' :
-                        mon = mon+1
+                        if view_obj.paid_amount:
+                            mon = mon+int(view_obj.paid_amount)
                     elif consumer_day== 'Tuesday' :
-                        tue = tue+1
+                        if view_obj.paid_amount:
+                            tue = tue+int(view_obj.paid_amount)
                     elif consumer_day== 'Wednesday' :
-                        wen = wen+1
+                        if view_obj.paid_amount:
+                            wen = wen+int(view_obj.paid_amount)
                     elif consumer_day== 'Thursday' :
-                        thus = thus+1
+                        if view_obj.paid_amount:
+                            thus = thus+int(view_obj.paid_amount)
                     elif consumer_day== 'Friday' :
-                        fri = fri+1
+                        if view_obj.paid_amount:
+                            fri = fri+int(view_obj.paid_amount)
                     elif consumer_day== 'Saturday' :
-                        sat = sat+1
+                        if view_obj.paid_amount:
+                            sat = sat+int(view_obj.paid_amount)
                     elif consumer_day== 'Sunday' :
-                        sun = sun+1
+                        if view_obj.paid_amount:
+                            sun = sun+int(view_obj.paid_amount)
                     else :
                         pass
 
-            print "$$$",mon,tue,wen,thus,fri,sat,sun
+            print "$$$REEEEEEEEEEEEEEEEEEEEEEEEE",mon,tue,wen,thus,fri,sat,sun
 
             ############################...Todays Login.....(3)....###############################
             count_zero = 0
@@ -962,7 +1141,7 @@ def admin_dashboard(request):
                     else :
                         pass
 
-            data = {'success':'true','subscriber_data':subscriber_obj,'today_date':today_date,'pre_date':pre_date,'count_zero':count_zero,'count_1':count_1,'count_2':count_2,'count_3':count_3,'logo':logo,'total_payment_count':total_payment_count,'total_new_subscriber':total_new_subscriber,
+            data = {'success':'true','subscriber_data':subscriber_obj,'today_date':today_date,'pre_date':pre_date,'count_zero':count_zero,'count_1':count_1,'count_2':count_2,'count_3':count_3,'total_payment_count':total_payment_count,'total_new_subscriber':total_new_subscriber,
                 'total_new_booking':total_new_booking,'total_advert_expiring':total_advert_expiring,'jan':jan,'feb':feb,'mar':mar,'apr':apr,'may':may,'jun':jun,'jul':jul,
                'aug':aug,'sep':sep,'oct':octo,'nov':nov,'dec':dec,'mon':mon,'tue':tue,'wen':wen,'thus':thus,'fri':fri,'sat':sat,'sun':sun,'mon1':mon1,'tue1':tue1,'wen1':wen1,'thus1':thus1,'fri1':fri1,'sat1':sat1,'sun1':sun1,'city_places_list':get_city_places(request)}
 
@@ -974,8 +1153,8 @@ def admin_dashboard(request):
     except Exception,e:
         print 'Exception ',e
 
-    #print data
-    return render(request,'Subscriber/admin-dashboard.html',data)
+    print data
+    return render(request,'Admin/index.html',data)
 
 
 # TO GET THE CITY
@@ -1007,11 +1186,11 @@ def get_admin_filter(request):
             print '//......$$$$$$$$.....city_front......//',city_front                                 
             if city_front == 'all':
                 #to find out logo of supplier
-                Supplier_obj = Supplier.objects.get(supplier_id=request.session['supplier_id'])
-                print "..................Supplier_obj.........",Supplier_obj
-                supplier_id = Supplier_obj.supplier_id
+                # Supplier_obj = Supplier.objects.get(supplier_id=request.session['supplier_id'])
+                # print "..................Supplier_obj.........",Supplier_obj
+                # supplier_id = Supplier_obj.supplier_id
 
-                logo= SERVER_URL + Supplier_obj.logo.url
+                # logo= SERVER_URL + Supplier_obj.logo.url
 
 
                 #######.............Total subscription  Graph......(1)....########
@@ -1160,11 +1339,11 @@ def get_admin_filter(request):
                             pass
             else :
                 #to find out logo of supplier
-                Supplier_obj = Supplier.objects.get(supplier_id=request.session['supplier_id'])
-                print "..................Supplier_obj.........",Supplier_obj
-                supplier_id = Supplier_obj.supplier_id
+                # Supplier_obj = Supplier.objects.get(supplier_id=request.session['supplier_id'])
+                # print "..................Supplier_obj.........",Supplier_obj
+                # supplier_id = Supplier_obj.supplier_id
 
-                logo= SERVER_URL + Supplier_obj.logo.url
+                # logo= SERVER_URL + Supplier_obj.logo.url
 
 
                 #######.............Total subscription  Graph......(1)....########
@@ -1265,7 +1444,7 @@ def get_admin_filter(request):
                         else :
                             pass
 
-            data = {'success':'true','logo':logo,'jan1':jan1,'feb1':feb1,'mar1':mar1,'apr1':apr1,'may1':may1,'jun1':jun1,'jul1':jul1,
+            data = {'success':'true','jan1':jan1,'feb1':feb1,'mar1':mar1,'apr1':apr1,'may1':may1,'jun1':jun1,'jul1':jul1,
                'aug1':aug1,'sep1':sep1,'oct1':octo1,'nov1':nov1,'dec1':dec1,'mon2':mon2,'tue2':tue2,'wen2':wen2,'thus2':thus2,'fri2':fri2,'sat2':sat2,'sun2':sun2,'mon4':mon4,'tue4':tue4,'wen4':wen4,'thus4':thus4,'fri4':fri4,'sat4':sat4,'sun4':sun4,'city_places_list':get_city_places(request)}
 
          
@@ -1296,9 +1475,9 @@ def get_admin_stat(request):
                 var1 = str(request.GET.get('week_var'))
                 city_front = request.GET.get('citys_var')
 
-                Supplier_obj = Supplier.objects.get(supplier_id=request.GET.get('supplier_id'))
+                # Supplier_obj = Supplier.objects.get(supplier_id=request.GET.get('supplier_id'))
 
-                logo= SERVER_URL + Supplier_obj.logo.url
+                # logo= SERVER_URL + Supplier_obj.logo.url
 
                 #########.............Dashboard Stats...........For a Month................#####
                 total_payment_count = 0
@@ -1348,9 +1527,9 @@ def get_admin_stat(request):
                 print '/.......$$$$..........only month.........../'
                 var1 = str(request.GET.get('week_var'))
 
-                Supplier_obj = Supplier.objects.get(supplier_id=request.GET.get('supplier_id'))
+                # Supplier_obj = Supplier.objects.get(supplier_id=request.GET.get('supplier_id'))
 
-                logo= SERVER_URL + Supplier_obj.logo.url
+                # logo= SERVER_URL + Supplier_obj.logo.url
 
                 #########.............Dashboard Stats...........For a Month................#####
                 total_payment_count = 0
@@ -1389,9 +1568,9 @@ def get_admin_stat(request):
                 var1 = str(request.GET.get('week_var'))
                 city_front = request.GET.get('citys_var')
 
-                Supplier_obj = Supplier.objects.get(supplier_id=request.GET.get('supplier_id'))
+                # Supplier_obj = Supplier.objects.get(supplier_id=request.GET.get('supplier_id'))
 
-                logo= SERVER_URL + Supplier_obj.logo.url
+                # logo= SERVER_URL + Supplier_obj.logo.url
 
                 #########.............Dashboard Stats...........For a Month................#####
                 total_payment_count = 0
@@ -1439,9 +1618,9 @@ def get_admin_stat(request):
 
                 var1 = str(request.GET.get('week_var'))
 
-                Supplier_obj = Supplier.objects.get(supplier_id=request.GET.get('supplier_id'))
+                # Supplier_obj = Supplier.objects.get(supplier_id=request.GET.get('supplier_id'))
 
-                logo= SERVER_URL + Supplier_obj.logo.url
+                # logo= SERVER_URL + Supplier_obj.logo.url
 
                 #########.............Dashboard Stats...........For a Month................#####
                 total_payment_count = 0
@@ -1477,7 +1656,7 @@ def get_admin_stat(request):
 
 
 
-            data = {'var1':var1,'success':'true','logo':logo,'total_payment_count':total_payment_count,
+            data = {'var1':var1,'success':'true','total_payment_count':total_payment_count,
                     'total_new_subscriber':total_new_subscriber,
                     'total_new_booking':total_new_booking,
                     'total_advert_expiring':total_advert_expiring}
@@ -1518,11 +1697,11 @@ def admin_report(request):
             pre_date = str(dates[0]) +'/'+dates[1]+'/'+dates[2]
 
             #to find out logo of supplier
-            Supplier_obj = Supplier.objects.get(supplier_id=request.session['supplier_id'])
-            print "..................Supplier_obj.........",Supplier_obj
-            supplier_id = Supplier_obj.supplier_id
+            # Supplier_obj = Supplier.objects.get(supplier_id=request.session['supplier_id'])
+            # print "..................Supplier_obj.........",Supplier_obj
+            # supplier_id = Supplier_obj.supplier_id
 
-            logo= SERVER_URL + Supplier_obj.logo.url
+            # logo= SERVER_URL + Supplier_obj.logo.url
 
       
 
@@ -1537,4 +1716,5 @@ def admin_report(request):
         print 'Exception ',e
 
     print data
-    return render(request,'Subscriber/admin_report.html',data)
+    return render(request,'Admin/admin_report.html',data)
+

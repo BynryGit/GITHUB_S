@@ -299,7 +299,7 @@ def user(request):
     else:
         user_role_list = UserRole.objects.filter(role_status='1')
         data = {'user_role_list':user_role_list,'username':request.session['login_user']}
-        return render(request,'Admin/user_list.html',data)        
+        return render(request,'Admin/view_user_list.html',data)        
 
 def notification(request):
     if not request.user.is_authenticated():
@@ -523,11 +523,13 @@ def view_user_list(request):
                     delete = '<a id="'+str(user_obj)+'" onclick="delete_user_detail(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Delete"  ><i class="fa fa-trash"></i></a>'
                     if user_obj.user_status == "1":                        
                         print "if"
+                        status = 'Active'
                         actions =  edit +" "+ delete
                     else:
                         print "else"
+                        status = 'In-active'
                         actions = '<a id="'+str(user_obj)+'" onclick="reactivate_user(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Reactivate"><i class="fa fa-undo"></i></a>'                       
-                    list = {'user_name':user_name,'actions':actions,'role_id':role_id,'usre_email_id':usre_email_id,'user_contact_no':user_contact_no}
+                    list = {'user_name':user_name,'actions':actions,'role_id':role_id,'usre_email_id':usre_email_id,'user_contact_no':user_contact_no,'status':status}
                     final_list.append(list)
                 data = {'success':'true','data':final_list}
         except IntegrityError as e:
@@ -597,6 +599,7 @@ def view_user_detail(request):
 
     except Exception,e:
         print 'Exception ',e
+    print data
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 @csrf_exempt
@@ -1932,3 +1935,72 @@ def city_add(city_obj):
     except SMTPException,e:
         print e
     return 1    
+
+
+###############$$$$$$$........ADMIN user add.................$$$$$$$$$$$$########################
+    
+@csrf_exempt
+def user_list(request):
+    try:
+        try:
+            data = {'success':'true'}
+
+        except IntegrityError as e:
+            print e
+            data = {'success':'false','message':'Error in  loading page. Please try after some time','username':request.session['login_user']}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception,e:
+        print 'Exception ',e
+
+    print data
+    return render(request,'Admin/user-list.html',data)
+
+@csrf_exempt
+def admin_add_user(request):
+    try:
+        try:
+            user_role_list = UserRole.objects.filter(role_status='1')
+            data = {'success':'true','user_role_list':user_role_list}
+            #data = {,'username':request.session['login_user']}
+
+        except IntegrityError as e:
+            print e
+            data = {'success':'false','message':'Error in  loading page. Please try after some time','username':request.session['login_user']}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception,e:
+        print 'Exception ',e
+
+    print data
+    return render(request,'Admin/add-user.html',data)
+
+@csrf_exempt
+def add_new_user(request):
+    try:
+        role_id = UserRole.objects.get(role_id=request.POST.get('role'))
+        user_obj=UserProfile(
+            first_name = request.POST.get('First_name'),
+            last_name = request.POST.get('Last_name'),
+            user_contact_no=request.POST.get('phone_no'),
+            usre_email_id=request.POST.get('Username'),
+            user_role=role_id,
+            user_created_date = datetime.now(),
+            user_status = '1',
+            #user_created_by = request.session['login_user']
+        );
+        user_obj.save();
+        user_obj.set_password(request.POST.get('password'));
+        user_obj.save();
+
+        data={
+            'success':'true',
+            'message':'User Created Successfully.'
+        }
+    except Exception, e:
+        data={
+            'success':'false',
+            'message':str(e)
+        }
+    print data
+    return HttpResponse(json.dumps(data),content_type='application/json') 

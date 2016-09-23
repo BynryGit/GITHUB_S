@@ -100,7 +100,7 @@ WSGI_APPLICATION = 'DigiSpace.wsgi.application'
 DATABASES = {
     'default': {
              'ENGINE': 'django.db.backends.mysql',
-             'NAME': 'digispace_new',
+             'NAME': 'digispace_all',
              'USER': 'root',
              'PASSWORD': 'root',
              'HOST': 'localhost',

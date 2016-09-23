@@ -24,7 +24,7 @@ urlpatterns = patterns('',
     url(r'^rate-card/', 'Admin.views.rate_card',name='rate_card'),
     url(r'^backoffice/', 'Admin.views.backoffice',name='backoffice'),
     url(r'^reload-captcha/', 'Admin.captcha_mod.reload_captcha', name='captcha_reload'),
-    url(r'^dashboard/', 'Admin.views.dashboard',name='dashboard'),
+    #url(r'^dashboard/', 'Admin.views.dashboard',name='dashboard'),
     url(r'^subscriber/', 'Admin.views.subscriber',name='subscriber'),
     url(r'^consumer/', 'Admin.views.consumer',name='consumer'),
     url(r'^user/', 'Admin.views.user',name='user'),
@@ -164,6 +164,18 @@ urlpatterns = patterns('',
     url(r'^get_new_registered_consumer/', 'Admin.dashboard.get_new_registered_consumer',name='get_new_registered_consumer'),
     url(r'^get_consumer_activity/', 'Admin.dashboard.get_consumer_activity',name='get_consumer_activity'),
     url(r'^get_consumer_usage/', 'Admin.dashboard.get_consumer_usage',name='get_consumer_usage'),
+
+#Dashboard Admin SHUBHAM
+    url(r'^dashboard/', 'Admin.dashboard.admin_dashboard',name='admin_dashboard'),
+    url(r'^get-admin-filter/', 'Admin.dashboard.get_admin_filter',name='get_admin_filter'),
+    url(r'^get-admin-stat/', 'Admin.dashboard.get_admin_stat',name='get_admin_stat'),
+    url(r'^admin-report/', 'Admin.dashboard.admin_report',name='admin_report'),
+    url(r'^get-subscriber-list/', 'Admin.dashboard.get_subscriber_list',name='get_subscriber_list'),
+
+# Admin add user SHUBHAM
+    url(r'^user-list/', 'Admin.views.user_list',name='user_list'),
+    url(r'^admin-add-user/', 'Admin.views.admin_add_user',name='admin_add_user'),
+    url(r'^add-new-user/', 'Admin.views.add_new_user',name='add_new_user'),
 
 
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

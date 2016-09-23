@@ -1016,18 +1016,7 @@ hr {
                                     </div>
                                     <div class="row">
                                     
-                                    	 <div class="col-md-2">
-                                            <p style="margin-top: 8px;">City:</p>
-                                        </div>
-                                    
-                                       <div class="col-md-4">
-                                            <select class="form-control" id="sub_city_list" onchange="my_subscriber_change();">
-                                                <option value="">Select City</option>
-                                                {% for city in city_places_list %}
-                                                    <option value="{{city.city_place_id}}">{{city.city}}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
+                             
                                         
                                         <div class="col-md-2">
                                             <p style="margin-top: 8px;">Date Range:</p>
@@ -1074,6 +1063,7 @@ hr {
                                         <div class="tools"> </div>
                                     </div>
                                     <div class="row">
+                                    	
                                         <div class="col-md-2">
                                             <p style="margin-top: 8px;">Date Range:</p>
                                         </div>
@@ -1320,7 +1310,7 @@ hr {
                                     <p style="margin-top: 8px;">Date Range:</p>
                                     </div>
                                     <div class="col-md-8">
-                                                    <div class="input-group input-large date-picker input-daterange" data-date="10/11/2012" data-date-format="mm/dd/yyyy">
+                                                    <div class="input-group input-large date-picker input-daterange" data-date="10/11/2012" data-date-format="dd/mm/yyyy">
                                                         <input type="text" class="form-control" name="from">
                                                         <span class="input-group-addon"> to </span>
                                                         <input type="text" class="form-control" name="to"> </div>
@@ -1661,7 +1651,8 @@ hr {
         my_to_date = $("#my_to_date").val();
         data = '/my_subscribers_list/?from_date='+my_from_date+'&to_date='+my_to_date+'&sub_city='+sub_city_id;
         $('#sales_subscriber').dataTable({
-            "bDestroy" : true,
+            	"bDestroy" : true,
+            "ordering": false,
             buttons: [
                 { extend: 'excel', className: 'btn yellow btn-outline ',
                     filename: 'My Subscriber', "title": "CityHoopla : My Subscriber"
@@ -1676,9 +1667,7 @@ hr {
                 },
             ],
 
-            "order": [
-                [0, 'asc']
-            ],
+         
 
             "ajax": data,
             "columns": [

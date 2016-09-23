@@ -1647,13 +1647,15 @@ $(document).ready(function(){
 
 function validateData(){
 
-	if(checkLogo("#logo")&checkBusinessName("#business_name")&checkNumber("#phone_no")&checkSecNumber("#sec_phone_no")&checkEmail("#pri_email")&checkSecEmail("#sec_email")&checkaddress("#address1")&checkcountry("#country")&checkState("#state")&checkCity("#city")&checkPincode("#pincode")&checkBusiness('#business')&checkUserName('#user_name')&checkUserEmail('#user_email')&checkUserContactNo('#user_contact_no')){
+	if(checkLogo("#logo")&checkBusinessName("#business_name")&checkNumber("#phone_no")&checkSecNumber("#sec_phone_no")&checkEmail("#pri_email")&checkSecEmail("#sec_email")&checkaddress("#address1")&checkcountry("#country")&checkState("#state")&checkCity("#city")&checkPincode("#pincode")&checkBusiness('#business')&checkUserName('#user_name')&checkUserEmail('#user_email')&checkUserContactNo('#user_contact_no'))
+	{
 		return true;	
 	}
 	return false;
 }
 
 $("#save-continue").click(function(event)  {
+
 
 	event.preventDefault();  
 

@@ -239,7 +239,8 @@ class Privileges(models.Model):
         return unicode(self.privilege_id)
 
 class UserProfile(User):
-    user_id                        =       models.AutoField(primary_key=True, editable=False)
+    user_id                        =       models.AutoField(primary_key=True, editable=False, blank=True)   
+    #user_first_name                      =       models.CharField(max_length=100,default=None,blank=True,null=True)
     user_name                      =       models.CharField(max_length=100,default=None,blank=True,null=True)
     user_contact_no                =       models.CharField(blank=True,null=True,max_length=200,default=None)
     usre_email_id                  =       models.CharField(blank=True,null=True,max_length=100,default=None)

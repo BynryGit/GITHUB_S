@@ -453,6 +453,17 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Item',
+            fields=[
+                ('Item_video_id', models.AutoField(serialize=False, editable=False, primary_key=True)),
+                ('Item_video_name', models.FileField(max_length=500, null=True, upload_to=b'static/', blank=True)),
+                ('creation_date', models.DateTimeField(null=True, blank=True)),
+                ('created_by', models.CharField(max_length=500, null=True, blank=True)),
+                ('updated_by', models.CharField(max_length=500, null=True, blank=True)),
+                ('updation_date', models.DateTimeField(null=True, blank=True)),
+            ],
+        ),
+        migrations.CreateModel(
             name='NearByAttraction',
             fields=[
                 ('attraction_id', models.AutoField(serialize=False, editable=False, primary_key=True)),

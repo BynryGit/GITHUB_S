@@ -42,15 +42,6 @@ subscriber_urlpattern = patterns('',
     #forgot Password Shubham
     url(r'^forgot-password/', 'subscriberapp.views.forgot_password',name='forgot_password'),
 
-#Dashboard Admin 
-    url(r'^admin-dashboard/', 'subscriberapp.views.admin_dashboard',name='admin_dashboard'),
-    url(r'^get-admin-filter/', 'subscriberapp.views.get_admin_filter',name='get_admin_filter'),
-    url(r'^get-admin-stat/', 'subscriberapp.views.get_admin_stat',name='get_admin_stat'),
-    url(r'^admin-report/', 'subscriberapp.views.admin_report',name='admin_report'),
-    url(r'^get-subscriber-list/', 'Admin.dashboard.get_subscriber_list',name='get_subscriber_list'),
-
-
-
     url(r'^renew-subscription/', 'subscriberapp.views.renew_subscription',name='renew_subscription'),
     url(r'^edit-subscription/', 'subscriberapp.views.edit_subscription',name='edit_subscription'),
     url(r'^uploaded-images/', 'subscriberapp.views.uploaded_images',name='uploaded_images'),

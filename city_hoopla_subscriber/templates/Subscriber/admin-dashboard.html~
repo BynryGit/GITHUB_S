@@ -1196,7 +1196,7 @@ var supplier_id={{request.session.supplier_id}};
 
 	$.ajax({
   	  	  type	: "GET",
-		  url 	: '/subscriber-portal/get-admin-filter/',
+		  url 	: '/get-admin-filter/',
 		  data : {'citys_var':citys_var,'supplier_id':supplier_id},                       
 		  
 
@@ -1428,7 +1428,7 @@ var supplier_id={{request.session.supplier_id}};
                     borderWidth:0
                 },
                 series:[
-                    {name: "Bookings",data:[{{jan}},{{feb}},{{mar}},{{apr}},{{may}},{{jun}},{{jul}},{{aug}},{{sep}},{{oct}},{{nov}},{{dec}}]},
+                    {name: "Subscriptions",data:[{{jan}},{{feb}},{{mar}},{{apr}},{{may}},{{jun}},{{jul}},{{aug}},{{sep}},{{oct}},{{nov}},{{dec}}]},
                 ]
             }) 
             
