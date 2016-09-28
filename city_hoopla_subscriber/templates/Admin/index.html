@@ -856,10 +856,10 @@ hr {
 						        <div class="col-lg-3" id="citys" style="font-size: 12px;font-family: 'Roboto Light', 'Roboto';">
                                  <select   class="form-control"  onchange="change_data();">
                                  
-													 <option   value="" > All</option>													 
+													 <option   value="all" > All</option>													 
 													 {% for city in city_places_list %}
 												    
-												    <option   value="{{ city.city }}" > {{ city.city }}</option>
+												    <option   value="{{ city.city_place_id }}" > {{ city.city }}</option>
 
 													  {% endfor %}
 											</select>
@@ -975,8 +975,29 @@ hr {
 					     
 					   <div class="row">
 					       <div class="col-lg-12" style="margin-left: -14px;">
+					       
+					       <div class="col-md-6 col-sm-6" style="width: 476px;">
+
+                                <div class="portlet light " style="border:1px solid #cccccc; box-shadow: 2px 2px 5px #bdbcbc;">
+                                    <div class="portlet-title">
+                                        <div class="">
+
+                                            <span  style="font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 14px;">Today's Login</span>
+                                            
+                                        <span style="float: right;  font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 12px;" > Last 24 hours</span>
+                                      </div>
+                                    
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="portlet-body">
+                                            <div id="highchart_2" style="height:290px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
 					     		                          
-                          <div class="col-md-6 col-sm-6" style="width: 476px;">
+                          <div class="col-md-6 col-sm-6" style="width: 476px;padding-left: 0px;">
                                 <!-- BEGIN PORTLET-->
                                 <div class="portlet light " style="border:1px solid #cccccc; box-shadow: 2px 2px 5px #bdbcbc;">
                                     <div class="portlet-title">
@@ -999,7 +1020,24 @@ hr {
                                 <!-- END PORTLET-->
                             </div>
                         
-                        
+                        <div class="col-md-6 col-sm-6" style="width: 476px;">
+
+                            <div class="portlet light " style="border:1px solid #cccccc; box-shadow: 2px 2px 5px #bdbcbc;">
+                                <div class="portlet-title" >
+                                    <div class="">
+                                        <i class="icon-share font-red-sunglo hide"></i>
+                                        <span style="font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 14px;"> Last 1 Week New Subscriptions</span>
+
+                                        <span style="float: right;  font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 12px;" > Last 7 days</span>
+                                    </div>
+                                 
+                                </div>
+                                <div class="portlet-body">
+                                        <div id="Payment_Collection2" style="height: 300px;"> </div>
+                                </div>
+                            </div>
+
+                        </div>
                         
                           <div class="col-md-6 col-sm-6" style="width: 476px;padding-left: 0px;">
                             <!-- BEGIN PORTLET-->
@@ -1020,68 +1058,10 @@ hr {
 
                         </div>
                         
-                          <div class="col-md-6 col-sm-6" style="width: 476px;">
-
-                                <div class="portlet light " style="border:1px solid #cccccc; box-shadow: 2px 2px 5px #bdbcbc;">
-                                    <div class="portlet-title">
-                                        <div class="">
-
-                                            <span  style="font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 14px;">Today's Login</span>
-                                            
-                                        <span style="float: right;  font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 12px;" > Last 24 hours</span>
-                                      </div>
-                                    
-                                    </div>
-                                    <div class="portlet-body">
-                                        <div class="portlet-body">
-                                            <div id="highchart_2" style="height:290px;"></div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
+                          
                         
-                         <div class="col-md-6 col-sm-6" style="width: 476px;padding-left: 0px;">
-
-                            <div class="portlet light " style="border:1px solid #cccccc; box-shadow: 2px 2px 5px #bdbcbc;">
-                                <div class="portlet-title" >
-                                    <div class="">
-                                        <i class="icon-share font-red-sunglo hide"></i>
-                                        <span style="font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 14px;">New Subscribers</span>
-
-                                        <span style="float: right;  font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 12px;" > Last 7 days</span>
-                                    </div>
-                                 
-                                </div>
-                                <div class="portlet-body">
-                                        <div id="Payment_Collection2" style="height: 300px;"> </div>
-                                </div>
-                            </div>
-
-                        </div>
+                         
                         
-                       <div class="col-md-6 col-sm-6" style="width: 476px;">
-
-                                <div class="portlet light " style="border:1px solid #cccccc; box-shadow: 2px 2px 5px #bdbcbc;">
-                                    <div class="portlet-title">
-                                        <div class="">
-
-                                            <span  style="font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 14px;">Testing</span>
-                                            
-                                        <span style="float: right;  font-family: 'Roboto Light', 'Roboto';font-style: normal; font-size: 12px;" > Last 24 hours</span>
-                                      </div>
-                                    
-                                    </div>
-                                    <div class="portlet-body">
-                                        <div class="portlet-body">
-                                            <div id="Testing" style="height:290px;"></div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                       </div>
-                            
-                             
 			
 					       </div>
 					     </div>
@@ -1266,6 +1246,45 @@ function change_data(){
                 ]
             }) 
             
+             $("#highchart_2").highcharts({
+                chart:{
+                    style:{
+                        fontFamily:"Open Sans"
+                    }
+                },
+                title:{
+                    text:"",
+                    x:-20
+                },
+                //subtitle:{text:"Source: WorldClimate.com",x:-20},
+                xAxis:{
+                    title:{
+                        text:""
+                    },
+                    categories:["00.00","08.00","16.00","23.59"]
+                },
+                yAxis:{
+                    tickInterval: 2,
+                    title:{
+                        text:""
+                    },
+                    plotLines:[{value:0,width:1,color:"#808080"}]
+                },
+                tooltip:{
+                    valueSuffix:""
+                },
+                legend:{
+                    layout:"vertical",
+                    align:"right",
+                    verticalAlign:"middle",
+                    borderWidth:0
+                },
+                series:[
+                    {name: "Registered Users",data:[response.count_zero1,response.count_11,response.count_22,response.count_33]},
+                ]
+            }) 
+            
+            
           
 	var chart = AmCharts.makeChart( "Payment_Collection1", {
 				
@@ -1397,8 +1416,10 @@ function change_data(){
 				  }
 				
 				} );
-				            
-	     		
+				
+		            
+
+            
 	     		}
 	     		
 	     		else {
@@ -1626,88 +1647,7 @@ var chart = AmCharts.makeChart( "Payment_Collection2", {
 } );
 
 
-///$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-var chartData = [];
-var chartData2 = [];
-var chartData3 = [];
-var chartData4 = [];
 
-generateChartData();
-
-function generateChartData() {
-  var firstDate = new Date();
-  firstDate.setDate( firstDate.getDate() - 500 );
-  firstDate.setHours( 0, 0, 0, 0 );
-
-  for ( var i = 0; i < 500; i++ ) {
-    var newDate = new Date( firstDate );
-    newDate.setDate( newDate.getDate() + i );
-
-    var a1 = Math.round( Math.random() * ( 40 + i ) ) + 100 + i;
-    var a2 = Math.round( Math.random() * ( 100 + i ) ) + 200 + i;
-    var a3 = Math.round( Math.random() * ( 100 + i ) ) + 200;
-    var a4 = Math.round( Math.random() * ( 100 + i ) ) + 200 + i;
-
-    chartData.push( {
-      date: newDate,
-      value1: a1,
-      value2: a2,
-      value3: a3,
-      value4: a4
-    } );
-  }
-}
-
-
-var chart = AmCharts.makeChart( "Testing", {
-  type: "stock",
-  "theme": "light",
-
-  "dataSets": [ {
-    "fieldMappings": [ {
-      "fromField": "value1",
-      "toField": "value1"
-    }, {
-      "fromField": "value2",
-      "toField": "value2"
-    }
-    ],
-    "dataProvider": chartData,
-    "categoryField": "date"
-  } ],
-
-  "panels": [ {
-    "stockGraphs": [ {
-      "id": "g1",
-      "title": "Graph #1",
-      "lineThickness": 2,
-      "valueField": "value1",
-      "useDataSetColors": false
-    }, {
-      "id": "g2",
-      "title": "Graph #2",
-      "lineThickness": 2,
-      "valueField": "value2",
-      "useDataSetColors": false
-    }
-     ]
-  } ],
-
-  "chartScrollbarSettings": {
-    "graph": "g1"
-  },
-
-  "chartCursorSettings": {
-    "valueBalloonsEnabled": true,
-    "fullWidth": true,
-    "cursorAlpha": 0.1,
-    "valueLineBalloonEnabled": true,
-    "valueLineEnabled": true,
-    "valueLineAlpha": 0.5
-  },
-
-
-} );
 
 </script>        
  </body>

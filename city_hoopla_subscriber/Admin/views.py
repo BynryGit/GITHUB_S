@@ -516,10 +516,12 @@ def view_user_list(request):
             for user_obj in user_list:
                 if user_obj.user_role:
                     role_id = user_obj.user_role.role_name
-                    user_name = user_obj.user_name
+                    user_first_name = str(user_obj.user_first_name)
+                    user_last_name = str(user_obj.user_last_name)
+                    user_name = user_first_name +" "+ user_last_name
                     usre_email_id = user_obj.usre_email_id
                     user_contact_no = user_obj.user_contact_no
-                    edit = '<a id="'+str(user_obj)+'" onclick="edit_user_detail(this.id);" style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit" class="edit" data-toggle="modal" href="#edit_subscription"><i class="fa fa-pencil"></i></a>'
+                    edit = '<a id="'+str(user_obj)+' " style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit" class="edit" data-toggle="modal" href="/edit-user-detail/?user_id='+str(user_obj)+'"><i class="fa fa-pencil"></i></a>'
                     delete = '<a id="'+str(user_obj)+'" onclick="delete_user_detail(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Delete"  ><i class="fa fa-trash"></i></a>'
                     if user_obj.user_status == "1":                        
                         print "if"
@@ -545,7 +547,7 @@ def view_user_list(request):
 @csrf_exempt
 def delete_user(request):
         try:
-            user_obj = UserProfile.objects.get(user_name=request.POST.get('user_id'))
+            user_obj = UserProfile.objects.get(usre_email_id=request.POST.get('user_id'))
             user_obj.user_status = '0'
             user_obj.save()
             data = {'message': 'User Inactivated Successfully', 'success':'true'}
@@ -560,7 +562,7 @@ def delete_user(request):
 @csrf_exempt
 def activate_user(request):
         try:
-            user_obj = UserProfile.objects.get(user_name=request.POST.get('user_id'))
+            user_obj = UserProfile.objects.get(usre_email_id=request.POST.get('user_id'))
             user_obj.user_status = '1'
             user_obj.save()
             data = {'message': 'User Activated Successfully', 'success':'true'}
@@ -582,7 +584,7 @@ def view_user_detail(request):
         #print 'User ID: ',request.GET.get('user_id')
         try:
             if request.method == "GET":
-                user_obj = UserProfile.objects.get(user_name=request.GET.get('user_id'))
+                user_obj = UserProfile.objects.get(username=request.GET.get('user_id'))
                 print user_obj
                 role_id = str(user_obj.user_role.role_id)
                 role_name = user_obj.user_role.role_name
@@ -925,129 +927,7 @@ def user_role_add(user_role_obj):
     except SMTPException,e:
         print e
     return 1    
- 
-def view_user_role_list(request):
-    try:
-        data = {}
-        final_list = []
-        try:
-            user_role_list = UserRole.objects.all()
-            print user_role_list
-            for role_obj in user_role_list:
-                role_id=role_obj.role_id
-                role_name = role_obj.role_name
-                role_created_by=role_obj.role_created_by
-                role_updated_by=role_obj.role_updated_by
-                role_creation_date = str(role_obj.role_created_date).split(' ')[0]
-                role_updation_date = str(role_obj.role_updated_date).split(' ')[0]
-
-                if role_obj.role_status == '1':
-                    # edit = '<a class="col-md-offset-2 col-md-1" id="'+str(role_id)+'" onclick="edit_user_role(this.id);" style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit" class="edit" data-toggle="modal" href="#edit_subscription"><i class="fa fa-pencil"></i></a>'
-                    edit = '<a class="col-md-offset-2 col-md-1" href="/edit-user-role/?role_id='+str(role_id) + '" style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit"  ><i class="fa fa-pencil"></i></a>'
-                    delete = '<a id="'+str(role_id)+'" onclick="delete_user_role(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Delete"  ><i class="fa fa-trash"></i></a>'
-                    status = 'Active'
-                    actions =  edit + delete
-                else:
-                    status = 'Inactive'
-                    active = '<a class="col-md-2" id="'+str(role_id)+'" onclick="active_service(this.id);" style="text-align: center;letter-spacing: 5px;width:10%;margin-left: 22px !important;" title="Activate" class="edit" data-toggle="modal" href="#edit_subscription"><i class="fa fa-repeat"></i></a>'
-                    actions =  active
-             
-                list = {'role_name':role_name,'actions':actions,'role_id':role_id,'role_creation_date':role_creation_date,'role_updation_date':role_updation_date,
-                        'created_by':role_created_by,'updated_by':role_updated_by}
-                final_list.append(list)
-            data = {'success':'true','data':final_list}
-        except IntegrityError as e:
-            print e
-            data = {'success':'false','message':'Error in  loading page. Please try after some time'}
-    except MySQLdb.OperationalError, e:
-        print e
-    except Exception,e:
-        print 'Exception ',e
-    print data    
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-
-
-@csrf_exempt
-def edit_user_role(request):
-    # pdb.set_trace()
-    try:
-        data = {}
-        final_list = []
-        try:
-            if request.method == "GET":
-                print request
-                role_obj = UserRole.objects.get(role_id=request.GET.get('role_id'))
-                role_id = str(role_obj.role_id)
-                role_name = role_obj.role_name
-
-                prv = ""
-                prv1 =""
-                prv2 =""
-                prv3 =""
-                prv4 =""
-                prv5 =""
-                prv6 =""
-                prv7 =""  
-                prv8 =""
-                prv9 =""
-                prv10 =""
-                prv11 =""
-                prv12 =""
-                prv13 =""
-                prv14 =""
-                #amenity_list = []
-                amenity_lis = Privileges.objects.filter(role_id=role_obj)
-                print 'amenity_lis',amenity_lis
-                if amenity_lis.count()>0:
-                    for amenities in amenity_lis:
-                        if amenities.privilage == "Subscription Management":
-                            prv="Subscription Management"
-                        elif amenities.privilage == "Admin Management":
-                            prv1="Admin Management"
-                        elif amenities.privilage == "Consumer Management":
-                            prv2="Consumer Management" 
-                        elif amenities.privilage == "Push Notification":
-                            prv3="Push Notification" 
-                        elif amenities.privilage == "Rate Card Management":
-                            prv4="Rate Card Management" 
-                        elif amenities.privilage == "Ref Data Management":
-                            prv5="Ref Data Management" 
-                        elif amenities.privilage == "Record Payment Module":
-                            prv6="Record Payment Module"
-                        elif amenities.privilage == "View Dashboard Details":
-                            prv7="View Dashboard Details"
-                        elif amenities.privilage == "View List of TID with Details":
-                            prv8="View List of TID with Details"
-                        elif amenities.privilage == "Assign Roles":
-                            prv9="Assign Roles"
-                        elif amenities.privilage == "View Selected Subscriber Details":
-                            prv10="View Selected Subscriber Details"
-                        elif amenities.privilage == "View Financial Details":
-                            prv11="View Financial Details"
-                        elif amenities.privilage == "View Advert Performance":
-                            prv12="View Advert Performance"
-                        elif amenities.privilage == "All":
-                            prv13="All"
-                        elif amenities.privilage == "None":
-                            prv14="None"
-        
-                amenity_list = {'prv':prv,'prv1':prv1,'prv2':prv2,'prv3':prv3,'prv4':prv4,'prv5':prv5,'prv6':prv6,'prv7':prv7,'prv8':prv8,'prv9':prv9,
-                                        'prv10':prv10,'prv11':prv11,'prv12':prv12,'prv13':prv13,'prv14':prv14}                       
-               
-                data = {'success':'true','role_name':role_name,'role_id':role_id,'prv_list':amenity_list,'username':request.session['login_user']}
-            
-
-        except IntegrityError as e:
-            print e
-            data = {'success':'false','message':'Error in  loading page. Please try after some time'}
-
-    except MySQLdb.OperationalError, e:
-        print e
-
-    except Exception,e:
-        print 'Exception ',e 
-    return render(request,'Admin/edit_user_role.html',data)     
+   
 
 
 @csrf_exempt
@@ -1980,8 +1860,9 @@ def add_new_user(request):
     try:
         role_id = UserRole.objects.get(role_id=request.POST.get('role'))
         user_obj=UserProfile(
-            first_name = request.POST.get('First_name'),
-            last_name = request.POST.get('Last_name'),
+            username = request.POST.get('Username'),
+            user_first_name = request.POST.get('First_name'),
+            user_last_name = request.POST.get('Last_name'),
             user_contact_no=request.POST.get('phone_no'),
             usre_email_id=request.POST.get('Username'),
             user_role=role_id,
@@ -2004,3 +1885,342 @@ def add_new_user(request):
         }
     print data
     return HttpResponse(json.dumps(data),content_type='application/json') 
+
+
+def edit_user_detail(request):
+    print request.method
+    try:
+        data = {}
+        final_list = []
+        try:
+            if request.method == "GET":
+                user_obj = UserProfile.objects.get(usre_email_id=request.GET.get('user_id'))
+                print user_obj
+                user_role_list = UserRole.objects.filter(role_status='1')
+                role_id = str(user_obj.user_role.role_id)
+                role_name = user_obj.user_role.role_name
+                user_first_name = user_obj.user_first_name
+                user_last_name = user_obj.user_last_name
+                user_email_id = user_obj.usre_email_id
+                user_contact_no = user_obj.user_contact_no
+                data = {'success':'true','user_role_list':user_role_list,'role_name':role_name,'role_id':role_id,'user_first_name':user_first_name,'user_last_name':user_last_name,'user_email_id':user_email_id,'user_contact_no':user_contact_no}            
+        except IntegrityError as e:
+            print e
+            data = {'success':'false','message':'Error in  loading page. Please try after some time'}
+
+    except MySQLdb.OperationalError, e:
+        print e
+
+    except Exception,e:
+        print 'Exception ',e
+    print data
+    return render(request,'Admin/edit-user.html',data)
+
+@csrf_exempt
+def save_user(request):
+    try:
+        if request.POST:
+            username = request.POST.get('Username')
+            password = request.POST.get('oldpassword')
+            try:
+                user = authenticate(username=username, password=password)
+                if user:
+                    role_id = UserRole.objects.get(role_id=request.POST.get('role'))
+                    user_obj = UserProfile.objects.get(usre_email_id=request.POST.get('Username'))
+
+                    user_obj.user_first_name = request.POST.get('First_name')
+                    user_obj.user_last_name = request.POST.get('Last_name')
+                    user_obj.user_contact_no = request.POST.get('phone_no')
+                    user_obj.user_role = role_id
+                    user_obj.user_updated_date = datetime.now()
+                    user_obj.user_status = '1'
+
+                    user_obj.save();
+                    user_obj.set_password(request.POST.get('newpassword'));
+                    user_obj.save();
+
+                    data={
+                        'success':'true',
+                        'message':'User Updated Successfully.'
+                    }
+                else:
+                    data = {'success': 'false', 'message': 'Invalid Password'}
+                    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+            except Exception as e:
+                print e
+                data = {'success': 'false', 'message': 'Invalid Username'}
+                return HttpResponse(json.dumps(data), content_type='application/json')
+
+    except Exception, e:
+        data={
+            'success':'false',
+            'message':str(e)
+        }
+    print data
+    return HttpResponse(json.dumps(data),content_type='application/json')
+
+@csrf_exempt
+def save_user1(request):
+    try:
+        if request.POST:
+            Username=request.POST.get('Username')
+            role_id = UserRole.objects.get(role_id=request.POST.get('role'))
+            user_obj = UserProfile.objects.get(usre_email_id=request.POST.get('Username'))
+            user_obj.user_first_name = request.POST.get('First_name')
+            user_obj.user_last_name = request.POST.get('Last_name')
+            user_obj.user_contact_no = request.POST.get('phone_no')
+            user_obj.user_role = role_id
+            user_obj.user_updated_date = datetime.now()
+            user_obj.user_status = '1'
+
+            user_obj.save()
+
+            data={
+                'success':'true',
+                'message':'User Updated Successfully.'
+            }
+    except Exception, e:
+        data={
+            'success':'false',
+            'message':str(e)
+        }
+    print data
+    return HttpResponse(json.dumps(data),content_type='application/json') 
+
+def get_data(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            sort_var=request.GET.get('sort_var')
+            if sort_var == 'show_all':
+                user_list = UserProfile.objects.filter()
+                for user_obj in user_list:
+                    if user_obj.user_role:
+                        role_id = user_obj.user_role.role_name
+                        user_first_name = str(user_obj.user_first_name)
+                        user_last_name = str(user_obj.user_last_name)
+                        user_name = user_first_name +" "+ user_last_name
+                        usre_email_id = user_obj.usre_email_id
+                        user_contact_no = user_obj.user_contact_no
+                        edit = '<a id="'+str(user_obj)+' " style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit" class="edit" data-toggle="modal" href="/edit-user-detail/?user_id='+str(user_obj)+'"><i class="fa fa-pencil"></i></a>'
+                        delete = '<a id="'+str(user_obj)+'" onclick="delete_user_detail(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Delete"  ><i class="fa fa-trash"></i></a>'
+                        if user_obj.user_status == "1":                        
+                            status = 'Active'
+                            actions =  edit +" "+ delete
+                        else:
+                            status = 'In-active'
+                            actions = '<a id="'+str(user_obj)+'" onclick="reactivate_user(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Reactivate"><i class="fa fa-undo"></i></a>'                       
+                        list = {'user_name':user_name,'actions':actions,'role_id':role_id,'usre_email_id':usre_email_id,'user_contact_no':user_contact_no,'status':status}
+                        final_list.append(list)
+
+
+                data = {'success':'true','data':final_list}
+
+            else :
+                user_list = UserProfile.objects.filter(user_status=sort_var)
+                for user_obj in user_list:
+                    if user_obj.user_role:
+                        role_id = user_obj.user_role.role_name
+                        user_first_name = str(user_obj.user_first_name)
+                        user_last_name = str(user_obj.user_last_name)
+                        user_name = user_first_name +" "+ user_last_name
+                        usre_email_id = user_obj.usre_email_id
+                        user_contact_no = user_obj.user_contact_no
+                        edit = '<a id="'+str(user_obj)+' " style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit" class="edit" data-toggle="modal" href="/edit-user-detail/?user_id='+str(user_obj)+'"><i class="fa fa-pencil"></i></a>'
+                        delete = '<a id="'+str(user_obj)+'" onclick="delete_user_detail(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Delete"  ><i class="fa fa-trash"></i></a>'
+                        if user_obj.user_status == "1":                        
+                            status = 'Active'
+                            actions =  edit +" "+ delete
+                        else:
+                            status = 'In-active'
+                            actions = '<a id="'+str(user_obj)+'" onclick="reactivate_user(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Reactivate"><i class="fa fa-undo"></i></a>'                       
+                        list = {'user_name':user_name,'actions':actions,'role_id':role_id,'usre_email_id':usre_email_id,'user_contact_no':user_contact_no,'status':status}
+                        final_list.append(list)
+                data = {'success':'true','data':final_list}
+
+
+        except IntegrityError as e:
+            print e
+            data = {'success':'false','message':'Error in  loading page. Please try after some time'}
+        except MySQLdb.OperationalError, e:
+            print e
+    except Exception,e:
+        print 'Exception ',e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+#################.............ADD New ROLE..............##############
+@csrf_exempt
+def role_list(request):
+    try:
+        try:
+            data = {'success':'true'}
+
+        except IntegrityError as e:
+            print e
+            data = {'success':'false','message':'Error in  loading page. Please try after some time','username':request.session['login_user']}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception,e:
+        print 'Exception ',e
+
+    print data
+    return render(request,'Admin/role-list.html',data)
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def add_new_role(request):
+    try:
+        try:
+            data = {'success':'true'}
+
+        except IntegrityError as e:
+            print e
+            data = {'success':'false','message':'Error in  loading page. Please try after some time','username':request.session['login_user']}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception,e:
+        print 'Exception ',e
+
+    print data
+    return render(request,'Admin/add-new-role.html',data)
+
+def view_user_role_list(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            user_role_list = UserRole.objects.all()
+            print user_role_list
+            for role_obj in user_role_list:
+                role_id=role_obj.role_id
+                role_name = role_obj.role_name
+                role_created_by=role_obj.role_created_by
+                role_updated_by=role_obj.role_updated_by
+                role_creation_date = str(role_obj.role_created_date).split(' ')[0]
+                role_updation_date = str(role_obj.role_updated_date).split(' ')[0]
+
+                if role_obj.role_status == '1':
+                    # edit = '<a class="col-md-offset-2 col-md-1" id="'+str(role_id)+'" onclick="edit_user_role(this.id);" style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit" class="edit" data-toggle="modal" href="#edit_subscription"><i class="fa fa-pencil"></i></a>'
+                    edit = '<a class="col-md-offset-2 col-md-1" href="/edit-user-role/?role_id='+str(role_id) + '" style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit"  ><i class="fa fa-pencil"></i></a>'
+                    delete = '<a id="'+str(role_id)+'" onclick="delete_user_role(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Delete"  ><i class="fa fa-trash"></i></a>'
+                    status = 'Active'
+                    actions =  edit + delete
+                else:
+                    status = 'Inactive'
+                    active = '<a class="col-md-2" id="'+str(role_id)+'" onclick="active_service(this.id);" style="text-align: center;letter-spacing: 5px;width:10%;margin-left: 22px !important;" title="Activate" class="edit" data-toggle="modal" href="#edit_subscription"><i class="fa fa-repeat"></i></a>'
+                    actions =  active
+             
+                list = {'role_name':role_name,'actions':actions,'role_id':role_id,'role_creation_date':role_creation_date,'role_updation_date':role_updation_date,
+                        'created_by':role_created_by,'updated_by':role_updated_by}
+                final_list.append(list)
+            data = {'success':'true','data':final_list}
+        except IntegrityError as e:
+            print e
+            data = {'success':'false','message':'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception,e:
+        print 'Exception ',e
+    print data    
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def edit_user_role(request):
+    # pdb.set_trace()
+    try:
+        data = {}
+        final_list = []
+        try:
+            if request.method == "GET":
+                print request
+                role_obj = UserRole.objects.get(role_id=request.GET.get('role_id'))
+                role_id = str(role_obj.role_id)
+                role_name = role_obj.role_name
+
+                prv = ""
+                prv1 =""
+                prv2 =""
+                prv3 =""
+                prv4 =""
+                prv5 =""
+                prv6 =""
+                prv7 =""  
+                prv8 =""
+                prv9 =""
+                prv10 =""
+                prv11 =""
+                prv12 =""
+                prv13 =""
+                prv14 =""
+                #amenity_list = []
+                amenity_lis = Privileges.objects.filter(role_id=role_obj)
+                print 'amenity_lis',amenity_lis
+                if amenity_lis.count()>0:
+                    for amenities in amenity_lis:
+                        if amenities.privilage == "Subscription Management":
+                            prv="Subscription Management"
+                        elif amenities.privilage == "Admin Management":
+                            prv1="Admin Management"
+                        elif amenities.privilage == "Consumer Management":
+                            prv2="Consumer Management" 
+                        elif amenities.privilage == "Push Notification":
+                            prv3="Push Notification" 
+                        elif amenities.privilage == "Rate Card Management":
+                            prv4="Rate Card Management" 
+                        elif amenities.privilage == "Ref Data Management":
+                            prv5="Ref Data Management" 
+                        elif amenities.privilage == "Record Payment Module":
+                            prv6="Record Payment Module"
+                        elif amenities.privilage == "View Dashboard Details":
+                            prv7="View Dashboard Details"
+                        elif amenities.privilage == "View List of TID with Details":
+                            prv8="View List of TID with Details"
+                        elif amenities.privilage == "Assign Roles":
+                            prv9="Assign Roles"
+                        elif amenities.privilage == "View Selected Subscriber Details":
+                            prv10="View Selected Subscriber Details"
+                        elif amenities.privilage == "View Financial Details":
+                            prv11="View Financial Details"
+                        elif amenities.privilage == "View Advert Performance":
+                            prv12="View Advert Performance"
+                        elif amenities.privilage == "All":
+                            prv13="All"
+                        elif amenities.privilage == "None":
+                            prv14="None"
+        
+                amenity_list = {'prv':prv,'prv1':prv1,'prv2':prv2,'prv3':prv3,'prv4':prv4,'prv5':prv5,'prv6':prv6,'prv7':prv7,'prv8':prv8,'prv9':prv9,
+                                        'prv10':prv10,'prv11':prv11,'prv12':prv12,'prv13':prv13,'prv14':prv14}                       
+               
+                data = {'success':'true','role_name':role_name,'role_id':role_id,'prv_list':amenity_list,'username':request.session['login_user']}
+            
+
+        except IntegrityError as e:
+            print e
+            data = {'success':'false','message':'Error in  loading page. Please try after some time'}
+
+    except MySQLdb.OperationalError, e:
+        print e
+
+    except Exception,e:
+        print 'Exception ',e 
+    return render(request,'Admin/edit_user_role.html',data)
+
+
+@csrf_exempt
+def activate_user(request):
+        try:
+            user_obj = UserProfile.objects.get(usre_email_id=request.POST.get('user_id'))
+            user_obj.user_status = '1'
+            user_obj.save()
+            data = {'message': 'User Activated Successfully', 'success':'true'}
+
+        except IntegrityError as e:
+          print e
+        except Exception,e:
+            print e
+        print "Final Data: ",data
+        return HttpResponse(json.dumps(data), content_type='application/json')
+
+

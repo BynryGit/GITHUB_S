@@ -171,11 +171,58 @@ urlpatterns = patterns('',
     url(r'^get-admin-stat/', 'Admin.dashboard.get_admin_stat',name='get_admin_stat'),
     url(r'^admin-report/', 'Admin.dashboard.admin_report',name='admin_report'),
     url(r'^get-subscriber-list/', 'Admin.dashboard.get_subscriber_list',name='get_subscriber_list'),
+    url(r'^get-catlevel1-list/', 'Admin.dashboard.get_catlevel1_list',name='get_catlevel1_list'),
+    url(r'^get-catlevel2-list/', 'Admin.dashboard.get_catlevel2_list',name='get_catlevel2_list'),
+    url(r'^get-catlevel3-list/', 'Admin.dashboard.get_catlevel3_list',name='get_catlevel3_list'),
+    url(r'^get-catlevel4-list/', 'Admin.dashboard.get_catlevel4_list',name='get_catlevel4_list'),
+    url(r'^get-catlevel5-list/', 'Admin.dashboard.get_catlevel5_list',name='get_catlevel5_list'),
+    url(r'^get-advert-table-data/', 'Admin.dashboard.get_advert_table_data',name='get_advert_table_data'),
+    url(r'^get-advert-table-data1/', 'Admin.dashboard.get_advert_table_data1',name='get_advert_table_data1'),
+    url(r'^get_advert_list1/', 'Admin.dashboard.get_advert_list1',name='get_advert_list1'),
+    url(r'^get_advert_list2/', 'Admin.dashboard.get_advert_list2',name='get_advert_list2'),
+    url(r'^get-advert-table-data2/', 'Admin.dashboard.get_advert_table_data2',name='get_advert_table_data2'),
+    url(r'^get_advert_list3/', 'Admin.dashboard.get_advert_list3',name='get_advert_list3'),
+    url(r'^get-advert-table-data3/', 'Admin.dashboard.get_advert_table_data3',name='get_advert_table_data3'),
+    url(r'^get_advert_list4/', 'Admin.dashboard.get_advert_list4',name='get_advert_list4'),
+    url(r'^get-advert-table-data4/', 'Admin.dashboard.get_advert_table_data4',name='get_advert_table_data4'),
+    url(r'^get_advert_list5/', 'Admin.dashboard.get_advert_list5',name='get_advert_list5'),
+    url(r'^get-advert-table-data5/', 'Admin.dashboard.get_advert_table_data5',name='get_advert_table_data5'),
+    url(r'^get_advert_list6/', 'Admin.dashboard.get_advert_list6',name='get_advert_list6'),
+    url(r'^get_advert_health_citybase/', 'Admin.dashboard.get_advert_health_citybase',name='get_advert_health_citybase'),
+    url(r'^get_subscription_plan_citybase/', 'Admin.dashboard.get_subscription_plan_citybase',name='get_subscription_plan_citybase'),
+    url(r'^get_advert_health_datebase/', 'Admin.dashboard.get_advert_health_datebase',name='get_advert_health_datebase'),
+    url(r'^get_advert_health_supplierbase/', 'Admin.dashboard.get_advert_health_supplierbase',name='get_advert_health_supplierbase'),
+
+    #Subscription plan @admin report
+    url(r'^get_subtable_data1/', 'Admin.dashboard.get_subtable_data1',name='get_subtable_data1'),
+    url(r'^get_subtable_data2/', 'Admin.dashboard.get_subtable_data2',name='get_subtable_data2'),
+    url(r'^get_subtable_data3/', 'Admin.dashboard.get_subtable_data3',name='get_subtable_data3'),
+    url(r'^get_subtable_data4/', 'Admin.dashboard.get_subtable_data4',name='get_subtable_data4'),
+    url(r'^get_subtable_data5/', 'Admin.dashboard.get_subtable_data5',name='get_subtable_data5'),
+    url(r'^get_subscription_plan_supplier/', 'Admin.dashboard.get_subscription_plan_supplier',name='get_subscription_plan_supplier'),
+
+    # Management @admin report
+    url(r'^get_sales/', 'Admin.dashboard.get_sales',name='get_sales'),
+    url(r'^get_new_sub_data/', 'Admin.dashboard.get_new_sub_data',name='get_new_sub_data'),
+
+
+
+
+
+
+
 
 # Admin add user SHUBHAM
     url(r'^user-list/', 'Admin.views.user_list',name='user_list'),
     url(r'^admin-add-user/', 'Admin.views.admin_add_user',name='admin_add_user'),
     url(r'^add-new-user/', 'Admin.views.add_new_user',name='add_new_user'),
+    url(r'^edit-user-detail/', 'Admin.views.edit_user_detail',name='edit_user_detail'),
+    url(r'^save-user/', 'Admin.views.save_user',name='save_user'),
+    url(r'^save-user1/', 'Admin.views.save_user1',name='save_user1'),
+    url(r'^get-data/', 'Admin.views.get_data',name='get_data'),
 
+# Admin add user ROLE SHUBHAM
+    url(r'^role-list/', 'Admin.views.role_list',name='role_list'),
+    url(r'^add-new-role/', 'Admin.views.add_new_role',name='add_new_role'),
 
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

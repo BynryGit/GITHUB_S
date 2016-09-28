@@ -2371,9 +2371,7 @@ def get_pincode(request):
 def update_profile(request):
     try:
         if request.POST:
-            print '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
             supplier_id=request.POST.get('supplier_id')
-            print '............supplier_id............',supplier_id
             supplier_obj = Supplier.objects.get(supplier_id=request.POST.get('supplier_id'))
             supplier_obj.business_name = request.POST.get('business_name')
             supplier_obj.phone_no = request.POST.get('phone_no')
@@ -2427,16 +2425,12 @@ def subscriber_dashboard(request):
         final_list = []
         final_list1 = []
         try:
-            print '......$$.supplier_id....$$..',request.GET.get('supplier_id')
-
             Supplier_obj = Supplier.objects.get(supplier_id=request.session['supplier_id'])
-            print "..................Supplier_obj.........",Supplier_obj
 
             logo= SERVER_URL + Supplier_obj.logo.url
 
             #########.............Advert Stats.........................#####
             Advert_list = Advert.objects.filter(supplier_id=request.session['supplier_id'])
-            print "..................Advert_list.........",Advert_list
 
             avail_discount_count = 0
             avail_callbacks_count = 0
@@ -2461,14 +2455,11 @@ def subscriber_dashboard(request):
             
             FY_MONTH_LIST = [1,2,3,4,5,6,7,8,9,10,11,12]
             today = date.today()
-            print '.......today.........',today
             start_date = date(today.year,01,01)
-            print '...........start_date..........',start_date
             end_date = date(today.year,12,31) 
             monthly_count = []
             # jan,feb,mar,apr,may,jun,jul,aug,sep,octo,nov,dec
             coupon_code_list = CouponCode.objects.filter(creation_date__range=[start_date,end_date]).extra(select={'month': "EXTRACT(month FROM creation_date)"}).values('month').annotate(count=Count('advert_id'))
-            print "...........coupon_code_list.......",coupon_code_list
             list={}
 
 
@@ -2501,14 +2492,10 @@ def subscriber_dashboard(request):
             ##########..................Total Views Graph.....................############
 
             current_date = datetime.now()
-            print '...........current_date.........',current_date
             first = calendar.day_name[current_date.weekday()]
-            print '...........first.........',first
 
             last_date = (datetime.now() - timedelta(days=7))
-            print '...........last_date.........',last_date
             last_date2 = calendar.day_name[last_date.weekday()]
-            print '...........last_date2.........',last_date2
 
             list = []
             total_view_list = AdvertView.objects.filter(creation_date__range=[last_date,current_date])
@@ -2567,7 +2554,6 @@ def get_filter(request):
                 logo= SERVER_URL + Supplier_obj.logo.url
 
                 #########.............Advert Stats.......For a Month..................#####
-                print '..........Advert Stats.......For a Month.......'
                 today_date = str(datetime.now())
                 one_month_date = str(datetime.now() - timedelta(days=30))
                 Advert_list = Advert.objects.filter(supplier_id=request.GET.get('supplier_id'))
@@ -2592,7 +2578,6 @@ def get_filter(request):
 
                 
                 #######.................Total Bookings Graph....For a Month...........########
-                print '............Total Bookings Graph....For a Month....'
                 today = date.today()
                 date_cal=datetime(today.year,today.month,today.day)
                 numb = (date_cal.day-1)//7+1
@@ -2628,7 +2613,6 @@ def get_filter(request):
 
                 ##########..................Total Views Graph........for a month.............############
                 
-                print '.......Total Views Graph........for a month........'
                 today = date.today()
                 date_cal=datetime(today.year,today.month,today.day)
                 numb = (date_cal.day-1)//7+1
@@ -2672,7 +2656,6 @@ def get_filter(request):
                 logo= SERVER_URL + Supplier_obj.logo.url
 
                 #########.............Advert Stats.......For a week..................#####
-                print '........Advert Stats.......For a week.....'
                 today_date = str(datetime.now())
                 one_month_date = str(datetime.now() - timedelta(days=7))
                 Advert_list = Advert.objects.filter(supplier_id=request.GET.get('supplier_id'))
@@ -2697,7 +2680,6 @@ def get_filter(request):
 
                 
                 #######.................Total Bookings Graph....For a week...........########
-                print '....Total Bookings Graph....For a week....'
                 current_date = datetime.now()
                 last_date = (datetime.now() - timedelta(days=7))
 
@@ -2724,8 +2706,6 @@ def get_filter(request):
                             sun1 = sun1+1
                         else :
                             pass
-
-                print ".........total Bookings Graph....For a week...",mon1,tue1,wen1,thus1,fri1,sat1,sun1
 
                 ##########..................Total Views Graph........for a week.............############
 
@@ -2779,7 +2759,6 @@ def subscriber_advert_stat(request):
         final_list = []
         final_list1 = []
         final_list2 = []
-        print "----------------request--------------", request.GET
         try:
             supplier_id = request.session['supplier_id']
             print 'supplier_id',supplier_id
@@ -2787,13 +2766,11 @@ def subscriber_advert_stat(request):
             print 'advert_nm',advert_nm
 
             Advert_list1 = Advert.objects.filter(supplier_id=request.session['supplier_id'])
-            print "..................Advert_list1.........",Advert_list1
 
           
 
 
             Supplier_obj = Supplier.objects.get(supplier_id=request.session['supplier_id'])
-            print "..................Supplier_obj.........",Supplier_obj
 
             logo= SERVER_URL + Supplier_obj.logo.url
 
@@ -2808,9 +2785,7 @@ def subscriber_advert_stat(request):
 
             FY_MONTH_LIST = [1,2,3,4,5,6,7,8,9,10,11,12]
             today = date.today()
-            print '.......today.........',today
             start_date = date(today.year,01,01)
-            print '...........start_date..........',start_date
             end_date = date(today.year,12,31)
 
             for advert_obj in Advert_list1:

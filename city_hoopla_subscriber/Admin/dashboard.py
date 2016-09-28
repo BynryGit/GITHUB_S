@@ -40,7 +40,6 @@ import ast
 from geopy.geocoders import Nominatim
 import datetime
 from datetime import datetime
-from datetime import date, timedelta
 import calendar
 from django.db.models import Count
 
@@ -49,47 +48,12 @@ from django.db.models import Count
 SERVER_URL = "http://192.168.0.151:9090"
 
 @csrf_exempt
-def get_subscriber_list(request):
-    city_id = request.GET.get('city_id')
-    supplier_obj = Supplier.objects.filter(city_place_id = city_id)
-    supplier_list = []
-    for supply in supplier_obj:
-        supplier_data = {
-            'supplier_obj_name' : supply.business_name,
-            'supplier_obj_id' : supply.supplier_id
-        }
-        supplier_list.append(supplier_data)
-    data = {
-        'success': 'true',
-        'supplier_list':supplier_list
-    }
-    print data
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-
-@csrf_exempt
-def get_advert_list(request):
-    supplier_id = request.GET.get('supplier_id')
-    advert_obj = Advert.objects.filter(supplier_id = supplier_id)
-    advert_list = []
-    for advert in advert_obj:
-        advert_data = {
-            'advert_obj_name' : advert.advert_name,
-            'advert_obj_id' : advert.advert_id
-        }
-        advert_list.append(advert_data)
-    data = {
-        'success': 'true',
-        'advert_list':advert_list
-    }
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-@csrf_exempt
 def get_advert_date(request):
     advert_id = request.GET.get('advert_id')
     advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=advert_id)
     start_date = advert_sub_obj.business_id.start_date
     start_date = start_date
+    print 'start.............',start_date
     start_date = datetime.strptime(start_date, "%m/%d/%Y")
     start_date = start_date.strftime("%d/%m/%Y")
     pre_date = datetime.now().strftime("%d/%m/%Y")
@@ -106,7 +70,6 @@ def get_advert_health(request):
         final_list = []
         try:
             if request.GET.get('advert_id'):
-                print '???????????....request.GET.get(advert_id).....????',request.GET.get('advert_id')
                 from_date = request.GET.get('from_date')
                 to_date = request.GET.get('to_date')
                 from_date = datetime.strptime(from_date, "%d/%m/%Y")
@@ -114,9 +77,9 @@ def get_advert_health(request):
                 from_date = from_date.strftime("%Y-%m-%d")
                 to_date = to_date.strftime("%Y-%m-%d")
                 advert = Advert.objects.get(advert_id=request.GET.get('advert_id'))
-                coupon_objs = CouponCode.objects.filter(advert_id=str(advert.advert_id),creation_date__range=[from_date, to_date])
-                advert_fav_objs = AdvertFavourite.objects.filter(advert_id=str(advert.advert_id),creation_date__range=[from_date, to_date])
-                advert_like_objs = AdvertLike.objects.filter(advert_id=str(advert.advert_id),creation_date__range=[from_date, to_date])
+                coupon_objs = CouponCode.objects.filter(advert_id=str(advert.advert_id),creation_date__range=[from_date,to_date])
+                advert_fav_objs = AdvertFavourite.objects.filter(advert_id=str(advert.advert_id),creation_date__range=[from_date,to_date])
+                advert_like_objs = AdvertLike.objects.filter(advert_id=str(advert.advert_id),creation_date__range=[from_date,to_date])
                 if advert.advert_views:
                     advert_views = advert.advert_views
                 else:
@@ -138,6 +101,8 @@ def get_advert_health(request):
                     'advert_twitter': '0'
                 }
                 final_list.append(advert_data)
+                print final_list
+            
             else:
                 advert_list = Advert.objects.filter(status = '1')
                 for advert in advert_list:
@@ -344,9 +309,9 @@ def my_subscribers_list(request):
                 print "===========Supplier=================",supplier_obj
                 for supplier in supplier_obj:
                     if supplier.supplier_status == '1':
-                        status = '<a class="btn btn-success">Active<a>'
+                        status = '<span style="cursor: default;" class="btn btn-success">Active</span>'
                     else:
-                        status = '<a class="btn btn-danger">Inactive<a>'
+                        status = '<span style="cursor: default;" class="btn btn-danger">Inactive</span>'
                     business_obj = Business.objects.filter(supplier=str(supplier.supplier_id))
 
                     total_amount = 0
@@ -394,9 +359,9 @@ def my_subscribers_list(request):
                 print "===========Supplier=================",supplier_obj
                 for supplier in supplier_obj:
                     if supplier.supplier_status == '1':
-                        status = '<a class="btn btn-success">Active<a>'
+                        status = '<span style="cursor: default;" class="btn btn-success">Active</span>'
                     else:
-                        status = '<a class="btn btn-danger">Inactive<a>'
+                        status = '<span style="cursor: default;" class="btn btn-danger">Inactive</span>'
                     business_obj = Business.objects.filter(supplier=str(supplier.supplier_id))
 
                     total_amount = 0
@@ -954,36 +919,30 @@ def admin_dashboard(request):
 
 
             current_date = datetime.now()
-            print '...........current_date.........',current_date
             first = calendar.day_name[current_date.weekday()]
-            print '...........first.........',first
 
             last_date = (datetime.now() - timedelta(days=7))
-            print '...........last_date.........',last_date
             last_date2 = calendar.day_name[last_date.weekday()]
-            print '...........last_date2.........',last_date2
             #Payment Received
             paymentdetail_list = PaymentDetail.objects.filter(payment_created_date__range=[last_date,current_date])
 
             for pay_obj in paymentdetail_list:
                 if pay_obj.paid_amount:
                     paid_amount = pay_obj.paid_amount
-                    print 'paid_amount',paid_amount
-                    total_payment_count = total_payment_count + float(paid_amount)
+                    total_payment_count = total_payment_count + int(paid_amount)
                     
-                    print 'total_payment_count',total_payment_count
-
             #New Subscribers
             total_new_subscriber = Business.objects.filter(business_created_date__range=[last_date,current_date]).count()
-            print "..********......total_new_subscriber.........",total_new_subscriber
+            
             #New Bookings
             total_new_booking = CouponCode.objects.filter(creation_date__range=[last_date,current_date]).count()
-            print "..********......total_new_booking.........",total_new_booking
-
             # Adverts Expiring
-            # total_advert_expiring = AdvertSubscriptionMap.objects.filter(creation_date__range=[last_date,current_date]).count()
-            # print "..********......total_new_booking.........",total_advert_expiring
+            current_date = datetime.now().strftime("%m/%d/%Y")
+            last_date = (datetime.now() + timedelta(days=7)).strftime("%m/%d/%Y")
+            total_advert_expiring = Business.objects.filter(end_date__range=[current_date,last_date]).count()
+            print "..#########......total_advert_expiring.........",total_advert_expiring
 
+            
             #######.............Total subscription  Graph......(1)....########
             
             FY_MONTH_LIST = [1,2,3,4,5,6,7,8,9,10,11,12]
@@ -992,12 +951,13 @@ def admin_dashboard(request):
             end_date = date(today.year,12,31) 
             monthly_count = []
             # jan,feb,mar,apr,may,jun,jul,aug,sep,octo,nov,dec
+
+
             subscriptions = Business.objects.filter(business_created_date__range=[start_date,end_date]).extra(select={'month': "EXTRACT(month FROM business_created_date)"}).values('month').annotate(count=Count('business_id'))
             list={}
 
 
             for sub in subscriptions:
-                print "sub.get('count')",sub.get('count')
                 if sub.get('month'):
                     list[sub.get('month')]=sub.get('count') or '0.00'
             
@@ -1060,7 +1020,6 @@ def admin_dashboard(request):
                     else :
                         pass
 
-            print "$$$REEEEEEEEEEEEEEEEEEEEEEEEE",mon,tue,wen,thus,fri,sat,sun
 
             ############################...Todays Login.....(3)....###############################
             count_zero = 0
@@ -1072,9 +1031,7 @@ def admin_dashboard(request):
             count_zero = count_zero + consumer_list0
 
             for hour in range(0,9):
-                print "HOur",hour
                 hour = ' 0'+ str(hour) + ':'
-                print "hour",hour
                 consumer_list= ConsumerProfile.objects.filter(last_time_login__regex = hour).count()
                 count_first = count_first + consumer_list
             count_1 = str(count_first)
@@ -1104,11 +1061,11 @@ def admin_dashboard(request):
                     dates[0] = '0'+str(dates[0])
             pre_date = str(dates[0]) +'/'+dates[1]+'/'+dates[2]
 
-            print '..........pre_date..........',pre_date
             print '..........count_zero..........',count_zero
             print '..........count_1..........',count_1
             print '..........count_2..........',count_2
             print '..........count_3..........',count_3
+
 
             ###########################....... New subscription view...(4).....######################
             current_date = datetime.now()
@@ -1143,7 +1100,8 @@ def admin_dashboard(request):
 
             data = {'success':'true','subscriber_data':subscriber_obj,'today_date':today_date,'pre_date':pre_date,'count_zero':count_zero,'count_1':count_1,'count_2':count_2,'count_3':count_3,'total_payment_count':total_payment_count,'total_new_subscriber':total_new_subscriber,
                 'total_new_booking':total_new_booking,'total_advert_expiring':total_advert_expiring,'jan':jan,'feb':feb,'mar':mar,'apr':apr,'may':may,'jun':jun,'jul':jul,
-               'aug':aug,'sep':sep,'oct':octo,'nov':nov,'dec':dec,'mon':mon,'tue':tue,'wen':wen,'thus':thus,'fri':fri,'sat':sat,'sun':sun,'mon1':mon1,'tue1':tue1,'wen1':wen1,'thus1':thus1,'fri1':fri1,'sat1':sat1,'sun1':sun1,'city_places_list':get_city_places(request)}
+               'aug':aug,'sep':sep,'oct':octo,'nov':nov,'dec':dec,'mon':mon,'tue':tue,'wen':wen,'thus':thus,'fri':fri,'sat':sat,'sun':sun,'mon1':mon1,'tue1':tue1,'wen1':wen1,'thus1':thus1,'fri1':fri1,'sat1':sat1,'sun1':sun1,'city_places_list':get_city_places(request),
+               'count_zero':count_zero,'count_1':count_1,'count_2':count_2,'count_3':count_3}
 
         except IntegrityError as e:
             print e
@@ -1165,7 +1123,6 @@ def get_city_places(request):
         city_objs=City_Place.objects.filter(city_status='1')
         for city in city_objs:
             city_list.append({'city_place_id': city.city_place_id,'city': city.city_id.city_name})
-            print '............city List..........PPP',city_list
         data =  city_list
         return data
 
@@ -1262,52 +1219,42 @@ def get_admin_filter(request):
                             pass
 
                 # ##########.....Todays Login.(3)... for a week  ##########
-                # count_zero1 = 0
-                # count_first = 0
-                # count_second = 0
-                # count_third = 0
+                count_zero1 = 0
+                count_first = 0
+                count_second = 0
+                count_third = 0
 
-                # consumer_list0= ConsumerProfile.objects.filter(last_time_login__regex = ' 0:').count()
-                # count_zero1 = count_zero1 + consumer_list0
+                consumer_list0= ConsumerProfile.objects.filter(last_time_login__regex = ' 0:').count()
+                count_zero1 = count_zero1 + consumer_list0
 
-                # for hour in range(0,9):
-                #     print "HOur",hour
-                #     hour = ' 0'+ str(hour) + ':'
-                #     print "hour",hour
-                #     consumer_list= ConsumerProfile.objects.filter(last_time_login__regex = hour).count()
-                #     count_first = count_first + consumer_list
-                # count_11 = str(count_first)
+                for hour in range(0,9):
+                    print "HOur",hour
+                    hour = ' 0'+ str(hour) + ':'
+                    print "hour",hour
+                    consumer_list= ConsumerProfile.objects.filter(last_time_login__regex = hour).count()
+                    count_first = count_first + consumer_list
+                count_11 = str(count_first)
 
-                # for hour in range(9,17):
-                #     if hour == 9:
-                #         hour = ' 0'+ str(hour) + ':'
-                #     else:
-                #         hour = ' '+ str(hour) + ':'
-                #     consumer_list1= ConsumerProfile.objects.filter(last_time_login__regex = hour).count()
-                #     count_second = count_second + consumer_list1
-                # count_22 = str(count_second)
+                for hour in range(9,17):
+                    if hour == 9:
+                        hour = ' 0'+ str(hour) + ':'
+                    else:
+                        hour = ' '+ str(hour) + ':'
+                    consumer_list1= ConsumerProfile.objects.filter(last_time_login__regex = hour).count()
+                    count_second = count_second + consumer_list1
+                count_22 = str(count_second)
 
-                # for hour in range(17,24):
-                #     hour = ' '+ str(hour) + ':'
-                #     consumer_list2= ConsumerProfile.objects.filter(last_time_login__regex = hour).count()
-                #     count_third = count_third + consumer_list2
-                # count_33 = str(count_third)
+                for hour in range(17,24):
+                    hour = ' '+ str(hour) + ':'
+                    consumer_list2= ConsumerProfile.objects.filter(last_time_login__regex = hour).count()
+                    count_third = count_third + consumer_list2
+                count_33 = str(count_third)
 
-                # today_date = datetime.now().strftime("%m/%d/%Y")
-                # dates = today_date.split('/')
-                # if dates[0] == '1':
-                #     dates[0] = 12
-                # else:
-                #     dates[0] = int(dates[0]) - 1
-                #     if int(dates[0]) < 10:
-                #         dates[0] = '0'+str(dates[0])
-                # pre_date = str(dates[0]) +'/'+dates[1]+'/'+dates[2]
 
-                # print '..........pre_date..........',pre_date
-                # print '..........count_zero..........',count_zero1
-                # print '..........count_1..........',count_11
-                # print '..........count_2..........',count_22
-                # print '..........count_3..........',count_33
+                print '..........count_zero..........',count_zero1
+                print '..........count_1..........',count_11
+                print '..........count_2..........',count_22
+                print '..........count_3..........',count_33
 
 
                 ##########..... New subscription view...(4).... for a week  ##########
@@ -1354,12 +1301,15 @@ def get_admin_filter(request):
                 end_date = date(today.year,12,31) 
                 monthly_count = []
                 # jan,feb,mar,apr,may,jun,jul,aug,sep,octo,nov,dec
-                subscriptions = Business.objects.filter(business_created_date__range=[start_date,end_date]).extra(select={'month': "EXTRACT(month FROM business_created_date)"}).values('month').annotate(count=Count('business_id'))
+                supplier_id_list = []
+                sup_obj = Supplier.objects.filter(supplier_status = '1',city_place_id=city_front)
+                for supplier in sup_obj:
+                    supplier_id_list.append(str(supplier.supplier_id))
+                subscriptions = Business.objects.filter(business_created_date__range=[start_date,end_date],
+                    supplier_id__in=supplier_id_list).extra(select={'month': "EXTRACT(month FROM business_created_date)"}).values('month').annotate(count=Count('business_id'))
                 list={}
 
-
                 for sub in subscriptions:
-                    print "sub.get('count')",sub.get('count')
                     if sub.get('month'):
                         list[sub.get('month')]=sub.get('count') or '0.00'
                 
@@ -1395,7 +1345,7 @@ def get_admin_filter(request):
                 mon2=tue2=wen2=thus2=fri2=sat2=sun2=0
                 if total_view_list:
                     for view_obj in total_view_list:
-                        city_nm = view_obj.business_id.supplier.city_place_id.city_id
+                        city_nm = view_obj.business_id.supplier.city_place_id
                         payment_created_date=view_obj.payment_created_date
                         consumer_day = calendar.day_name[payment_created_date.weekday()]
                         if consumer_day== 'Monday' and str(city_front) == str(city_nm) :
@@ -1414,6 +1364,44 @@ def get_admin_filter(request):
                             sun2 = sun2+1
                         else :
                             pass
+
+
+                # ##########.....Todays Login.(3)... for a week  ##########
+                count_zero1 = 0
+                count_first = 0
+                count_second = 0
+                count_third = 0
+
+                consumer_list0= ConsumerProfile.objects.filter(last_time_login__regex = ' 0:',city_place_id = city_front).count()
+                count_zero1 = count_zero1 + consumer_list0
+
+                for hour in range(0,9):
+                    hour = ' 0'+ str(hour) + ':'
+                    consumer_list= ConsumerProfile.objects.filter(last_time_login__regex = hour,city_place_id = city_front).count()
+                    count_first = count_first + consumer_list
+                count_11 = count_first
+
+                for hour in range(9,17):
+                    if hour == 9:
+                        hour = ' 0'+ str(hour) + ':'
+                    else:
+                        hour = ' '+ str(hour) + ':'
+                    consumer_list1= ConsumerProfile.objects.filter(last_time_login__regex = hour,city_place_id = city_front).count()
+                    count_second = count_second + consumer_list1
+                count_22 = count_second
+
+                for hour in range(17,24):
+                    hour = ' '+ str(hour) + ':'
+                    consumer_list2= ConsumerProfile.objects.filter(last_time_login__regex = hour,city_place_id = city_front).count()
+                    count_third = count_third + consumer_list2
+                count_33 = count_third
+
+
+                print '..........count_zero..........',count_zero1
+                print '..........count_1..........',count_11
+                print '..........count_2..........',count_22
+                print '..........count_3..........',count_33
+
 
                 ##########..... New subscription view...(4).... for a week  ##########
                 current_date = datetime.now()
@@ -1445,10 +1433,11 @@ def get_admin_filter(request):
                             pass
 
             data = {'success':'true','jan1':jan1,'feb1':feb1,'mar1':mar1,'apr1':apr1,'may1':may1,'jun1':jun1,'jul1':jul1,
-               'aug1':aug1,'sep1':sep1,'oct1':octo1,'nov1':nov1,'dec1':dec1,'mon2':mon2,'tue2':tue2,'wen2':wen2,'thus2':thus2,'fri2':fri2,'sat2':sat2,'sun2':sun2,'mon4':mon4,'tue4':tue4,'wen4':wen4,'thus4':thus4,'fri4':fri4,'sat4':sat4,'sun4':sun4,'city_places_list':get_city_places(request)}
+               'aug1':aug1,'sep1':sep1,'oct1':octo1,'nov1':nov1,'dec1':dec1,'mon2':mon2,'tue2':tue2,'wen2':wen2,'thus2':thus2,
+               'fri2':fri2,'sat2':sat2,'sun2':sun2,'mon4':mon4,'tue4':tue4,'wen4':wen4,'thus4':thus4,'fri4':fri4,'sat4':sat4,'sun4':sun4,'city_places_list':get_city_places(request),
+               'count_zero1':count_zero1,'count_11':count_11,'count_22':count_22,'count_33':count_33}
 
          
-                #,'count_zero1':count_zero1,'count_11':count_11,'count_22':count_22,'count_33':count_33
         except IntegrityError as e:
             print e
             data = {'success':'false','message':'Error in  loading page. Please try after some time','username':request.session['login_user']}
@@ -1464,12 +1453,11 @@ def get_admin_filter(request):
 @csrf_exempt
 def get_admin_stat(request):
     try:
-        print 'HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH'
         data = {}
         final_list = []
         final_list1 = []
         try: 
-            if request.GET.get('week_var') == 'month' and request.GET.get('citys_var') != '':
+            if request.GET.get('week_var') == 'month' and request.GET.get('citys_var') != 'all':
                 print '/........$$$......... month.. &&  city........./'
 
                 var1 = str(request.GET.get('week_var'))
@@ -1496,7 +1484,7 @@ def get_admin_stat(request):
 
                 for pay_obj in paymentdetail_list:
                     if pay_obj.paid_amount:
-                        city_nm = pay_obj.business_id.supplier.city_place_id.city_id
+                        city_nm = pay_obj.business_id.supplier.city_place_id
                         if str(city_front) == str(city_nm) :
                             paid_amount = pay_obj.paid_amount
                             total_payment_count = total_payment_count + float(paid_amount)
@@ -1507,23 +1495,24 @@ def get_admin_stat(request):
                 #New Subscribers
                 total_new_subscriber_list = Business.objects.filter(business_created_date__range=[last_date,current_date])
                 for subscr_obj in total_new_subscriber_list:
-                    city_nm = subscr_obj.supplier.city_place_id.city_id
+                    city_nm = subscr_obj.supplier.city_place_id
                     if str(city_front) == str(city_nm) :
                         total_new_subscriber = total_new_subscriber + 1
 
                 #New Bookings
                 total_new_booking_list = CouponCode.objects.filter(creation_date__range=[last_date,current_date])
                 for subscr_obj in total_new_booking_list:
-                    city_nm = subscr_obj.advert_id.city_place_id.city_id.city_name
+                    city_nm = subscr_obj.advert_id.city_place_id
                     if str(city_front) == str(city_nm) :
                         total_new_booking = total_new_booking + 1
                 
 
                 # Adverts Expiring
-                total_advert_expiring = Business.objects.filter(business_created_date__range=[last_date,current_date]).count()
+                current_dt = datetime.now().strftime("%m/%d/%Y")
+                last_dt = (datetime.now() + timedelta(days=30)).strftime("%m/%d/%Y")
+                total_advert_expiring = Business.objects.filter(end_date__range=[current_dt,last_dt],city_place_id = city_front ).count()
 
-
-            if request.GET.get('week_var') == 'month' and request.GET.get('citys_var') == '':
+            if request.GET.get('week_var') == 'month' and request.GET.get('citys_var') == 'all':
                 print '/.......$$$$..........only month.........../'
                 var1 = str(request.GET.get('week_var'))
 
@@ -1559,10 +1548,13 @@ def get_admin_stat(request):
                 total_new_booking = CouponCode.objects.filter(creation_date__range=[last_date,current_date]).count()
  
                 # Adverts Expiring
-                total_advert_expiring = Business.objects.filter(business_created_date__range=[last_date,current_date]).count()
+                current_dt = datetime.now().strftime("%m/%d/%Y")
+                last_dt = (datetime.now() + timedelta(days=30)).strftime("%m/%d/%Y")
+                total_advert_expiring = Business.objects.filter(end_date__range=[current_dt,last_dt]).count()
+                print "..#########......total_advert_expiring.........",total_advert_expiring
 
 
-            if request.GET.get('week_var') == 'week' and request.GET.get('citys_var') != '':
+            if request.GET.get('week_var') == 'week' and request.GET.get('citys_var') != 'all':
                 print '/.......$$$.......... week.. &&  city........./'
 
                 var1 = str(request.GET.get('week_var'))
@@ -1589,7 +1581,7 @@ def get_admin_stat(request):
 
                 for pay_obj in paymentdetail_list:
                     if pay_obj.paid_amount:
-                        city_nm = pay_obj.business_id.supplier.city_place_id.city_id
+                        city_nm = pay_obj.business_id.supplier.city_place_id
                         if str(city_front) == str(city_nm) :
                             paid_amount = pay_obj.paid_amount
                             total_payment_count = total_payment_count + float(paid_amount)
@@ -1598,22 +1590,24 @@ def get_admin_stat(request):
                 #New Subscribers
                 total_new_subscriber_list = Business.objects.filter(business_created_date__range=[last_date,current_date])
                 for subscr_obj in total_new_subscriber_list:
-                    city_nm = subscr_obj.supplier.city_place_id.city_id
+                    city_nm = subscr_obj.supplier.city_place_id
                     if str(city_front) == str(city_nm) :
                         total_new_subscriber = total_new_subscriber + 1
                 
                 #New Bookings
                 total_new_booking_list = CouponCode.objects.filter(creation_date__range=[last_date,current_date])
                 for subscr_obj in total_new_booking_list:
-                    city_nm = subscr_obj.advert_id.city_place_id.city_id.city_name
+                    city_nm = subscr_obj.advert_id.city_place_id
                     if str(city_front) == str(city_nm) :
                         total_new_booking = total_new_booking + 1
 
                 # Adverts Expiring
-                total_advert_expiring = Business.objects.filter(business_created_date__range=[last_date,current_date]).count()
+                current_dt = datetime.now().strftime("%m/%d/%Y")
+                last_dt = (datetime.now() + timedelta(days=7)).strftime("%m/%d/%Y")
+                total_advert_expiring = Business.objects.filter(end_date__range=[current_dt,last_dt],city_place_id = city_front).count()
+                print "..#########......total_advert_expiring.........",total_advert_expiring
 
-
-            if request.GET.get('week_var') == 'week' and request.GET.get('citys_var') == '':
+            if request.GET.get('week_var') == 'week' and request.GET.get('citys_var') == 'all':
                 print '/.......@$$$.......... only week........./'
 
                 var1 = str(request.GET.get('week_var'))
@@ -1650,9 +1644,10 @@ def get_admin_stat(request):
                 total_new_booking = CouponCode.objects.filter(creation_date__range=[last_date,current_date]).count()
  
                 # Adverts Expiring
-                total_advert_expiring = Business.objects.filter(business_created_date__range=[last_date,current_date]).count()
-
-
+                current_dt = datetime.now().strftime("%m/%d/%Y")
+                last_dt = (datetime.now() + timedelta(days=7)).strftime("%m/%d/%Y")
+                total_advert_expiring = Business.objects.filter(end_date__range=[current_dt,last_dt]).count()
+                print "..#########......total_advert_expiring.........",total_advert_expiring
 
 
 
@@ -1702,10 +1697,11 @@ def admin_report(request):
             # supplier_id = Supplier_obj.supplier_id
 
             # logo= SERVER_URL + Supplier_obj.logo.url
+            Supplier_list = Supplier.objects.all().values('sales_person_name').distinct()
 
       
 
-            data = {'success':'true','subscriber_data':subscriber_obj,'today_date':today_date,'pre_date':pre_date,'city_places_list':get_city_places(request)}
+            data = {'success':'true','subscriber_data':subscriber_obj,'Supplier_data':Supplier_list,'today_date':today_date,'pre_date':pre_date,'city_places_list':get_city_places(request)}
 
         except IntegrityError as e:
             print e
@@ -1717,4 +1713,1492 @@ def admin_report(request):
 
     print data
     return render(request,'Admin/admin_report.html',data)
+
+####################..............Admin REPORT..............############################
+
+@csrf_exempt
+def get_subscriber_list(request):
+    city_id = request.GET.get('city_id')
+    advert_obj = CategoryCityMap.objects.filter(city_place_id = city_id)
+    advert_list = []
+    for ad_obj in advert_obj:
+        advert_data = {
+            'category_id' : ad_obj.category_id.category_id,
+            'category_nm' : ad_obj.category_id.category_name,
+        }
+        advert_list.append(advert_data)
+
+
+    supplier_obj = Supplier.objects.filter(city_place_id = city_id)
+    supplier_list = []
+    for supply in supplier_obj:
+        supplier_data = {
+            'supplier_obj_name' : supply.business_name,
+            'supplier_obj_id' : supply.supplier_id
+        }
+        supplier_list.append(supplier_data)
+    data = {
+        'success': 'true',
+        'supplier_list':supplier_list,
+        'advert_list':advert_list
+    }
+    print data
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def get_catlevel1_list(request):
+    cat_id = request.GET.get('cat_id')
+    category_lst = CategoryLevel1.objects.filter(parent_category_id = cat_id)
+    category1_list = []
+    for cat_obj in category_lst:
+        cat1_data = {
+            'category_id' : cat_obj.category_id,
+            'category_nm' : cat_obj.category_name
+        }
+        category1_list.append(cat1_data)
+
+    data = {
+        'success': 'true',
+        'category1_list':category1_list
+    }
+    print data
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def get_catlevel2_list(request):
+    cat_id = request.GET.get('cat_id')
+    category_lst = CategoryLevel2.objects.filter(parent_category_id = cat_id)
+    category2_list = []
+    for cat_obj in category_lst:
+        cat2_data = {
+            'category_id' : cat_obj.category_id,
+            'category_nm' : cat_obj.category_name
+        }
+        category2_list.append(cat2_data)
+
+    data = {
+        'success': 'true',
+        'category2_list':category2_list
+    }
+    print data
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def get_catlevel3_list(request):
+    cat_id = request.GET.get('cat_id')
+    category_lst = CategoryLevel3.objects.filter(parent_category_id = cat_id)
+    category3_list = []
+    for cat_obj in category_lst:
+        cat3_data = {
+            'category_id' : cat_obj.category_id,
+            'category_nm' : cat_obj.category_name
+        }
+        category3_list.append(cat3_data)
+
+    data = {
+        'success': 'true',
+        'category3_list':category3_list
+    }
+    print data
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def get_catlevel4_list(request):
+    cat_id = request.GET.get('cat_id')
+    category_lst = CategoryLevel4.objects.filter(parent_category_id = cat_id)
+    category4_list = []
+    for cat_obj in category_lst:
+        cat4_data = {
+            'category_id' : cat_obj.category_id,
+            'category_nm' : cat_obj.category_name
+        }
+        category4_list.append(cat4_data)
+
+    data = {
+        'success': 'true',
+        'category4_list':category4_list
+    }
+    print data
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def get_catlevel5_list(request):
+    cat_id = request.GET.get('cat_id')
+    category_lst = CategoryLevel5.objects.filter(parent_category_id = cat_id)
+    category5_list = []
+    for cat_obj in category_lst:
+        cat5_data = {
+            'category_id' : cat_obj.category_id,
+            'category_nm' : cat_obj.category_name
+        }
+        category5_list.append(cat5_data)
+
+    data = {
+        'success': 'true',
+        'category5_list':category5_list
+    }
+    print data
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def get_advert_list(request):
+    supplier_id = request.GET.get('supplier_id')
+    advert_obj = Advert.objects.filter(supplier_id = supplier_id)
+    advert_list = []
+    for advert in advert_obj:
+        advert_data = {
+            'advert_obj_name' : advert.advert_name,
+            'advert_obj_id' : advert.advert_id
+        }
+        advert_list.append(advert_data)
+    data = {
+        'success': 'true',
+        'advert_list':advert_list
+    }
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def get_advert_table_data(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            advert_list = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),category_id=request.GET.get('cat_id'))
+            for adve_obj in advert_list: 
+                coupon_objs = CouponCode.objects.filter(advert_id=str(adve_obj.advert_id))
+                advert_fav_objs = AdvertFavourite.objects.filter(advert_id=str(adve_obj.advert_id))
+                advert_like_objs = AdvertLike.objects.filter(advert_id=str(adve_obj.advert_id))
+                if adve_obj.advert_views:
+                    advert_views = adve_obj.advert_views
+                else:
+                    advert_views = 0
+                advert_data = {
+                    'advert_id': adve_obj.advert_id,
+                    'advert_title': adve_obj.advert_name,
+                    'advert_views': advert_views,
+                    'advert_likes': advert_like_objs.count(),
+                    'advert_favourites': advert_fav_objs.count(),
+                    'advert_calls': '0',
+                    'advert_call_backs': '0',
+                    'advert_emails': '0',
+                    'advert_coupons': coupon_objs.count(),
+                    'advert_reviews': '0',
+                    'advert_sms': '0',
+                    'advert_whatsapp': '0',
+                    'advert_facebook': '0',
+                    'advert_twitter': '0',
+                }
+                final_list.append(advert_data)
+
+            data = {'success': 'true', 'data': final_list}
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    print final_list
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def get_advert_list1(request):
+    supplier_id = request.GET.get('supplier_id')
+    cat_id = request.GET.get('cat_id')
+    
+    advert_obj = Advert.objects.filter(supplier_id = supplier_id,category_id = cat_id)
+    advert_list = []
+    for advert in advert_obj:
+        advert_data = {
+            'advert_obj_name' : advert.advert_name,
+            'advert_obj_id' : advert.advert_id
+        }
+        advert_list.append(advert_data)
+    data = {
+        'success': 'true',
+        'advert_list':advert_list
+    }
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def get_advert_table_data1(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            advert_list = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),category_id=request.GET.get('cat_id'),category_level_1=request.GET.get('cat1_id'))
+            for adve_obj in advert_list: 
+                coupon_objs = CouponCode.objects.filter(advert_id=str(adve_obj.advert_id))
+                advert_fav_objs = AdvertFavourite.objects.filter(advert_id=str(adve_obj.advert_id))
+                advert_like_objs = AdvertLike.objects.filter(advert_id=str(adve_obj.advert_id))
+                if adve_obj.advert_views:
+                    advert_views = adve_obj.advert_views
+                else:
+                    advert_views = 0
+                advert_data = {
+                    'advert_id': adve_obj.advert_id,
+                    'advert_title': adve_obj.advert_name,
+                    'advert_views': advert_views,
+                    'advert_likes': advert_like_objs.count(),
+                    'advert_favourites': advert_fav_objs.count(),
+                    'advert_calls': '0',
+                    'advert_call_backs': '0',
+                    'advert_emails': '0',
+                    'advert_coupons': coupon_objs.count(),
+                    'advert_reviews': '0',
+                    'advert_sms': '0',
+                    'advert_whatsapp': '0',
+                    'advert_facebook': '0',
+                    'advert_twitter': '0'
+                }
+                final_list.append(advert_data)
+
+            data = {'success': 'true', 'data': final_list}
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def get_advert_list2(request):
+    supplier_id = request.GET.get('supplier_id')
+    cat_id = request.GET.get('cat_id')
+    cat1_id = request.GET.get('cat1_id')
+    
+    advert_obj = Advert.objects.filter(supplier_id = supplier_id,category_id = cat_id,category_level_1 = cat1_id)
+    advert_list = []
+    for advert in advert_obj:
+        advert_data = {
+            'advert_obj_name' : advert.advert_name,
+            'advert_obj_id' : advert.advert_id
+        }
+        advert_list.append(advert_data)
+    data = {
+        'success': 'true',
+        'advert_list':advert_list
+    }
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def get_advert_table_data2(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            advert_list = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),category_id=request.GET.get('cat_id'),category_level_1=request.GET.get('cat1_id'),category_level_2=request.GET.get('cat2_id'))
+            for adve_obj in advert_list: 
+                coupon_objs = CouponCode.objects.filter(advert_id=str(adve_obj.advert_id))
+                advert_fav_objs = AdvertFavourite.objects.filter(advert_id=str(adve_obj.advert_id))
+                advert_like_objs = AdvertLike.objects.filter(advert_id=str(adve_obj.advert_id))
+                if adve_obj.advert_views:
+                    advert_views = adve_obj.advert_views
+                else:
+                    advert_views = 0
+                advert_data = {
+                    'advert_id': adve_obj.advert_id,
+                    'advert_title': adve_obj.advert_name,
+                    'advert_views': advert_views,
+                    'advert_likes': advert_like_objs.count(),
+                    'advert_favourites': advert_fav_objs.count(),
+                    'advert_calls': '0',
+                    'advert_call_backs': '0',
+                    'advert_emails': '0',
+                    'advert_coupons': coupon_objs.count(),
+                    'advert_reviews': '0',
+                    'advert_sms': '0',
+                    'advert_whatsapp': '0',
+                    'advert_facebook': '0',
+                    'advert_twitter': '0'
+                }
+                final_list.append(advert_data)
+
+            data = {'success': 'true', 'data': final_list}
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def get_advert_list3(request):
+    supplier_id = request.GET.get('supplier_id')
+    cat_id = request.GET.get('cat_id')
+    cat1_id = request.GET.get('cat1_id')
+    cat2_id = request.GET.get('cat2_id')
+    advert_obj = Advert.objects.filter(supplier_id = supplier_id,category_id = cat_id,category_level_1 = cat1_id,category_level_2 = cat2_id)
+    advert_list = []
+    for advert in advert_obj:
+        advert_data = {
+            'advert_obj_name' : advert.advert_name,
+            'advert_obj_id' : advert.advert_id
+        }
+        advert_list.append(advert_data)
+    data = {
+        'success': 'true',
+        'advert_list':advert_list
+    }
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def get_advert_table_data3(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            advert_list = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),category_id=request.GET.get('cat_id'),category_level_1=request.GET.get('cat1_id'),category_level_2=request.GET.get('cat2_id'),category_level_3=request.GET.get('cat3_id'))
+            for adve_obj in advert_list: 
+                coupon_objs = CouponCode.objects.filter(advert_id=str(adve_obj.advert_id))
+                advert_fav_objs = AdvertFavourite.objects.filter(advert_id=str(adve_obj.advert_id))
+                advert_like_objs = AdvertLike.objects.filter(advert_id=str(adve_obj.advert_id))
+                if adve_obj.advert_views:
+                    advert_views = adve_obj.advert_views
+                else:
+                    advert_views = 0
+                advert_data = {
+                    'advert_id': adve_obj.advert_id,
+                    'advert_title': adve_obj.advert_name,
+                    'advert_views': advert_views,
+                    'advert_likes': advert_like_objs.count(),
+                    'advert_favourites': advert_fav_objs.count(),
+                    'advert_calls': '0',
+                    'advert_call_backs': '0',
+                    'advert_emails': '0',
+                    'advert_coupons': coupon_objs.count(),
+                    'advert_reviews': '0',
+                    'advert_sms': '0',
+                    'advert_whatsapp': '0',
+                    'advert_facebook': '0',
+                    'advert_twitter': '0'
+                }
+                final_list.append(advert_data)
+
+            data = {'success': 'true', 'data': final_list}
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def get_advert_list4(request):
+    supplier_id = request.GET.get('supplier_id')
+    cat_id = request.GET.get('cat_id')
+    cat1_id = request.GET.get('cat1_id')
+    cat2_id = request.GET.get('cat2_id')
+    cat3_id = request.GET.get('cat3_id')
+    advert_obj = Advert.objects.filter(supplier_id = supplier_id,category_id = cat_id,category_level_1 = cat1_id,category_level_2 = cat2_id,category_level_3 = cat3_id)
+    advert_list = []
+    for advert in advert_obj:
+        advert_data = {
+            'advert_obj_name' : advert.advert_name,
+            'advert_obj_id' : advert.advert_id
+        }
+        advert_list.append(advert_data)
+    data = {
+        'success': 'true',
+        'advert_list':advert_list
+    }
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def get_advert_table_data4(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            advert_list = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),category_id=request.GET.get('cat_id'),category_level_1=request.GET.get('cat1_id'),category_level_2=request.GET.get('cat2_id'),category_level_3=request.GET.get('cat3_id'),category_level_4=request.GET.get('cat4_id'))
+            for adve_obj in advert_list: 
+                coupon_objs = CouponCode.objects.filter(advert_id=str(adve_obj.advert_id))
+                advert_fav_objs = AdvertFavourite.objects.filter(advert_id=str(adve_obj.advert_id))
+                advert_like_objs = AdvertLike.objects.filter(advert_id=str(adve_obj.advert_id))
+                if adve_obj.advert_views:
+                    advert_views = adve_obj.advert_views
+                else:
+                    advert_views = 0
+                advert_data = {
+                    'advert_id': adve_obj.advert_id,
+                    'advert_title': adve_obj.advert_name,
+                    'advert_views': advert_views,
+                    'advert_likes': advert_like_objs.count(),
+                    'advert_favourites': advert_fav_objs.count(),
+                    'advert_calls': '0',
+                    'advert_call_backs': '0',
+                    'advert_emails': '0',
+                    'advert_coupons': coupon_objs.count(),
+                    'advert_reviews': '0',
+                    'advert_sms': '0',
+                    'advert_whatsapp': '0',
+                    'advert_facebook': '0',
+                    'advert_twitter': '0'
+                }
+                final_list.append(advert_data)
+
+            data = {'success': 'true', 'data': final_list}
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def get_advert_list5(request):
+    supplier_id = request.GET.get('supplier_id')
+    cat_id = request.GET.get('cat_id')
+    cat1_id = request.GET.get('cat1_id')
+    cat2_id = request.GET.get('cat2_id')
+    cat3_id = request.GET.get('cat3_id')
+    cat4_id = request.GET.get('cat4_id')
+    advert_obj = Advert.objects.filter(supplier_id = supplier_id,category_id = cat_id,category_level_1 = cat1_id,category_level_2 = cat2_id,category_level_3 = cat3_id,category_level_4 = cat4_id)
+    advert_list = []
+    for advert in advert_obj:
+        advert_data = {
+            'advert_obj_name' : advert.advert_name,
+            'advert_obj_id' : advert.advert_id
+        }
+        advert_list.append(advert_data)
+    data = {
+        'success': 'true',
+        'advert_list':advert_list
+    }
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def get_advert_table_data5(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            advert_list = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),category_id=request.GET.get('cat_id'),category_level_1=request.GET.get('cat1_id'),category_level_2=request.GET.get('cat2_id'),category_level_3=request.GET.get('cat3_id'),category_level_4=request.GET.get('cat4_id'),category_level_5=request.GET.get('cat5_id'))
+            for adve_obj in advert_list: 
+                coupon_objs = CouponCode.objects.filter(advert_id=str(adve_obj.advert_id))
+                advert_fav_objs = AdvertFavourite.objects.filter(advert_id=str(adve_obj.advert_id))
+                advert_like_objs = AdvertLike.objects.filter(advert_id=str(adve_obj.advert_id))
+                if adve_obj.advert_views:
+                    advert_views = adve_obj.advert_views
+                else:
+                    advert_views = 0
+                advert_data = {
+                    'advert_id': adve_obj.advert_id,
+                    'advert_title': adve_obj.advert_name,
+                    'advert_views': advert_views,
+                    'advert_likes': advert_like_objs.count(),
+                    'advert_favourites': advert_fav_objs.count(),
+                    'advert_calls': '0',
+                    'advert_call_backs': '0',
+                    'advert_emails': '0',
+                    'advert_coupons': coupon_objs.count(),
+                    'advert_reviews': '0',
+                    'advert_sms': '0',
+                    'advert_whatsapp': '0',
+                    'advert_facebook': '0',
+                    'advert_twitter': '0'
+                }
+                final_list.append(advert_data)
+
+            data = {'success': 'true', 'data': final_list}
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def get_advert_list6(request):
+    supplier_id = request.GET.get('supplier_id')
+    cat_id = request.GET.get('cat_id')
+    cat1_id = request.GET.get('cat1_id')
+    cat2_id = request.GET.get('cat2_id')
+    cat3_id = request.GET.get('cat3_id')
+    cat4_id = request.GET.get('cat4_id')
+    cat5_id = request.GET.get('cat5_id')
+    advert_obj = Advert.objects.filter(supplier_id = supplier_id,category_id = cat_id,category_level_1 = cat1_id,category_level_2 = cat2_id,category_level_3 = cat3_id,category_level_4 = cat4_id,category_level_5 = cat5_id)
+    advert_list = []
+    for advert in advert_obj:
+        advert_data = {
+            'advert_obj_name' : advert.advert_name,
+            'advert_obj_id' : advert.advert_id
+        }
+        advert_list.append(advert_data)
+    data = {
+        'success': 'true',
+        'advert_list':advert_list
+    }
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+@csrf_exempt
+def sub_city_list(request):
+    city_id = request.GET.get('city_id')
+    advert_obj = CategoryCityMap.objects.filter(city_place_id = city_id)
+    advert_list = []
+    for ad_obj in advert_obj:
+        advert_data = {
+            'category_id' : ad_obj.category_id.category_id,
+            'category_nm' : ad_obj.category_id.category_name,
+        }
+        advert_list.append(advert_data)
+
+
+    supplier_obj = Supplier.objects.filter(city_place_id = city_id)
+    supplier_list = []
+    for supply in supplier_obj:
+        supplier_data = {
+            'supplier_obj_name' : supply.business_name,
+            'supplier_obj_id' : supply.supplier_id
+        }
+        supplier_list.append(supplier_data)
+    data = {
+        'success': 'true',
+        'supplier_list':supplier_list,
+        'advert_list':advert_list
+    }
+    print data
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def get_subtable_data1(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            advert_obj = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),category_id=request.GET.get('cat_id'))
+            for advert in advert_obj:
+                advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=str(advert.advert_id))
+                start_date = advert_sub_obj.business_id.start_date
+                end_date = advert_sub_obj.business_id.end_date
+
+                pre_ser_obj_list = PremiumService.objects.filter(business_id=str(advert_sub_obj.business_id))
+                premium_service, advert_slider, top_advert = 'N/A', 'No', 'No'
+                premium_start_date, slider_start_date, top_advert_start_date = 'N/A', 'N/A', 'N/A'
+                premium_end_date, slider_end_date, top_advert_end_date = 'N/A', 'N/A', 'N/A'
+
+                for pre_ser_obj in pre_ser_obj_list:
+                    if pre_ser_obj.premium_service_name != "Advert Slider" and pre_ser_obj.premium_service_name != "Top Advert":
+                        premium_service = pre_ser_obj.premium_service_name
+                        premium_start_date = pre_ser_obj.start_date
+                        premium_end_date = pre_ser_obj.end_date
+                    if pre_ser_obj.premium_service_name == "Advert Slider":
+                        advert_slider = 'Yes'
+                        slider_start_date = pre_ser_obj.start_date
+                        slider_end_date = pre_ser_obj.end_date
+                    if pre_ser_obj.premium_service_name == "Top Advert":
+                        top_advert = 'No'
+                        top_advert_start_date = pre_ser_obj.start_date
+                        top_advert_end_date = pre_ser_obj.end_date
+                try:
+                    payment_obj = PaymentDetail.objects.get(business_id=str(advert_sub_obj.business_id))
+                    if payment_obj.total_amount:
+                        total_amount = payment_obj.payable_amount
+                    else:
+                        total_amount = 0
+                    if payment_obj.paid_amount:
+                        paid_amount = payment_obj.paid_amount
+                    else:
+                        paid_amount = 0
+                except Exception as e:
+                    total_amount = 0
+                    paid_amount = 0
+                video_count = Advert_Video.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
+                image_count = AdvertImage.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
+
+                advert_data = {
+                    'advert_id': str(advert_sub_obj.advert_id),
+                    'advert_title': advert_sub_obj.advert_id.advert_name,
+                    'category': advert_sub_obj.advert_id.category_id.category_name,
+                    'start_date': start_date,
+                    'end_date': end_date,
+                    'premium_service': premium_service,
+                    'premium_start_date': premium_start_date,
+                    'premium_end_date': premium_end_date,
+                    'advert_slider': advert_slider,
+                    'slider_start_date': slider_start_date,
+                    'slider_end_date': slider_end_date,
+                    'top_advert': top_advert,
+                    'top_advert_start_date': top_advert_start_date,
+                    'top_advert_end_date': top_advert_end_date,
+                    'uploaded_pictures': image_count,
+                    'uploaded_videos': video_count,
+                    'memory_usages': '0',
+                    'total_service_cost': total_amount,
+                    'total_amount_paid': paid_amount,
+                    'saleman_name': '',
+                    'saleman_number': ''
+                }
+                final_list.append(advert_data)
+            data = {'success': 'true', 'data': final_list}
+
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def get_subtable_data2(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            advert_obj = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),category_id=request.GET.get('cat_id'),category_level_1=request.GET.get('cat_id1'))
+            for advert in advert_obj:
+                advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=str(advert.advert_id))
+                start_date = advert_sub_obj.business_id.start_date
+                end_date = advert_sub_obj.business_id.end_date
+
+                pre_ser_obj_list = PremiumService.objects.filter(business_id=str(advert_sub_obj.business_id))
+                premium_service, advert_slider, top_advert = 'N/A', 'No', 'No'
+                premium_start_date, slider_start_date, top_advert_start_date = 'N/A', 'N/A', 'N/A'
+                premium_end_date, slider_end_date, top_advert_end_date = 'N/A', 'N/A', 'N/A'
+
+                for pre_ser_obj in pre_ser_obj_list:
+                    if pre_ser_obj.premium_service_name != "Advert Slider" and pre_ser_obj.premium_service_name != "Top Advert":
+                        premium_service = pre_ser_obj.premium_service_name
+                        premium_start_date = pre_ser_obj.start_date
+                        premium_end_date = pre_ser_obj.end_date
+                    if pre_ser_obj.premium_service_name == "Advert Slider":
+                        advert_slider = 'Yes'
+                        slider_start_date = pre_ser_obj.start_date
+                        slider_end_date = pre_ser_obj.end_date
+                    if pre_ser_obj.premium_service_name == "Top Advert":
+                        top_advert = 'No'
+                        top_advert_start_date = pre_ser_obj.start_date
+                        top_advert_end_date = pre_ser_obj.end_date
+                try:
+                    payment_obj = PaymentDetail.objects.get(business_id=str(advert_sub_obj.business_id))
+                    if payment_obj.total_amount:
+                        total_amount = payment_obj.payable_amount
+                    else:
+                        total_amount = 0
+                    if payment_obj.paid_amount:
+                        paid_amount = payment_obj.paid_amount
+                    else:
+                        paid_amount = 0
+                except Exception as e:
+                    total_amount = 0
+                    paid_amount = 0
+                video_count = Advert_Video.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
+                image_count = AdvertImage.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
+
+                advert_data = {
+                    'advert_id': str(advert_sub_obj.advert_id),
+                    'advert_title': advert_sub_obj.advert_id.advert_name,
+                    'category': advert_sub_obj.advert_id.category_id.category_name,
+                    'start_date': start_date,
+                    'end_date': end_date,
+                    'premium_service': premium_service,
+                    'premium_start_date': premium_start_date,
+                    'premium_end_date': premium_end_date,
+                    'advert_slider': advert_slider,
+                    'slider_start_date': slider_start_date,
+                    'slider_end_date': slider_end_date,
+                    'top_advert': top_advert,
+                    'top_advert_start_date': top_advert_start_date,
+                    'top_advert_end_date': top_advert_end_date,
+                    'uploaded_pictures': image_count,
+                    'uploaded_videos': video_count,
+                    'memory_usages': '0',
+                    'total_service_cost': total_amount,
+                    'total_amount_paid': paid_amount,
+                    'saleman_name': '',
+                    'saleman_number': ''
+                }
+                final_list.append(advert_data)
+            data = {'success': 'true', 'data': final_list}
+
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def get_subtable_data3(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            advert_obj = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),category_id=request.GET.get('cat_id'),category_level_1=request.GET.get('cat_id1'),category_level_2=request.GET.get('cat_id2'))
+            for advert in advert_obj:
+                advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=str(advert.advert_id))
+                start_date = advert_sub_obj.business_id.start_date
+                end_date = advert_sub_obj.business_id.end_date
+
+                pre_ser_obj_list = PremiumService.objects.filter(business_id=str(advert_sub_obj.business_id))
+                premium_service, advert_slider, top_advert = 'N/A', 'No', 'No'
+                premium_start_date, slider_start_date, top_advert_start_date = 'N/A', 'N/A', 'N/A'
+                premium_end_date, slider_end_date, top_advert_end_date = 'N/A', 'N/A', 'N/A'
+
+                for pre_ser_obj in pre_ser_obj_list:
+                    if pre_ser_obj.premium_service_name != "Advert Slider" and pre_ser_obj.premium_service_name != "Top Advert":
+                        premium_service = pre_ser_obj.premium_service_name
+                        premium_start_date = pre_ser_obj.start_date
+                        premium_end_date = pre_ser_obj.end_date
+                    if pre_ser_obj.premium_service_name == "Advert Slider":
+                        advert_slider = 'Yes'
+                        slider_start_date = pre_ser_obj.start_date
+                        slider_end_date = pre_ser_obj.end_date
+                    if pre_ser_obj.premium_service_name == "Top Advert":
+                        top_advert = 'No'
+                        top_advert_start_date = pre_ser_obj.start_date
+                        top_advert_end_date = pre_ser_obj.end_date
+                try:
+                    payment_obj = PaymentDetail.objects.get(business_id=str(advert_sub_obj.business_id))
+                    if payment_obj.total_amount:
+                        total_amount = payment_obj.payable_amount
+                    else:
+                        total_amount = 0
+                    if payment_obj.paid_amount:
+                        paid_amount = payment_obj.paid_amount
+                    else:
+                        paid_amount = 0
+                except Exception as e:
+                    total_amount = 0
+                    paid_amount = 0
+                video_count = Advert_Video.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
+                image_count = AdvertImage.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
+
+                advert_data = {
+                    'advert_id': str(advert_sub_obj.advert_id),
+                    'advert_title': advert_sub_obj.advert_id.advert_name,
+                    'category': advert_sub_obj.advert_id.category_id.category_name,
+                    'start_date': start_date,
+                    'end_date': end_date,
+                    'premium_service': premium_service,
+                    'premium_start_date': premium_start_date,
+                    'premium_end_date': premium_end_date,
+                    'advert_slider': advert_slider,
+                    'slider_start_date': slider_start_date,
+                    'slider_end_date': slider_end_date,
+                    'top_advert': top_advert,
+                    'top_advert_start_date': top_advert_start_date,
+                    'top_advert_end_date': top_advert_end_date,
+                    'uploaded_pictures': image_count,
+                    'uploaded_videos': video_count,
+                    'memory_usages': '0',
+                    'total_service_cost': total_amount,
+                    'total_amount_paid': paid_amount,
+                    'saleman_name': '',
+                    'saleman_number': ''
+                }
+                final_list.append(advert_data)
+            data = {'success': 'true', 'data': final_list}
+
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def get_subtable_data4(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            advert_obj = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),category_id=request.GET.get('cat_id'),category_level_1=request.GET.get('cat_id1'),category_level_3=request.GET.get('cat_id3'),category_level_4=request.GET.get('cat_id4'))
+            for advert in advert_obj:
+                advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=str(advert.advert_id))
+                start_date = advert_sub_obj.business_id.start_date
+                end_date = advert_sub_obj.business_id.end_date
+
+                pre_ser_obj_list = PremiumService.objects.filter(business_id=str(advert_sub_obj.business_id))
+                premium_service, advert_slider, top_advert = 'N/A', 'No', 'No'
+                premium_start_date, slider_start_date, top_advert_start_date = 'N/A', 'N/A', 'N/A'
+                premium_end_date, slider_end_date, top_advert_end_date = 'N/A', 'N/A', 'N/A'
+
+                for pre_ser_obj in pre_ser_obj_list:
+                    if pre_ser_obj.premium_service_name != "Advert Slider" and pre_ser_obj.premium_service_name != "Top Advert":
+                        premium_service = pre_ser_obj.premium_service_name
+                        premium_start_date = pre_ser_obj.start_date
+                        premium_end_date = pre_ser_obj.end_date
+                    if pre_ser_obj.premium_service_name == "Advert Slider":
+                        advert_slider = 'Yes'
+                        slider_start_date = pre_ser_obj.start_date
+                        slider_end_date = pre_ser_obj.end_date
+                    if pre_ser_obj.premium_service_name == "Top Advert":
+                        top_advert = 'No'
+                        top_advert_start_date = pre_ser_obj.start_date
+                        top_advert_end_date = pre_ser_obj.end_date
+                try:
+                    payment_obj = PaymentDetail.objects.get(business_id=str(advert_sub_obj.business_id))
+                    if payment_obj.total_amount:
+                        total_amount = payment_obj.payable_amount
+                    else:
+                        total_amount = 0
+                    if payment_obj.paid_amount:
+                        paid_amount = payment_obj.paid_amount
+                    else:
+                        paid_amount = 0
+                except Exception as e:
+                    total_amount = 0
+                    paid_amount = 0
+                video_count = Advert_Video.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
+                image_count = AdvertImage.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
+
+                advert_data = {
+                    'advert_id': str(advert_sub_obj.advert_id),
+                    'advert_title': advert_sub_obj.advert_id.advert_name,
+                    'category': advert_sub_obj.advert_id.category_id.category_name,
+                    'start_date': start_date,
+                    'end_date': end_date,
+                    'premium_service': premium_service,
+                    'premium_start_date': premium_start_date,
+                    'premium_end_date': premium_end_date,
+                    'advert_slider': advert_slider,
+                    'slider_start_date': slider_start_date,
+                    'slider_end_date': slider_end_date,
+                    'top_advert': top_advert,
+                    'top_advert_start_date': top_advert_start_date,
+                    'top_advert_end_date': top_advert_end_date,
+                    'uploaded_pictures': image_count,
+                    'uploaded_videos': video_count,
+                    'memory_usages': '0',
+                    'total_service_cost': total_amount,
+                    'total_amount_paid': paid_amount,
+                    'saleman_name': '',
+                    'saleman_number': ''
+                }
+                final_list.append(advert_data)
+            data = {'success': 'true', 'data': final_list}
+
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def get_subtable_data5(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            advert_obj = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),category_id=request.GET.get('cat_id'),category_level_1=request.GET.get('cat_id1'),category_level_3=request.GET.get('cat_id3'),category_level_4=request.GET.get('cat_id4'),category_level_5=request.GET.get('cat_id5'))
+            for advert in advert_obj:
+                advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=str(advert.advert_id))
+                start_date = advert_sub_obj.business_id.start_date
+                end_date = advert_sub_obj.business_id.end_date
+
+                pre_ser_obj_list = PremiumService.objects.filter(business_id=str(advert_sub_obj.business_id))
+                premium_service, advert_slider, top_advert = 'N/A', 'No', 'No'
+                premium_start_date, slider_start_date, top_advert_start_date = 'N/A', 'N/A', 'N/A'
+                premium_end_date, slider_end_date, top_advert_end_date = 'N/A', 'N/A', 'N/A'
+
+                for pre_ser_obj in pre_ser_obj_list:
+                    if pre_ser_obj.premium_service_name != "Advert Slider" and pre_ser_obj.premium_service_name != "Top Advert":
+                        premium_service = pre_ser_obj.premium_service_name
+                        premium_start_date = pre_ser_obj.start_date
+                        premium_end_date = pre_ser_obj.end_date
+                    if pre_ser_obj.premium_service_name == "Advert Slider":
+                        advert_slider = 'Yes'
+                        slider_start_date = pre_ser_obj.start_date
+                        slider_end_date = pre_ser_obj.end_date
+                    if pre_ser_obj.premium_service_name == "Top Advert":
+                        top_advert = 'No'
+                        top_advert_start_date = pre_ser_obj.start_date
+                        top_advert_end_date = pre_ser_obj.end_date
+                try:
+                    payment_obj = PaymentDetail.objects.get(business_id=str(advert_sub_obj.business_id))
+                    if payment_obj.total_amount:
+                        total_amount = payment_obj.payable_amount
+                    else:
+                        total_amount = 0
+                    if payment_obj.paid_amount:
+                        paid_amount = payment_obj.paid_amount
+                    else:
+                        paid_amount = 0
+                except Exception as e:
+                    total_amount = 0
+                    paid_amount = 0
+                video_count = Advert_Video.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
+                image_count = AdvertImage.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
+
+                advert_data = {
+                    'advert_id': str(advert_sub_obj.advert_id),
+                    'advert_title': advert_sub_obj.advert_id.advert_name,
+                    'category': advert_sub_obj.advert_id.category_id.category_name,
+                    'start_date': start_date,
+                    'end_date': end_date,
+                    'premium_service': premium_service,
+                    'premium_start_date': premium_start_date,
+                    'premium_end_date': premium_end_date,
+                    'advert_slider': advert_slider,
+                    'slider_start_date': slider_start_date,
+                    'slider_end_date': slider_end_date,
+                    'top_advert': top_advert,
+                    'top_advert_start_date': top_advert_start_date,
+                    'top_advert_end_date': top_advert_end_date,
+                    'uploaded_pictures': image_count,
+                    'uploaded_videos': video_count,
+                    'memory_usages': '0',
+                    'total_service_cost': total_amount,
+                    'total_amount_paid': paid_amount,
+                    'saleman_name': '',
+                    'saleman_number': ''
+                }
+                final_list.append(advert_data)
+            data = {'success': 'true', 'data': final_list}
+
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def get_advert_health_citybase(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            from_date = request.GET.get('from_date')
+            to_date = request.GET.get('to_date')
+            from_date = datetime.strptime(from_date, "%d/%m/%Y")
+            to_date = datetime.strptime(to_date, "%d/%m/%Y")
+            from_date = from_date.strftime("%Y-%m-%d")
+            to_date = to_date.strftime("%Y-%m-%d")
+            advert_list = Advert.objects.filter(city_place_id=request.GET.get('city_id'),creation_date__range=[from_date, to_date])
+            for adv_obj in advert_list :
+                coupon_objs = CouponCode.objects.filter(advert_id=str(adv_obj.advert_id))
+                advert_fav_objs = AdvertFavourite.objects.filter(advert_id=str(adv_obj.advert_id))
+                advert_like_objs = AdvertLike.objects.filter(advert_id=str(adv_obj.advert_id))
+                if adv_obj.advert_views:
+                    advert_views = adv_obj.advert_views
+                else:
+                    advert_views = 0
+                advert_data = {
+                    'advert_id': adv_obj.advert_id,
+                    'advert_title': adv_obj.advert_name,
+                    'advert_views': advert_views,
+                    'advert_likes': advert_like_objs.count(),
+                    'advert_favourites': advert_fav_objs.count(),
+                    'advert_calls': '0',
+                    'advert_call_backs': '0',
+                    'advert_emails': '0',
+                    'advert_coupons': coupon_objs.count(),
+                    'advert_reviews': '0',
+                    'advert_sms': '0',
+                    'advert_whatsapp': '0',
+                    'advert_facebook': '0',
+                    'advert_twitter': '0'
+                }
+                final_list.append(advert_data)
+
+            data = {'success': 'true', 'data': final_list}
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def get_subscription_plan_citybase(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            advert_obj = Advert.objects.filter(city_place_id=request.GET.get('city_id'))
+            for advert in advert_obj:
+                advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=str(advert.advert_id))
+                start_date = advert_sub_obj.business_id.start_date
+                end_date = advert_sub_obj.business_id.end_date
+
+                pre_ser_obj_list = PremiumService.objects.filter(business_id=str(advert_sub_obj.business_id))
+                premium_service, advert_slider, top_advert = 'N/A', 'No', 'No'
+                premium_start_date, slider_start_date, top_advert_start_date = 'N/A', 'N/A', 'N/A'
+                premium_end_date, slider_end_date, top_advert_end_date = 'N/A', 'N/A', 'N/A'
+
+                for pre_ser_obj in pre_ser_obj_list:
+                    if pre_ser_obj.premium_service_name != "Advert Slider" and pre_ser_obj.premium_service_name != "Top Advert":
+                        premium_service = pre_ser_obj.premium_service_name
+                        premium_start_date = pre_ser_obj.start_date
+                        premium_end_date = pre_ser_obj.end_date
+                    if pre_ser_obj.premium_service_name == "Advert Slider":
+                        advert_slider = 'Yes'
+                        slider_start_date = pre_ser_obj.start_date
+                        slider_end_date = pre_ser_obj.end_date
+                    if pre_ser_obj.premium_service_name == "Top Advert":
+                        top_advert = 'No'
+                        top_advert_start_date = pre_ser_obj.start_date
+                        top_advert_end_date = pre_ser_obj.end_date
+                try:
+                    payment_obj = PaymentDetail.objects.get(business_id=str(advert_sub_obj.business_id))
+                    if payment_obj.total_amount:
+                        total_amount = payment_obj.payable_amount
+                    else:
+                        total_amount = 0
+                    if payment_obj.paid_amount:
+                        paid_amount = payment_obj.paid_amount
+                    else:
+                        paid_amount = 0
+                except Exception as e:
+                    total_amount = 0
+                    paid_amount = 0
+                video_count = Advert_Video.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
+                image_count = AdvertImage.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
+
+                advert_data = {
+                    'advert_id': str(advert_sub_obj.advert_id),
+                    'advert_title': advert_sub_obj.advert_id.advert_name,
+                    'category': advert_sub_obj.advert_id.category_id.category_name,
+                    'start_date': start_date,
+                    'end_date': end_date,
+                    'premium_service': premium_service,
+                    'premium_start_date': premium_start_date,
+                    'premium_end_date': premium_end_date,
+                    'advert_slider': advert_slider,
+                    'slider_start_date': slider_start_date,
+                    'slider_end_date': slider_end_date,
+                    'top_advert': top_advert,
+                    'top_advert_start_date': top_advert_start_date,
+                    'top_advert_end_date': top_advert_end_date,
+                    'uploaded_pictures': image_count,
+                    'uploaded_videos': video_count,
+                    'memory_usages': '0',
+                    'total_service_cost': total_amount,
+                    'total_amount_paid': paid_amount,
+                    'saleman_name': '',
+                    'saleman_number': ''
+                }
+                final_list.append(advert_data)
+
+            data = {'success': 'true', 'data': final_list}
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def get_advert_health_datebase(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            from_date = request.GET.get('from_date')
+            to_date = request.GET.get('to_date')
+            from_date = datetime.strptime(from_date, "%d/%m/%Y")
+            to_date = datetime.strptime(to_date, "%d/%m/%Y")
+            from_date = from_date.strftime("%Y-%m-%d")
+            to_date = to_date.strftime("%Y-%m-%d")
+
+            advert_list = Advert.objects.filter(status = '1',creation_date__range=[from_date, to_date])
+            for advert in advert_list:
+                coupon_objs = CouponCode.objects.filter(advert_id = str(advert.advert_id))
+                advert_fav_objs = AdvertFavourite.objects.filter(advert_id = str(advert.advert_id))
+                advert_like_objs = AdvertLike.objects.filter(advert_id = str(advert.advert_id))
+                if advert.advert_views:
+                    advert_views = advert.advert_views
+                else:
+                    advert_views = 0
+                advert_data={
+                    'advert_id':advert.advert_id,
+                    'advert_title':advert.advert_name,
+                    'advert_views':advert_views,
+                    'advert_likes':advert_like_objs.count(),
+                    'advert_favourites':advert_fav_objs.count(),
+                    'advert_calls':'0',
+                    'advert_call_backs':'0',
+                    'advert_emails':'0',
+                    'advert_coupons':coupon_objs.count(),
+                    'advert_reviews':'0',
+                    'advert_sms':'0',
+                    'advert_whatsapp':'0',
+                    'advert_facebook':'0',
+                    'advert_twitter': '0'
+                }
+                final_list.append(advert_data)
+            data = {'success': 'true', 'data': final_list}
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    print data
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def get_advert_health_supplierbase(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            from_date = request.GET.get('from_date')
+            to_date = request.GET.get('to_date')
+            from_date = datetime.strptime(from_date, "%d/%m/%Y")
+            to_date = datetime.strptime(to_date, "%d/%m/%Y")
+            from_date = from_date.strftime("%Y-%m-%d")
+            to_date = to_date.strftime("%Y-%m-%d")
+            advert = Advert.objects.filter(supplier_id=request.GET.get('sub_id'))
+            for ad_ob in advert:
+                coupon_objs = CouponCode.objects.filter(advert_id=str(ad_ob.advert_id),creation_date__range=[from_date,to_date])
+                advert_fav_objs = AdvertFavourite.objects.filter(advert_id=str(ad_ob.advert_id),creation_date__range=[from_date,to_date])
+                advert_like_objs = AdvertLike.objects.filter(advert_id=str(ad_ob.advert_id),creation_date__range=[from_date,to_date])
+                if ad_ob.advert_views:
+                    advert_views = ad_ob.advert_views
+                else:
+                    advert_views = 0
+                advert_data = {
+                    'advert_id': ad_ob.advert_id,
+                    'advert_title': ad_ob.advert_name,
+                    'advert_views': advert_views,
+                    'advert_likes': advert_like_objs.count(),
+                    'advert_favourites': advert_fav_objs.count(),
+                    'advert_calls': '0',
+                    'advert_call_backs': '0',
+                    'advert_emails': '0',
+                    'advert_coupons': coupon_objs.count(),
+                    'advert_reviews': '0',
+                    'advert_sms': '0',
+                    'advert_whatsapp': '0',
+                    'advert_facebook': '0',
+                    'advert_twitter': '0'
+                }
+                final_list.append(advert_data)
+                print final_list
+
+            data = {'success': 'true', 'data': final_list}
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def get_subscription_plan_supplier(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            business_obj = Business.objects.filter(supplier=request.GET.get('sub_id'))
+            for business in business_obj:   
+                advert_sub_obj = AdvertSubscriptionMap.objects.get(business_id=str(business.business_id))
+                start_date = advert_sub_obj.business_id.start_date
+                end_date = advert_sub_obj.business_id.end_date
+
+                pre_ser_obj_list = PremiumService.objects.filter(business_id=str(advert_sub_obj.business_id))
+                premium_service, advert_slider, top_advert = 'N/A', 'No', 'No'
+                premium_start_date, slider_start_date, top_advert_start_date = 'N/A', 'N/A', 'N/A'
+                premium_end_date, slider_end_date, top_advert_end_date = 'N/A', 'N/A', 'N/A'
+
+                for pre_ser_obj in pre_ser_obj_list:
+                    if pre_ser_obj.premium_service_name != "Advert Slider" and pre_ser_obj.premium_service_name != "Top Advert":
+                        premium_service = pre_ser_obj.premium_service_name
+                        premium_start_date = pre_ser_obj.start_date
+                        premium_end_date = pre_ser_obj.end_date
+                    if pre_ser_obj.premium_service_name == "Advert Slider":
+                        advert_slider = 'Yes'
+                        slider_start_date = pre_ser_obj.start_date
+                        slider_end_date = pre_ser_obj.end_date
+                    if pre_ser_obj.premium_service_name == "Top Advert":
+                        top_advert = 'No'
+                        top_advert_start_date = pre_ser_obj.start_date
+                        top_advert_end_date = pre_ser_obj.end_date
+                try:
+                    payment_obj = PaymentDetail.objects.get(business_id=str(advert_sub_obj.business_id))
+                    if payment_obj.total_amount:
+                        total_amount = payment_obj.payable_amount
+                    else:
+                        total_amount = 0
+                    if payment_obj.paid_amount:
+                        paid_amount = payment_obj.paid_amount
+                    else:
+                        paid_amount = 0
+                except Exception as e:
+                    total_amount = 0
+                    paid_amount = 0
+                video_count = Advert_Video.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
+                image_count = AdvertImage.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
+
+                advert_data = {
+                    'advert_id': str(advert_sub_obj.advert_id),
+                    'advert_title': advert_sub_obj.advert_id.advert_name,
+                    'category': advert_sub_obj.advert_id.category_id.category_name,
+                    'start_date': start_date,
+                    'end_date': end_date,
+                    'premium_service': premium_service,
+                    'premium_start_date': premium_start_date,
+                    'premium_end_date': premium_end_date,
+                    'advert_slider': advert_slider,
+                    'slider_start_date': slider_start_date,
+                    'slider_end_date': slider_end_date,
+                    'top_advert': top_advert,
+                    'top_advert_start_date': top_advert_start_date,
+                    'top_advert_end_date': top_advert_end_date,
+                    'uploaded_pictures': image_count,
+                    'uploaded_videos': video_count,
+                    'memory_usages': '0',
+                    'total_service_cost': total_amount,
+                    'total_amount_paid': paid_amount,
+                    'saleman_name': '',
+                    'saleman_number': ''
+                }
+                final_list.append(advert_data)
+
+            data = {'success': 'true', 'data': final_list}
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def get_sales(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            if request.GET.get('sales_nm'): 
+                from_date = request.GET.get('from_date')
+                to_date = request.GET.get('to_date')
+                print from_date,to_date
+                from_date = datetime.strptime(from_date, "%d/%m/%Y")
+                to_date = datetime.strptime(to_date, "%d/%m/%Y") + timedelta(days=1)
+                from_date = from_date.strftime("%Y-%m-%d")
+                to_date = to_date.strftime("%Y-%m-%d")
+
+
+                Supplier_list = Supplier.objects.filter(supplier_created_date__range=[from_date, to_date],sales_person_name = request.GET.get('sales_nm'))
+                print Supplier_list
+
+                for supp_obj in Supplier_list:
+                    sales_person_name = supp_obj.sales_person_name
+                    area = supp_obj.area
+                    city_place = supp_obj.city_place_id.city_id.city_name
+                    business_name = supp_obj.business_name
+                    supplier_id = supp_obj.supplier_id
+
+                    business_list = Business.objects.filter(supplier = supplier_id)
+
+                    for bus_obj in  business_list:
+                        business_id = bus_obj.business_id
+                        payment_obj = PaymentDetail.objects.get(business_id = business_id)
+                        payment_date = payment_obj.payment_created_date
+                        if payment_obj.total_amount:
+                            total_ser_cost = payment_obj.total_amount
+                        else:
+                            total_ser_cost = 0
+                        if payment_obj.paid_amount:   
+                            total_pay_amt = payment_obj.paid_amount
+                        else:
+                            total_pay_amt = 0
+
+                        advert_obj = AdvertSubscriptionMap.objects.get(business_id = business_id)
+                        
+                        advert_name = advert_obj.advert_id.advert_name
+                        category_level_1 = advert_obj.advert_id.category_level_1.category_name
+                        category_level_2 = advert_obj.advert_id.category_level_2.category_name
+
+                        consumer_data={
+                            'sales_by':sales_person_name,
+                            'title':advert_name,
+                            'busi_name':business_name,
+                            'Area':area,
+                            'City':city_place,
+                            'cat_L1':category_level_1,
+                            'cat_L2':category_level_2,
+                            'sold_date':'sws',
+                            'ser_cost':total_ser_cost,
+                            'pay_amt':total_pay_amt,
+                            'pay_date':payment_date
+                        }
+                        final_list.append(consumer_data)
+            else :
+                from_date = request.GET.get('from_date')
+                to_date = request.GET.get('to_date')
+                print from_date,to_date
+                from_date = datetime.strptime(from_date, "%d/%m/%Y")
+                to_date = datetime.strptime(to_date, "%d/%m/%Y") + timedelta(days=1)
+                from_date = from_date.strftime("%Y-%m-%d")
+                to_date = to_date.strftime("%Y-%m-%d")
+
+                Supplier_list = Supplier.objects.filter(supplier_created_date__range=[from_date, to_date])
+                print Supplier_list
+
+                for supp_obj in Supplier_list:
+                    sales_person_name = supp_obj.sales_person_name
+                    area = supp_obj.area
+                    city_place = supp_obj.city_place_id.city_id.city_name
+                    business_name = supp_obj.business_name
+                    supplier_id = supp_obj.supplier_id
+
+                    business_list = Business.objects.filter(supplier = supplier_id)
+
+                    for bus_obj in  business_list:
+                        business_id = bus_obj.business_id
+                        payment_obj = PaymentDetail.objects.get(business_id = business_id)
+                        payment_date = payment_obj.payment_created_date
+                        if payment_obj.total_amount:
+                            total_ser_cost = payment_obj.total_amount
+                        else:
+                            total_ser_cost = 0
+                        if payment_obj.paid_amount:   
+                            total_pay_amt = payment_obj.paid_amount
+                        else:
+                            total_pay_amt = 0
+
+                        advert_obj = AdvertSubscriptionMap.objects.get(business_id = business_id)
+                        
+                        advert_name = advert_obj.advert_id.advert_name
+                        category_level_1 = advert_obj.advert_id.category_level_1.category_name
+                        category_level_2 = advert_obj.advert_id.category_level_2.category_name
+
+                        consumer_data={
+                            'sales_by':sales_person_name,
+                            'title':advert_name,
+                            'busi_name':business_name,
+                            'Area':area,
+                            'City':city_place,
+                            'cat_L1':category_level_1,
+                            'cat_L2':category_level_2,
+                            'sold_date':'sws',
+                            'ser_cost':total_ser_cost,
+                            'pay_amt':total_pay_amt,
+                            'pay_date':payment_date
+                        }
+                        final_list.append(consumer_data)
+            data = {'success': 'true', 'data': final_list}
+        except Exception as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def get_new_sub_data(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            if request.GET.get('sales_nm'): 
+                from_date = request.GET.get('from_date')
+                to_date = request.GET.get('to_date')
+                from_date = datetime.strptime(from_date, "%d/%m/%Y")
+                to_date = datetime.strptime(to_date, "%d/%m/%Y") + timedelta(days=1)
+                from_date = from_date.strftime("%Y-%m-%d")
+                to_date = to_date.strftime("%Y-%m-%d")
+
+                Supplier_list = Supplier.objects.filter(supplier_created_date__range=[from_date, to_date],sales_person_name = request.GET.get('sales_nm'))
+                print Supplier_list
+
+                for supp_obj in Supplier_list:
+                    sales_person_name = supp_obj.sales_person_name
+                    area = supp_obj.area
+                    city_place = supp_obj.city_place_id.city_id.city_name
+                    business_name = supp_obj.business_name
+                    supplier_id = supp_obj.supplier_id
+
+                    business_list = Business.objects.filter(supplier = supplier_id)
+
+                    for bus_obj in  business_list:
+                        business_id = bus_obj.business_id
+
+                        advert_obj = AdvertSubscriptionMap.objects.get(business_id = business_id)
+                        
+                        status = advert_obj.advert_id.status
+                        if status == '1':
+                            category_level_1 = advert_obj.advert_id.category_level_1.category_name
+                            category_level_2 = advert_obj.advert_id.category_level_2.category_name
+                        else :
+                            category_level_1 = ''
+                            category_level_2 = ''
+
+                        consumer_data={
+                            'sales_by':sales_person_name,
+                            'busi_name':business_name,
+                            'Area':area,
+                            'City':city_place,
+                            'cat_L1':category_level_1,
+                            'cat_L2':category_level_2,
+                            'pend_pay':'sws'
+                        }
+                        final_list.append(consumer_data)
+            else :
+                from_date = request.GET.get('from_date')
+                to_date = request.GET.get('to_date')
+                print from_date,to_date
+                from_date = datetime.strptime(from_date, "%d/%m/%Y")
+                to_date = datetime.strptime(to_date, "%d/%m/%Y") + timedelta(days=1)
+                from_date = from_date.strftime("%Y-%m-%d")
+                to_date = to_date.strftime("%Y-%m-%d")
+
+                Supplier_list = Supplier.objects.filter(supplier_created_date__range=[from_date, to_date])
+                print Supplier_list
+
+                for supp_obj in Supplier_list:
+                    sales_person_name = supp_obj.sales_person_name
+                    area = supp_obj.area
+                    city_place = supp_obj.city_place_id.city_id.city_name
+                    business_name = supp_obj.business_name
+                    supplier_id = supp_obj.supplier_id
+
+                    business_list = Business.objects.filter(supplier = supplier_id)
+
+                    for bus_obj in  business_list:
+                        business_id = bus_obj.business_id
+
+                        advert_obj = AdvertSubscriptionMap.objects.get(business_id = business_id)
+                        
+                        status = advert_obj.advert_id.status
+                        if status == '1':
+                            category_level_1 = advert_obj.advert_id.category_level_1.category_name
+                            category_level_2 = advert_obj.advert_id.category_level_2.category_name
+                        else :
+                            category_level_1 = ''
+                            category_level_2 = ''
+
+                        consumer_data={
+                            'sales_by':sales_person_name,
+                            'busi_name':business_name,
+                            'Area':area,
+                            'City':city_place,
+                            'cat_L1':category_level_1,
+                            'cat_L2':category_level_2,
+                            'pend_pay':'sws'
+                        }
+                        final_list.append(consumer_data)
+            data = {'success': 'true', 'data': final_list}
+        except Exception as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
 

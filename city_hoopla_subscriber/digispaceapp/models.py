@@ -70,47 +70,6 @@ class Operator(User):
     def __unicode__(self):
         return unicode(self.operator_id)
 
-class ConsumerProfile(User):
-    consumer_id                        =       models.AutoField(primary_key=True, editable=False)
-    consumer_full_name                 =       models.CharField(max_length=100,default=None,blank=True,null=True)
-    consumer_contact_no                =       models.CharField(blank=True,null=True,max_length=200,default=None)
-    consumer_email_id                  =       models.CharField(blank=True,null=True,max_length=100,default=None)
-    consumer_status                    =       models.CharField(default="1",null=True,max_length=100, choices=status)
-    consumer_created_date              =       models.DateTimeField(null=True,blank=True)
-    consumer_created_by                =       models.CharField(max_length=100,null=True,blank=True)
-    consumer_updated_by                =       models.CharField(max_length=100,null=True,blank= True)
-    consumer_otp                       =       models.CharField(max_length=100,null=True,blank= True)
-    consumer_updated_date              =       models.DateTimeField(null=True,blank=True)
-    sign_up_source                     =       models.CharField(max_length=20,null=True,blank= True) 
-    consumer_profile_pic               =       models.ImageField("Image",upload_to=USER_IMAGES_PATH,max_length=500, default=None)
-    device_token                       =       models.CharField(max_length=20,null=True,blank= True)  
-    online                             =       models.CharField(default="1",null=True,max_length=100, choices=status) 
-    last_time_login                    =       models.DateTimeField(default=datetime.now,null=True,blank=True)
-    latitude                           =       models.FloatField(blank=True, null=True, max_length=20, default=None)
-    longitude                          =       models.FloatField(blank=True, null=True, max_length=20, default=None)
-    consumer_area                      =       models.CharField(max_length=100, default=None, blank=True, null=True)
-    user_verified                      =       models.CharField(default="false", null=True, max_length=100, choices=flag)
-    notification_status                =       models.CharField(default="true", null=True, max_length=100, choices=flag)
-    push_review_status                 =       models.CharField(default="true", null=True, max_length=100, choices=flag)
-    push_post_status                   =       models.CharField(default="true", null=True, max_length=100, choices=flag)
-    push_social_status                 =       models.CharField(default="true", null=True, max_length=100, choices=flag)
-    email_review_status                =       models.CharField(default="true", null=True, max_length=100, choices=flag)
-    newsletter_status                  =       models.CharField(default="true", null=True, max_length=100, choices=flag)
-    email_social_status                =       models.CharField(default="true", null=True, max_length=100, choices=flag)
-    no_of_login                        =       models.CharField(max_length=100, default=None, blank=True, null=True)
-        
-
-    def __unicode__(self):
-        return unicode(self.consumer_id)
-    
-class Consumer_Feedback(models.Model):
-    feedback_id                        =  models.AutoField(primary_key=True, editable=False)
-    consumer_id                        =  models.ForeignKey(ConsumerProfile,null=True,blank=True)
-    consumer_feedback                  =  models.CharField(max_length=1000,null=True,blank=True)    
-    
-    def __unicode__(self):
-        return unicode(self.feedback_id) 
-
 class Country(models.Model):
     country_id      =       models.AutoField(primary_key=True, editable=False)
     country_name    =       models.CharField(max_length=500,null=True,blank=True)
@@ -215,6 +174,49 @@ class Pincode(models.Model):
     def __unicode__(self):
         return unicode(self.pincode)
 
+class ConsumerProfile(User):
+    consumer_id                        =       models.AutoField(primary_key=True, editable=False)
+    consumer_full_name                 =       models.CharField(max_length=100,default=None,blank=True,null=True)
+    consumer_contact_no                =       models.CharField(blank=True,null=True,max_length=200,default=None)
+    consumer_email_id                  =       models.CharField(blank=True,null=True,max_length=100,default=None)
+    consumer_status                    =       models.CharField(default="1",null=True,max_length=100, choices=status)
+    consumer_created_date              =       models.DateTimeField(null=True,blank=True)
+    consumer_created_by                =       models.CharField(max_length=100,null=True,blank=True)
+    consumer_updated_by                =       models.CharField(max_length=100,null=True,blank= True)
+    consumer_otp                       =       models.CharField(max_length=100,null=True,blank= True)
+    consumer_updated_date              =       models.DateTimeField(null=True,blank=True)
+    sign_up_source                     =       models.CharField(max_length=20,null=True,blank= True) 
+    consumer_profile_pic               =       models.ImageField("Image",upload_to=USER_IMAGES_PATH,max_length=500, default=None)
+    device_token                       =       models.CharField(max_length=20,null=True,blank= True)  
+    online                             =       models.CharField(default="1",null=True,max_length=100, choices=status) 
+    last_time_login                    =       models.DateTimeField(default=datetime.now,null=True,blank=True)
+    latitude                           =       models.FloatField(blank=True, null=True, max_length=20, default=None)
+    longitude                          =       models.FloatField(blank=True, null=True, max_length=20, default=None)
+    consumer_area                      =       models.CharField(max_length=100, default=None, blank=True, null=True)
+    user_verified                      =       models.CharField(default="false", null=True, max_length=100, choices=flag)
+    notification_status                =       models.CharField(default="true", null=True, max_length=100, choices=flag)
+    push_review_status                 =       models.CharField(default="true", null=True, max_length=100, choices=flag)
+    push_post_status                   =       models.CharField(default="true", null=True, max_length=100, choices=flag)
+    push_social_status                 =       models.CharField(default="true", null=True, max_length=100, choices=flag)
+    email_review_status                =       models.CharField(default="true", null=True, max_length=100, choices=flag)
+    newsletter_status                  =       models.CharField(default="true", null=True, max_length=100, choices=flag)
+    email_social_status                =       models.CharField(default="true", null=True, max_length=100, choices=flag)
+    no_of_login                        =       models.CharField(max_length=100, default=None, blank=True, null=True)
+    city_place_id                      =       models.ForeignKey(City_Place,blank=True,null=True)    
+
+    def __unicode__(self):
+        return unicode(self.consumer_id)
+    
+class Consumer_Feedback(models.Model):
+    feedback_id                        =  models.AutoField(primary_key=True, editable=False)
+    consumer_id                        =  models.ForeignKey(ConsumerProfile,null=True,blank=True)
+    consumer_feedback                  =  models.CharField(max_length=1000,null=True,blank=True)    
+    
+    def __unicode__(self):
+        return unicode(self.feedback_id) 
+
+
+
 class UserRole(models.Model):
     role_id             	=       models.AutoField(primary_key=True, editable=False)
     role_name           	=       models.CharField(max_length=25)
@@ -240,8 +242,8 @@ class Privileges(models.Model):
 
 class UserProfile(User):
     user_id                        =       models.AutoField(primary_key=True, editable=False, blank=True)   
-    #user_first_name                      =       models.CharField(max_length=100,default=None,blank=True,null=True)
-    user_name                      =       models.CharField(max_length=100,default=None,blank=True,null=True)
+    user_first_name                =       models.CharField(max_length=100,default=None,blank=True,null=True)
+    user_last_name                 =       models.CharField(max_length=100,default=None,blank=True,null=True)
     user_contact_no                =       models.CharField(blank=True,null=True,max_length=200,default=None)
     usre_email_id                  =       models.CharField(blank=True,null=True,max_length=100,default=None)
     user_role                 	   =       models.ForeignKey(UserRole,blank=True,null=True)
@@ -253,7 +255,7 @@ class UserProfile(User):
 
 
     def __unicode__(self):
-        return unicode(self.user_name)
+        return unicode(self.usre_email_id)
 
 class Category(models.Model):
     category_id                 =       models.AutoField(primary_key=True, editable=False)
@@ -375,6 +377,9 @@ class Supplier(User):
     supplier_created_by                =       models.CharField(max_length=100,null=True,blank=True)
     supplier_updated_by                =       models.CharField(max_length=100,null=True,blank= True)
     supplier_updated_date              =       models.DateTimeField(null=True,blank=True)
+    sales_person_name                  =       models.CharField(blank=True,null=True,max_length=100,default=None)
+    sales_person_contact_number        =       models.CharField(blank=True,null=True,max_length=100,default=None)
+    sales_person_email                 =       models.CharField(blank=True,null=True,max_length=100,default=None)
     notification_status = models.CharField(default="true", null=True, max_length=100, choices=preference_status)
     reminders_status = models.CharField(default="true", null=True, max_length=100, choices=preference_status)
     discounts_status = models.CharField(default="true", null=True, max_length=100, choices=preference_status)
@@ -638,6 +643,7 @@ class Business(models.Model):
     business_updated_by         =       models.CharField(max_length=30,null=True,blank= True)
     business_updated_date       =       models.DateTimeField(default=datetime.now,null=True,blank=True)
     is_active       =      models.CharField(max_length=2,null=True,blank=True)
+    city_place_id                     = models.ForeignKey(City_Place,blank=True,null=True)
     def __unicode__(self):
         return unicode(self.business_id)
 
