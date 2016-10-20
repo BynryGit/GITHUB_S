@@ -17,7 +17,7 @@ License: You must have a valid license purchased only from themeforest(the above
     <!--<![endif]-->
     <!-- BEGIN HEAD -->
 {% load staticfiles %}
-    <head>
+     <head>
         <meta charset="utf-8" />
         <title>City Hoopla | Subscriber</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -25,43 +25,76 @@ License: You must have a valid license purchased only from themeforest(the above
         <meta content="" name="description" />
         <meta content="" name="author" />
         <!-- BEGIN GLOBAL MANDATORY STYLES -->
-        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
-        <link href="{% static 'assets/global/plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'assets/global/plugins/simple-line-icons/simple-line-icons.min.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'assets/global/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'assets/global/plugins/uniform/css/uniform.default.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css' %}" rel="stylesheet" type="text/css" />
-        <!-- END GLOBAL MANDATORY STYLES -->
-        <!-- BEGIN PAGE LEVEL PLUGINS -->
-        <link href="{% static 'assets/global/plugins/bootstrap-select/css/bootstrap-select.min.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'assets/global/plugins/jquery-multi-select/css/multi-select.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'assets/global/plugins/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'assets/global/plugins/select2/css/select2-bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
-           <link href="{% static 'assets/global/plugins/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'assets/global/plugins/select2/css/select2-bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
-        <!-- END PAGE LEVEL PLUGINS -->
-                <!-- BEGIN PAGE LEVEL PLUGINS -->
+            <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet"
+          type="text/css"/>
+    <link href="{% static 'assets/global/plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <link href="{% static 'assets/global/plugins/simple-line-icons/simple-line-icons.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <link href="{% static 'assets/global/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/global/plugins/uniform/css/uniform.default.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/global/plugins/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/global/plugins/select2/css/select2-bootstrap.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <!-- <link href="{% static 'assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css' %}" rel="stylesheet" type="text/css" /> -->
+    <link href="{% static 'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <link href="{% static 'assets/global/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <!-- END PAGE LEVEL PLUGINS -->
+    <!-- BEGIN THEME GLOBAL STYLES -->
+    <link href="{% static 'assets/global/css/components.min.css' %}" rel="stylesheet" id="style_components"
+          type="text/css"/>
+    <link href="{% static 'assets/global/css/plugins.min.css' %}" rel="stylesheet" type="text/css"/>
+    <!-- END THEME GLOBAL STYLES -->
+    <!-- BEGIN THEME LAYOUT STYLES -->
+    <link href="{% static 'assets/layouts/layout2/css/layout.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/layouts/layout2/css/themes/blue.min.css' %}" rel="stylesheet" type="text/css"
+          id="style_color"/>
+    <link href="{% static 'assets/layouts/layout2/css/custom.min.css' %}" rel="stylesheet" type="text/css"/>
+
+    <link href="{% static 'vendor/bootstrap-fileinput/jasny-bootstrap.min.css' %}" rel="stylesheet" media="screen">
 
 
-        <!-- END PAGE LEVEL PLUGINS -->
-        <!-- BEGIN THEME GLOBAL STYLES -->
-        <link href="{% static 'assets/global/css/components.min.css' %}" rel="stylesheet" id="style_components" type="text/css" />
-        <link href="{% static 'assets/global/css/plugins.min.css' %}" rel="stylesheet" type="text/css" />
-        <!-- END THEME GLOBAL STYLES -->
-        <!-- BEGIN THEME LAYOUT STYLES -->
-        <link href="{% static 'assets/layouts/layout2/css/layout.min.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'assets/layouts/layout2/css/themes/blue.min.css' %}" rel="stylesheet" type="text/css" id="style_color" />
-        <link href="{% static 'assets/layouts/layout2/css/custom.min.css' %}" rel="stylesheet" type="text/css" />
-	     <link href="{% static 'assets/global/plugins/datatables/datatables.min.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css' %}" rel="stylesheet" type="text/css" />
-          
+    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2016.2.504/styles/kendo.common-material.min.css"/>
+    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2016.2.504/styles/kendo.material.min.css"/>
+
+    <link href="{% static 'assets/pages/css/dropzone.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/bootstrap-tagsinput.css' %}" rel="stylesheet" type="text/css"/>
         <!-- END THEME LAYOUT STYLES -->
 
 
     
 
     <!-- END HEAD -->
+
     <style type="text/css">
+
+.border_s{
+
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+.fa-lg {
+    font-size: 2.333333em;
+    line-height: .75em;
+    vertical-align: -15%;
+}
+
+div.checker span {
+    display: -moz-inline-box;
+    display: inline-block;
+    zoom: 1;
+    text-align: center;
+    background-position: 0 -260px;
+
+}
+
 #processing{
     height: 100vh;
     position: fixed;
@@ -80,54 +113,174 @@ License: You must have a valid license purchased only from themeforest(the above
 }
 
 #loading{
-	width: 36%;
-	height: 22px;
-	position: absolute;
-	top: 26%;
-	left: 32%;
-	margin: -28px 0px 0px -25px;
-	text-align: center;
-	font-size: 13px;
-	font-weight: 500;
-	color: #000;
+    width: 36%;
+    height: 22px;
+    position: absolute;
+    top: 26%;
+    left: 32%;
+    margin: -28px 0px 0px -25px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: #000;
 }
 
-		div.dataTables_wrapper div.dataTables_info {
-    padding-top: 8px;
-    white-space: nowrap;
-    display: none;
-}
-div.dataTables_wrapper div.dataTables_length label {
-    font-weight: normal;
-    text-align: left;
-    white-space: nowrap;
-    display: none;
+.done_btn{
+    color: rgb(255, 255, 255);
+    border-radius: 20px !important;
+    background-color: #0d67e6;
+    background-image: url(images/linear_bg_1.png);
+    background-repeat: repeat-y;
+
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* IE 10 */
+    background: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
 }
 
-div.dataTables_filter label {
-    font-weight: normal;
-    white-space: nowrap;
-    text-align: left;
-    display: none;
+.form-height{
+height: 65px;
 }
 
-#user_table tr td , #user_table th{
-	text-align: center;
+.user-image img {
+    max-width: 100%;
 }
 
-.page-header.navbar .page-logo .logo-default {
-    margin: 2px 0 0;
-    width: 105px;
-    background: rgba(255, 255, 255, 0.48);
+.fileinput .thumbnail>img {
+    height: 178px !important;
 }
 
-.page-header.navbar .page-logo {
-  /* fallback */
+.fileinput-preview.thumbnail {
+    max-width: 278px;
+}
+
+.bootstrap-tagsinput {
+    line-height: 35px;
+    width: 980px;
+}
+
+.error{
+    font-weight: 400;
+    font-style: normal;
+    font-size: 12px;
+}
+
+.portlet.light {
+    <!--padding: 0px 0px 4px;-->
+    <!--background-color: #eef1f5;-->
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #6B6B6B;
+    border-bottom: 0;
+}
+
+.div-border-top{
+    border: 1px solid #cccccc;
+    border-bottom: none;
+}
+
+.div-border-bottom{
+    border: 1px solid #cccccc;
+    border-top: none;
+}
+
+.div-border-left-right{
+    border: 1px solid #cccccc;
+    border-top: none;
+    border-bottom: none;
+}
+
+.div-border{
+    border: 1px solid #cccccc;
+}
+
+.div-color{
+    background-color: rgb(243, 242, 242);
+    border: 2px solid rgb(204, 204, 204) !important;
+    border-radius: 10px !important;
+    margin-right: 0.5%;
+    margin-left: 0.5%;
+    margin-bottom: 1%;
+}
+
+
+@media (min-width:992px) {
+    .col-md-3 {
+        width:24% !important;
+    }
+    /*.col-xs-6 {
+        width: 46% !important;
+    }*/
+}
+
+.page-sidebar .page-sidebar-menu > li > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li > a {
+    min-height: 74px;
+}
+
+.form-control {
+    border: 1px solid #c0c0c0;
+}
+
+.brad-crum-1{
+    font-size:16px;
+    color: #3eb199;
+}
+
+.brad-crum-2{
+    font-size:16px;
+    color: #00448b;
+}
+
+.brad-crum-3{
+    font-size:16px;
+    color: #00448b;
+    font-weight:700;
+}
+
+.grey_color{
+    border: 1px solid rgb(72, 72, 72);
+    color: rgb(255, 255, 255);
+    background: rgb(72, 72, 72) none repeat scroll 0% 0%;
+    border-radius: 20px !important;
+}
+
+
+.page-header.navbar .menu-toggler {
+    background-image: url(/static/assets/layouts/layout2/img/sidebar_toggler_icon_blue.png);
+}
+
+.fa-filter{
+color: #3eb199;
+}
+a {
+    color: #3eb199;
+}
+
+
+.btn-default-add {
+    color: #ffffff;
+    font-size: 16px;
+    border-radius: 19px !important;
   background-color: #0d67e6;
-  background-image: url(images/linear_bg_1.png);
-  background-repeat: repeat-y;
-
-  /* Safari 4-5, Chrome 1-9 */
+      /* Safari 4-5, Chrome 1-9 */
   background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a));
 
   /* Safari 5.1, Chrome 10+ */
@@ -141,48 +294,72 @@ div.dataTables_filter label {
 
   /* Opera 11.10+ */
   background: -o-linear-gradient(left, #0d67e6, #11ca9a);
+    
 }
 
-@media (max-width: 767px){
-.page-header.navbar {
-     background-color: #0d67e6;
-  background-image: url(images/linear_bg_1.png);
-  background-repeat: repeat-y;
-
-  /* Safari 4-5, Chrome 1-9 */
-  background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a));
-
-  /* Safari 5.1, Chrome 10+ */
-  background: -webkit-linear-gradient(left, #0d67e6, #11ca9a);
-
-  /* Firefox 3.6+ */
-  background: -moz-linear-gradient(left, #0d67e6, #11ca9a);
-
-  /* IE 10 */
-  background: -ms-linear-gradient(left, #0d67e6, #11ca9a);
-
-  /* Opera 11.10+ */
-  background: -o-linear-gradient(left, #0d67e6, #11ca9a);
-}
+.fa-plus{
+color: #ffffff;
 }
 
+.fa-plus:hover{
+color: #ffffff;
+}
 
-	</style>
+.fa-pencil:hover {
+    color: #3eb199;
+}
+
+.fa-trash-o:hover {
+    color: #3eb199;
+}
+
+.fa-lg {
+    font-size: 1.83333em;
+    line-height: 0.75em;
+    vertical-align: -112%;
+}
+.center-align{
+color:#ffffff;
+font-size: 16px; 
+font-weight:500;
+vertical-align: -moz-middle-with-baseline;
+vertical-align: -webkit-baseline-middle;
+}   
+.center-align-active{
+
+vertical-align: -moz-middle-with-baseline;
+vertical-align: -webkit-baseline-middle;
+} 
+
+.fa-lg-p {
+    font-size: 1.83333em;
+    line-height: 0.75em;
+    vertical-align: -100%;
+}
+
+    </style>
+
 
      <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
+		<!-- <div id="processing" style="display:none;">
+		    <div id="loading">
+		        <img src="../assets/loading-bars.gif" style="height : 100px;">
+		
+		    </div>
+		</div> -->
         <!-- BEGIN HEADER -->
-			<div id="processing" style="display:none;">
+        <div id="processing" style="display:none;">
 				<div id="loading">
 					<img  src="{% static 'assets/loading-bars.gif' %}" style="height : 100px;">
 					
 				</div>	
-  			</div>       
+  			</div>
         <div class="page-header navbar navbar-fixed-top">
                  <!-- BEGIN HEADER INNER -->
             <div class="page-header-inner ">
                 <!-- BEGIN LOGO -->
                 <div class="page-logo">
-                    <a href="/dashboard/">
+                    <a href="index.html">
                          <img src="{% static 'assets/layouts/layout2/img/City_Hoopla_Logo.png' %}" alt="logo" class="logo-default" /> </a>
                     <div class="menu-toggler sidebar-toggler">
                         <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
@@ -195,125 +372,39 @@ div.dataTables_filter label {
                 <!-- BEGIN PAGE TOP -->
                 <div class="page-top">
                     <!-- BEGIN TOP NAVIGATION MENU -->
+                  <!--  <div class="input-group form-group" style="width: 257px;float: left; padding-left: 10px; padding-top: 17px;">
+                             <span class="input-group-btn">
+										<span style="border: none !important;"  class="btn btn btn-default">
+	                                        <span class="fa fa-search"></span>
+	                                    </span>
+									</span>
+                             <input style="border: none !important; padding-left: 0px ; font-family: 'Roboto Light', 'Roboto';" type="text" class="form-control " id="txtSearch"
+                                    placeholder="Search " name="s">
+									
+                         </div> -->
                     <div class="top-menu">
                         <ul class="nav navbar-nav pull-right">
-                            <!-- BEGIN NOTIFICATION DROPDOWN -->
-                            <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                            <!-- <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
-                                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                                    <i class="icon-bell"></i>
-                                    <span class="badge badge-default"> 7 </span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li class="external">
-                                        <h3>
-                                            <span class="bold">12 pending</span> notifications</h3>
-                                        <a href="page_user_profile_1.html">view all</a>
-                                    </li>
-                                    <li>
-                                        <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <span class="time">just now</span>
-                                                    <span class="details">
-                                                        <span class="label label-sm label-icon label-success">
-                                                            <i class="fa fa-plus"></i>
-                                                        </span> New user registered. </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <span class="time">3 mins</span>
-                                                    <span class="details">
-                                                        <span class="label label-sm label-icon label-danger">
-                                                            <i class="fa fa-bolt"></i>
-                                                        </span> Server #12 overloaded. </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <span class="time">10 mins</span>
-                                                    <span class="details">
-                                                        <span class="label label-sm label-icon label-warning">
-                                                            <i class="fa fa-bell-o"></i>
-                                                        </span> Server #2 not responding. </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <span class="time">14 hrs</span>
-                                                    <span class="details">
-                                                        <span class="label label-sm label-icon label-info">
-                                                            <i class="fa fa-bullhorn"></i>
-                                                        </span> Application error. </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <span class="time">2 days</span>
-                                                    <span class="details">
-                                                        <span class="label label-sm label-icon label-danger">
-                                                            <i class="fa fa-bolt"></i>
-                                                        </span> Database overloaded 68%. </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <span class="time">3 days</span>
-                                                    <span class="details">
-                                                        <span class="label label-sm label-icon label-danger">
-                                                            <i class="fa fa-bolt"></i>
-                                                        </span> A user IP blocked. </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <span class="time">4 days</span>
-                                                    <span class="details">
-                                                        <span class="label label-sm label-icon label-warning">
-                                                            <i class="fa fa-bell-o"></i>
-                                                        </span> Storage Server #4 not responding dfdfdfd. </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <span class="time">5 days</span>
-                                                    <span class="details">
-                                                        <span class="label label-sm label-icon label-info">
-                                                            <i class="fa fa-bullhorn"></i>
-                                                        </span> System Error. </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">
-                                                    <span class="time">9 days</span>
-                                                    <span class="details">
-                                                        <span class="label label-sm label-icon label-danger">
-                                                            <i class="fa fa-bolt"></i>
-                                                        </span> Storage server failed. </span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li> -->
-                            <!-- END NOTIFICATION DROPDOWN -->   
+                           <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+				                   <!--  <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+				                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
+				                           data-close-others="true">
+				                            <i class="icon-bell"></i>
+				                            <span class="badge badge-default" style="    background-color: #d22917;"> 7 </span>
+				                        </a>
+				                    </li> -->
+                    			<!-- END NOTIFICATION DROPDOWN -->
                             <!-- BEGIN USER LOGIN DROPDOWN -->
                             <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                             <li class="dropdown dropdown-user">
                                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                                  <!--   <img alt="" class="img-circle" src="{% static 'assets/layouts/layout2/img/avatar3_small.jpg' %}" /> -->
+                                    <!-- <img alt="" style="width: 40px;" alt="" class="img-circle" src="{% static 'assets/layouts/layout2/img/avatar3_small.jpg' %}" /> -->
                                     <span class="username username-hide-on-mobile"> {{ username }} </span>
                                     <i class="fa fa-angle-down"></i>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-default">
-                                    <!-- <li>
-                                        <a href="page_user_profile_1.html">
-                                            <i class="icon-user"></i> My Profile </a>
-                                    </li> -->
                                     <li>
                                         <a href="/log-out/">
-                                            <i class="icon-key"></i> Log Out </a>
+                                        <i class="icon-key"></i> Log Out </a>
                                     </li>
                                 </ul>
                             </li>
@@ -333,378 +424,191 @@ div.dataTables_filter label {
         <!-- BEGIN CONTAINER -->
         <div class="page-container">
             <!-- BEGIN SIDEBAR -->
-            <div class="page-sidebar-wrapper">
-                <!-- END SIDEBAR -->
-                <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
-                <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+             <div class="page-sidebar-wrapper">
                 <div class="page-sidebar navbar-collapse collapse">
-                    <!-- BEGIN SIDEBAR MENU -->
-                    <!-- DOC: Apply "page-sidebar-menu-light" class right after "page-sidebar-menu" to enable light sidebar menu style(without borders) -->
-                    <!-- DOC: Apply "page-sidebar-menu-hover-submenu" class right after "page-sidebar-menu" to enable hoverable(hover vs accordion) sub menu mode -->
-                    <!-- DOC: Apply "page-sidebar-menu-closed" class right after "page-sidebar-menu" to collapse("page-sidebar-closed" class must be applied to the body element) the sidebar sub menu mode -->
-                    <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
-                    <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
-                    <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
                     {% include 'Admin/side-panel.html' %}
-                    <!-- END SIDEBAR MENU -->
                 </div>
-                <!-- END SIDEBAR -->
             </div>
             <!-- END SIDEBAR -->
             <!-- BEGIN CONTENT -->
             <div class="page-content-wrapper">
-                <!-- BEGIN CONTENT BODY -->
-                <div class="page-content">
-                		<h3 class="page-title"> Subscribers
-                    </h3>
-                    <!-- BEGIN PAGE HEADER-->
-                   <div class="page-bar">
-                        <ul class="page-breadcrumb">
-                          <li>
-                                Customers
-                                <i class="fa fa-angle-right"></i>
-                            </li>
-                            <li>
-                                Subscribers
-                                <i class="fa fa-angle-right"></i>
-                            </li>
-                            <li>
-                                <span>View</span>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <!-- END PAGE HEADER-->
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="portlet light  ">
-                                 <div class="portlet-title">
-                                    <div class="caption">
-                                        <i class="icon-social-dribbble font-green"></i>
-                                        <span class="caption-subject font-green bold uppercase">Subscribers List</span>
-                                    </div>
-                                    <!-- <div class="actions">
-                                        <div class="btn-group btn-group-devided" data-toggle="buttons">
-                                            <label class="btn btn-transparent dark btn-outline btn-circle btn-sm ">
-                                                <input type="radio" name="options" class="toggle" id="option1">Actions</label>
-                                            <label class="btn btn-transparent dark btn-outline btn-circle btn-sm">
-                                                <input type="radio" name="options" class="toggle" id="option2">Settings</label>
+        <!-- BEGIN CONTENT BODY -->
+        <div class="page-content">
+
+            <!-- END PAGE HEADER-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="portlet light  ">
+                        <div class="portlet-body form">
+                            <!-- BEGIN FORM-->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <!-- <a href="#" class="brad-crum-1">{{advert_name}}</a> 
+                                    <i class="fa fa-angle-right"></i> -->
+                                    <span class="brad-crum-2">Subscriber</span>
+                                    <div class="portlet-body">
+                                        <div class="row " >
+	                                			<div class="col-lg-3 col-md-3 form-group" >
+	                                       	  <div class="input-group form-group" style="width: 224px;margin-top: 0px;">
+						                                <span class="input-group-btn">
+						                                    <span style=" height: 34px;"
+						                                          class="btn btn btn-default">
+						                                        <span class="fa fa-search"></span>
+						                                    </span>
+						                                </span>
+						                                <input style=" font-size: 14px; " type="text"
+						                                       class="form-control " id="txtSearch"
+						                                       placeholder="Search Subscriber" name="s">
+						                            </div>	
+	                                        </div>
+	                                        
+	                                        <div class="col-lg-1"
+						                             style="border: none !important;  margin-top: 7px;font-size: 16px; padding: 0px;">
+						                            <span>Sort By:  </span>
+						                        </div>
+		                                
+                                   			<div class="form-group col-lg-3 col-md-3" >
+                                   				<select id="sortby" onchange="sort_by()" class="form-control sel2" style="color: #797979;">
+						                                {% if sort_by != "oldest_first"%}
+						                                <option style="font-size: 14px" selected value="newest_first">Newest First</option>
+						                                {% else %}
+						                                <option style="font-size: 14px" value="newest_first">Newest First</option>
+						                                {% endif %}
+						                                {% if sort_by == "oldest_first"%}
+						                                    <option style="font-size: 14px" selected value="oldest_first">Oldest First</option>
+						                                {% else %}
+						                                    <option style="font-size: 14px" value="oldest_first">Oldest First</option>
+						                                {% endif %}
+						                            </select>
+                                     		</div> 
+                                     		
+		                                		<div class="col-lg-2	col-md-2 form-group" style="margin-top: 0.5% ! important;">
+		                                			<span >
+																<i class="fa fa-filter "   aria-hidden="true"></i>
+                                               <a data-toggle="modal"  href="#createNew" type="submit">Filters</a>
+                                             </span>  
+		                                		</div>
+		                                		
+		                                		<div class=" col-lg-3 col-md-3 form-group">
+				                                    <div class="pull-right">
+				                                        <a class="btn btn-default-add"  href="/add-subscriber/" > Add Subscriber</a>
+				                                   	</div>
+				                                </div>
+		                    					</div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                           
+                                            {% for subscriber in subscriber_list %}
+                                                <div class="col-md-3 col-sm-3  div-color connect-cat">    
+                                                    <div class="row">
+	                                            				<div class="col-md-2 col-sm-2 " style="background-color:red;border-top-left-radius: 9px !important;padding-top: 32px !important;height: 88px !important;">
+	                                            					<span style="color:#ffffff;font-size: 14px;font-weight:700; " class="id">{{ subscriber.subscriber_id }}</span>
+	                                            				</div>
+	                                            				<div class="col-md-6 col-sm-6 " style="padding-top: 8px !important;">
+	                                            					<span style="color:#00448b;font-size: 14px;font-weight:700; " class="bname">{{ subscriber.business_name }}</span><br>
+	                                            					<span style="font-weight:500;" class="city_name">{{ subscriber.subscriber_city }}
+	                                            					</span>
+	                                            				</div>
+	                                            				
+	                                            						
+												                          
+												                           {% if subscriber.status == '0' %}
+												                           <div class="col-md-4 col-sm-4 " style=" padding-top: 11px !important;">
+	                                            							<div class="pull-right">
+												                         			<a class="fa fa fa-repeat" onclick="active_subscriber({{subscriber.subscriber_id}})" style="color:#3eb199; font-size:17px;"
+												                                                       ></a>
+												                         		</div>
+												                           </div>                            
+												                         {% else %}
+												                         <div class="col-md-4 col-sm-4 " style=" padding-top: 4px !important;">
+	                                            							<div class="pull-right">
+												                          		<a class="fa fa-pencil" href="/edit-subscriber/?subscriber_id= {{subscriber.subscriber_id}}" style="color:#3eb199; font-size:17px;"
+												                                                       ></a>
+												                           		<span style="font-size:20px;">|</span>
+												                         		<a class="fa fa-trash-o" onclick="delete_user_detail({{subscriber.subscriber_id}})" style="color:#3eb199; font-size:17px;"
+												                                                       ></a>
+												                          </div>	
+                                            			 			</div>                             
+												                          {% endif %} 
+												                                                      
+	                                            					</div>
+	                                            				
+                                                    <div class="row">
+                                                        <div class="col-md-12 col-xs-12" >
+                                                            <!-- <div class="row"
+                                                                style="text-align:center">
+                                                                <b> <span> Coupon ID - </span><span class="coupon_code">{{coupons.coupon_code}}</span> </b>
+                                                            </div> -->
+
+                                                            <div class="row"
+                                                                 style="text-align:center">
+                                                                <div class="item_image" style="text-align:center">
+                                                                    <img src="{{ subscriber.logo }}"
+                                                                         style="width: 100%; height: 180px !important;"
+                                                                         class="img-responsive"> </img>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div  style="font-size: 14px; font-weight:500;margin-top: -10px !important;">
+                                                            <br><span style="font-weight:700;" class="user_name">{{ subscriber.subscriber_name }}</span> 
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                         					<div class="col-md-12">
+                                         						<span style="font-size: 14px; font-weight:500" class="user_contact">{{ subscriber.user_contact_no }}
+                                         						</span>
+                                         					</div>
+                                         					<div class="col-md-12">
+                                         						<span style="font-size: 14px; font-weight:500" class="user_email">{{ subscriber.user_email_id }}
+                                         						</span>
+                                         					</div>
+                                            			</div>
+                                            			{% if subscriber.status == '1' %}
+                                            			<div class="row"  style="background-color:#3eb199;border-bottom-right-radius: 8px !important;border-bottom-left-radius: 8px !important;height:40px !important;margin-top: 10px !important;">
+                                         					<div class="col-md-2 col-sm-2 col-xs-2">
+                                         						<span class="center-align-active" style="color:#ffffff;font-size: 16px; font-weight:900">{{ subscriber.advert_count }}</span>
+                                         					</div>
+                                         					<div class="col-md-8 col-sm-8 col-xs-8">
+                                         						<span class="center-align">Active Adverts</span>
+                                         					</div>
+                                         					<div class="col-md-2 col-sm-2 col-xs-2">		
+                                                 			<a class="fa  fa-plus fa-lg-p" href ="/advert-management/?subscriber_id={{subscriber.subscriber_id}}"></a>
+                                            				</div>
+                                            			</div>
+                                            			{% else %}
+                                            			<div class="row"  style="background-color:lightgrey;border-bottom-right-radius: 8px !important;border-bottom-left-radius: 8px !important;height:40px !important;margin-top: 10px !important;">
+                                         					
+                                            			</div>
+                                            			{% endif %}
+                                                </div>
+                                                {% endfor %}
+                                                
+                                                                                                
+                                                
+                                            </div>
                                         </div>
-                                    </div> -->
-                                    <!-- <div class="actions">
-                                        <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;">
-                                            <i class="icon-cloud-upload"></i>
-                                        </a>
-                                        <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;">
-                                            <i class="icon-wrench"></i>
-                                        </a>
-                                        <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;">
-                                            <i class="icon-trash"></i>
-                                        </a>
-                                    </div> -->
-                                </div> 
-                                <div class="portlet-body form">
-                                    <!-- BEGIN FORM-->
-                                    <form action="" >
-                                        	<div class="row ">
-				                                <div class="col-lg-10 form-group">
-				                                    <form action="">
-				                                        <div class="input-group form-group">
-				                                            <input type="text" class="form-control " id="txtSearch"
-				                                                   placeholder="Search Subscriber" name="s"/>
-																		<span class="input-group-btn">
-																			<span class="btn btn btn-default">
-										                                        <span class="fa fa-search"></span>
-										                                    </span>
-																		</span>
-				                                        </div>
-				                                    </form>
-				                                </div>
-				                                <div class="col-lg-2 form-group">
-				                                    <div  class="pull-right ">
- 																	<a class="btn btn-success"  href="/add-subscriber/" > Add Subscriber</a>
-				                                    </div>
-				                                </div>
-                            					</div>
-                                    </form>
-                                    <div class="row">
-                                    	<div class="col-lg-12">
-                                    			<div class="portlet-body">
-				                     
-                                    <table class="table table-striped table-bordered table-hover table-checkable order-column" id="user_table">
-                                        <thead>
-                                            <tr >
-                                                <th style="width:15%";> Subscriber ID </th>
-                                                <th style="width:10%";> Business Name </th>
-                                                <th style="width:15%";> PoC </th>
-                                                <th style="width:30%";> Phone,Email </th>
-                                                <th style="width:10%";> City </th>
-                                                <th style="width:8%";> Status </th>
-                                                <th  style="text-align: center; width:12%"> Action </th>
-                                            </tr>
-                                        </thead>
-
-
-                                    	 	</table> 	
-                                    	</div>
+                                        
                                     </div>
-                                    <!-- END FORM-->
                                 </div>
+                                <!-- END FORM-->
                             </div>
-                            <!-- END PORTLET-->
                         </div>
+                        <!-- END PORTLET-->
                     </div>
                 </div>
-                <!-- END CONTENT BODY -->
             </div>
-            <!-- END CONTENT -->
+            <!-- END CONTENT BODY -->
         </div>
-       </div> 
-        <!-- END CONTAINER -->
-        <!-- /.modal -->
-            <div  class="modal fade bs-modal-lg" id="large" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                            <h4 class="modal-title">Add Subscriber</h4>
-                        </div>
-                        <div class="modal-body"> 
-                			<form id="add_new_userform"  method="POST">    								
-    								{%csrf_token%}                       	
-                        	<div class="row">
-				                 <div class="form-group col-md-4 ">
-			                      <label for="">Username</label>
-			                      <input  type="text" id="username" class="form-control" placeholder="Username" name="username">
-	                    			<label class="error" style="color:red; display:none;"></label>																							
-	                    		  </div>
-	                    		  
-	                    		  <div class="form-group col-md-4 ">
-			                      <label for="">Contact No</label>
-			                      <input id="contact_no" maxlength="10" type="text" class="form-control" pattern="[0-9]{10}" name="contact_no" placeholder="Contact No">
-	                    				<label class="error" style="color:red; display:none;"></label>																							
-	                    		  </div>
-	                    		  
-	                    		   <div class="form-group col-md-4 ">
-			                      <label for="">Email ID</label>
-			                      <input id="email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" name="email" class="form-control" placeholder="Email ID">
-	                    				<label class="error" style="color:red; display:none;"></label>																							
+        <!-- END CONTENT -->
+    </div>             
+</div>
+            
+<!-- END CONTAINER -->
 
-	                    		  </div>
-                    			</div> 
-                    			 
-								<div class="row">
-                    		  <div class="form-group col-md-4 ">
-		                      <label >Role </label>                              
-                                  <select id="user_role" class="form-control select2me" name="user_role">
- 		                		<option value="">Select Role</option>
-			                		{%for user_role  in user_role_list%}
-			                		<option value={{user_role.role_id}}>{{user_role.role_name}}</option>
-			                		{%endfor%}
-		                                 </select>
-										<label class="error" style="color:red; display:none;"></label>	                    			
-                    			</div>
-                    			
-                    			<div class="form-group col-md-4 ">
-			                      <label for="">Password</label>
-			                      <input id="password" type="password" class="form-control" name="password" placeholder="Password">
-										<label class="error" style="color:red; display:none;"></label>	
-
-	                    		  </div>
-	                    		  
-	                    		  <div class="form-group col-md-4 ">
-			                      <label for="">Confirm Password</label>
-			                      <input id="re-password" type="password" class="form-control" name="re-password" placeholder="Confirm Password">
-										<label class="error" style="color:red; display:none;"></label>	
-	                    		  </div>
-                    		</div>	
-                         
-                        <div class="modal-footer">
-                           <input value="Save" onclick="user_register()" type="button"  class="btn green">
-                            <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
-                        </div>
-							</form>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
-          </div> 
-          
-		<div  class="modal fade bs-modal-lg" id="edit-user" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                            <h4 class="modal-title">Edit User</h4>
-                        </div>
-                        <div class="modal-body"> 
-                			<form id="edit_user"  method="POST">    								
-    								{%csrf_token%}                       	
-                        	<div class="row">
-				                 <div class="form-group col-md-4 ">
-			                      <label for="">Username</label>
-			                      <input id="e_username" required  type="text" required class="form-control" placeholder="Username" name="e_username">
-										<div class="help-block with-errors"></div>	                    		  
-	                    		  </div>
-	                    		  
-	                    		  <div class="form-group col-md-4 ">
-			                      <label for="">Contact No</label>
-			                      <input id="e_contact_no" required type="text" class="form-control" pattern="[0-9]{10}" name="e_contact_no" placeholder="Contact No">
-										<div class="help-block with-errors"></div>
-	                    		  </div>
-	                    		  
-	                    		   <div class="form-group col-md-4 ">
-			                      <label for="">Email ID</label>
-			                      <input id="e_email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" name="e_email" class="form-control" placeholder="Email ID">
-										<div class="help-block with-errors"></div>
-
-	                    		  </div>
-                    			</div> 
-                    			 
-								<div class="row">
-                    		  <div class="form-group col-md-4 ">
-		                      <label >Role </label>                              
-                                  <select id="e_user_role" class="form-control select2me" name="e_user_role">
- 		                		<option value="">Select Role</option>
-			                		{%for user_role  in user_role_list%}
-			                		<option value={{user_role.role_id}}>{{user_role.role_name}}</option>
-			                		{%endfor%}
-		                                 </select>
-                    			</div>
-                    			
-                    			<div class="form-group col-md-4 ">
-			                      <label for="">Old Password</label>
-			                      <input id="e_password" type="password" class="form-control" name="e_password" placeholder="Old Password">
-										<div class="help-block with-errors"></div>
-
-	                    		  </div>
-	                    		  
-	                    		  <div class="form-group col-md-4 ">
-			                      <label for="">New Password</label>
-			                      <input id="e_re-password" type="password" class="form-control" name="e_re-password" placeholder="New Password">
-										<div class="help-block with-errors"></div>
-	                    		  </div>
-                    		</div>	
-								<div class="row">
-                   		  <div class="form-group col-md-4 ">
-			                      <label for="">Confirm Password</label>
-			                      <input id="e_cnf-password" type="password" class="form-control" name="e_cnf-password" placeholder="Confirm Password">
-										<div class="help-block with-errors"></div>
-	                    		  </div>
-								</div>                         
-                         
-                        <div class="modal-footer">
-                            <button type="submit" class="btn green">Save</button>
-                            <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
-                        </div>
-							</form>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
-          </div>           
-           
-      	<!-- /.modal -->
-		<div style="overflow-y:hidden;" id="pwd_macth" class="modal fade" role="dialog">
-		        <div class="modal-dialog">
-		
-		            <!-- Modal content-->
-		            <div class="modal-content">
-		                <div class="modal-header">
-		                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-		                </div>
-		                <div class="modal-body">
-		                    <div class="row">
-		                        <div class="col-lg-8">
-		                            Passwords Don't Match
-		                    </div>
-		                        </div>        
-		                        </div>
-		                
-		                <div class="modal-footer">
-		                    <div class="row">
-		                        <div class="col-md-offset-5 col-md-2">
-		                        <button type="button" class="btn green" data-dismiss="modal">OK</button>
-		                            <!-- <input data-dismiss="modal" value="OK"  
-		                            class="btn btn-primary" id="btn-loading-demo"> -->
-		                        </div>
-		                    </div>
-		                </div>
-		
-		            </div>
-		
-		        </div>
-		    </div>        
-      
-      <div class="modal fade draggable-modal" id="delete_user" tabindex="-1" role="basic" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                    <div class="modal-header">
-
-                    		<img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
-
-                </div>                                                
-                        <div class="modal-body">
-
-                <div class="form-body">
-                    <h4 class="text-center">Do you want to deactivate subscriber profile?</h4>
-                        </div>
-                        <div style="text-align:center !important;" class="modal-footer">
-                        <button type="button" onclick="inactive_user()" class="btn green">Yes</button>
-                        <button type="button" class="btn green" data-dismiss="modal">No</button>
-                            
-                        </div>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
-        </div>   
-       <div class="modal fade draggable-modal" id="remove_user" tabindex="-1" role="basic" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                    <div class="modal-header">
-
-                    		<img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
-
-                </div>                                                
-                        <div class="modal-body">
-
-                <div class="form-body">
-                    <h4 class="text-center">Subscriber profile deactivated successfully</h4>
-                        </div>
-                        <div style="text-align:center !important;" class="modal-footer">
-                        <button type="button" onclick="location.reload()" class="btn green" data-dismiss="modal">OK</button>
-
-                            
-                        </div>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
-        </div> 
-         
-    <div class="modal fade draggable-modal" id="error-modal" tabindex="-1" role="basic" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">                                                
-                        <div class="modal-body">
-
-                <div class="form-body">
-                    <h4 class="text-center">Username already exists</h4>
-                        </div>
-                        <div style="text-align:center !important;" class="modal-footer">
-                        <button type="button" class="btn green" data-dismiss="modal">OK</button>
-                            
-                        </div>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
-        </div>    
         <!-- BEGIN FOOTER -->
         <div class="page-footer">
             <div class="page-footer-inner"> 2016 &copy; DigiSpace.
@@ -713,77 +617,14 @@ div.dataTables_filter label {
                 <i class="icon-arrow-up"></i>
             </div>
         </div>
-
- <div class="modal fade draggable-modal" id="update_user" role="basic" aria-hidden="true">
-       <div class="modal-dialog">
-           <div class="modal-content">                                                
-               <div class="modal-body">
-
-                		<div class="form-body">
-                   		<h4 class="text-center">User updated successfully</h4>
-                     </div>
-                     <div style="text-align:center !important;" class="modal-footer">
-                     	<button type="button" onclick="location.reload()" class="btn green" data-dismiss="modal">OK</button>
-                     </div>
-              </div>
-           </div>
-      </div>
-    </div> 
-
-<div style="overflow-y:hidden;" id="pwd_null" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <label id="pwd_msg" ></label>
-                    </div>
-                        </div>        
-                        </div>
-                
-                <div class="modal-footer">
-                    <div class="row">
-                        <div class="col-md-offset-5 col-md-2">
-                            <input data-dismiss="modal" type="submit" value="OK"
-                                   class="btn btn-primary" id="btn-loading-demo">
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-    </div> 
- <div class="modal fade draggable-modal" id="error-modal" tabindex="-1" role="basic" aria-hidden="true">
+        <!-- END FOOTER -->
+         <div class="modal fade draggable-modal" id="delete_user" tabindex="-1" role="basic" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">                                                
                         <div class="modal-body">
 
                 <div class="form-body">
-                    <h4 class="text-center">Username already exists</h4>
-                        </div>
-                        <div style="text-align:center !important;" class="modal-footer">
-                        <button type="button" class="btn green" data-dismiss="modal">OK</button>
-                            
-                        </div>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
-        </div>
- <div class="modal fade draggable-modal" id="delete_user" tabindex="-1" role="basic" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">                                                
-                        <div class="modal-body">
-
-                <div class="form-body">
-                    <h4 class="text-center">Do you want to deactive subscriber profile?</h4>
+                    <h4 class="text-center">Do you want to deactivate Subscriber ?</h4>
                         </div>
                         <div style="text-align:center !important;" class="modal-footer">
                         <button type="button" onclick="inactive_user()" class="btn green">Yes</button>
@@ -795,18 +636,22 @@ div.dataTables_filter label {
                 </div>
                 <!-- /.modal-dialog -->
             </div>
-        </div> 
-
-<div class="modal fade draggable-modal" id="check_advert" tabindex="-1" role="basic" aria-hidden="true">
+        </div>
+         <div class="modal fade draggable-modal" id="remove_user" tabindex="-1" role="basic" aria-hidden="true">
                 <div class="modal-dialog">
-                    <div class="modal-content">                                                
+                    <div class="modal-content">
+                    <div class="modal-header">
+
+                    		<img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+
+                </div>                                                
                         <div class="modal-body">
 
                 <div class="form-body">
-                    <h4 class="text-center">Please add service details for subscriber to add advert</h4>
+                    <h4 class="text-center">Subscriber has been deactivated successfully</h4>
                         </div>
                         <div style="text-align:center !important;" class="modal-footer">
-                        <button type="button" class="btn green" data-dismiss="modal">OK</button>
+                        <button type="button" onclick="location.reload();" class="btn green" data-dismiss="modal">OK</button>
 
                             
                         </div>
@@ -816,27 +661,7 @@ div.dataTables_filter label {
                 <!-- /.modal-dialog -->
             </div>
         </div>
-<div class="modal fade draggable-modal" id="remove_user" tabindex="-1" role="basic" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">                                                
-                        <div class="modal-body">
-
-                <div class="form-body">
-                    <h4 class="text-center">Subscriber profile deactivated successfully</h4>
-                        </div>
-                        <div style="text-align:center !important;" class="modal-footer">
-                        <button type="button" onclick="location.reload()" class="btn green" data-dismiss="modal">OK</button>
-
-                            
-                        </div>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
-        </div>       
-      
-<div class="modal fade draggable-modal" id="active_premium_service" tabindex="-1" role="basic" aria-hidden="true">
+        <div class="modal fade draggable-modal" id="active_premium_service" tabindex="-1" role="basic" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                      <div class="modal-header">
@@ -858,9 +683,8 @@ div.dataTables_filter label {
                 </div>
                 <!-- /.modal-dialog -->
             </div>
-        </div>      
-  
-<div class="modal fade draggable-modal" id="activate_premium_service" tabindex="-1" role="basic" aria-hidden="true">
+        </div>
+        <div class="modal fade draggable-modal" id="activate_premium_service" tabindex="-1" role="basic" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                      <div class="modal-header">
@@ -870,10 +694,10 @@ div.dataTables_filter label {
                         <div class="modal-body">
 
                 <div class="form-body">
-                    <h4 class="text-center">Subsciber has been activated successfully</h4>
+                    <h4 class="text-center">Subscriber has been activated successfully</h4>
                         </div>
                         <div style="text-align:center !important;" class="modal-footer">
-                        <a href="/subscriber/"><input type="submit"  value="OK"
+                        <a href="/view-subscriber-list/"><input type="submit"  value="OK"
                                    class="btn btn-primary" id="btn"></a>
 
 
@@ -884,117 +708,347 @@ div.dataTables_filter label {
                 </div>
                 <!-- /.modal-dialog -->
             </div>
-        </div>   
-      
-        <!-- END FOOTER -->
+        </div>
+        <div class="model_style">
+        <div class="modal fade bs-modal-lg" id="createNew" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" style="width: 453px; margin-left: 168px;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 style=" font-size: 18px;">Apply Filters</h4>
+                    </div>
+
+
+                    <form id="scheduleFrm">
+                        <div class="row">
+                            <input id="supplier_id" name="supplier_id" hidden type="text" value="110">
+                        </div>
+
+
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="form-group col-lg-12">
+                                    <label style=" font-size: 16px;">
+                                        City </label>
+                                    <br>
+                                    <select class="form-control sel2" style=" width: 142px;font-size: 14px;color: #797979;"
+                                            name="city_id" id="city_id">
+                                        <option value=""><b>Select City </b></option>
+                                        {% for obj_cat in city_list %}
+                                        <option value="{{obj_cat.city_id}}">{{obj_cat.city_name}}</option>
+                                        {%endfor%}
+                                    </select>
+
+                                </div>
+
+                                <div class="form-group col-lg-12">
+                                    <label style=" font-size: 16px;"> Time </label>
+                                    <br>
+                                    <input id="One_week" type="button" class="btn btn-outline green" name="Time"
+                                           value="1W"
+                                           onclick="activate_daterange();">
+                                    <input id="One_month" type="button" class="btn btn-outline green" name="Time"
+                                           value="1M"
+                                           onclick="activate_daterange();">
+                                    <input id="Three_month" type="button" class="btn btn-outline green" name="Time"
+                                           value="3M"
+                                           onclick="activate_daterange();">
+                                    <input id="Six_month" type="button" class="btn btn-outline green" name="Time"
+                                           value="6M"
+                                           onclick="activate_daterange();">
+                                    <input id="date_range" type="button" class="btn btn-outline green" name="Time"
+                                           value="Date Range"
+                                           onclick="activate_daterange();">
+                                </div>
+                            </div>
+
+                            <br>
+                            <div class="row ">
+                                <div id="active_date" class="form-group col-md-12 "
+                                     style=" margin-left: -14px;    margin-bottom: 0px;margin-top: -22px;">
+
+                                    <div class="form-group col-md-1 " style="width:9.3333%">
+                                        <label style=" font-size: 16px;">
+                                            From</label>
+                                    </div>
+                                    <div class="form-group col-md-5 " style="width: 40.66667%;">
+
+                                        <div class="input-append date form_datetime" >
+                                            <input placeholder="DD-MM-YY" style="width: 124px;" name="startDate" 
+                                                   id="startDate" size="16" type="text" value="" readonly>
+                                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            <span class="add-on"><i class="icon-th"></i></span>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group col-md-1 ">
+
+                                        <label style=" font-size: 16px;">
+                                            To</label>
+                                    </div>
+                                    <div class="form-group col-md-5 " style="">
+
+                                        <div class="input-append date form_datetime">
+                                            <input placeholder="DD-MM-YY"  style="width: 124px;" name="endDate"
+                                                   id="endDate" size="16" type="text" value="" readonly>
+                                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            <span class="add-on"><i class="icon-th"></i></span>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group col-md-12 ">
+                                    <label> <b>Status </b> </label>
+                                </div>
+
+                                <div class="form-group col-lg-12" style=" margin-left: -14px;">
+
+                                    <div class=" col-lg-4">
+                                        <input id="Active" type="radio" name="stat" value="1" checked> Active
+                                    </div>
+
+                                    <div class=" col-lg-4">
+                                        <input id="Expired" type="radio" name="stat" value="0"> Inactive
+                                    </div>
+
+                                    <div class=" col-lg-4">
+                                        <input id="Show_All" type="radio" name="stat" value=""> Show All
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline grey_color " data-dismiss="modal">Cancel
+                                </button>
+                                <button type="button" id="submit_btn" onclick="filter_advert();"
+                                        class="btn btn-outline done_btn">Apply
+                                </button>
+
+                            </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+       
         <!--[if lt IE 9]>
-<script src="{% static 'assets/global/plugins/respond.min.js' %}"></script>
-<script src="{% static 'assets/global/plugins/excanvas.min.js' %}"></script> 
+<script src="../assets/global/plugins/respond.min.js"></script>
+<script src="../assets/global/plugins/excanvas.min.js"></script> 
 <![endif]-->
         <!-- BEGIN CORE PLUGINS -->
-        <script src="{% static 'assets/global/plugins/jquery.min.js' %}" type="text/javascript"></script>
-        <script src="{% static 'assets/global/plugins/bootstrap/js/bootstrap.min.js' %}" type="text/javascript"></script>
-        <script src="{% static 'assets/global/plugins/js.cookie.min.js' %}" type="text/javascript"></script>
-        <script src="{% static 'assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}" type="text/javascript"></script>
-        <script src="{% static 'assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js' %}" type="text/javascript"></script>
-        <script src="{% static 'assets/global/plugins/jquery.blockui.min.js' %}" type="text/javascript"></script>
-        <script src="{% static 'assets/global/plugins/uniform/jquery.uniform.min.js' %}" type="text/javascript"></script>
-        <script src="{% static 'assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js' %}" type="text/javascript"></script>
-        <!-- END CORE PLUGINS -->
-        <!-- BEGIN PAGE LEVEL PLUGINS -->
-        <script src="{% static 'assets/global/plugins/bootstrap-select/js/bootstrap-select.min.js' %}" type="text/javascript"></script>
-        <script src="{% static 'assets/global/plugins/jquery-multi-select/js/jquery.multi-select.js' %}" type="text/javascript"></script>
-        <script src="{% static 'assets/global/plugins/select2/js/select2.full.min.js' %}" type="text/javascript"></script>
-        <!-- END PAGE LEVEL PLUGINS -->
-                <!-- BEGIN PAGE LEVEL PLUGINS -->
-        <script src="{% static 'assets/global/plugins/select2/js/select2.full.min.js' %}" type="text/javascript"></script>
-         <script src="{% static 'assets/pages/scripts/components-select2.min.js' %}" type="text/javascript"></script>
-        <!-- END PAGE LEVEL PLUGINS -->
-        <!-- BEGIN THEME GLOBAL SCRIPTS -->
-        <script src="{% static 'assets/global/scripts/app.min.js' %}" type="text/javascript"></script>
-        <!-- END THEME GLOBAL SCRIPTS -->
-        <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        <script src="{% static 'assets/pages/scripts/components-multi-select.min.js' %}" type="text/javascript"></script>
-        <!-- END PAGE LEVEL SCRIPTS -->
-        <!-- BEGIN PAGE LEVEL PLUGINS -->
-        <!-- END PAGE LEVEL PLUGINS -->
-          <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        <!-- END PAGE LEVEL SCRIPTS -->
-        <!-- BEGIN THEME LAYOUT SCRIPTS -->
-        <script src="{% static 'assets/layouts/layout2/scripts/layout.min.js' %}" type="text/javascript"></script>
-        <script src="{% static 'assets/layouts/layout2/scripts/demo.min.js' %}" type="text/javascript"></script>
-        <script src="{% static 'assets/layouts/global/scripts/quick-sidebar.min.js' %}" type="text/javascript"></script>
+<!-- BEGIN CORE PLUGINS -->
+<script src="{% static 'assets/global/plugins/jquery.min.js' %}" type="text/javascript"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="{% static 'assets/global/plugins/bootstrap/js/bootstrap.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/js.cookie.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}"
+        type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js' %}"
+        type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/jquery.blockui.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/uniform/jquery.uniform.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js' %}"
+        type="text/javascript"></script>
+<!-- END CORE PLUGINS -->
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<script src="{% static 'assets/global/plugins/select2/js/select2.full.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/jquery-validation/js/jquery.validate.min.js' %}"
+        type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/jquery-validation/js/additional-methods.min.js' %}"
+        type="text/javascript"></script>
+<!-- <script src="{% static 'assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js' %}" type="text/javascript"></script> -->
+<!-- <script src="{% static 'assets/global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.js' %}" type="text/javascript"></script> -->
+<script src="{% static 'assets/global/plugins/ckeditor/ckeditor.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/bootstrap-markdown/lib/markdown.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/bootstrap-markdown/js/bootstrap-markdown.js' %}"
+        type="text/javascript"></script>
+<!-- END PAGE LEVEL PLUGINS -->
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<script src="{% static 'assets/global/plugins/select2/js/select2.full.min.js' %}" type="text/javascript"></script>
+<!-- END PAGE LEVEL PLUGINS -->
+<!-- BEGIN THEME GLOBAL SCRIPTS -->
+<script src="{% static 'assets/global/scripts/app.min.js' %}" type="text/javascript"></script>
+<!-- END THEME GLOBAL SCRIPTS -->
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="{% static 'assets/pages/scripts/components-select2.min.js' %}" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+<!-- END THEME GLOBAL SCRIPTS -->
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="{% static 'assets/pages/scripts/form-validation.min.js' %}" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+<!-- BEGIN THEME LAYOUT SCRIPTS -->
+<script src="{% static 'assets/layouts/layout2/scripts/layout.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/layouts/layout2/scripts/demo.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/layouts/global/scripts/quick-sidebar.min.js' %}" type="text/javascript"></script>
+
+<script src="{% static 'assets/pages/scripts/form-wizard.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/bootstrap-wizard/jquery.bootstrap.wizard.min.js' %}"
+        type="text/javascript"></script>
+
+<script src="{% static 'vendor/bootstrap-fileinput/jasny-bootstrap.js' %}"></script>
+
+<script src="http://kendo.cdn.telerik.com/2016.2.504/js/kendo.all.min.js"></script>
+
+<!-- END THEME LAYOUT SCRIPTS -->
+
+<script src="{% static 'assets/pages/scripts/dropzone1.js' %}"></script>
+<script src="{% static 'assets/bootstrap-tagsinput.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/ion.rangeslider/js/ion.rangeSlider.min.js' %}"></script>
         <!-- END THEME LAYOUT SCRIPTS -->
-       <script src="{% static 'assets/global/scripts/datatable.js' %}" type="text/javascript"></script>
-        <script src="{% static 'assets/global/plugins/datatables/datatables.min.js' %}" type="text/javascript"></script>
-        <script src="{% static 'assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js' %}" type="text/javascript"></script>
-        <script src="{% static 'assets/pages/scripts/table-datatables-editable.min.js' %}" type="text/javascript"></script>   
+    </body>
+    
+    <script type="text/javascript" >
+    
+        $("#supplier_anchor").addClass("tab-active");
+    $("#supplier_icon").addClass("icon-active");
+    $("#supplier_active").css("display","block");
+    
+    $(document).ready(function(){
+$("#sortby").select2({});
+$("#city_id").select2({});
+    $("#startDate").datepicker({
+			
+        dateFormat: 'dd/mm/yy'
+    });
+    
+    $("#endDate").datepicker({
+			
+        dateFormat: 'dd/mm/yy'
+    });
+});
 
 
+function filter_advert() {
 
-		<script type="text/javascript">
+    startDate_var = $('#startDate').val()
+    endDate_var = $('#endDate').val()
+    city_name_var = $('#city_id').val()
+    stat_var = $("input[name='stat']:checked").val()
 
-		$("#customer_nav").addClass("active");
-		$("#supplier_nav").addClass("active");
 
-        $(document).ready(function(){
-			 var oTable = $('#user_table').dataTable({
-					"bFilter": true,
-               "bLengthChange": false,
-               //"scrollX": true,
-               "iDisplayLength": 20,
-            	//"sScrollY":"380px",
-            	'bScrollCollapse':true,
-  
-                 "ajax": "/view-subscriber-list/",
+    location.href = '/view-subscriber-list/?start_date_var='+startDate_var+'&end_date_var='+endDate_var+'&status_var='+stat_var+'&city_var='+city_name_var+''
+}
 
-                  "columns": [
-                {"data": "subscriber_id"},   
-                {"data": "business_name"},
-                {"data": "subscriber_name"},
-                {"data": "usre_email_id"},
-                {"data": "subscriber_city"},
-                {"data": "status"},
-                {"data": "actions"},
-		            ],
-		             "order": [[0, "asc"]],
-		            "cache": false ,
-		            "bAutoWidth": false,
+function sort_by(){
+    sortby = $("#sortby").val();
+    location.href = '/view-subscriber-list/?sort_by='+sortby+''
+}
 
-        })
-   
-			$("#txtSearch").keyup(function() {
-				oTable.fnFilter($("#txtSearch").val());
-			});           
- 		});  
+function activate_daterange() {
 
-	var xyz;
+   $('input[type="button"]').click(function() {
+
+       if($(this).attr('id') == 'One_week') {
+
+            var date = new Date();
+
+           //var date = new Date($('#start_'+id).val());
+            // days = parseInt($('#day_'+id).val(), 10) - 1;
+            date.setDate(date.getDate() - 7 );
+            var yyyy = date.getFullYear().toString();
+            var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+            var dd  = date.getDate().toString();
+            newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+
+            $("#startDate").val(newdate);
+
+
+            var date = new Date();
+
+            var yyyy = date.getFullYear().toString();
+            var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+            var dd  = date.getDate().toString();
+             newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+
+            $("#endDate").val(newdate);
+
+    }
+    else if($(this).attr('id') == 'One_month'){
+                       var date = new Date();
+
+                date.setDate(date.getDate() - 30 );
+                var yyyy = date.getFullYear().toString();
+                var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+                var dd  = date.getDate().toString();
+                  newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+
+                $("#startDate").val(newdate);
+
+
+            var date = new Date();
+
+                var yyyy = date.getFullYear().toString();
+                var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+                var dd  = date.getDate().toString();
+                 newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+
+                $("#endDate").val(newdate);
+       }
+           else if($(this).attr('id') == 'Three_month'){
+                       var date = new Date();
+
+                date.setDate(date.getDate() - 90 );
+                var yyyy = date.getFullYear().toString();
+                var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+                var dd  = date.getDate().toString();
+                  newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+
+                $("#startDate").val(newdate);
+
+
+            var date = new Date();
+
+                var yyyy = date.getFullYear().toString();
+                var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+                var dd  = date.getDate().toString();
+                   newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+
+                $("#endDate").val(newdate);
+       }
+           else if($(this).attr('id') == 'Six_month'){
+                       var date = new Date();
+
+                date.setDate(date.getDate() - 180 );
+                var yyyy = date.getFullYear().toString();
+                var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+                var dd  = date.getDate().toString();
+                 newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+
+                $("#startDate").val(newdate);
+
+
+            var date = new Date();
+
+                var yyyy = date.getFullYear().toString();
+                var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+                var dd  = date.getDate().toString();
+                 newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+
+                $("#endDate").val(newdate);
+       }
+                  else if($(this).attr('id') == 'date_range'){
+
+                $("#startDate").val(null);
+
+                $("#endDate").val(null);
+       }
+
+   });
+}
+
+
+    var xyz;
     function delete_user_detail(id) {
         xyz = id;
         $("#delete_user").modal('show');
    }
-
-function check_advert(id){
-        var  user_id = id;
-        $.ajax({
-            type: 'POST',
-            url: '/check-advert/',
-            data: {'user_id': user_id},
-            success: function (response) {
-            console.log(response);
-                if (response.success == 'true') {
-                	location.href='/advert-management/?user_id='+user_id 
-                }
-                if (response.success == 'false') {
-                   $("#check_advert").modal('show');
-                }
-            },
-            error: function (response) {
-            console.log(response);
-                alert('error');
-            },
-        });    
-    }
 
 function inactive_user() {
 	$("#delete_user").modal('hide');
@@ -1008,6 +1062,7 @@ function inactive_user() {
                 if (response.success == 'true') {
                 	$("#delete_user").modal('hide');
                   $("#remove_user").modal('show');
+                  
                 }
                 if (response.success == 'false') {
                     alert(response.message);
@@ -1044,6 +1099,7 @@ function activate_subscriber() {
                 if (response.success == 'true') {
                 	$("#active_premium_service").modal('hide');
                   $("#activate_premium_service").modal('show');
+               
                 }
                 if (response.success == 'false') {
                     
@@ -1060,14 +1116,27 @@ function activate_subscriber() {
                
             },
         });    
-    }    
+    }
     
-
-    
-</script>    
-    
-    
-    
-    </body>
+      document.getElementById("txtSearch").oninput=function(){
+    var matcher = new RegExp(document.getElementById("txtSearch").value, "gi");
+    for (var i=0;i<document.getElementsByClassName("connect-cat").length;i++) {
+        if (matcher.test(document.getElementsByClassName("id")[i].innerHTML)
+        || matcher.test(document.getElementsByClassName("bname")[i].innerHTML)
+        || matcher.test(document.getElementsByClassName("city_name")[i].innerHTML)
+       || matcher.test(document.getElementsByClassName("user_name")[i].innerHTML)
+        || matcher.test(document.getElementsByClassName("user_contact")[i].innerHTML)
+        || matcher.test(document.getElementsByClassName("user_email")[i].innerHTML))
+        
+        
+        
+        {
+            document.getElementsByClassName("connect-cat")[i].style.display="inline-block";
+        } else {
+            document.getElementsByClassName("connect-cat")[i].style.display="none";
+        }
+    }
+}
+</script>
 
 </html>

@@ -1,19 +1,6 @@
 from django.contrib import admin
 from digispaceapp.models import *
 
-
-###############################
-# from django.contrib import admin
-# from embed_video.admin import AdminVideoMixin
-# from .models import MyModel
-
-# class MyModelAdmin(AdminVideoMixin, admin.ModelAdmin):
-#     pass
-
-# admin.site.register(MyModel, MyModelAdmin)
-##################################
-
-
 #class Category(admin.ModelAdmin):
     #list_display = ['category_name']
 class CategoryAdmin(admin.ModelAdmin):
@@ -70,13 +57,26 @@ admin.site.register(Product);
 admin.site.register(Privileges);
 admin.site.register(Country);
 admin.site.register(SellTicket);
-
-
+admin.site.register(AdvertReview);
 admin.site.register(AdvertView);
-admin.site.register(AdvertCallbacks);
-admin.site.register(AdvertCallsMade);
+admin.site.register(SellTicketLike);
+admin.site.register(SellTicketFavourite);
+admin.site.register(SellTicketReview);
+admin.site.register(SellTicketShares);
+admin.site.register(RateCard);
+admin.site.register(CategoryWiseRateCard);
+admin.site.register(CallerDetails);
+admin.site.register(EnquiryDetails);
+admin.site.register(CallInfo);
+admin.site.register(Operator);
+admin.site.register(TelephoneEnquiryRateCard);
+admin.site.register(EnquiryService);
 admin.site.register(AdvertShares);
-
-
-admin.site.register(Item);
-
+admin.site.register(AdvertCallsMade);
+admin.site.register(AdvertCallbacks);
+admin.site.register(SellTicketDetails);
+admin.site.register(CityStarDetails);
+admin.site.register(StarImage);
+admin.site.register(citylife_category);
+admin.site.register(PostFileDetails);
+admin.site.register(PostDetails);

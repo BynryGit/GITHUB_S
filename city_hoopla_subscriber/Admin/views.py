@@ -45,12 +45,125 @@ import urllib2
 SERVER_URL = "http://52.40.205.128"   
 #SERVER_URL = "http://127.0.0.1:8000"
 
+
+def about_us(request):
+    return render(request,'terms_and_condition/About_us.html')
+
+def faq(request):
+    return render(request,'terms_and_condition/FAQ.html')
+
+def listing_policy(request):
+    return render(request,'terms_and_condition/Listing_Policy.html')
+
+def privacy_policy(request):
+    return render(request,'terms_and_condition/PrivacyPolicy.html')
+
+def terms_of_use(request):
+    return render(request,'terms_and_condition/Terms_of_use.html')
+
+
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def rate_card(request):
     if not request.user.is_authenticated():
         return redirect('backoffice')
-    else:    
-        data = {'username':request.session['login_user']}
+    else:
+        cat_list= []
+        city_list = City_Place.objects.all()
+        first_city = city_list[0]
+        first_city_name = first_city.city_id.city_name
+        first_city_currency = first_city.currency
+        city_name_list = []
+        telephone_rate_card_list = []
+        for city in city_list:
+            rate_card_obj = RateCard.objects.filter(city_place_id=str(city.city_place_id), rate_card_status='1')
+            if rate_card_obj:
+                has_rate_card = 'true'
+            else:
+                has_rate_card = 'false'
+            city_data = {
+                'city_id':str(city.city_place_id),
+                'city_name':str(city.city_id.city_name),
+                'has_rate_card':has_rate_card
+            }
+            city_name_list.append(city_data)
+
+        cat_city_obj = CategoryCityMap.objects.filter(city_place_id=str(first_city))
+        for objs in cat_city_obj:
+            cat_obj = Category.objects.get(category_id=str(objs.category_id))
+            cat_data = {'cat_id': str(cat_obj.category_id), 'cat_name': cat_obj.category_name}
+            cat_list.append(cat_data)
+        rate_card_list=[]
+        rate_card_obj = RateCard.objects.filter(city_place_id=str(first_city),rate_card_status='1')
+        if rate_card_obj:
+            for rate_card in rate_card_obj:
+                if rate_card.service_name == "Advert Slider":
+                    rate_card_data = {
+                        'service_name':rate_card.service_name,
+                        'cost_for_3days':str( "%0.2f" % float(rate_card.cost_for_3_days)),
+                        'cost_for_7days':str( "%0.2f" % float(rate_card.cost_for_7_days)),
+                        'cost_for_30days':str( "%0.2f" % float(rate_card.cost_for_30_days)),
+                        'cost_for_90days':str( "%0.2f" % float(rate_card.cost_for_90_days)),
+                        'cost_for_180days':str( "%0.2f" % float(rate_card.cost_for_180_days))
+                    }
+                    rate_card_list.append(rate_card_data)
+                else:
+                    rate_card_data = {
+                        'service_name': rate_card.service_name,
+                        'cost_for_3days': str("%0.2f" % float(rate_card.cost_for_3_days)),
+                        'cost_for_7days': str("%0.2f" % float(rate_card.cost_for_7_days)),
+                        'cost_for_30days': str("%0.2f" % float(rate_card.cost_for_30_days)),
+                        'cost_for_90days': rate_card.cost_for_90_days,
+                        'cost_for_180days': rate_card.cost_for_180_days
+                    }
+                    rate_card_list.append(rate_card_data)
+        else:
+            rate_card_data = {
+                'service_name': "Advert Slider",
+                'cost_for_3days': "0.00",
+                'cost_for_7days': "0.00",
+                'cost_for_30days': "0.00",
+                'cost_for_90days': "0.00",
+                'cost_for_180days': "0.00",
+            }
+            rate_card_list.append(rate_card_data)
+            rate_card_data = {
+                'service_name': "Top Advert",
+                'cost_for_3days': "0.00",
+                'cost_for_7days': "0.00",
+                'cost_for_30days': "0.00",
+                'cost_for_90days': "N/A",
+                'cost_for_180days': "N/A",
+            }
+            rate_card_list.append(rate_card_data)
+        telephone_rate_card_obj = TelephoneEnquiryRateCard.objects.filter(city_place_id=str(first_city), rate_card_status='1')
+        if telephone_rate_card_obj:
+            for telephone_rate_card in telephone_rate_card_obj:
+                telephone_rate_card_data = {
+                    'service_name': telephone_rate_card.service_name,
+                    'cost_for_3days': str("%0.2f" % float(telephone_rate_card.cost_for_3_days)),
+                    'cost_for_7days': str("%0.2f" % float(telephone_rate_card.cost_for_7_days)),
+                    'cost_for_30days': str("%0.2f" % float(telephone_rate_card.cost_for_30_days)),
+                    'cost_for_90days': str("%0.2f" % float(telephone_rate_card.cost_for_90_days)),
+                    'cost_for_180days': str("%0.2f" % float(telephone_rate_card.cost_for_180_days))
+                }
+                telephone_rate_card_list.append(telephone_rate_card_data)
+        else:
+            rate_cards = ['Platinum','Diamond','Gold','Silver','Bronze','Value']
+            for rates in rate_cards:
+                telephone_rate_card_data = {
+                    'service_name': rates,
+                    'cost_for_3days': "0.00",
+                    'cost_for_7days': "0.00",
+                    'cost_for_30days': "0.00",
+                    'cost_for_90days': "0.00",
+                    'cost_for_180days': "0.00",
+                }
+                telephone_rate_card_list.append(telephone_rate_card_data)
+        data = {
+            'username':request.session['login_user'],'telephone_rate_card_list':telephone_rate_card_list,
+            'city_list':city_name_list, 'cat_list':cat_list,'rate_card_list':rate_card_list,
+            'first_city_name':first_city_name, 'first_city_currency':first_city_currency
+        }
         return render(request,'Admin/rate_card.html',data)
 
 def login_open(request):
@@ -110,8 +223,6 @@ def dashboard(request):
         octo=monthly_count[9]
         nov=monthly_count[10]
         dec=monthly_count[11]
-        
-
         count_zero = 0
         count_first = 0
         count_second = 0
@@ -152,7 +263,6 @@ def dashboard(request):
             if int(dates[0]) < 10:
                 dates[0] = '0'+str(dates[0])
         pre_date = str(dates[0]) +'/'+dates[1]+'/'+dates[2]
-        
         temp_var0 = 0
         temp_var1 = 0
         temp_var2 = 0
@@ -299,7 +409,7 @@ def user(request):
     else:
         user_role_list = UserRole.objects.filter(role_status='1')
         data = {'user_role_list':user_role_list,'username':request.session['login_user']}
-        return render(request,'Admin/view_user_list.html',data)        
+        return render(request,'Admin/user_list.html',data)        
 
 def notification(request):
     if not request.user.is_authenticated():
@@ -307,13 +417,13 @@ def notification(request):
     else:
         return render(request,'Admin/notification.html')   
 
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def reference_data(request):
-    if not request.user.is_authenticated():
-        return redirect('backoffice')
-    else:
-        data ={'username':request.session['login_user']}
-        return render(request,'Admin/rdm.html',data)       
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# def reference_data(request):
+#     if not request.user.is_authenticated():
+#         return redirect('backoffice')
+#     else:
+#         data ={'username':request.session['login_user']}
+#         return render(request,'Admin/rdm.html',data)       
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def add_supplier(request):
@@ -331,12 +441,116 @@ def add_city(request):
         data = {'country_list':get_country(request),'category_list':get_category(request),'username':request.session['login_user']}
         return render(request,'Admin/add_city.html',data)  
 
+#@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+#def category(request):
+#    if not request.user.is_authenticated():
+#        return redirect('backoffice')
+#    else:
+#        data = {'username':request.session['login_user']}
+#        return render(request,'Admin/category.html',data)  
+
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def category(request):
     if not request.user.is_authenticated():
         return redirect('backoffice')
     else:
-        data = {'username':request.session['login_user']}
+        data = {}
+        final_list = []
+        try:
+            category_list =[]
+            print '----------ids------',request.GET.get('city_id')
+            if request.GET.get('city_id'):
+                city_obj = City_Place.objects.get(city_place_id=request.GET.get('city_id'))
+                print '------------city obj--------',city_obj
+                state = city_obj.state_id
+                country = city_obj.country_id
+                cat_obj = CategoryCityMap.objects.filter(city_place_id=request.GET.get('city_id'))
+                print '-------cat_obj----',cat_obj
+                for c in cat_obj:
+                    print c.category_id
+                    category_list.append(Category.objects.get(category_id = str(c.category_id)))
+                    print '----------category list------',category_list
+            else:
+                #category_list = Category.objects.all()
+                category_list = ''
+            country_list = Country.objects.filter(country_status='1')
+            state_list = State.objects.filter(state_status='1')
+            city_list = City_Place.objects.filter(city_status='1')
+            print '------country list-----',city_list
+
+            for cat_obj in category_list:
+                #print '---------state-----',state
+                #print '---------country-----',country
+                category_id = str(cat_obj.category_id)
+                active_advert = 'No'
+                cat_color = cat_obj.category_color
+                advert_obj_list = Advert.objects.filter(category_id=category_id)
+                obj_count = Advert.objects.filter(category_id=category_id).count()
+                inactive_count = Advert.objects.filter(category_id=category_id,status='0').count()
+                if advert_obj_list:
+                    if obj_count == inactive_count:
+                        active_advert = 'No'
+                    else:
+                        for advert_obj in advert_obj_list:
+                            advert_id = str(advert_obj.advert_id)
+                            pre_date = datetime.now().strftime("%m/%d/%Y")
+                            pre_date = datetime.strptime(pre_date, "%m/%d/%Y")
+                            advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=advert_id)
+                            end_date = advert_sub_obj.business_id.end_date
+                            end_date = datetime.strptime(end_date, "%d/%m/%Y")
+                            date_gap = end_date - pre_date
+                            if int(date_gap.days) >= 0:
+                                active_advert = 'Yes'
+
+                category_name = cat_obj.category_name
+                city_name = CategoryCityMap.objects.filter(category_id=cat_obj)
+                city_list = ''
+                if city_name:
+                    for city in city_name:
+                        city_list = str(city.city_place_id.city_id.city_name) + ',' + city_list
+                    city_list = city_list[:-1]
+                if not city_list:
+                    city_list = 'All'
+
+                category_created_by = str(cat_obj.category_created_by)
+                category_updated_by = str(cat_obj.category_updated_by)
+                creation_date = str(cat_obj.category_created_date).split()[0]
+                updation_date = str(cat_obj.category_updated_date).split()[0]
+                if creation_date:
+                    creation_date = datetime.strptime(creation_date, "%Y-%m-%d")
+                    #creation_date = creation_date.strftime("%d/%m/%Y")
+                    creation_date = creation_date.strftime('%b %d,%Y')
+                #print '---------creation date------',creation_date.strftime('%b %d,%Y')
+                if updation_date :
+                    updation_date = datetime.strptime(updation_date, "%Y-%m-%d")
+                    #updation_date = updation_date.strftime("%d/%m/%Y")
+                    updation_date = updation_date.strftime('%b %d,%Y')
+
+                if (cat_obj.category_status == '1'):
+                    status = 'Active'
+                    if active_advert == 'No':
+                        delete = '<a id="' + str(
+                            category_id) + '" onclick="delete_category(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Delete"  ><i class="fa fa-trash"></i></a>'
+                    else:
+                        delete = ''
+                    edit = '<a  id="' + str(category_id) + '" href="/edit-category/?category_id=' + str(
+                        category_id) + '" style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit" class="edit" data-toggle="modal" href="#edit_subscription"><i class="fa fa-pencil"></i></a>'
+                    actions = edit + delete
+                else:
+                    status = 'Inactive'
+                    active = '<a class="col-md-2" id="' + str(
+                        cat_obj) + '" onclick="active_service(this.id);" style="text-align: center;letter-spacing: 5px;width:15%;margin-left: 36px !important;" title="Activate" class="edit" data-toggle="modal" href="#edit_subscription"><i class="fa fa-repeat"></i></a>'
+                    actions = active
+                list = {'active_advert':active_advert,'category_id':category_id,'status': status,'cat_color':cat_color, 'category_name': category_name, 'actions': actions, 'city_name': city_list,
+                        'creation_date': creation_date,'category_updated_by':category_updated_by,'category_created_by':category_created_by, 'updation_date': updation_date, 'updated_by':cat_obj.category_updated_by}
+                final_list.append(list)
+            data = {'country_list':country_list,'username':request.session['login_user'],'success': 'true', 'data': final_list}
+            #print '----------data------',data
+        except IntegrityError as e:
+            print e
+            data = {'username':request.session['login_user'],'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+            print '----------data------',data
+        #data = {'username':request.session['login_user']}
         return render(request,'Admin/category.html',data)  
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -362,6 +576,12 @@ def add_advert(request):
         return redirect('backoffice')
     else:
         user_id = request.GET.get('user_id')
+        print 'user_id',user_id
+        supplier_id=request.GET.get('user_id')
+        supplier_obj = Supplier.objects.get(supplier_id = user_id)
+        user_id=supplier_obj.contact_email
+        business_id = request.GET.get('business_id')
+        print 'business_id',business_id
         tax_list = Tax.objects.all()
 
         service_list = ServiceRateCard.objects.filter(service_rate_card_status='1').values('service_name').distinct()
@@ -374,10 +594,28 @@ def add_advert(request):
         advert_service_list = AdvertRateCard.objects.filter(advert_rate_card_id__in=advert_service_list)
 
         data = {'tax_list': tax_list, 'advert_service_list': advert_service_list, 'service_list': service_list,
-                'username': request.session['login_user'], 'user_id': user_id, 'category_list': get_category(request),
-                'currency': get_currency(request), 'phone_category': get_phone_category(request),
-                'country_list':get_country(request)}
-        return render(request, 'Admin/add_advert.html', data)   
+                'username': request.session['login_user'],'supplier_id':supplier_id, 'user_id': user_id, 'category_list': get_category(request),
+                'country_list': get_country(request), 'phone_category': get_phone_category(request), 'business_id':business_id,
+                'state_list': get_states(request)}
+        if business_id:
+            business_obj = Business.objects.get(business_id = business_id)
+            start_date = business_obj.start_date
+            end_date = business_obj.end_date
+
+            start_date = datetime.strptime(start_date, "%d/%m/%Y")
+            end_date = datetime.strptime(end_date, "%d/%m/%Y")
+            start_date = start_date.strftime("%d %b %y")
+            end_date = end_date.strftime("%d %b %y")
+            category_color = business_obj.category.category_color
+            data = {'tax_list': tax_list, 'advert_service_list': advert_service_list, 'service_list': service_list,
+                    'username': request.session['login_user'],'supplier_id':supplier_id, 'user_id': user_id,
+                    'category_list': get_category(request), 'category_id':str(business_obj.category.category_id),
+                    'country_list': get_country(request), 'phone_category': get_phone_category(request),
+                    'business_id': business_id,
+                    'state_list': get_states(request),'start_date':start_date,'end_date':end_date,'category_color':category_color}
+            return render(request, 'Admin/add_advert_form.html', data)
+        else:
+            return render(request, 'Admin/add_advert.html', data)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def consumer_detail(request):
@@ -406,53 +644,62 @@ def signin(request):
                 try:
                     user_obj = UserProfile.objects.get(username=username)
 
-                    user = authenticate(username=username, password=password)
-                    print 'valid form befor----->'
-                    if user :
-                        if user.is_active:
-                            print 'valid form after----->',user
-                            user_profile_obj = UserProfile.objects.get(username=username)
-                            print user_profile_obj.user_role.role_name
-                            print user_profile_obj.user_role.role_id
-                            privilege_obj = Privileges.objects.filter(
-                                role_id=str(user_profile_obj.user_role.role_id))
-                            privilege_list = []
-                            for privilege in privilege_obj:
-                                privilege_list.append(str(privilege.privilage))
-                            request.session['privileges'] = privilege_list
-                            print request.session['privileges']
-                            if user_profile_obj.user_status == "1":
-                                try:
-                                    request.session['login_user'] = user_profile_obj.username
-                                    request.session['first_name'] = user_profile_obj.user_name
-                                    login(request, user)
-                                    if 'All' in request.session['privileges']:
-                                        redirect_url = '/dashboard/'
-                                    elif 'View Dashboard Details' in request.session['privileges']:
-                                        redirect_url = '/dashboard/'
-                                    elif 'View Financial Details' in request.session['privileges']:
-                                        redirect_url = '/dashboard/'
-                                    elif 'View Advert Performance' in request.session['privileges']:
-                                        redirect_url = '/dashboard/'
-                                    elif 'View Selected Subscriber Details' in request.session['privileges']:
-                                        redirect_url = '/dashboard/'
-                                    elif 'Consumer Management' in request.session['privileges']:
-                                        redirect_url = '/consumer/'
-                                    elif 'Subscription Management' in request.session['privileges']:
-                                        redirect_url = '/subscriber/'
-                                    print "=======================================",redirect_url
-                                except Exception as e:
-                                    print e
-                                print "USERNAME", request.session['login_user']
-                                data= { 'success' : 'true','username':request.session['first_name'],'redirect_url':redirect_url}
-
+                    try:
+                        user = authenticate(username=username, password=password)
+                        print 'valid form before----->',user
+                        if user :
+                            print 'valid form before----222->',user
+                            if user.is_active:
+                                print 'valid form after----->',user.is_active
+                                user_profile_obj = UserProfile.objects.get(username=username)
+                                print user_profile_obj.user_role.role_name
+                                print user_profile_obj.user_role.role_id
+                                privilege_obj = Privileges.objects.filter(
+                                    role_id=str(user_profile_obj.user_role.role_id))
+                                privilege_list = []
+                                for privilege in privilege_obj:
+                                    privilege_list.append(str(privilege.privilage))
+                                request.session['privileges'] = privilege_list
+                                print request.session['privileges']
+                                if user_profile_obj.user_status == "1":
+                                    try:
+                                        request.session['login_user'] = user_profile_obj.username
+                                        request.session['first_name'] = user_profile_obj.user_first_name + '' + user_profile_obj.user_last_name
+                                        login(request, user)
+                                        if 'All' in request.session['privileges']:
+                                            redirect_url = '/dashboard/'
+                                        elif 'View Dashboard Details' in request.session['privileges']:
+                                            redirect_url = '/dashboard/'
+                                        elif 'View Financial Details' in request.session['privileges']:
+                                            redirect_url = '/dashboard/'
+                                        elif 'View Advert Performance' in request.session['privileges']:
+                                            redirect_url = '/dashboard/'
+                                        elif 'View Selected Subscriber Details' in request.session['privileges']:
+                                            redirect_url = '/dashboard/'
+                                        elif 'Consumer Management' in request.session['privileges']:
+                                            redirect_url = '/consumer/'
+                                        elif 'Subscription Management' in request.session['privileges']:
+                                            redirect_url = '/subscriber/'
+                                        print "=======================================",redirect_url
+                                    except Exception as e:
+                                        print e
+                                    print "USERNAME====000", request.session['login_user']
+                                    data= { 'success' : 'true','username':request.session['first_name'],'redirect_url':redirect_url}
+                                else:
+                                    data= { 'success' : 'false1', 'message' :'Invalid Username'}
+                                    return HttpResponse(json.dumps(data), content_type='application/json') 
+                            else:
+                                data= { 'success' : 'false', 'message':'User Is Not Active'}
+                                print 'SSSSSSSSSSSSSSSSSSS',data
+                                return HttpResponse(json.dumps(data), content_type='application/json')
                         else:
-                            data= { 'success' : 'false', 'message':'User Is Not Active'}
-                            return HttpResponse(json.dumps(data), content_type='application/json')
-                    else:
-                            data= { 'success' : 'Invalid Password', 'message' :'Invalid Password'}
-                            print "====USERNAME",data
-                            return HttpResponse(json.dumps(data), content_type='application/json')
+                                data= { 'success' : 'Invalid Password', 'message' :'Invalid Password'}
+                                print "====USERNAME====",data
+                                return HttpResponse(json.dumps(data), content_type='application/json')
+                    except:
+                        data= { 'success' : 'false1', 'message' :'Invalid Username'}
+                        return HttpResponse(json.dumps(data), content_type='application/json') 
+
                 except:
                     data= { 'success' : 'false', 'message' :'Invalid Username'}
                     return HttpResponse(json.dumps(data), content_type='application/json')            
@@ -507,73 +754,6 @@ def add_user(request):
         }
     return HttpResponse(json.dumps(data),content_type='application/json')    
 
-def view_user_list(request):
-    try:
-        data = {}
-        final_list = []
-        try:
-            user_list = UserProfile.objects.filter()
-            for user_obj in user_list:
-                if user_obj.user_role:
-                    role_id = user_obj.user_role.role_name
-                    user_first_name = str(user_obj.user_first_name)
-                    user_last_name = str(user_obj.user_last_name)
-                    user_name = user_first_name +" "+ user_last_name
-                    usre_email_id = user_obj.usre_email_id
-                    user_contact_no = user_obj.user_contact_no
-                    edit = '<a id="'+str(user_obj)+' " style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit" class="edit" data-toggle="modal" href="/edit-user-detail/?user_id='+str(user_obj)+'"><i class="fa fa-pencil"></i></a>'
-                    delete = '<a id="'+str(user_obj)+'" onclick="delete_user_detail(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Delete"  ><i class="fa fa-trash"></i></a>'
-                    if user_obj.user_status == "1":                        
-                        print "if"
-                        status = 'Active'
-                        actions =  edit +" "+ delete
-                    else:
-                        print "else"
-                        status = 'In-active'
-                        actions = '<a id="'+str(user_obj)+'" onclick="reactivate_user(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Reactivate"><i class="fa fa-undo"></i></a>'                       
-                    list = {'user_name':user_name,'actions':actions,'role_id':role_id,'usre_email_id':usre_email_id,'user_contact_no':user_contact_no,'status':status}
-                    final_list.append(list)
-                data = {'success':'true','data':final_list}
-        except IntegrityError as e:
-            print e
-            data = {'success':'false','message':'Error in  loading page. Please try after some time'}
-        except MySQLdb.OperationalError, e:
-            print e
-    except Exception,e:
-        print 'Exception ',e
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-
-@csrf_exempt
-def delete_user(request):
-        try:
-            user_obj = UserProfile.objects.get(usre_email_id=request.POST.get('user_id'))
-            user_obj.user_status = '0'
-            user_obj.save()
-            data = {'message': 'User Inactivated Successfully', 'success':'true'}
-
-        except IntegrityError as e:
-          print e
-        except Exception,e:
-            print e
-        print "Final Data: ",data
-        return HttpResponse(json.dumps(data), content_type='application/json')
-
-@csrf_exempt
-def activate_user(request):
-        try:
-            user_obj = UserProfile.objects.get(usre_email_id=request.POST.get('user_id'))
-            user_obj.user_status = '1'
-            user_obj.save()
-            data = {'message': 'User Activated Successfully', 'success':'true'}
-
-        except IntegrityError as e:
-          print e
-        except Exception,e:
-            print e
-        print "Final Data: ",data
-        return HttpResponse(json.dumps(data), content_type='application/json')
-
 
 def view_user_detail(request):
     print 'in user detail'
@@ -584,7 +764,7 @@ def view_user_detail(request):
         #print 'User ID: ',request.GET.get('user_id')
         try:
             if request.method == "GET":
-                user_obj = UserProfile.objects.get(username=request.GET.get('user_id'))
+                user_obj = UserProfile.objects.get(user_name=request.GET.get('user_id'))
                 print user_obj
                 role_id = str(user_obj.user_role.role_id)
                 role_name = user_obj.user_role.role_name
@@ -601,7 +781,6 @@ def view_user_detail(request):
 
     except Exception,e:
         print 'Exception ',e
-    print data
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 @csrf_exempt
@@ -684,6 +863,7 @@ def get_states(request):
 def get_state(request):
 ##    pdb.set_trace()
     country_id=request.GET.get('country_id')
+    currency = Currency.objects.get(country_id=country_id)
     state_list = []
     try:
         state = State.objects.filter(state_status='1',country_id=country_id)
@@ -692,7 +872,7 @@ def get_state(request):
                    sta.state_id) + '>' + sta.state_name + '</option>'
             state_list.append(options_data)
             print state_list
-        data = {'state_list':state_list }    
+        data = {'state_list':state_list,'currency':currency.currency }    
     except Exception, e:
         print 'Exception ', e
         data = {'state_list':'No states available' }
@@ -700,13 +880,14 @@ def get_state(request):
 
 # TO GET THE CATEGOTRY
 def get_category(request):
-##    pdb.set_trace()
+    ##    pdb.set_trace()
     cat_list = []
     try:
         category = Category.objects.filter(category_status='1').order_by('category_name')
         for cat in category:
-            cat_list.append(
-                {'category_id': cat.category_id, 'category': cat.category_name})
+            if cat.category_name !="Event Ticket Resale":
+                cat_list.append(
+                    {'category_id': cat.category_id, 'category': cat.category_name})
 
     except Exception, e:
         print 'Exception ', e
@@ -756,25 +937,24 @@ def get_phone_category(request):
 # TO GET THE CITY
 def get_city_places(request):
    
-    city_list=[]
-    try:
-        city_objs=City_Place.objects.filter(city_status='1')
-        for city in city_objs:
-            city_list.append({'city_place_id': city.city_place_id,'city': city.city_id.city_name})
-            print city_list
-            data =  city_list
-            return data
+   city_list=[]
+   try:
+      city_objs=City_Place.objects.filter(city_status='1')
+      for city in city_objs:
+         city_list.append({'city_place_id': city.city_place_id,'city': city.city_id.city_name})
+         print city_list
+      data =  city_list
+      return data
 
-    except Exception, ke:
-        print ke
-        data={'city_list': 'none','message':'No city available'}
-    return HttpResponse(json.dumps(data), content_type='application/json')
+   except Exception, ke:
+      print ke
+      data={'city_list': 'none','message':'No city available'}
+   return HttpResponse(json.dumps(data), content_type='application/json')
 
 # TO GET THE CITY
 def get_city(request):
    
    state_id=request.GET.get('state_id')
-   print '.................state_id.....................',state_id
    city_list=[]
    try:
       city_objs=City.objects.filter(state_id=state_id,city_status='1').order_by('city_name')
@@ -795,24 +975,22 @@ def get_city(request):
 def get_pincode(request):
    #pdb.set_trace()
 
-    pincode_list=[]
-    try:
-        city_id = request.GET.get('city_id')
-        print '/////////////city_id///////',city_id
-        pincode_list1=Pincode.objects.filter(city_id=city_id).order_by('pincode')
-        print 'pincode_list1',pincode_list1
-        pincode_objs = pincode_list1.values('pincode').distinct()
-        print pincode_objs
-        for pincode in pincode_objs:
-            options_data = '<option>' +pincode['pincode']+ '</option>'
-            pincode_list.append(options_data)
-            print pincode_list
-        data = {'pincode_list': pincode_list}
+   pincode_list=[]
+   try:
+      city_id = request.GET.get('city_id')
+      pincode_list1=Pincode.objects.filter(city_id=city_id).order_by('pincode')
+      pincode_objs = pincode_list1.values('pincode').distinct()
+      print pincode_objs
+      for pincode in pincode_objs:
+         options_data = '<option>' +pincode['pincode']+ '</option>'
+         pincode_list.append(options_data)
+         print pincode_list
+      data = {'pincode_list': pincode_list}
 
-    except Exception, ke:
-        print ke
-        data={'city_list': 'none','message':'No city available'}
-    return HttpResponse(json.dumps(data), content_type='application/json')  
+   except Exception, ke:
+      print ke
+      data={'city_list': 'none','message':'No city available'}
+   return HttpResponse(json.dumps(data), content_type='application/json')  
    
 
 # payal
@@ -927,7 +1105,136 @@ def user_role_add(user_role_obj):
     except SMTPException,e:
         print e
     return 1    
-   
+ 
+def view_user_role_list(request):
+    try:
+        data = {}
+        final_list = []
+        try:
+            user_role_list = UserRole.objects.all()
+            for role_obj in user_role_list:
+                role_id=role_obj.role_id
+                role_name = role_obj.role_name
+                role_created_by=role_obj.role_created_by
+                role_updated_by=role_obj.role_updated_by
+                role_creation_date = str(role_obj.role_created_date).split(' ')[0]
+                
+                if role_obj.role_updated_date:
+                    role_updation_date = str(role_obj.role_updated_date).split(' ')[0]
+                    to_date = datetime.strptime(role_updation_date, "%Y-%m-%d")
+                    to_date = to_date.strftime("%d/%m/%Y")
+                else :
+                    role_updation_date = ''
+                    to_date = ''
+                from_date = datetime.strptime(role_creation_date, "%Y-%m-%d")                
+                from_date = from_date.strftime("%d/%m/%Y")
+                
+                
+                if role_obj.role_status == '1':
+                    # edit = '<a class="col-md-offset-2 col-md-1" id="'+str(role_id)+'" onclick="edit_user_role(this.id);" style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit" class="edit" data-toggle="modal" href="#edit_subscription"><i class="fa fa-pencil"></i></a>'
+                    edit = '<a class="col-md-offset-2 col-md-1" href="/edit-user-role/?role_id='+str(role_id) + '" style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit"  ><i class="fa fa-pencil"></i></a>'
+                    delete = '<a id="'+str(role_name)+'" onclick="delete_user_role('+str(role_id)+',this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Delete"  ><i class="fa fa-trash"></i></a>'
+                    status = 'Active'
+                    actions =  edit + delete
+                else:
+                    status = 'Inactive'
+                    active = '<a class="col-md-2" id="'+str(role_name)+'" onclick="active_service('+str(role_id)+',this.id);" style="text-align: center;letter-spacing: 5px;width:10%;margin-left: 22px !important;" title="Activate" class="edit" data-toggle="modal" href="#edit_subscription"><i class="fa fa-repeat"></i></a>'
+                    actions =  active
+             
+                list = {'role_name':role_name,'actions':actions,'role_id':role_id,'from_date':from_date,'to_date':to_date,
+                        'created_by':role_created_by,'updated_by':role_updated_by}
+                final_list.append(list)
+            data = {'success':'true','data':final_list}
+        except IntegrityError as e:
+            print e
+            data = {'success':'false','message':'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception,e:
+        print 'Exception ',e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+@csrf_exempt
+def edit_user_role(request):
+    # pdb.set_trace()
+    try:
+        data = {}
+        final_list = []
+        try:
+            if request.method == "GET":
+                print request
+                role_obj = UserRole.objects.get(role_id=request.GET.get('role_id'))
+                role_id = str(role_obj.role_id)
+                role_name = role_obj.role_name
+
+                prv = ""
+                prv1 =""
+                prv2 =""
+                prv3 =""
+                prv4 =""
+                prv5 =""
+                prv6 =""
+                prv7 =""  
+                prv8 =""
+                prv9 =""
+                prv10 =""
+                prv11 =""
+                prv12 =""
+                prv13 =""
+                prv14 =""
+                #amenity_list = []
+                amenity_lis = Privileges.objects.filter(role_id=role_obj)
+                print 'amenity_lis',amenity_lis
+                if amenity_lis.count()>0:
+                    for amenities in amenity_lis:
+                        if amenities.privilage == "Subscription Management":
+                            prv="Subscription Management"
+                        elif amenities.privilage == "Admin Management":
+                            prv1="Admin Management"
+                        elif amenities.privilage == "Consumer Management":
+                            prv2="Consumer Management" 
+                        elif amenities.privilage == "Push Notification":
+                            prv3="Push Notification" 
+                        elif amenities.privilage == "Rate Card Management":
+                            prv4="Rate Card Management" 
+                        elif amenities.privilage == "Ref Data Management":
+                            prv5="Ref Data Management" 
+                        elif amenities.privilage == "Record Payment Module":
+                            prv6="Record Payment Module"
+                        elif amenities.privilage == "View Dashboard Details":
+                            prv7="View Dashboard Details"
+                        elif amenities.privilage == "View List of TID with Details":
+                            prv8="View List of TID with Details"
+                        elif amenities.privilage == "Assign Roles":
+                            prv9="Assign Roles"
+                        elif amenities.privilage == "View Selected Subscriber Details":
+                            prv10="View Selected Subscriber Details"
+                        elif amenities.privilage == "View Financial Details":
+                            prv11="View Financial Details"
+                        elif amenities.privilage == "View Advert Performance":
+                            prv12="View Advert Performance"
+                        elif amenities.privilage == "All":
+                            prv13="All"
+                        elif amenities.privilage == "None":
+                            prv14="None"
+        
+                amenity_list = {'prv':prv,'prv1':prv1,'prv2':prv2,'prv3':prv3,'prv4':prv4,'prv5':prv5,'prv6':prv6,'prv7':prv7,'prv8':prv8,'prv9':prv9,
+                                        'prv10':prv10,'prv11':prv11,'prv12':prv12,'prv13':prv13,'prv14':prv14}                       
+               
+                data = {'success':'true','role_name':role_name,'role_id':role_id,'prv_list':amenity_list,'username':request.session['login_user']}
+            
+
+        except IntegrityError as e:
+            print e
+            data = {'success':'false','message':'Error in  loading page. Please try after some time'}
+
+    except MySQLdb.OperationalError, e:
+        print e
+
+    except Exception,e:
+        print 'Exception ',e 
+    return render(request,'Admin/edit_user_role.html',data)    
 
 
 @csrf_exempt
@@ -1039,6 +1346,40 @@ def active_user_role(request):
         print "Final Data: ",data
         return HttpResponse(json.dumps(data), content_type='application/json')
 
+@csrf_exempt
+def role_list(request):
+    try:
+        try:
+            data = {'success':'true'}
+
+        except IntegrityError as e:
+            print e
+            data = {'success':'false','message':'Error in  loading page. Please try after some time','username':request.session['login_user']}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception,e:
+        print 'Exception ',e
+    print data
+    return render(request,'Admin/role-list.html',data)
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def add_new_role(request):
+    try:
+        try:
+            data = {'success':'true'}
+
+        except IntegrityError as e:
+            print e
+            data = {'success':'false','message':'Error in  loading page. Please try after some time','username':request.session['login_user']}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception,e:
+        print 'Exception ',e
+    print data
+    return render(request,'Admin/add-new-role.html',data)
+
+
+
 def user_role_active(role_obj):
     gmail_user =  "cityhoopla2016"
     gmail_pwd =  "cityhoopla@2016"
@@ -1126,15 +1467,88 @@ def save_city(request):
             city_obj.save();
             city_place_id = city_obj.city_place_id
             print "city ID",city_place_id
+            print '------city_name------',city_place_id.city_id
+            city_name = city_place_id.city_id
 
             if request.POST['check_image'] == "1":
                 city_obj.city_image = request.FILES['city_image']
                 city_obj.save()
+
+            city_id=request.POST.get('city_name')
+
+            city_obj=City_Place.objects.get(city_id=city_id)
+
+            poi_range = request.POST.get('poi_range')
+            point_of_interest_list = request.POST.get('point_of_interest_list')
+            point_of_interest_list = str(point_of_interest_list).split(',')
+            point_of_interest_image_list = []
+            
+            for i in range(int(poi_range)):
+                image = "point_of_interest_image" + str(i)
+                try:
+                    point_of_interest_image_list.append(request.FILES[image])                 
+                except:
+                    point_of_interest_image_list.append('')
+
+            zipped_wk = zip(point_of_interest_list,point_of_interest_image_list)
+            place_type = 'point_of_interest'
+            if(zipped_wk!=[]):
+                save_places(zipped_wk,city_obj,place_type)
+           
+            shop_list = request.POST.get('shop_list')
+            shop_list = str(shop_list).split(',')
+            shop_range = request.POST.get('shop_range')
+            shop_image_list = []
+            for i in range(int(shop_range)):
+                image = "shop_image" + str(i)
+                try:
+                    shop_image_list.append(request.FILES[image])                 
+                except: 
+                    shop_image_list.append('')
+
+            zipped_wk = zip(shop_list,shop_image_list)
+            place_type = 'where_to_shop'
+
+            save_places(zipped_wk,city_obj,place_type)
+
+            hospital_list = request.POST.get('hospital_list')
+            hospital_list = str(hospital_list).split(',')
+
+            hospital_range = request.POST.get('hospital_range')
+            hospital_image_list = []
+            for i in range(int(hospital_range)):
+                image = "hospital_image" + str(i)
+                try:
+                    hospital_image_list.append(request.FILES[image])                 
+                except:
+                    hospital_image_list.append('')
+            zipped_wk = zip(hospital_list,hospital_image_list)
+            place_type = 'reputed_hospitals'
+
+            save_places(zipped_wk,city_obj,place_type)
+
+            college_list = request.POST.get('college_list')
+            college_list = str(college_list).split(',')
+
+
+            college_range = request.POST.get('college_range')
+            college_image_list = []
+            for i in range(int(college_range)):
+                image = "college_image" + str(i)
+                try:
+                    college_image_list.append(request.FILES[image])                 
+                except:
+                    college_image_list.append('')
+            zipped_wk = zip(college_list,college_image_list)
+            place_type = 'college_and_universities'
+            save_places(zipped_wk,city_obj,place_type)
+            city_add(city_obj)
    
             data={
                     'success':'true',
                     'message':'City Added Successfully.',
-                    "city_place_id":  city_place_id 
+                    "city_place_id":  city_place_id,
+                    "city_name":city_name 
                     }
 
 
@@ -1251,40 +1665,55 @@ def save_city_data(request):
 
 def update_places(zipped_wk,city_obj,place_type):
     try:
-
+        # pdb.set_trace()
+        print "in update places"
         for interest_id,interest_name,interest_img in zipped_wk:
             try:
-                place_obj = Places.objects.get(place_id=interest_id)
-                place_obj.place_name = interest_name
-                if interest_img != '':
-                    place_obj.place_image=interest_img
+                print "update places try",interest_id    
+
+                splitId=interest_id.split('_')
+
+                print 'splitId',splitId
+
+                if splitId[0]=='old':
+                    place_obj = Places.objects.get(place_id=splitId[1])
+                    print "-----place_obj",place_obj
+                    place_obj.place_name = interest_name
+                    if interest_img != '':
+                        place_obj.place_image=interest_img
+                    else:
+                        pass
+                    place_obj.updated_by="Admin",
+                    place_obj.updated_date=datetime.now()
+                    place_obj.save()        
                 else:
-                    pass
-                place_obj.updated_by="Admin",
-                place_obj.updated_date=datetime.now()
-                place_obj.save()        
-            except:
-                if interest_name != '' and interest_img != '' : 
-                    interest_name_obj = Places(
-                    city_place_id=city_obj,
-                    place_name = interest_name,
-                    place_image=interest_img,
-                    place_type=place_type,
-                    created_date=datetime.now(),
-                    created_by="Admin",
-                    updated_by="Admin",
-                    updated_date=datetime.now()
-                )
-                    interest_name_obj.save()
+                    if interest_name != '':
+                        interest_name_obj = Places(
+                        city_place_id=city_obj,
+                        place_name = interest_name,
+                        place_image=interest_img,
+                        place_type=place_type,
+                        created_date=datetime.now(),
+                        created_by="Admin",
+                        updated_by="Admin",
+                        updated_date=datetime.now()
+                        )
+                        interest_name_obj.save()
+                    else:
+                        pass
+
+            except Exception,e:
+                print 'Exception',e        
+
             data = {'success': 'true'}
-            print "RESPONSE",data
 
     except Exception, e:
+        print "====Exception",e
         data={
             'success':'false',
             'message':str(e)
         }
-    return HttpResponse(json.dumps(data),content_type='application/json') 
+    return 1
 
 
 def save_places(zipped_wk,city_obj,place_type):
@@ -1317,12 +1746,44 @@ def save_places(zipped_wk,city_obj,place_type):
 
 
 
-def view_city(request):
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def reference_data(request):
     try:
         adv_list = []
-        city_obj = City_Place.objects.all()
+        country=''
+        country = request.GET.get('country')
+        state=''
+        state = request.GET.get('state')
+        status1 = ''
+        status1 = request.GET.get('status')
+        print 'status',status1
+        if country:
+            city_obj = City_Place.objects.filter(country_id=country)
+            city_obj1 = City_Place.objects.filter(country_id=country).count()
+        elif state:
+            city_obj = City_Place.objects.filter(state_id=state)
+            city_obj1 = City_Place.objects.filter(state_id=state).count()
+        elif status1 == "active":
+            city_obj = City_Place.objects.filter(city_status="1")
+            city_obj1 = City_Place.objects.filter(city_status="1").count()
+        elif status1 == "inactive":
+            city_obj = City_Place.objects.filter(city_status="0")
+            city_obj1 = City_Place.objects.filter(city_status="0").count()
+        elif status1 == "show_all":
+            city_obj = City_Place.objects.all()
+            city_obj1 = City_Place.objects.all().count() 
+        else:
+            city_obj = City_Place.objects.all()
+            city_obj1 = City_Place.objects.all().count()    
+
         for adv in city_obj:
             city_place_id = str(adv.city_place_id)
+
+            if adv.city_image:
+                city_image=SERVER_URL + adv.city_image.url
+            else:
+                city_image=SERVER_URL + '/static/assets/layouts/layout2/img/City_Hoopla_Logo.png'
+
             active_advert = 'No'
             advert_active_list = Advert.objects.filter(city_place_id=city_place_id,status="1").count()
             advert_inactive_list = Advert.objects.filter(city_place_id=city_place_id,status="0").count()
@@ -1338,37 +1799,38 @@ def view_city(request):
                     active_advert = 'Yes'
 
             if adv.city_status == '1':
-                print "IN IF"
                 status="Active"
                 if active_advert == 'No':
                     print "IN ACTIVE IF"
                     if advert_active_list == 0:
-                        edit = '<a class="col-md-offset-1 col-md-1" style="text-align: center; margin-left: 20% ! important;" href="/edit-city/?city_place_id=' + str(adv.city_place_id) + '" class="edit" data-toggle="modal"><i class="fa fa-pencil"></i></a>'
-                        delete = '<a class="col-md-1" style="text-align: center;" id="'+str(adv.city_place_id)+'" onclick="delete_user_detail(this.id)" class="fa  fa-trash-o fa-lg"><i class="fa fa-trash"></a>'
+                       print "=========IN Active if"
+                       edit = 'edit'
+                       delete = 'delete'
                     else:
-                        pass
+                        edit = 'edit'
+                        delete = 'delete1'
                 else:
                     print "IN ACTIVE ELSE"
-                    delete = ''
-                    edit = '<a class="col-md-offset-1 col-md-1" style="text-align: center; margin-left: 38% ! important;" href="/edit-city/?city_place_id=' + str(adv.city_place_id) + '" class="edit" data-toggle="modal"><i class="fa fa-pencil"></i></a>'
+                    delete = 'delete1'
+                    edit = 'edit'
                 # edit = '<a class="col-md-offset-1 col-md-1" style="text-align: center; margin-left: 32% ! important;" href="/edit-city/?city_place_id=' + str(adv.city_place_id) + '" class="edit" data-toggle="modal"><i class="fa fa-pencil"></i></a>'    
                 # delete = '<a class="col-md-1" style="text-align: center;" id="'+str(adv.city_place_id)+'" onclick="delete_user_detail(this.id)" class="fa  fa-trash-o fa-lg"><i class="fa fa-trash"></a>'    
-                action=edit + delete
+                # action=edit + delete
             else:
                 status="Inactive"
-                edit = '--'
-                delete = '--'
-                active = '<a class="col-md-2" id="'+str(adv.city_place_id)+'" onclick="active_service(this.id);" style="text-align: center;letter-spacing: 5px;width:15%;margin-left: 31% !important;" title="Activate" class="edit" data-toggle="modal" ><i class="fa fa-repeat"></i></a>'
-                action=active
-            temp_obj = {'city_name':adv.city_id.city_name,'country':adv.country_id.country_name,'state':adv.state_id.state_name,'status':status,'action':action}
+                edit = 'no'
+                delete = 'no'
+                # active = '<a class="col-md-2" id="'+str(adv.city_place_id)+'" onclick="active_service(this.id);" style="text-align: center;letter-spacing: 5px;width:15%;margin-left: 31% !important;" title="Activate" class="edit" data-toggle="modal" ><i class="fa fa-repeat"></i></a>'
+                
+            temp_obj = {'edit':edit,'delete':delete,'city_image':city_image,'city_place_id':city_place_id,'city_name':adv.city_id.city_name,'country':adv.country_id.country_name,'state':adv.state_id.state_name,'status':status}
             adv_list.append(temp_obj)
                 
-        data = {'data':adv_list}
+        data = {'success':'true','country':country,'username':request.session['login_user'],'city_status':status1,'state':state,'city_count':city_obj1,'city_list':adv_list,'country_list':get_country(request),'state_list': get_states(request)}
 
     except Exception, e:
         print 'Exception : ', e
         data = {'data': 'none'}
-    return HttpResponse(json.dumps(data), content_type='application/json')  
+    return render(request,'Admin/rdm.html',data)  
 
 
 
@@ -1473,7 +1935,7 @@ def edit_city(request):
                 city_image = SERVER_URL + city_obj.city_image.url
                 file_name = city_image[47:]
             else:
-                city_image = ""
+                city_image = SERVER_URL + '/static/assets/layouts/layout2/img/City_Hoopla_Logo.png'
                 file_name  = ""
 
             city_dict = {
@@ -1498,7 +1960,9 @@ def edit_city(request):
             intr_list = []      
             point_of_intrest = Places.objects.filter(city_place_id = city_obj,place_type = 'point_of_interest')
             poi_index = 0
+
             if point_of_intrest:
+                    print 'point_of_intrest====>',point_of_intrest
                     poi_index = len(point_of_intrest)-1
                     i = 0;
                     for place in point_of_intrest:
@@ -1510,11 +1974,12 @@ def edit_city(request):
                             file_name = ''
                         place_data = {
                             'image_id':i,
-                            'place_id':place.place_id,
+                            'place_id':'old_'+str(place.place_id),
                             'place_name':place.place_name,
                             'place_image':place_image,
                             'filename':file_name
                         }
+
                         intr_list.append(place_data)
                         i = i+1 
                     
@@ -1528,7 +1993,7 @@ def edit_city(request):
                         place_image = SERVER_URL + shop.place_image.url
                         file_name = place_image[47:]
                         place_data = {
-                             'place_id':shop.place_id,
+                             'place_id':'old_'+str(shop.place_id),
                              'image_id':i,
                             'place_name':shop.place_name,
                             'place_image':place_image,
@@ -1546,7 +2011,7 @@ def edit_city(request):
                         place_image = SERVER_URL + hosp.place_image.url
                         file_name = place_image[47:]
                         place_data = {
-                             'place_id':hosp.place_id,
+                             'place_id':'old_'+str(hosp.place_id),
                              'image_id':i,
                             'place_name':hosp.place_name,
                             'place_image':place_image,
@@ -1565,7 +2030,7 @@ def edit_city(request):
                         file_name = place_image[32:]
                         place_data = {
                             'image_id':i,
-                            'place_id':clg.place_id,
+                            'place_id':'old_'+str(clg.place_id),
                             'place_name':clg.place_name,
                             'place_image':place_image,
                             'filename':file_name
@@ -1582,9 +2047,14 @@ def edit_city(request):
 @csrf_exempt
 def update_city(request):
     print 'in update city'
-##    pdb.set_trace()
+    # pdb.set_trace()
+
     try:
         if request.method == "POST":
+            print "===Data===",request.POST
+            print "===Data===",request.FILES
+            
+
             city_obj = City_Place.objects.get(city_place_id=request.POST.get('city_place_id'))
             city_obj.city_id= City.objects.get(city_id = request.POST.get('city_name'))
             city_obj.state_id =State.objects.get(state_id=request.POST.get('state'))
@@ -1615,6 +2085,95 @@ def update_city(request):
                 city_obj.city_image = request.FILES['city_image']
                 city_obj.save()
 
+            city_id=request.POST.get('city_place_id')
+
+            city_obj = City_Place.objects.get(city_place_id=request.POST.get('city_place_id'))
+
+            poi_range = request.POST.get('poi_range')
+            print 'poi_range',poi_range
+            point_of_interest_id_list = request.POST.get('point_of_interest_id_list')
+            point_of_interest_id_list = str(point_of_interest_id_list).split(',')
+            
+            point_of_interest_list = request.POST.get('point_of_interest_list')
+            point_of_interest_list = str(point_of_interest_list).split(',')
+
+            point_of_interest_image_list = []
+        
+            for i in range(int(poi_range)+1):
+                image = "point_of_interest_image" + str(i)
+                try:
+                    point_of_interest_image_list.append(request.FILES[image]) 
+                    print "IN TRY---,point_of_interest_image_list",point_of_interest_image_list                
+                except:
+                    point_of_interest_image_list.append('')
+                    print "IN EXCEPT ---,point_of_interest_image_list",point_of_interest_image_list
+
+            place_type = 'point_of_interest'
+
+            zipped_wk = zip(point_of_interest_id_list,point_of_interest_list,point_of_interest_image_list)
+            update_places(zipped_wk,city_obj,place_type)
+                 
+            shop_id_list = request.POST.get('shop_id_list')
+            shop_id_list = str(shop_id_list).split(',')
+            
+            shop_list = request.POST.get('shop_list')
+            shop_list = str(shop_list).split(',')
+
+            shop_range = request.POST.get('shop_range')
+            shop_image_list = []
+            for i in range(int(shop_range)+1):
+                image = "shop_image" + str(i)
+                try:
+                    shop_image_list.append(request.FILES[image])                 
+                except: 
+                    shop_image_list.append('')
+
+            zipped_wk = zip(shop_id_list,shop_list,shop_image_list)
+            place_type = 'where_to_shop'
+            update_places(zipped_wk,city_obj,place_type)
+            
+            hospital_id_list = request.POST.get('hospital_id_list')
+            hospital_id_list = str(hospital_id_list).split(',')
+            
+            hospital_list = request.POST.get('hospital_list')
+            hospital_list = str(hospital_list).split(',')
+
+            hospital_range = request.POST.get('hospital_range')
+            hospital_image_list = []
+            for i in range(int(hospital_range)+1):
+                image = "hospital_image" + str(i)
+                try:
+                    hospital_image_list.append(request.FILES[image])                 
+                except:
+                    hospital_image_list.append('')
+
+            zipped_wk = zip(hospital_id_list,hospital_list,hospital_image_list)
+            place_type = 'reputed_hospitals'
+            update_places(zipped_wk,city_obj,place_type)
+            
+
+            college_id_list = request.POST.get('college_id_list')
+            college_id_list = str(college_id_list).split(',')
+
+            college_list = request.POST.get('college_list')
+            college_list = str(college_list).split(',')
+
+
+            college_range = request.POST.get('college_range')
+            college_image_list = []
+            for i in range(int(college_range)+1):
+                image = "college_image" + str(i)
+                try:
+                    college_image_list.append(request.FILES[image])                 
+                except:
+                    college_image_list.append('')
+
+            zipped_wk = zip(college_id_list,college_list,college_image_list)
+            place_type = 'college_and_universities'
+            update_places(zipped_wk,city_obj,place_type)
+
+           
+            
             city_update(city_obj)
             update_city_sms(city_obj)
             data = {'success': 'true'}
@@ -1814,11 +2373,9 @@ def city_add(city_obj):
         server.quit()
     except SMTPException,e:
         print e
-    return 1    
+    return 1   
 
 
-###############$$$$$$$........ADMIN user add.................$$$$$$$$$$$$########################
-    
 @csrf_exempt
 def user_list(request):
     try:
@@ -1884,7 +2441,7 @@ def add_new_user(request):
             'message':str(e)
         }
     print data
-    return HttpResponse(json.dumps(data),content_type='application/json') 
+    return HttpResponse(json.dumps(data),content_type='application/json')
 
 
 def edit_user_detail(request):
@@ -1892,6 +2449,7 @@ def edit_user_detail(request):
     try:
         data = {}
         final_list = []
+        #print 'User ID: ',request.GET.get('user_id')
         try:
             if request.method == "GET":
                 user_obj = UserProfile.objects.get(usre_email_id=request.GET.get('user_id'))
@@ -1903,7 +2461,7 @@ def edit_user_detail(request):
                 user_last_name = user_obj.user_last_name
                 user_email_id = user_obj.usre_email_id
                 user_contact_no = user_obj.user_contact_no
-                data = {'success':'true','user_role_list':user_role_list,'role_name':role_name,'role_id':role_id,'user_first_name':user_first_name,'user_last_name':user_last_name,'user_email_id':user_email_id,'user_contact_no':user_contact_no}            
+                data = {'success':'true','user_role_list':user_role_list,'role_name':role_name,'role_id':role_id,'user_first_name':user_first_name,'user_last_name':user_last_name,'user_email_id':user_email_id,'user_contact_no':user_contact_no}
         except IntegrityError as e:
             print e
             data = {'success':'false','message':'Error in  loading page. Please try after some time'}
@@ -1919,11 +2477,13 @@ def edit_user_detail(request):
 @csrf_exempt
 def save_user(request):
     try:
+        print 'in login'
         if request.POST:
             username = request.POST.get('Username')
             password = request.POST.get('oldpassword')
             try:
                 user = authenticate(username=username, password=password)
+                print 'valid form befor----->'
                 if user:
                     role_id = UserRole.objects.get(role_id=request.POST.get('role'))
                     user_obj = UserProfile.objects.get(usre_email_id=request.POST.get('Username'))
@@ -1966,6 +2526,7 @@ def save_user1(request):
     try:
         if request.POST:
             Username=request.POST.get('Username')
+            print '............Username............',Username
             role_id = UserRole.objects.get(role_id=request.POST.get('role'))
             user_obj = UserProfile.objects.get(usre_email_id=request.POST.get('Username'))
             user_obj.user_first_name = request.POST.get('First_name')
@@ -1987,7 +2548,7 @@ def save_user1(request):
             'message':str(e)
         }
     print data
-    return HttpResponse(json.dumps(data),content_type='application/json') 
+    return HttpResponse(json.dumps(data),content_type='application/json')
 
 def get_data(request):
     try:
@@ -2011,7 +2572,7 @@ def get_data(request):
                             status = 'Active'
                             actions =  edit +" "+ delete
                         else:
-                            status = 'In-active'
+                            status = 'Inactive'
                             actions = '<a id="'+str(user_obj)+'" onclick="reactivate_user(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Reactivate"><i class="fa fa-undo"></i></a>'                       
                         list = {'user_name':user_name,'actions':actions,'role_id':role_id,'usre_email_id':usre_email_id,'user_contact_no':user_contact_no,'status':status}
                         final_list.append(list)
@@ -2021,24 +2582,30 @@ def get_data(request):
 
             else :
                 user_list = UserProfile.objects.filter(user_status=sort_var)
-                for user_obj in user_list:
-                    if user_obj.user_role:
-                        role_id = user_obj.user_role.role_name
-                        user_first_name = str(user_obj.user_first_name)
-                        user_last_name = str(user_obj.user_last_name)
-                        user_name = user_first_name +" "+ user_last_name
-                        usre_email_id = user_obj.usre_email_id
-                        user_contact_no = user_obj.user_contact_no
-                        edit = '<a id="'+str(user_obj)+' " style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit" class="edit" data-toggle="modal" href="/edit-user-detail/?user_id='+str(user_obj)+'"><i class="fa fa-pencil"></i></a>'
-                        delete = '<a id="'+str(user_obj)+'" onclick="delete_user_detail(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Delete"  ><i class="fa fa-trash"></i></a>'
-                        if user_obj.user_status == "1":                        
-                            status = 'Active'
-                            actions =  edit +" "+ delete
-                        else:
-                            status = 'In-active'
-                            actions = '<a id="'+str(user_obj)+'" onclick="reactivate_user(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Reactivate"><i class="fa fa-undo"></i></a>'                       
-                        list = {'user_name':user_name,'actions':actions,'role_id':role_id,'usre_email_id':usre_email_id,'user_contact_no':user_contact_no,'status':status}
-                        final_list.append(list)
+                if user_list:
+                    for user_obj in user_list:
+                        if user_obj.user_role:
+                            role_id = user_obj.user_role.role_name
+                            user_first_name = str(user_obj.user_first_name)
+                            user_last_name = str(user_obj.user_last_name)
+                            user_name = user_first_name +" "+ user_last_name
+                            usre_email_id = user_obj.usre_email_id
+                            user_contact_no = user_obj.user_contact_no
+                            edit = '<a id="'+str(user_obj)+' " style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit" class="edit" data-toggle="modal" href="/edit-user-detail/?user_id='+str(user_obj)+'"><i class="fa fa-pencil"></i></a>'
+                            delete = '<a id="'+str(user_obj)+'" onclick="delete_user_detail(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Delete"  ><i class="fa fa-trash"></i></a>'
+                            if user_obj.user_status == "1":                        
+                                status = 'Active'
+                                actions =  edit +" "+ delete
+                            else:
+                                status = 'Inactive'
+                                actions = '<a id="'+str(user_obj)+'" onclick="reactivate_user(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Reactivate"><i class="fa fa-undo"></i></a>'                       
+                            list = {'user_name':user_name,'actions':actions,'role_id':role_id,'usre_email_id':usre_email_id,'user_contact_no':user_contact_no,'status':status}
+                 
+                            final_list.append(list)
+                else :
+                    final_list = []
+
+
                 data = {'success':'true','data':final_list}
 
 
@@ -2051,167 +2618,63 @@ def get_data(request):
         print 'Exception ',e
     return HttpResponse(json.dumps(data), content_type='application/json')
 
-#################.............ADD New ROLE..............##############
-@csrf_exempt
-def role_list(request):
-    try:
-        try:
-            data = {'success':'true'}
 
-        except IntegrityError as e:
-            print e
-            data = {'success':'false','message':'Error in  loading page. Please try after some time','username':request.session['login_user']}
-    except MySQLdb.OperationalError, e:
-        print e
-    except Exception,e:
-        print 'Exception ',e
-
-    print data
-    return render(request,'Admin/role-list.html',data)
-
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def add_new_role(request):
-    try:
-        try:
-            data = {'success':'true'}
-
-        except IntegrityError as e:
-            print e
-            data = {'success':'false','message':'Error in  loading page. Please try after some time','username':request.session['login_user']}
-    except MySQLdb.OperationalError, e:
-        print e
-    except Exception,e:
-        print 'Exception ',e
-
-    print data
-    return render(request,'Admin/add-new-role.html',data)
-
-def view_user_role_list(request):
+def view_user_list(request):
     try:
         data = {}
         final_list = []
         try:
-            user_role_list = UserRole.objects.all()
-            print user_role_list
-            for role_obj in user_role_list:
-                role_id=role_obj.role_id
-                role_name = role_obj.role_name
-                role_created_by=role_obj.role_created_by
-                role_updated_by=role_obj.role_updated_by
-                role_creation_date = str(role_obj.role_created_date).split(' ')[0]
-                role_updation_date = str(role_obj.role_updated_date).split(' ')[0]
-
-                if role_obj.role_status == '1':
-                    # edit = '<a class="col-md-offset-2 col-md-1" id="'+str(role_id)+'" onclick="edit_user_role(this.id);" style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit" class="edit" data-toggle="modal" href="#edit_subscription"><i class="fa fa-pencil"></i></a>'
-                    edit = '<a class="col-md-offset-2 col-md-1" href="/edit-user-role/?role_id='+str(role_id) + '" style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit"  ><i class="fa fa-pencil"></i></a>'
-                    delete = '<a id="'+str(role_id)+'" onclick="delete_user_role(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Delete"  ><i class="fa fa-trash"></i></a>'
-                    status = 'Active'
-                    actions =  edit + delete
-                else:
-                    status = 'Inactive'
-                    active = '<a class="col-md-2" id="'+str(role_id)+'" onclick="active_service(this.id);" style="text-align: center;letter-spacing: 5px;width:10%;margin-left: 22px !important;" title="Activate" class="edit" data-toggle="modal" href="#edit_subscription"><i class="fa fa-repeat"></i></a>'
-                    actions =  active
-             
-                list = {'role_name':role_name,'actions':actions,'role_id':role_id,'role_creation_date':role_creation_date,'role_updation_date':role_updation_date,
-                        'created_by':role_created_by,'updated_by':role_updated_by}
-                final_list.append(list)
-            data = {'success':'true','data':final_list}
+            user_list = UserProfile.objects.filter()
+            for user_obj in user_list:
+                if user_obj.user_role:
+                    role_id = user_obj.user_role.role_name
+                    user_first_name = str(user_obj.user_first_name)
+                    user_last_name = str(user_obj.user_last_name)
+                    user_name = user_first_name +" "+ user_last_name
+                    usre_email_id = user_obj.usre_email_id
+                    user_contact_no = user_obj.user_contact_no
+                    edit = '<a id="'+str(user_obj)+' " style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit" class="edit" data-toggle="modal" href="/edit-user-detail/?user_id='+str(user_obj)+'"><i class="fa fa-pencil"></i></a>'
+                    delete = '<a id="'+str(user_obj)+'" onclick="delete_user_detail(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Delete"  ><i class="fa fa-trash"></i></a>'
+                    if user_obj.user_status == "1":
+                        print "if"
+                        status = 'Active'
+                        actions =  edit +" "+ delete
+                    else:
+                        print "else"
+                        status = 'Inactive'
+                        actions = '<a id="'+str(user_obj)+'" onclick="reactivate_user(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Reactivate"><i class="fa fa-undo"></i></a>'
+                    list = {'user_name':user_name,'actions':actions,'role_id':role_id,'usre_email_id':usre_email_id,'user_contact_no':user_contact_no,'status':status}
+                    final_list.append(list)
+                data = {'success':'true','data':final_list}
         except IntegrityError as e:
             print e
             data = {'success':'false','message':'Error in  loading page. Please try after some time'}
-    except MySQLdb.OperationalError, e:
-        print e
+        except MySQLdb.OperationalError, e:
+            print e
     except Exception,e:
         print 'Exception ',e
-    print data    
     return HttpResponse(json.dumps(data), content_type='application/json')
 
+
 @csrf_exempt
-def edit_user_role(request):
-    # pdb.set_trace()
+def delete_user(request):
     try:
-        data = {}
-        final_list = []
-        try:
-            if request.method == "GET":
-                print request
-                role_obj = UserRole.objects.get(role_id=request.GET.get('role_id'))
-                role_id = str(role_obj.role_id)
-                role_name = role_obj.role_name
+        user_obj = UserProfile.objects.get(username=request.POST.get('user_id'))
+        user_obj.user_status = '0'
+        user_obj.save()
+        data = {'message': 'User Inactivated Successfully', 'success': 'true'}
 
-                prv = ""
-                prv1 =""
-                prv2 =""
-                prv3 =""
-                prv4 =""
-                prv5 =""
-                prv6 =""
-                prv7 =""  
-                prv8 =""
-                prv9 =""
-                prv10 =""
-                prv11 =""
-                prv12 =""
-                prv13 =""
-                prv14 =""
-                #amenity_list = []
-                amenity_lis = Privileges.objects.filter(role_id=role_obj)
-                print 'amenity_lis',amenity_lis
-                if amenity_lis.count()>0:
-                    for amenities in amenity_lis:
-                        if amenities.privilage == "Subscription Management":
-                            prv="Subscription Management"
-                        elif amenities.privilage == "Admin Management":
-                            prv1="Admin Management"
-                        elif amenities.privilage == "Consumer Management":
-                            prv2="Consumer Management" 
-                        elif amenities.privilage == "Push Notification":
-                            prv3="Push Notification" 
-                        elif amenities.privilage == "Rate Card Management":
-                            prv4="Rate Card Management" 
-                        elif amenities.privilage == "Ref Data Management":
-                            prv5="Ref Data Management" 
-                        elif amenities.privilage == "Record Payment Module":
-                            prv6="Record Payment Module"
-                        elif amenities.privilage == "View Dashboard Details":
-                            prv7="View Dashboard Details"
-                        elif amenities.privilage == "View List of TID with Details":
-                            prv8="View List of TID with Details"
-                        elif amenities.privilage == "Assign Roles":
-                            prv9="Assign Roles"
-                        elif amenities.privilage == "View Selected Subscriber Details":
-                            prv10="View Selected Subscriber Details"
-                        elif amenities.privilage == "View Financial Details":
-                            prv11="View Financial Details"
-                        elif amenities.privilage == "View Advert Performance":
-                            prv12="View Advert Performance"
-                        elif amenities.privilage == "All":
-                            prv13="All"
-                        elif amenities.privilage == "None":
-                            prv14="None"
-        
-                amenity_list = {'prv':prv,'prv1':prv1,'prv2':prv2,'prv3':prv3,'prv4':prv4,'prv5':prv5,'prv6':prv6,'prv7':prv7,'prv8':prv8,'prv9':prv9,
-                                        'prv10':prv10,'prv11':prv11,'prv12':prv12,'prv13':prv13,'prv14':prv14}                       
-               
-                data = {'success':'true','role_name':role_name,'role_id':role_id,'prv_list':amenity_list,'username':request.session['login_user']}
-            
-
-        except IntegrityError as e:
-            print e
-            data = {'success':'false','message':'Error in  loading page. Please try after some time'}
-
-    except MySQLdb.OperationalError, e:
+    except IntegrityError as e:
         print e
-
-    except Exception,e:
-        print 'Exception ',e 
-    return render(request,'Admin/edit_user_role.html',data)
-
+    except Exception, e:
+        print e
+    print "Final Data: ", data
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 @csrf_exempt
 def activate_user(request):
         try:
-            user_obj = UserProfile.objects.get(usre_email_id=request.POST.get('user_id'))
+            user_obj = UserProfile.objects.get(username=request.POST.get('user_id'))
             user_obj.user_status = '1'
             user_obj.save()
             data = {'message': 'User Activated Successfully', 'success':'true'}
@@ -2222,5 +2685,3 @@ def activate_user(request):
             print e
         print "Final Data: ",data
         return HttpResponse(json.dumps(data), content_type='application/json')
-
-

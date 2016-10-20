@@ -48,8 +48,10 @@ def add_category(request):
     if not request.user.is_authenticated():
         return redirect('backoffice')
     else:
+        country_list = Country.objects.filter(country_status='1')
+        print '------country list-----',country_list
         city_list = City_Place.objects.filter(city_status='1')
-        data = {'city_list': city_list, 'username': request.session['login_user']}
+        data = {'country_list':country_list,'city_list': city_list, 'username': request.session['login_user']}
         return render(request, 'Admin/add_category.html', data)
 
 @csrf_exempt
@@ -73,6 +75,60 @@ def get_cat_sequence(request):
     }
     return HttpResponse(json.dumps(data), content_type='application/json')
 
+
+# TO GET THE STATE
+def cget_state(request):
+##    pdb.set_trace()
+    country_id=request.GET.get('country_id')
+    print '-----country id-------',country_id
+    state_list = []
+    data={}
+    try:
+        state = State.objects.filter(state_status='1',country_id=str(country_id))
+        # a = '<option value='+ 'select State'+' </option>'
+        # state_list.append(a)
+        for sta in state:
+            options_data = '<option value=' + str(sta.state_id) + '>' + sta.state_name + '</option>'
+            state_list.append(options_data)
+        print state_list
+        data = {'state_list':state_list}
+        print '--------data-----',data
+    except Exception, e:
+        print 'Exception ', e
+        data = {'state_list':'No states available' }
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def get_country(request):
+    country_list = Country.objects.filter(country_status='1')
+    print '------country list-----',country_list
+    for c in country_list:
+        options_data = '<option value=' + str(c.country_id) + '>' + c.country_name + '</option>'
+        country_list.append(options_data)
+        print '------------city-list---------',country_list
+    data = {'country_list':country_list}
+    print '--------data-----',data
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+# TO GET THE CITY
+def cget_city(request):
+    state_id=request.GET.get('state_id')
+    print '-----country id-------',state_id
+    city_list = []
+    data={}
+    try:
+        City = City_Place.objects.filter(city_status='1',state_id=str(state_id))
+        # a = '<option value='+ 'select City'+' </option>'
+        # city_list.append(a)
+        for city in City:
+            options_data = '<option value=' + str(city.city_place_id) + '>' + city.city_id.city_name + '</option>'
+            city_list.append(options_data)
+        print '------------city-list---------',city_list
+        data = {'city_list':city_list}
+        print '--------data-----',data
+    except Exception, e:
+        print 'Exception ', e
+        data = {'city_list':'No city available' }
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 @csrf_exempt
 def save_category(request):
@@ -103,17 +159,26 @@ def save_category(request):
                 return HttpResponse(json.dumps(data), content_type='application/json')
 
         try:
-            category_obj = Category.objects.get(category_name=request.POST.get('cat_name'))
-
-            data = {
-                'success': 'false',
-                'message': "Category already exist"
-            }
+            cat_obj = Category.objects.get(category_name=request.POST.get('cat_name'))
+            cat_id = cat_obj.category_id
+            print '-------cat id-------',cat_id
+            # cat_obj = CategoryCityMap.objects.get(city_place_id=city_id,category_id=cat_id)
+            print '---------city list in try------',city_list
+            for c in city_list:
+                print '---------city id-------',c
+                cat_obj = CategoryCityMap.objects.get(city_place_id=c,category_id=cat_id)
+                print '--------cat_obj------',cat_obj
+                #category_obj = Category.objects.get(category_name=request.POST.get('cat_name'))
+                data = {
+                    'success': 'false',
+                    'message': "Category already exist"
+                }
 
         except Exception, e:
             print e
             cat_obj = Category(
                 category_name=cat_name,
+                category_created_by = request.session['login_user'],
                 category_created_date=datetime.now(),
                 category_updated_date=datetime.now(),
                 category_status='1'
@@ -291,6 +356,207 @@ def updatecheksamesequence(zipped_list, cat_id):
                 return False
             else:
                 return True
+
+def search_category_list(request):
+    data = {}
+    final_list = []
+    clist=[]
+    try:
+        print '------------country------',request.GET.get('cid')
+        print '------------state------',request.GET.get('sid')
+        print '------------city------',request.GET.get('cityid')
+        if request.GET.get('cid'):
+            city_obj = City_Place.objects.filter(country_id=request.GET.get('cid'))
+            cat_obj = CategoryCityMap.objects.filter(city_place_id__in=city_obj)
+            print '-------cat_obj----',cat_obj
+            for c in cat_obj:
+                print c.category_id
+                category_list.append(Category.objects.get(category_id = c.category_id))
+                print '----------category list------',category_list
+        for cat_obj in category_list:
+
+            category_id = str(cat_obj.category_id)
+            active_advert = 'No'
+            cat_color = cat_obj.category_color
+            advert_obj_list = Advert.objects.filter(category_id=category_id)
+            obj_count = Advert.objects.filter(category_id=category_id).count()
+            inactive_count = Advert.objects.filter(category_id=category_id,status='0').count()
+            if advert_obj_list:
+                if obj_count == inactive_count:
+                    active_advert = 'No'
+                else:
+                    for advert_obj in advert_obj_list:
+                        advert_id = str(advert_obj.advert_id)
+                        pre_date = datetime.now().strftime("%m/%d/%Y")
+                        pre_date = datetime.strptime(pre_date, "%m/%d/%Y")
+                        advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=advert_id)
+                        end_date = advert_sub_obj.business_id.end_date
+                        end_date = datetime.strptime(end_date, "%m/%d/%Y")
+                        date_gap = end_date - pre_date
+                        if int(date_gap.days) >= 0:
+                            active_advert = 'Yes'
+
+            category_name = cat_obj.category_name
+            city_name = CategoryCityMap.objects.filter(category_id=cat_obj)
+            city_list = ''
+            if city_name:
+                for city in city_name:
+                    city_list = str(city.city_place_id.city_id.city_name) + ',' + city_list
+                city_list = city_list[:-1]
+            if not city_list:
+                city_list = 'All'
+
+            category_created_by = str(cat_obj.category_created_by)
+            category_updated_by = str(cat_obj.category_updated_by)
+            creation_date = str(cat_obj.category_created_date).split()[0]
+            updation_date = str(cat_obj.category_updated_date).split()[0]
+            if (cat_obj.category_status == '1'):
+                status = 'Active'
+                if active_advert == 'No':
+                    delete = '<a id="' + str(
+                        category_id) + '" onclick="delete_category(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Delete"  ><i class="fa fa-trash"></i></a>'
+                else:
+                    delete = ''
+                edit = '<a  id="' + str(category_id) + '" href="/edit-category/?category_id=' + str(
+                    category_id) + '" style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit" class="edit" data-toggle="modal" href="#edit_subscription"><i class="fa fa-pencil"></i></a>'
+                actions = edit + delete
+            else:
+                status = 'Inactive'
+                active = '<a class="col-md-2" id="' + str(
+                    cat_obj) + '" onclick="active_service(this.id);" style="text-align: center;letter-spacing: 5px;width:15%;margin-left: 36px !important;" title="Activate" class="edit" data-toggle="modal" href="#edit_subscription"><i class="fa fa-repeat"></i></a>'
+                actions = active
+            list = {'category_id':category_id,'status': status,'cat_color':cat_color, 'category_name': category_name, 'actions': actions, 'city_name': city_list,
+                    'creation_date': creation_date,'category_updated_by':category_updated_by,'category_created_by':category_created_by, 'updation_date': updation_date, 'updated_by':cat_obj.category_updated_by}
+            final_list.append(list)
+        data = {'username':request.session['login_user'],'success': 'true', 'data': final_list}
+        #print '----------data------',data
+    except IntegrityError as e:
+        print e
+        data = {'username':request.session['login_user'],'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+        print '----------data------',data
+    #data = {'username':request.session['login_user']}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def get_all_category_list_details(request):
+    print '--------in category list---------',request.GET.get('category_id')
+    c = request.GET.get('category_id')
+    try:
+        cat_obj = Category.objects.get(category_id=request.GET.get('category_id'))
+        cat_l1_obj = CategoryLevel1.objects.filter(parent_category_id=str(cat_obj.category_id))
+        cat_str = ''
+        i = 0
+        for cat_l1 in cat_l1_obj:
+            i = int(i) + 1
+            level_name = "level"+c+"_" + str(i)
+            cat_l2_obj = CategoryLevel2.objects.filter(parent_category_id=str(cat_l1.category_id))
+            if cat_l2_obj:
+                icon = 'fa-minus-square'
+                click_function = ''
+                flag_click = "onclick=collapse_div('" + level_name + "',this)"
+                cursor_style = ''
+            else:
+                icon = ''
+                click_function = "onclick='showTable(this," + str(cat_l1.category_id) + ",1)'"
+                flag_click = ''
+                cursor_style = "style='cursor: pointer;'"
+            cat_str = cat_str + "<div class='col-lg-12 padding_left0'>" \
+                                "<div class='col-lg-1' style='padding:0px;'>" \
+                                "<a class='fa " + icon + "' " + flag_click + "></a></div>" \
+                                                                             "<div class='col-lg-11'><label " + cursor_style + " class='label_item' " + click_function + ">" + cat_l1.category_name + "</label>" \
+                                                                                                                                                                                                      "</div></div>"
+            j = 0
+            for cat_l2 in cat_l2_obj:
+                j = int(j) + 1
+                level_name_1 = "level"+c+"_" + str(i) + "_" + str(j)
+                cat_l3_obj = CategoryLevel3.objects.filter(parent_category_id=str(cat_l2.category_id))
+                if cat_l3_obj:
+                    icon = 'fa-minus-square'
+                    click_function = ''
+                    flag_click = "onclick=collapse_div('" + level_name_1 + "',this)"
+                    cursor_style = ''
+                else:
+                    icon = ''
+                    click_function = "onclick='showTable(this," + str(cat_l2.category_id) + ",2)'"
+                    flag_click = ''
+                    cursor_style = "style='cursor: pointer;'"
+                cat_str = cat_str + "<div class='row col_div " + level_name + "' style='margin-left: 6.33333%;'>" \
+                                                                              "<div class='col-lg-12 padding_left0'>" \
+                                                                              "<div class='col-lg-1' style='padding:0px;'>" \
+                                                                              "<a class='fa " + icon + "' " + flag_click + "></a></div>" \
+                                                                                                                           "<div class='col-lg-11'><label " + cursor_style + " class='label_item' " + click_function + ">" + cat_l2.category_name + "</label>" \
+                                                                                                                                                                                                                                                    "</div></div>"
+                k = 0
+                for cat_l3 in cat_l3_obj:
+                    k = int(k) + 1
+                    level_name_2 = "level"+c+"_" + str(i) + "_" + str(j) + "_" + str(k)
+                    cat_l4_obj = CategoryLevel4.objects.filter(parent_category_id=str(cat_l3.category_id))
+                    if cat_l4_obj:
+                        icon = 'fa-minus-square'
+                        click_function = ''
+                        flag_click = "onclick=collapse_div('" + level_name_2 + "',this)"
+                        cursor_style = ''
+                    else:
+                        icon = ''
+                        click_function = "onclick='showTable(this," + str(cat_l3.category_id) + ",3)'"
+                        flag_click = ''
+                        cursor_style = "style='cursor: pointer;'"
+                    cat_str = cat_str + "<div class='row col_div " + level_name_1 + "' style='margin-left: 6.33333%;'>" \
+                                                                                    "<div class='col-lg-12 padding_left0'>" \
+                                                                                    "<div class='col-lg-1' style='padding:0px;'>" \
+                                                                                    "<a class='fa " + icon + "' " + flag_click + "></a></div>" \
+                                                                                                                                 "<div class='col-lg-11'><label " + cursor_style + " class='label_item' " + click_function + ">" + cat_l3.category_name + "</label>" \
+                                                                                                                                                                                                                                                          "</div></div>"
+                    l = 0
+                    for cat_l4 in cat_l4_obj:
+                        l = int(l) + 1
+                        level_name_3 = "level"+c+"_" + str(i) + "_" + str(j) + "_" + str(k) + "_" + str(l)
+                        cat_l5_obj = CategoryLevel5.objects.filter(parent_category_id=str(cat_l4.category_id))
+                        if cat_l5_obj:
+                            icon = 'fa-minus-square'
+                            click_function = ''
+                            flag_click = "onclick=collapse_div('" + level_name_3 + "',this)"
+                            cursor_style = ''
+                        else:
+                            icon = ''
+                            click_function = "onclick='showTable(this," + str(cat_l4.category_id) + ",4)'"
+                            flag_click = ''
+                            cursor_style = "style='cursor: pointer;'"
+                        cat_str = cat_str + "<div class='row col_div " + level_name_2 + "' style='margin-left: 6.33333%;'>" \
+                                                                                        "<div class='col-lg-12 padding_left0'>" \
+                                                                                        "<div class='col-lg-1' style='padding:0px;'>" \
+                                                                                        "<a class='fa " + icon + "' " + flag_click + "></a></div>" \
+                                                                                                                                     "<div class='col-lg-11'><label " + cursor_style + " class='label_item' " + click_function + " >" + cat_l4.category_name + "</label>" \
+                                                                                                                                                                                                                                                               "</div></div>"
+                        for cat_l5 in cat_l5_obj:
+                            cursor_style = "style='cursor: pointer;'"
+                            cat_str = cat_str + "<div class='row col_div " + level_name_3 + "' style='margin-left: 6.33333%;'>" \
+                                                                                            "<div class='col-lg-12 padding_left0'>" \
+                                                                                            "<div class='col-lg-1' style='padding:0px;'>" \
+                                                                                            "<a class='fa '></a></div>" \
+                                                                                            "<div class='col-lg-11'><label " + cursor_style + " class='label_item' onclick='showTable(this," + str(
+                                cat_l5.category_id) + ",5)'>" + cat_l5.category_name + "</label>" \
+                                                                                       "</div></div>"
+                            cat_str = cat_str + '</div>'
+                        cat_str = cat_str + '</div>'
+                    cat_str = cat_str + '</div>'
+                cat_str = cat_str + '</div>'
+            cat_str = cat_str + '</div>'
+        data = {
+            'success': 'true',
+            'message': "Service already exist",
+            'cat_str': cat_str
+        }
+    except Exception, e:
+        print e
+        data = {
+            'success': 'false',
+            'message': "Service added successfully"
+        }
+    print '------------data------',data
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
 
 
 def category_list(request):
@@ -474,14 +740,22 @@ def edit_category(request):
                 category = Category.objects.get(category_id=request.GET.get('category_id'))
                 category_id = str(category.category_id)
                 category_name = str(category.category_name)
-                city_name = CategoryCityMap.objects.filter(category_id=category)
-                sequence_list = ['1', '2', '3', '4', '5']
+                city_name = CategoryCityMap.objects.get(category_id=category)
+                print '---------city name-------',city_name
 
-                for city in city_name:
-                    selected_city_list.append(str(city.city_place_id.city_id.city_name))
-                    selected_sequence_list.append(str(city.sequence))
 
-                city_sequence_list = zip(selected_city_list, selected_sequence_list)
+                city_obj = str(city_name.city_place_id.city_id)
+                state_obj = str(city_name.city_place_id.state_id)
+                country_obj = city_name.city_place_id.country_id
+                seq_obj = str(city_name.sequence)
+                print '---------state_obj name-------',state_obj
+                print '---------country_obj name-------',country_obj
+
+                country_list = Country.objects.all()
+                state_list = State.objects.filter(country_id = str(city_name.city_place_id.country_id.country_id))
+                print '----state list-----',state_list
+                city_list = City_Place.objects.filter(state_id = str(city_name.city_place_id.state_id.state_id))
+                print '-------city_list-----',city_list
 
                 active_advert = 'No'
 
@@ -581,9 +855,10 @@ def edit_category(request):
                 length5 = len(sub_category5_list)
                 print '=====category5======='
 
-                data = {'username': request.session['login_user'], 'sequence_list': sequence_list, 'length5': length5,
+                data = {'username': request.session['login_user'], 'length5': length5,
                         'length4': length4, 'length3': length3, 'length2': length2, 'length1': length1,
-                        'category_id': category_id, 'city_sequence_list': city_sequence_list, 'city_list': city_list,
+                        'category_id': category_id, 'city_list': city_list, 'state_list': state_list, 'country_list': country_list,
+                        'city_id': city_obj, 'state_id': state_obj, 'country_id': country_obj, 'city_sequence': seq_obj,
                         'success': 'true', 'sub_category5_list': sub_category5_list,'cat_img':SERVER_URL + category.category_image.url,
                         'sub_category4_list': sub_category4_list, 'sub_category3_list': sub_category3_list,
                         'sub_category2_list': sub_category2_list, 'category_name': category_name,'active_advert':active_advert,

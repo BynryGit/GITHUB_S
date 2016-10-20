@@ -29,6 +29,7 @@ import json
 from django.db import IntegrityError
 from captcha_form import CaptchaForm
 import operator
+from operator import itemgetter
 from django.db.models import Q
 import datetime
 from datetime import datetime
@@ -37,30 +38,16 @@ from django.views.decorators.cache import cache_control
 # HTTP Response
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+from DigiSpace.tasks import send_to_subscriber
+from DigiSpace.tasks import send_sms_to_consumer
+from DigiSpace.tasks import send_email_to_consumer
 
-SERVER_URL = "http://52.40.205.128"   
+#from DigiSpace.tasks import print_some_times
+SERVER_URL = "http://52.40.205.128"
 #SERVER_URL = "http://127.0.0.1:8000"
 
 #CTI CRM APIs=============================================================================
 
-def crm_login_form(request):
-    form = CaptchaForm()
-    return render(request,'CTI_CRM/operator_login.html', dict(form=form))
-
-def crm_home(request):
-    return render(request,'CTI_CRM/crm_home.html')
-
-@csrf_exempt
-def demo_function(request):
-    print 'in demo'
-    data = {}
-    try:
-        if request.method == "POST":
-            print 'list: ', request.POST.getlist('a')
-
-    except Exception, e:
-        print 'Exception ', e
-    return HttpResponse(json.dumps(data), content_type='application/json')
 
 @csrf_exempt
 def get_consumer_detail(request):
@@ -82,72 +69,25 @@ def get_consumer_detail(request):
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 @csrf_exempt
-def crm_login(request):
-        data = {}
-        try:
-            if request.POST:
-                print 'logs: login request with: ', request.POST
-                username = request.POST['username']
-                password = request.POST['password']
-                try:
-                        user_obj = Operator.objects.get(username=username)
-                        user = authenticate(username=username, password=password)
-                        print 'valid form befor----->'
-                        if user :
-                            if user.is_active:
-                                print 'valid form after----->',user
-                                user_profile_obj = Operator.objects.get(username=user)
-                                print '---user_profile_obj----',user_profile_obj
-                                if user_profile_obj.operator_status=="1":
-                                    print '--------in if ---------'
-                                    request.session['login_user'] = user_profile_obj.username
-                                    print "USERNAME",request.session['login_user']
-                                    login(request,user)
-                                    print "USERNAME",request.session['login_user']
-                                    data= { 'success' : 'true','username':request.session['login_user']}
-                            else:
-                                data= { 'success' : 'false', 'message':'User Is Not Active'}
-                                return HttpResponse(json.dumps(data), content_type='application/json')
-                        else:
-                                data= { 'success' : 'Invalid Password', 'message' :'Invalid Password'}
-                                print "====Password",data
-                                return HttpResponse(json.dumps(data), content_type='application/json')
-                except:
-                        data= { 'success' : 'false', 'message' :'Invalid Username'}
-                        return HttpResponse(json.dumps(data), content_type='application/json')
-            else:
-                    data= { 'success' : 'Invalid Captcha', 'message' :'Invalid Captcha'}
-                    print "INVALID CAPTCHA"
-                    return HttpResponse(json.dumps(data), content_type='application/json')
-        except MySQLdb.OperationalError, e:
-            print e
-            data= {'success' : 'false', 'message':'Internal server'}
-            return HttpResponse(json.dumps(data), content_type='application/json')
-        except Exception, e:
-            print 'Exception ', e
-            data= { 'success' : 'false', 'message':'Invalid Username or Password'}
-        return HttpResponse(json.dumps(data), content_type='application/json')
-
-@csrf_exempt
 def caller_details_api(request):
+    print '-----------body--123----',request.GET.get('CallerID')
     try:
-        json_obj = json.loads(request.body)
-        print '----------json obj--------',json_obj
         call_obj = CallInfo(
-            UCID=json_obj['UCID'],
-            CallerID=json_obj['CallerID'],
-            CalledNo=json_obj['CalledNo'],
-            CallStartTime=json_obj['CallStartTime'],
-            DialStartTime=json_obj['DialStartTime'],
-            DialEndTime=json_obj['DialEndTime'],
-            DisconnectType=json_obj['DisconnectType'],
-            CallStatus=json_obj['CallStatus'],
-            CallDuration=json_obj['CallDuration'],
-            CallType=json_obj['CallType'],
-            AudioRecordingURL=json_obj['Audio Recording URL'],
-            DialedNumber=json_obj['DialedNumber'],
-            Department=json_obj['Department'],
-            Extn=json_obj['Extn']
+            UCID=request.GET.get('UCID'),
+            CallerID=request.GET.get('CallerID'),
+            CalledNo=request.GET.get('CalledNo'),
+            CallStartTime=request.GET.get('CallStartTime'),
+            DialStartTime=request.GET.get('DialStartTime'),
+            DialEndTime=request.GET.get('DialEndTime'),
+            DisconnectType=request.GET.get('DisconnectType'),
+            CallStatus=request.GET.get('CallStatus'),
+            CallDuration=request.GET.get('CallDuration'),
+            CallType=request.GET.get('CallType'),
+            AudioRecordingURL=request.GET.get('RecordingURL'),
+            DialedNumber=request.GET.get('DialedNumber'),
+            Department=request.GET.get('Department'),
+            CallBackParam=request.GET.get('CallBackParam'),
+            Extn=request.GET.get('Extn')
         );
         call_obj.save()
         data= { 'success' : 'true'}
@@ -159,69 +99,110 @@ def caller_details_api(request):
 
 
 def crm_details(request):
-    user_obj = CallerDetails.objects.get(CallerID=request.GET.get('callerid'))
-    enquiry=''
-    address=''
-    e_date=''
-    action=''
-    caller_id=''
-    detail_list=[]
-    caller_id = user_obj.CallerID
-    phone_number = user_obj.IncomingTelNo
-    first_name = user_obj.first_name
-    last_name = user_obj.last_name
-    CallerArea = user_obj.CallerArea
-    CallerCity = user_obj.CallerCity
-    CallerPincode = user_obj.CallerPincode
+    try:
+        if request.GET.get('number'):
+            request.session['number']=request.GET.get('number')
+            user_obj = CallerDetails.objects.get(IncomingTelNo=request.GET.get('number'))
+            enquiry=''
+            address=''
+            e_date=''
+            detail_list=[]
+            caller_id = user_obj.CallerID
+            phone_number = user_obj.IncomingTelNo
+            first_name = user_obj.first_name
+            last_name = user_obj.last_name
+            email = user_obj.email
+            CallerArea = user_obj.CallerArea
+            CallerCity = user_obj.CallerCity
+            CallerPincode = user_obj.CallerPincode
 
-    enquiry_obj = EnquiryDetails.objects.filter(CallerID=user_obj)
-    print '--------enquiry obj-----',enquiry_obj
-    sr_no=0
-    for e in enquiry_obj:
-        sr_no=sr_no+1
-        enquiry = e.enquiryFor
-        print '-----enquiry-----',enquiry
-        address = str(e.SelectedArea) +','+str(e.SelectedCity)+'-'+str(e.SelectedPincode)
-        e_date = e.created_date
+            enquiry_obj = EnquiryDetails.objects.filter(CallerID=user_obj)
+            print '--------enquiry obj-----',enquiry_obj
+            sr_no=0
+            for e in enquiry_obj:
+                sr_no=sr_no+1
+                enquiry = e.enquiryFor
+                print '-----enquiry-----',enquiry
+                address = str(e.SelectedArea)
+                e_date = e.created_date
 
-        data_list={'sr_no':sr_no,'enquiry':enquiry,'address':address,'e_date':e_date}
-        detail_list.append(data_list)
+                data_list={'sr_no':sr_no,'enquiry':enquiry,'address':address,'e_date':e_date}
+                detail_list.append(data_list)
 
-    data = {'detail_list':detail_list,'caller_id':caller_id,'phone_number':phone_number,'first_name':first_name,'last_name':last_name,'area':CallerArea,'city':CallerCity,'pincode':CallerPincode,
-            'enquiry':enquiry,'address':address,'e_date':e_date}
-    return render(request,'CTI_CRM/crm_details.html',data)
+            city_list = City.objects.all()
+            category_list = Category.objects.all()
+
+            data = {'city_list':city_list,'category_list':category_list,'detail_list':detail_list,'caller_id':caller_id,'phone_number':phone_number,'email':email,'first_name':first_name,'last_name':last_name,'area':CallerArea,'city':CallerCity,'pincode':CallerPincode,
+                    'enquiry':enquiry,'address':address,'e_date':e_date,'number':request.session['number']}
+            return render(request,'CTI_CRM/crm_details.html',data)
+        else:
+            request.session['number1']=request.GET.get('number1')
+            user_obj = CallerDetails.objects.get(IncomingTelNo=request.GET.get('number1'))
+            enquiry=''
+            address=''
+            e_date=''
+            action=''
+            caller_id=''
+            detail_list=[]
+            caller_id = user_obj.CallerID
+            phone_number = user_obj.IncomingTelNo
+            first_name = user_obj.first_name
+            last_name = user_obj.last_name
+            email = user_obj.email
+            CallerArea = user_obj.CallerArea
+            CallerCity = user_obj.CallerCity
+            CallerPincode = user_obj.CallerPincode
+
+            enquiry_obj = EnquiryDetails.objects.filter(CallerID=user_obj)
+            print '--------enquiry obj-----',enquiry_obj
+            sr_no=0
+            for e in enquiry_obj:
+                sr_no=sr_no+1
+                enquiry = e.enquiryFor
+                print '-----enquiry-----',enquiry
+                address = str(e.SelectedArea)
+                e_date = e.created_date
+
+                data_list={'sr_no':sr_no,'enquiry':enquiry,'address':address,'e_date':e_date}
+                detail_list.append(data_list)
+
+            city_list = City.objects.all()
+            category_list = Category.objects.all()
+
+            data = {'city_list':city_list,'category_list':category_list,'detail_list':detail_list,'caller_id':caller_id,'phone_number':phone_number,'email':email,'first_name':first_name,'last_name':last_name,'area':CallerArea,'city':CallerCity,'pincode':CallerPincode,
+                    'enquiry':enquiry,'address':address,'e_date':e_date,'number1':request.session['number']}
+            print '-------data-------',data
+            return render(request,'CTI_CRM/crm_details.html',data)
+    except:
+        city_list = City.objects.all()
+        data = {'city_list':city_list,'number':request.session['number']}
+        return render(request,'CTI_CRM/new_consumer.html',data)
 
 def new_consumer(request):
     data={}
+    number=request.GET.get('number')
     city_list = City.objects.all()
-    data = {'city_list':city_list}
+    data = {'city_list':city_list,'number':number}
     return render(request,'CTI_CRM/new_consumer.html',data)
 
 @csrf_exempt
 def save_consumer_details(request):
-    print "IN SAVE consumer"
     id = Pincode.objects.get(pincode=request.POST.get('pincode'))
     city = City.objects.get(city_id=request.POST.get('city'))
-    mobile = CallerDetails.objects.get(IncomingTelNo=request.POST.get('mobile'))
-    print '---------mobile--------',mobile
     try:
-        if request.method == "POST":
-            if CallerDetails.objects.get(IncomingTelNo=request.POST.get('mobile')):
-                data = {'success': 'exists','caller_id':str(mobile)}
-            else:
-                caller_obj = CallerDetails(
-                    first_name=request.POST.get('fname'),
-                    last_name=request.POST.get('lname'),
-                    IncomingTelNo=request.POST.get('mobile'),
-                    email=request.POST.get('email'),
-                    CallerArea=request.POST.get('area'),
-                    CallerPincode=id,
-                    CallerCity=city,
-                    caller_created_date=datetime.now()
-                )
-                caller_obj.save()
-                print '--------caller id------',caller_obj
-                data = {'success': 'true','caller_id':str(caller_obj)}
+        caller_obj = CallerDetails(
+            first_name=request.POST.get('fname'),
+            last_name=request.POST.get('lname'),
+            IncomingTelNo=request.POST.get('mobile'),
+            email=request.POST.get('email'),
+            CallerArea=request.POST.get('area'),
+            CallerPincode=id,
+            CallerCity=city,
+            caller_created_date=datetime.now()
+        )
+        caller_obj.save()
+        print '--------caller id------',caller_obj.IncomingTelNo
+        data = {'success': 'true','number1':str(caller_obj.IncomingTelNo)}
 
     except Exception, e:
         print 'Exception ', e
@@ -240,73 +221,145 @@ def get_pincode_list(request):
         for pincode in pincode_objs:
             options_data = '<option>' + pincode['pincode'] + '</option>'
             pincode_list.append(options_data)
-            #print pincode_list
         data = {'pincode_list': pincode_list}
     except Exception, ke:
         print ke
         data = {'city_list': 'none', 'message': 'No city available'}
     return HttpResponse(json.dumps(data), content_type='application/json')
 
-def enquiry_form(request):
-    user_obj = CallerDetails.objects.get(CallerID=request.GET.get('callerid'))
-    phone_number = user_obj.IncomingTelNo
-    first_name = user_obj.first_name
-    last_name = user_obj.last_name
-    CallerArea = user_obj.CallerArea
-    CallerCity = user_obj.CallerCity
-    CallerPincode = user_obj.CallerPincode
-    email = user_obj.email
-    cid = request.GET.get('callerid')
+@csrf_exempt
+def send_subscriber_details(request):
+    i=0
+    slist=[]
+    list1=[]
+    list=[]
+    print '------------send data----------',request.POST.get('subscriber_id')
+    print '------------all data----------',request.POST.get('es_name_list')
+    print '------------sms data----------',request.POST.get('sms')
+    print '------------email data----------',request.POST.get('email')
+    try:
+        list = request.POST.get('subscriber_id')
+        searchfor = request.POST.get('searchfor')
+        area = request.POST.get('area')
+        city = request.POST.get('city')
+        cid = request.POST.get('cid')
+        cobj = CallerDetails.objects.get(CallerID=cid)
+        c_number = cobj.IncomingTelNo
+        c_name = cobj.first_name
+        c_email = cobj.email
+        ele = list.split(',')
+        print '---------ele-------',ele
+        for i in range(len(ele)):
+            print ele[i]
+            element = ele[i].split('-')
+            print '----id--',element[0]
+            print '------',element[1]
+            supplier_obj = Supplier.objects.get(supplier_id=element[0])
+            supplier_id = str(supplier_obj.supplier_id)
+            business_name = supplier_obj.business_name
+            email = supplier_obj.supplier_email
+            phone = supplier_obj.phone_no
+            address = supplier_obj.address1+ ' ' +supplier_obj.address2 +','+str(supplier_obj.city_place_id.city_id)+'-'+supplier_obj.pincode.pincode
+            t = datetime.now()
+            list1={'supplier_id':supplier_id,'bname':business_name,'email':email,'phone':phone,'address':str(address),'time':t,
+                   'searchfor':searchfor,'area':area,'cid':cid,'c_number':c_number,'c_name':c_name,'c_email':c_email}
+            slist.append(list1)
+            data = {'success':'true'}
+        save_enquiry_details(cid,city,searchfor,area)
 
-    #category_list = Category.objects.all()
-    #business_list = Business.objects.all()
-    #subcategory_list1 = CategoryLevel1.objects.all()
-    #subcategory_list2 = CategoryLevel2.objects.all()
-    #city_list = City.objects.all()
+        if request.POST.get('sms'):
+            print '--------in the sms=-------'
+            send_sms_to_consumer.delay(slist,c_number)
 
-    #data = {'city_list':city_list,'category_list':category_list,'subcategory_list1':subcategory_list1,'subcategory_list2':subcategory_list2,'first_name':first_name,'phone_number':phone_number,'last_name':last_name,'CallerArea':CallerArea,'CallerCity':CallerCity,'CallerPincode':CallerPincode}
+        if request.POST.get('email'):
+            print '--------in email------'
+            send_email_to_consumer.delay(slist,c_email)
 
-    data = {'cid':cid,'email':email,'first_name':first_name,'phone_number':phone_number,'last_name':last_name,'CallerArea':CallerArea,'CallerCity':CallerCity,'CallerPincode':CallerPincode}
+        send_consumer_details(list,searchfor,area,cid)
 
-    print data
-    return render(request,'CTI_CRM/equiry_form.html',data)
+    except Exception as e:
+        print e
+        data = {'success':'false'}
 
-def enquiry_search_results(request):
-    return render(request,'CTI_CRM/enquiry_search_results.html')
-#
-# def crm_logout(request):
-#     logout(request)
-#     form = CaptchaForm()
-#     return render_to_response('Admin/user_login.html', dict(
-#         form=form, message_logout='You have successfully logged out.'
-#     ), context_instance=RequestContext(request))
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def send_consumer_details(list,searchfor,area,cid):
+    print '------------in consumer details----------',list,searchfor,area,cid
+    i=0
+    slist=[]
+    list1=[]
+    try:
+        cobj = CallerDetails.objects.get(CallerID=cid)
+        c_number = cobj.IncomingTelNo
+        c_name = cobj.first_name
+        c_email = cobj.email
+        print '--------list----',list
+        ele = list.split(',')
+        for i in range(len(ele)):
+            print '-----i---',ele[i]
+            element = ele[i].split('-')
+            print '----id--',element[0]
+            print '------',element[1]
+            supplier_obj = Supplier.objects.get(supplier_id=element[0])
+            enquiry_service_name = element[1]
+            print '---enquiry_service_name----',enquiry_service_name
+            if enquiry_service_name == 'Platinum':
+                es_name = 'P'
+                n='1'
+            elif enquiry_service_name == 'Diamond':
+                es_name = 'D'
+                n='2'
+            elif enquiry_service_name == 'Gold':
+                es_name = 'G'
+                n='3'
+            elif enquiry_service_name == 'Silver':
+                es_name = 'S'
+                n='4'
+            elif enquiry_service_name == 'Bronze':
+                es_name = 'B'
+                n='5'
+            elif enquiry_service_name == 'Value':
+                es_name = 'V'
+                n='6'
+
+            supplier_id = str(supplier_obj.supplier_id)
+            business_name = supplier_obj.business_name
+            email = supplier_obj.supplier_email
+            phone = supplier_obj.phone_no
+            address = supplier_obj.address1+ ' ' +supplier_obj.address2 +','+str(supplier_obj.city_place_id.city_id)+'-'+supplier_obj.pincode.pincode
+            t = datetime.now()
+            list1={'n':n,'es_name':es_name,'enquiry_service_name':enquiry_service_name,'supplier_id':supplier_id,'bname':business_name,'email':email,'phone':phone,'address':str(address),'time':t,
+                   'searchfor':searchfor,'area':area,'cid':cid,'c_number':c_number,'c_name':c_name,'c_email':c_email}
+            print '--------list1--------',list1
+            slist.append(list1)
+            data = {'success':'true'}
+        #slist.sort(n)
+        newlist = sorted(slist, key=itemgetter('n'))
+        print '----------sorted list-----',newlist
+        print '-------slist------',slist
+        send_to_subscriber.delay(newlist)
+
+    except Exception as e:
+        print e
+        data = {'success':'false'}
+
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 @csrf_exempt
-def save_enquiry_details(request):
-    i=0
-    print '------------in save----------',request.POST.get('alist')
+def save_enquiry_details(cid,city,searchfor,area):
     try:
-        cid = CallerDetails.objects.get(CallerID=request.POST.get('cid'))
-        list = request.POST.get('alist')
-        ele = list.split(',')
-        for i in range(len(ele)):
-            print ele[i]
-            supplier_obj = Supplier.objects.get(supplier_id=ele[i])
-            business_name = supplier_obj.business_name
-            cat_obj = Business.objects.get(supplier=supplier_obj)
-            cat_id = cat_obj.category
-            enq_obj = EnquiryDetails(
-                CallerID = cid,
-                enquiryFor=request.POST.get('keyword'),
-                SelectedArea = supplier_obj.area,
-                SelectedPincode = supplier_obj.pincode,
-                SelectedCity = supplier_obj.city,
-                category_id = cat_id,
-                created_date = datetime.now()
-            );
-            enq_obj.save()
-            data = {'success':'true'}
+        print '----------in save enquiry------',cid,city,searchfor,area
+        cobj = CallerDetails.objects.get(CallerID=cid)
+        enq_obj = EnquiryDetails(
+            CallerID = cobj,
+            enquiryFor=searchfor,
+            SelectedArea = area,
+            created_date = datetime.now()
+        );
+        enq_obj.save()
+        data = {'success':'true'}
     except Exception as e:
         print e
         data = {'success':'false'}
@@ -314,161 +367,117 @@ def save_enquiry_details(request):
 
 
 @csrf_exempt
-def enquiry_search_details(request):
+def search_details(request):
     print '------------in search----------',request.POST.get('keyword')
     data = {}
-    result_list=[]
-    category_obj=[]
     n=0
     try:
         if request.method == "POST":
             if request.POST.get('keyword'):
                 text = request.POST.get('keyword')
                 area = request.POST.get('area')
+
                 try :
-                    if Supplier.objects.filter(business_name__icontains=text):
-                        category_obj = business_search(text,area)
-                        if category_obj:
-                            print '---------len-----',len(category_obj)
-                            data = {'result_list':category_obj,'success':'true'}
-                        else :
-                            data = {'success':'false'}
+                    print '---------in try-----'
+                    if request.POST.get('city') == 'all' and request.POST.get('category')=='all':
+                        print '------------in both------'
+                        if Supplier.objects.filter(business_name__icontains=text):
+                            print '---------if 5-1-----'
+                            sobj = Supplier.objects.filter(business_name__icontains=text,supplier_status=1)
+                            category_obj = b_search4(sobj)
+                            if category_obj:
+                                print '---------len-----',len(category_obj)
+                                data = {'result_list':category_obj,'success':'true'}
+                            else :
+                                data = {'success':'false'}
+                        elif Advert.objects.filter(keywords__icontains=text):
+                            a = Advert.objects.filter(keywords__icontains=text)
+                            category_obj = keyword_search(a)
+                            if category_obj:
+                                print '---------len-----',len(category_obj)
+                                data = {'result_list':category_obj,'success':'true'}
+                            else :
+                                data = {'success':'false'}
 
-                    elif Category.objects.filter(category_name__icontains=text):
-                        category_obj = category_search(text,area)
-                        if category_obj:
-                            print '---------len-----',len(category_obj)
-                            data = {'result_list':category_obj,'success':'true'}
-                        else :
-                            data = {'success':'false'}
+                    elif request.POST.get('city') == 'all':
+                        print '---------city------',request.POST.get('city')
+                        category = request.POST.get('category')
+                        if Supplier.objects.filter(business_name__icontains=text):
+                            print '---------if 4- 1----'
+                            sobj = Supplier.objects.filter(business_name__icontains=text,supplier_status=1)
+                            category_obj = b_search1(sobj,category)
+                            if category_obj:
+                                print '---------len-----',len(category_obj)
+                                data = {'result_list':category_obj,'success':'true'}
+                            else :
+                                data = {'success':'false'}
+                        elif Advert.objects.filter(keywords__icontains=text,category_id=category):
+                            print '---------if 4-2-----'
+                            a = Advert.objects.filter(keywords__icontains=text,category_id=category)
+                            category_obj = keyword_search(a)
+                            if category_obj:
+                                print '---------len-----',len(category_obj)
+                                data = {'result_list':category_obj,'success':'true'}
+                            else :
+                                data = {'success':'false'}
 
-                    elif CategoryLevel1.objects.filter(category_name__icontains=text):
-                        if area=='':
-                            area = ''
-                            category_obj = category_search1(text,area)
-                        else:
-                            category_obj = category_search1(text,area)
-                        #category_obj = category_search1(text)
-                        if category_obj:
-                            print '---------len-----',len(category_obj)
-                            data = {'result_list':category_obj,'success':'true'}
-                        else :
-                            data = {'success':'false'}
+                    elif request.POST.get('category')=='all':
+                        print '-----------category------',request.POST.get('category')
+                        print '---------if 5-----'
+                        city_place = City_Place.objects.get(city_id=request.POST.get('city'))
+                        if Supplier.objects.filter(business_name__icontains=text):
+                            print '---------if 5-1-----'
+                            sobj = Supplier.objects.filter(business_name__icontains=text,supplier_status=1)
+                            category_obj = b_search3(sobj,city_place,area)
+                            if category_obj:
+                                print '---------len-----',len(category_obj)
+                                data = {'result_list':category_obj,'success':'true'}
+                            else :
+                                data = {'success':'false'}
+                        elif Advert.objects.filter(keywords__icontains=text,city_place_id=city_place):
+                            print '---------if 5-2-----'
+                            a = Advert.objects.filter(keywords__icontains=text,city_place_id=city_place,area__icontains=area)
+                            category_obj = keyword_search(a)
+                            if category_obj:
+                                print '---------len-----',len(category_obj)
+                                data = {'result_list':category_obj,'success':'true'}
+                            else :
+                                data = {'success':'false'}
 
-                    elif CategoryLevel2.objects.filter(category_name__icontains=text):
-                        if area=='':
-                            area = ''
-                            category_obj = category_search2(text,area)
-                        else:
-                            category_obj = category_search2(text,area)
-                        #category_obj = category_search2(text)
-                        if category_obj:
-                            print '---------len-----',len(category_obj)
-                            data = {'result_list':category_obj,'success':'true'}
-                        else :
-                            data = {'success':'false'}
+                    else:
+                        city_place = City_Place.objects.get(city_id=request.POST.get('city'))
+                        print '----city place------',city_place
+                        category = request.POST.get('category')
+                        if Advert.objects.filter(keywords__icontains=text,city_place_id=city_place,area__icontains=area,category_id=category):
+                            print '---------if 1-----'
+                            a = Advert.objects.filter(keywords__icontains=text,city_place_id=city_place,area__icontains=area,category_id=category)
+                            category_obj = keyword_search(a)
+                            if category_obj:
+                                print '---------len-----',len(category_obj)
+                                data = {'result_list':category_obj,'success':'true'}
+                            else :
+                                data = {'success':'false'}
 
-                    elif CategoryLevel3.objects.filter(category_name__icontains=text):
-                        if area=='':
-                            area = ''
-                            category_obj = category_search3(text,area)
-                        else:
-                            category_obj = category_search3(text,area)
-                        #category_obj = category_search3(text)
-                        if category_obj:
-                            print '---------len-----',len(category_obj)
-                            data = {'result_list':category_obj,'success':'true'}
-                        else :
-                            data = {'success':'false'}
+                        elif Advert.objects.filter(keywords__icontains=text,city_place_id=city_place,area__icontains=area):
+                            print '---------if 2-----'
+                            a = Advert.objects.filter(keywords__icontains=text,city_place_id=city_place,area__icontains=area)
+                            category_obj = keyword_search(a)
+                            if category_obj:
+                                print '---------len-----',len(category_obj)
+                                data = {'result_list':category_obj,'success':'true'}
+                            else :
+                                data = {'success':'false'}
 
-                    elif CategoryLevel4.objects.filter(category_name__icontains=text):
-                        if area=='':
-                            area = ''
-                            category_obj = category_search4(text,area)
-                        else:
-                            category_obj = category_search4(text,area)
-                        #category_obj = category_search4(text)
-                        if category_obj:
-                            print '---------len-----',len(category_obj)
-                            data = {'result_list':category_obj,'success':'true'}
-                        else :
-                            data = {'success':'false'}
+                        elif Supplier.objects.filter(business_name__icontains=text):
+                            print '---------if 3-----'
+                            sobj = Supplier.objects.filter(business_name__icontains=text,supplier_status=1)
+                            category_obj = b_search(sobj,area,city_place,category)
+                            if category_obj:
+                                print '---------len-----',len(category_obj)
+                                data = {'result_list':category_obj,'success':'true'}
+                            else :
+                                data = {'success':'false'}
 
-                    elif CategoryLevel5.objects.filter(category_name__icontains=text):
-                        if area=='':
-                            area = ''
-                            category_obj = category_search5(text,area)
-                        else:
-                            category_obj = category_search5(text,area)
-                        #category_obj = category_search5(text)
-                        if category_obj:
-                            print '---------len-----',len(category_obj)
-                            data = {'result_list':category_obj,'success':'true'}
-                        else :
-                            data = {'success':'false'}
-
-                    # elif City.objects.filter(city_name__icontains=text):
-                    #     city_obj = city_search(text)
-                    #     category_obj = city_obj
-                    #     if category_obj:
-                    #         data = {'result_list':category_obj,'success':'true'}
-                    #     else :
-                    #         data = {'success':'false'}
-
-                    elif Advert.objects.filter(keywords__icontains=text):
-                        for c in Advert.objects.filter(keywords__icontains=text):
-                            print '----------- 7 ---------'
-                            if area:
-                                supplier_id = str(c.supplier_id)
-                                supplier_obj = Supplier.objects.filter(supplier_id=supplier_id,area__icontains=area)
-                                for s in supplier_obj:
-                                    supplier_id = s.supplier_id
-                                    business_name = str(s.business_name)
-                                    address = str(b.address1)+' '+str(b.address2)+','+str(b.city)+'-'+str(b.pincode)
-                                    business_obj = Business.objects.filter(supplier=s)
-                                    for b in business_obj:
-                                        cat = str(b.category)
-                                        cat_obj = Category.objects.filter(category_id=cat)
-                                        for cat in cat_obj:
-                                            cat_name = cat.category_name
-                                            subcat1_obj = CategoryLevel1.objects.filter(parent_category_id=cat)
-                                            for s1 in subcat1_obj:
-                                                subcat1_name = s1.category_name
-                                                subcat2_obj = CategoryLevel2.objects.filter(parent_category_id=s1)
-                                                for s2 in subcat2_obj:
-                                                    subcat2_name = s2.category_name
-                                            advert_obj = {'supplier_id':supplier_id,'business_name':business_name,'category_name':cat_name,'subcategory1':subcat1_name,'subcategory2':subcat2_name,'address':address}
-                                            category_obj.append(advert_obj)
-                                        category_obj = category_obj[:10]
-                            else:
-                                supplier_id = str(c.supplier_id)
-                                supplier_obj = Supplier.objects.filter(supplier_id=supplier_id)
-                                for s in supplier_obj:
-                                    supplier_id = s.supplier_id
-                                    business_name = str(s.business_name)
-                                    address = str(b.address1)+' '+str(b.address2)+','+str(b.city)+'-'+str(b.pincode)
-                                    business_obj = Business.objects.filter(supplier=s)
-                                    for b in business_obj:
-                                        cat = str(b.category)
-                                        cat_obj = Category.objects.filter(category_id=cat)
-                                        for cat in cat_obj:
-                                            cat_name = cat.category_name
-                                            subcat1_obj = CategoryLevel1.objects.filter(parent_category_id=cat)
-                                            for s1 in subcat1_obj:
-                                                subcat1_name = s1.category_name
-                                                subcat2_obj = CategoryLevel2.objects.filter(parent_category_id=s1)
-                                                for s2 in subcat2_obj:
-                                                    subcat2_name = s2.category_name
-                                            advert_obj = {'supplier_id':supplier_id,'business_name':business_name,'category_name':cat_name,'subcategory1':subcat1_name,'subcategory2':subcat2_name,'address':address}
-                                            category_obj.append(advert_obj)
-                                        category_obj = category_obj[:10]
-                        if category_obj:
-                            print '---------len-----',len(category_obj)
-                            data = {'result_list':category_obj,'success':'true'}
-                        else :
-                            data = {'success':'false'}
-
-                    print '-------data-------',data
                 except Exception,e:
                     print e
                     data = {'success':'false'}
@@ -480,333 +489,426 @@ def enquiry_search_details(request):
         data = {'success':'false'}
     return HttpResponse(json.dumps(data), content_type='application/json')
 
-def business_search(text,area):
-    print '----------- 1 ---------',area
-    category_obj1=[]
+# def demo(a):
+#     print '----------- in demo ---------',a
+#     category_obj=[]
+#
+#     for b in a:
+#         print '----------cat obj---',b
+#
+#         adv_obj = AdvertSubscriptionMap.objects.get(advert_id=b)
+#         print '------------adv_obj------',adv_obj
+#         business_obj = adv_obj.business_id
+#         print '------------business_obj 1------',business_obj
+#         if EnquiryService.objects.get(business_id = business_obj):
+#             print '------------in if---------'
+#             Enquiry_obj = EnquiryService.objects.get(business_id = business_obj)
+#             print '------------Enquiry_obj 1------',Enquiry_obj
+#             enquiry_service_name = Enquiry_obj.enquiry_service_name
+#             print '------------enquiry_service_name 1------',enquiry_service_name
+#             b_obj = Enquiry_obj.business_id
+#             print '------------b_obj 1------',b_obj
+#
+#             Business_obj = Business.objects.get(business_id = str(b_obj))
+#             print '------------Business_obj 1------',Business_obj
+#             supplier_obj = Business_obj.supplier
+#             print '------------supplier_obj 1------',supplier_obj
+#
+#             supplier_id = Supplier.objects.get(supplier_id=str(supplier_obj),supplier_status=1)
+#             print '------------supplier_id 1------',supplier_id
+#
+#             advert_obj = Advert.objects.get(supplier_id=str(supplier_id))
+#             print '------------advert_obj 1------',advert_obj
+#             category_obj1 = advert_obj.category_id.category_name
+#
+#             print '------------cat 1------',category_obj1
+#             if advert_obj.category_level_1:
+#                 subcat1_name = advert_obj.category_level_1.category_name
+#                 print '------------sub cat 1------',subcat1_name
+#             else:
+#                 subcat1_name = ''
+#             if advert_obj.category_level_2:
+#                 subcat2_name = advert_obj.category_level_2.category_name
+#                 print '-----------sub-cat 2------',subcat2_name
+#             else:
+#                 subcat2_name = ''
+#
+#             category = str(category_obj1)+'>'+str(subcat1_name)+'>' +str(subcat2_name)
+#             business_name = supplier_id.business_name
+#             print '---city---',supplier_id.city_place_id.city_id
+#             address = str(supplier_id.address1)+' '+str(supplier_id.address2)+','+str(supplier_id.city_place_id.city_id)+'-'+str(supplier_id.pincode)
+#             cat_obj = {'supplier_id':supplier_id.supplier_id,'enquiry_service_name':enquiry_service_name,'business_name':business_name,'category':category,'address':address}
+#             category_obj.append(cat_obj)
+#     return category_obj
+
+
+def keyword_search(a):
+    print '----------- in demo ---------',a
     category_obj=[]
-    subcat2_name = ''
-    if area:
-        b_obj = Supplier.objects.filter(business_name__icontains=text,area__icontains=area)
-        for b in b_obj:
-            print '--------b_obj------',b
-            supplier_id = b
-            name = b.business_name
-            address = str(b.address1)+' '+str(b.address2)+','+str(b.city)+'-'+str(b.pincode)
-            category_obj = Business.objects.filter(supplier=b)
-            print '-----------category obj-------',category_obj
-            for c in category_obj:
-                cat_obj = str(c.category)
-                cat_name = Category.objects.get(category_id=str(cat_obj))
-                cname = str(cat_name.category_name)
-                subcat1_obj = CategoryLevel1.objects.filter(parent_category_id=cat_name)
-                for s1 in subcat1_obj:
-                    subcat1_name = str(s1.category_name)
-                    subcat2_obj = CategoryLevel2.objects.filter(parent_category_id=s1)
-                    for s2 in subcat2_obj:
-                        subcat2_name = str(s2.category_name)
-                        cat_obj = {'supplier_id':str(supplier_id),'business_name':name,'category_name':cname,'subcategory1':subcat1_name,'subcategory2':subcat2_name,'address':address}
-                category_obj1.append(cat_obj)
-            category_obj1 = category_obj1[:10]
-        return category_obj1
+    for b in a:
+        print '----------cat obj---',b
+        adv_obj = AdvertSubscriptionMap.objects.get(advert_id=b)
+        print '-----------adv obj-------',adv_obj
+        business_obj = adv_obj.business_id
+        print '-------business obj-------',business_obj
+        if EnquiryService.objects.get(business_id = business_obj):
+            Enquiry_obj = EnquiryService.objects.get(business_id = business_obj)
+            enquiry_service_name = Enquiry_obj.enquiry_service_name
+            # b_obj = Enquiry_obj.business_id
+            # print '--------b obj-----',b_obj
+            # Business_obj = Business.objects.get(business_id = str(b_obj))
+            # print '---------business obj-------',Business_obj
+            # supplier_obj = Business_obj.supplier
+            supplier_obj = b.supplier_id
+            supplier_id = Supplier.objects.get(supplier_id=str(supplier_obj),supplier_status=1)
 
-    else:
-        print '-------in else---------'
-        business_obj = Supplier.objects.filter(business_name__icontains=text)
-        for b in business_obj:
-            supplier_id = b
-            name = b.business_name
-            address = str(b.address1)+' '+str(b.address2)+','+str(b.city)+'-'+str(b.pincode)
-            category_obj = Business.objects.filter(supplier__icontains=business_obj)
-            for c in category_obj:
-                cat_obj = str(c.category)
-                cat_name = Category.objects.get(category_id=str(cat_obj))
-                cname = str(cat_name.category_name)
-                subcat1_obj = CategoryLevel1.objects.filter(parent_category_id=cat_name)
-                for s1 in subcat1_obj:
-                    subcat1_name = str(s1.category_name)
-                    subcat2_obj = CategoryLevel2.objects.filter(parent_category_id=s1)
-                    for s2 in subcat2_obj:
-                        subcat2_name = str(s2.category_name)
-                        cat_obj = {'supplier_id':str(supplier_id),'business_name':name,'category_name':cname,'subcategory1':subcat1_name,'subcategory2':subcat2_name,'address':address}
-                category_obj1.append(cat_obj)
-            category_obj1 = category_obj1[:10]
-        return category_obj1
+            category_obj1 = b.category_id.category_name
+            if b.category_level_1:
+                subcat1_name = b.category_level_1.category_name
+            else:
+                subcat1_name = ''
+            if b.category_level_2:
+                subcat2_name = b.category_level_2.category_name
+            else:
+                subcat2_name = ''
 
-def category_search(text,area):
-    print '----------- 2 ---------',area
-    subcat2_name = ''
-    category_obj=[]
-    if area:
-        category_obj1 = Category.objects.filter(category_name__icontains=text)
-        for c in category_obj1:
-            cname1 = c.category_name
-            subcat1_obj = CategoryLevel1.objects.filter(parent_category_id=c)
-            for s1 in subcat1_obj:
-                subcat1_name = s1.category_name
-                subcat2_obj = CategoryLevel2.objects.filter(parent_category_id=s1)
-                for s2 in subcat2_obj:
-                    subcat2_name = s2.category_name
-        business_obj1 = Business.objects.filter(category__icontains=category_obj1)
-        for b in business_obj1:
-            b_obj = Supplier.objects.filter(supplier_id__icontains=b.supplier,area__icontains=area)
-            print '------------b obj----2------------',b_obj
-            for c in b_obj:
-                supplier_obj = c.supplier.business_name
-                supplier_id = c.supplier.supplier_id
-                address = str(c.supplier.address1)+' '+str(c.supplier.address2)+','+str(c.supplier.city)+'-'+str(c.supplier.pincode)
-                cat_obj = {'supplier_id':supplier_id,'business_name':supplier_obj,'category_name':cname1,'subcategory1':subcat1_name,'subcategory2':subcat2_name,'address':address}
-                category_obj.append(cat_obj)
-            category_obj = category_obj[:10]
-            return category_obj
-
-    else:
-        category_obj1 = Category.objects.filter(category_name__icontains=text)
-        for c in category_obj1:
-            cname1 = c.category_name
-            subcat1_obj = CategoryLevel1.objects.filter(parent_category_id=c)
-            for s1 in subcat1_obj:
-                subcat1_name = s1.category_name
-                subcat2_obj = CategoryLevel2.objects.filter(parent_category_id=s1)
-                for s2 in subcat2_obj:
-                    subcat2_name = s2.category_name
-        business_obj1 = Business.objects.filter(category__icontains=category_obj1)
-        for b in business_obj1:
-            supplier_obj = b.supplier.business_name
-            supplier_id = b.supplier.supplier_id
-            address = str(b.supplier.address1)+' '+str(b.supplier.address2)+','+str(b.supplier.city)+'-'+str(b.supplier.pincode)
-            cat_obj = {'supplier_id':supplier_id,'business_name':supplier_obj,'category_name':cname1,'subcategory1':subcat1_name,'subcategory2':subcat2_name,'address':address}
+            category = str(category_obj1)+'>'+str(subcat1_name)+'>' +str(subcat2_name)
+            business_name = supplier_id.business_name
+            address = str(supplier_id.address1)+' '+str(supplier_id.address2)+','+str(supplier_id.city_place_id.city_id)+'-'+str(supplier_id.pincode)
+            cat_obj = {'supplier_id':supplier_id.supplier_id,'enquiry_service_name':enquiry_service_name,'business_name':business_name,'category':category,'address':address}
             category_obj.append(cat_obj)
-        category_obj = category_obj[:10]
-        return category_obj
+    category_obj = category_obj[:20]
+    return category_obj
 
-def category_search1(text,area):
-    print '----------- 3 ---------',area
-    subcat2_name = ''
+# def keyword_search(a):
+#     print '----------- 1 ---------',a
+#     category_obj=[]
+#
+#     for b in a:
+#         print '----------cat obj---',b
+#         supplier_obj = Supplier.objects.get(supplier_id__icontains=b.supplier_id,supplier_status=1)
+#         print '-----------supplier obj------',supplier_obj
+#         category_obj1 = b.category_id.category_name
+#         print '------------cat 1------',category_obj1
+#         if b.category_level_1:
+#             subcat1_name = b.category_level_1.category_name
+#             print '------------sub cat 1------',subcat1_name
+#         else:
+#             subcat1_name = ''
+#         if b.category_level_2:
+#             subcat2_name = b.category_level_2.category_name
+#             print '-----------sub-cat 2------',subcat2_name
+#         else:
+#             subcat2_name = ''
+#
+#         category = str(category_obj1)+'>'+str(subcat1_name)+'>' +str(subcat2_name)
+#         business_name = supplier_obj.business_name
+#         print '---city---',supplier_obj.city_place_id.city_id
+#         address = str(supplier_obj.address1)+' '+str(supplier_obj.address2)+','+str(supplier_obj.city_place_id.city_id)+'-'+str(supplier_obj.pincode)
+#         cat_obj = {'supplier_id':supplier_obj.supplier_id,'business_name':business_name,'category':category,'address':address}
+#         category_obj.append(cat_obj)
+#     category_obj = category_obj[:10]
+#     return category_obj
+
+
+def b_search4(sobj):
+    print '----------- b search ---------',sobj
     category_obj=[]
-    if area:
-        category_obj2 = CategoryLevel1.objects.filter(category_name__icontains=text)
-        for c in category_obj2:
-            cname = c.parent_category_id
-            subcat1_name = c.category_name
-            subcat2_obj = CategoryLevel2.objects.filter(parent_category_id=c)
-            for s2 in subcat2_obj:
-                subcat2_name = s2.category_name
-            category_name = c.parent_category_id.category_name
-            business_obj = Business.objects.filter(category=cname)
-            for b in business_obj:
-                print '-------b---------',b
-                b_obj = Supplier.objects.filter(supplier_id__icontains=b.supplier,area__icontains=area)
-                print '------------b obj----2------------',b_obj
-                for c in b_obj:
-                    supplier_obj = c.supplier.business_name
-                    supplier_id = c.supplier.supplier_id
-                    address = str(c.supplier.address1)+' '+str(c.supplier.address2)+','+str(c.supplier.city)+'-'+str(c.supplier.pincode)
-                    cat_obj = {'supplier_id':supplier_id,'business_name':supplier_obj,'category_name':category_name,'subcategory1':subcat1_name,'subcategory2':subcat2_name,'address':address}
-                    category_obj.append(cat_obj)
-                category_obj = category_obj[:10]
-            return category_obj
+    for b in sobj:
+        print '----------cat obj---',b
+        a = Advert.objects.filter(supplier_id=b)
+        print '-----------supplier obj------',a
+        for i in a:
+            adv_obj = AdvertSubscriptionMap.objects.get(advert_id=i)
+            business_obj = adv_obj.business_id
+            if EnquiryService.objects.get(business_id = business_obj):
 
-    else:
-        category_obj2 = CategoryLevel1.objects.filter(category_name__icontains=text)
-        for c in category_obj2:
-            cname = c.parent_category_id
-            subcat1_name = c.category_name
-            subcat2_obj = CategoryLevel2.objects.filter(parent_category_id=c)
-            for s2 in subcat2_obj:
-                subcat2_name = s2.category_name
-            category_name = c.parent_category_id.category_name
-            business_obj = Business.objects.filter(category=cname)
-            for b in business_obj:
-                supplier_obj = b.supplier.business_name
-                supplier_id = b.supplier.supplier_id
-                address = str(b.supplier.address1)+' '+str(b.supplier.address2)+','+str(b.supplier.city)+'-'+str(b.supplier.pincode)
-                cat_obj = {'supplier_id':supplier_id,'business_name':supplier_obj,'category_name':category_name,'subcategory1':subcat1_name,'subcategory2':subcat2_name,'address':address}
+                Enquiry_obj = EnquiryService.objects.get(business_id = business_obj)
+                enquiry_service_name = Enquiry_obj.enquiry_service_name
+                # b_obj = Enquiry_obj.business_id
+                # Business_obj = Business.objects.get(business_id = str(b_obj))
+                # supplier_obj = Business_obj.supplier
+                supplier_obj = i.supplier_id
+                supplier_id = Supplier.objects.get(supplier_id=str(supplier_obj),supplier_status=1)
+
+                category_obj1 = i.category_id.category_name
+                if i.category_level_1:
+                    subcat1_name = i.category_level_1.category_name
+                else:
+                    subcat1_name = ''
+                if i.category_level_2:
+                    subcat2_name = i.category_level_2.category_name
+                else:
+                    subcat2_name = ''
+
+                category = str(category_obj1)+'>'+str(subcat1_name)+'>' +str(subcat2_name)
+                business_name = supplier_id.business_name
+                address = str(supplier_id.address1)+' '+str(supplier_id.address2)+','+str(supplier_id.city_place_id.city_id)+'-'+str(supplier_id.pincode)
+                cat_obj = {'supplier_id':supplier_id.supplier_id,'enquiry_service_name':enquiry_service_name,'business_name':business_name,'category':category,'address':address}
                 category_obj.append(cat_obj)
-            category_obj = category_obj[:10]
-        return category_obj
+        category_obj = category_obj[:20]
+    return category_obj
 
-def category_search2(text,area):
-    print '----------- 4 ---------',area
+
+# def b_search4(sobj):
+#     print '----------- b search ---------',sobj
+#     category_obj=[]
+#     for b in sobj:
+#         print '----------cat obj---',b
+#         a = Advert.objects.filter(supplier_id=b)
+#         print '-----------supplier obj------',a
+#         for i in a:
+#             category_obj1 = i.category_id.category_name
+#             print '------------cat 1------',category_obj1
+#             if i.category_level_1:
+#                 subcat1_name = i.category_level_1.category_name
+#                 print '------------sub cat 1------',subcat1_name
+#             else:
+#                 subcat1_name = ''
+#             if i.category_level_2:
+#                 subcat2_name = i.category_level_2.category_name
+#                 print '-----------sub-cat 2------',subcat2_name
+#             else:
+#                 subcat2_name = ''
+#
+#             category = str(category_obj1)+'>'+str(subcat1_name)+'>' +str(subcat2_name)
+#             business_name = b.business_name
+#             address = str(b.address1)+' '+str(b.address2)+','+str(b.city_place_id.city_id)+'-'+str(b.pincode)
+#             cat_obj = {'supplier_id':b.supplier_id,'business_name':business_name,'category':category,'address':address}
+#             category_obj.append(cat_obj)
+#         category_obj = category_obj[:10]
+#     return category_obj
+
+def b_search3(sobj,city_place,area):
+    print '----------- b search ---------',sobj,city_place
     category_obj=[]
-    if area:
-        category_obj2 = CategoryLevel2.objects.filter(category_name__icontains=text)
-        for c in category_obj2:
-            subcat2_name = c.category_name
-            subcat1_name = c.parent_category_id.category_name
-            cname = c.parent_category_id.parent_category_id
-            category_name = c.parent_category_id.parent_category_id.category_name
-            business_obj = Business.objects.filter(category=cname)
-            for b in business_obj:
-                print '-------b---------',b
-                b_obj = Supplier.objects.filter(supplier_id__icontains=b.supplier,area__icontains=area)
-                print '------------b obj----2------------',b_obj
-                for c in b_obj:
-                    supplier_obj = c.supplier.business_name
-                    supplier_id = c.supplier.supplier_id
-                    address = str(c.supplier.address1)+' '+str(c.supplier.address2)+','+str(c.supplier.city)+'-'+str(c.supplier.pincode)
-                    cat_obj = {'supplier_id':supplier_id,'business_name':supplier_obj,'category_name':category_name,'subcategory1':subcat1_name,'subcategory2':subcat2_name,'address':address}
-                    category_obj.append(cat_obj)
-                category_obj = category_obj[:10]
-            return category_obj
+    for b in sobj:
+        print '----------cat obj---',b
+        a = Advert.objects.filter(supplier_id=b,city_place_id=city_place,area__icontains=area)
+        print '-----------supplier obj------',a
+        for i in a:
+            adv_obj = AdvertSubscriptionMap.objects.get(advert_id=i)
+            business_obj = adv_obj.business_id
+            if EnquiryService.objects.get(business_id = business_obj):
+                Enquiry_obj = EnquiryService.objects.get(business_id = business_obj)
+                enquiry_service_name = Enquiry_obj.enquiry_service_name
+                # b_obj = Enquiry_obj.business_id
+                # Business_obj = Business.objects.get(business_id = str(b_obj))
+                supplier_obj = i.supplier
+                supplier_id = Supplier.objects.get(supplier_id=str(supplier_obj),supplier_status=1)
+                #advert_obj = Advert.objects.get(supplier_id=str(supplier_id))
+                category_obj1 = i.category_id.category_name
+                if i.category_level_1:
+                    subcat1_name = i.category_level_1.category_name
+                else:
+                    subcat1_name = ''
+                if i.category_level_2:
+                    subcat2_name = i.category_level_2.category_name
+                else:
+                    subcat2_name = ''
 
-    else:
-        category_obj2 = CategoryLevel2.objects.filter(category_name__icontains=text)
-        for c in category_obj2:
-            subcat2_name = c.category_name
-            subcat1_name = c.parent_category_id.category_name
-            cname = c.parent_category_id.parent_category_id
-            category_name = c.parent_category_id.parent_category_id.category_name
-            business_obj = Business.objects.filter(category=cname)
-            for b in business_obj:
-                supplier_obj = b.supplier.business_name
-                supplier_id = b.supplier.supplier_id
-                address = str(b.supplier.address1)+' '+str(b.supplier.address2)+','+str(b.supplier.city)+'-'+str(b.supplier.pincode)
-                cat_obj = {'supplier_id':supplier_id,'business_name':supplier_obj,'category_name':category_name,'subcategory1':subcat1_name,'subcategory2':subcat2_name,'address':address}
+                category = str(category_obj1)+'>'+str(subcat1_name)+'>' +str(subcat2_name)
+                business_name = supplier_id.business_name
+                address = str(supplier_id.address1)+' '+str(supplier_id.address2)+','+str(supplier_id.city_place_id.city_id)+'-'+str(supplier_id.pincode)
+                cat_obj = {'supplier_id':supplier_id.supplier_id,'enquiry_service_name':enquiry_service_name,'business_name':business_name,'category':category,'address':address}
                 category_obj.append(cat_obj)
-            category_obj = category_obj[:10]
-        return category_obj
+        category_obj = category_obj[:20]
+    return category_obj
 
-def category_search3(text,area):
-    print '----------- 5 ---------',area
+
+
+# def b_search3(sobj,city_place,area):
+#     print '----------- b search ---------',sobj,city_place
+#     category_obj=[]
+#     for b in sobj:
+#         print '----------cat obj---',b
+#         a = Advert.objects.filter(supplier_id=b,city_place_id=city_place,area__icontains=area)
+#         print '-----------supplier obj------',a
+#         for i in a:
+#             category_obj1 = i.category_id.category_name
+#             print '------------cat 1------',category_obj1
+#             if i.category_level_1:
+#                 subcat1_name = i.category_level_1.category_name
+#                 print '------------sub cat 1------',subcat1_name
+#             else:
+#                 subcat1_name = ''
+#             if i.category_level_2:
+#                 subcat2_name = i.category_level_2.category_name
+#                 print '-----------sub-cat 2------',subcat2_name
+#             else:
+#                 subcat2_name = ''
+#
+#             category = str(category_obj1)+'>'+str(subcat1_name)+'>' +str(subcat2_name)
+#             business_name = b.business_name
+#             address = str(b.address1)+' '+str(b.address2)+','+str(b.city_place_id.city_id)+'-'+str(b.pincode)
+#             cat_obj = {'supplier_id':b.supplier_id,'business_name':business_name,'category':category,'address':address}
+#             category_obj.append(cat_obj)
+#         category_obj = category_obj[:10]
+#     return category_obj
+
+
+# def b_search3(sobj,city_place,area):
+#     print '----------- b search ---------',sobj,city_place
+#     category_obj=[]
+#     for b in sobj:
+#         print '----------cat obj---',b
+#         a = Advert.objects.filter(supplier_id=b,city_place_id=city_place,area__icontains=area)
+#         print '-----------supplier obj------',a
+#         for i in a:
+#             category_obj1 = i.category_id.category_name
+#             print '------------cat 1------',category_obj1
+#             if i.category_level_1:
+#                 subcat1_name = i.category_level_1.category_name
+#                 print '------------sub cat 1------',subcat1_name
+#             else:
+#                 subcat1_name = ''
+#             if i.category_level_2:
+#                 subcat2_name = i.category_level_2.category_name
+#                 print '-----------sub-cat 2------',subcat2_name
+#             else:
+#                 subcat2_name = ''
+#
+#             category = str(category_obj1)+'>'+str(subcat1_name)+'>' +str(subcat2_name)
+#             business_name = b.business_name
+#             address = str(b.address1)+' '+str(b.address2)+','+str(b.city_place_id.city_id)+'-'+str(b.pincode)
+#             cat_obj = {'supplier_id':b.supplier_id,'business_name':business_name,'category':category,'address':address}
+#             category_obj.append(cat_obj)
+#         category_obj = category_obj[:10]
+#     return category_obj
+
+
+def b_search1(sobj,category):
+    print '----------- b search ---------',sobj,category
     category_obj=[]
-    if area:
-        category_obj2 = CategoryLevel3.objects.filter(category_name__icontains=text)
-        for c in category_obj2:
-            cname = c.parent_category_id.parent_category_id.parent_category_id
-            subcat2_name = c.parent_category_id.category_name
-            subcat1_name = c.parent_category_id.parent_category_id.category_name
-            category_name = c.parent_category_id.parent_category_id.parent_category_id.category_name
-            business_obj = Business.objects.filter(category=cname)
-            for b in business_obj:
-                print '-------b---------',b
-                b_obj = Supplier.objects.filter(supplier_id__icontains=b.supplier,area__icontains=area)
-                print '------------b obj----2------------',b_obj
-                for c in b_obj:
-                    supplier_obj = c.supplier.business_name
-                    supplier_id = c.supplier.supplier_id
-                    address = str(c.supplier.address1)+' '+str(c.supplier.address2)+','+str(c.supplier.city)+'-'+str(c.supplier.pincode)
-                    cat_obj = {'supplier_id':supplier_id,'business_name':supplier_obj,'category_name':category_name,'subcategory1':subcat1_name,'subcategory2':subcat2_name,'address':address}
-                    category_obj.append(cat_obj)
-                category_obj = category_obj[:10]
-            return category_obj
+    for b in sobj:
+        print '----------cat obj---',b
+        a = Advert.objects.filter(supplier_id=b,category_id=category)
+        print '-----------supplier obj------',a
+        for i in a:
+            adv_obj = AdvertSubscriptionMap.objects.get(advert_id=i)
+            business_obj = adv_obj.business_id
+            if EnquiryService.objects.get(business_id = business_obj):
+                Enquiry_obj = EnquiryService.objects.get(business_id = business_obj)
+                enquiry_service_name = Enquiry_obj.enquiry_service_name
+                # b_obj = Enquiry_obj.business_id
+                # Business_obj = Business.objects.get(business_id = str(b_obj))
+                supplier_obj = i.supplier
+                supplier_id = Supplier.objects.get(supplier_id=str(supplier_obj),supplier_status=1)
+                #advert_obj = Advert.objects.get(supplier_id=str(supplier_id))
+                category_obj1 = i.category_id.category_name
+                if i.category_level_1:
+                    subcat1_name = i.category_level_1.category_name
+                else:
+                    subcat1_name = ''
+                if i.category_level_2:
+                    subcat2_name = i.category_level_2.category_name
+                else:
+                    subcat2_name = ''
 
-    else:
-        category_obj2 = CategoryLevel3.objects.filter(category_name__icontains=text)
-        for c in category_obj2:
-            cname = c.parent_category_id.parent_category_id.parent_category_id
-            subcat2_name = c.parent_category_id.category_name
-            subcat1_name = c.parent_category_id.parent_category_id.category_name
-            category_name = c.parent_category_id.parent_category_id.parent_category_id.category_name
-            business_obj = Business.objects.filter(category=cname)
-            for b in business_obj:
-                supplier_obj = b.supplier.business_name
-                supplier_id = b.supplier.supplier_id
-                address = str(b.supplier.address1)+' '+str(b.supplier.address2)+','+str(b.supplier.city)+'-'+str(b.supplier.pincode)
-                cat_obj = {'supplier_id':supplier_id,'business_name':supplier_obj,'category_name':category_name,'subcategory1':subcat1_name,'subcategory2':subcat2_name,'address':address}
+                category = str(category_obj1)+'>'+str(subcat1_name)+'>' +str(subcat2_name)
+                business_name = supplier_id.business_name
+                address = str(supplier_id.address1)+' '+str(supplier_id.address2)+','+str(supplier_id.city_place_id.city_id)+'-'+str(supplier_id.pincode)
+                cat_obj = {'supplier_id':supplier_id.supplier_id,'enquiry_service_name':enquiry_service_name,'business_name':business_name,'category':category,'address':address}
                 category_obj.append(cat_obj)
-            category_obj = category_obj[:10]
-        return category_obj
+        category_obj = category_obj[:20]
+    return category_obj
 
-def category_search4(text,area):
-    print '----------- 51 ---------',area
+# def b_search1(sobj,category):
+#     print '----------- b search ---------',sobj,category
+#     category_obj=[]
+#     for b in sobj:
+#         print '----------cat obj---',b
+#         a = Advert.objects.filter(supplier_id=b,category_id=category)
+#         print '-----------supplier obj------',a
+#         for i in a:
+#             category_obj1 = i.category_id.category_name
+#             print '------------cat 1------',category_obj1
+#             if i.category_level_1:
+#                 subcat1_name = i.category_level_1.category_name
+#                 print '------------sub cat 1------',subcat1_name
+#             else:
+#                 subcat1_name = ''
+#             if i.category_level_2:
+#                 subcat2_name = i.category_level_2.category_name
+#                 print '-----------sub-cat 2------',subcat2_name
+#             else:
+#                 subcat2_name = ''
+#
+#             category = str(category_obj1)+'>'+str(subcat1_name)+'>' +str(subcat2_name)
+#             business_name = b.business_name
+#             address = str(b.address1)+' '+str(b.address2)+','+str(b.city_place_id.city_id)+'-'+str(b.pincode)
+#             cat_obj = {'supplier_id':b.supplier_id,'business_name':business_name,'category':category,'address':address}
+#             category_obj.append(cat_obj)
+#         category_obj = category_obj[:10]
+#     return category_obj
+
+def b_search(sobj,area,city_place,category):
+    print '----------- b search ---------',sobj,area,city_place,category
+    cat = category
     category_obj=[]
-    if area:
-        category_obj2 = CategoryLevel4.objects.filter(category_name__icontains=text)
-        for c in category_obj2:
-            cname = c.parent_category_id.parent_category_id.parent_category_id.parent_category_id
-            subcat2_name = c.parent_category_id.parent_category_id.category_name
-            subcat1_name = c.parent_category_id.parent_category_id.parent_category_id.category_name
-            category_name = c.parent_category_id.parent_category_id.parent_category_id.parent_category_id.category_name
-            business_obj = Business.objects.filter(category=cname)
-            for b in business_obj:
-                print '-------b---------',b
-                b_obj = Supplier.objects.filter(supplier_id__icontains=b.supplier,area__icontains=area)
-                print '------------b obj----2------------',b_obj
-                for c in b_obj:
-                    supplier_obj = c.supplier.business_name
-                    supplier_id = c.supplier.supplier_id
-                    address = str(c.supplier.address1)+' '+str(c.supplier.address2)+','+str(c.supplier.city)+'-'+str(c.supplier.pincode)
-                    cat_obj = {'supplier_id':supplier_id,'business_name':supplier_obj,'category_name':category_name,'subcategory1':subcat1_name,'subcategory2':subcat2_name,'address':address}
-                    category_obj.append(cat_obj)
-                category_obj = category_obj[:10]
-            return category_obj
+    for b in sobj:
+        print '----------cat obj---',b , cat
+        a = Advert.objects.filter(supplier_id=b,city_place_id=city_place,area__icontains=area,category_id=cat)
+        print '-----------supplier obj------',a
+        for i in a:
+            adv_obj = AdvertSubscriptionMap.objects.get(advert_id=i)
+            business_obj = adv_obj.business_id
+            if EnquiryService.objects.get(business_id = business_obj):
+                Enquiry_obj = EnquiryService.objects.get(business_id = business_obj)
+                enquiry_service_name = Enquiry_obj.enquiry_service_name
+                # b_obj = Enquiry_obj.business_id
+                # Business_obj = Business.objects.get(business_id = str(b_obj))
+                supplier_obj = i.supplier
+                supplier_id = Supplier.objects.get(supplier_id=str(supplier_obj),supplier_status=1)
+                #advert_obj = Advert.objects.get(supplier_id=str(supplier_id))
+                category_obj1 = i.category_id.category_name
+                if i.category_level_1:
+                    subcat1_name = i.category_level_1.category_name
+                else:
+                    subcat1_name = ''
+                if i.category_level_2:
+                    subcat2_name = i.category_level_2.category_name
+                else:
+                    subcat2_name = ''
 
-    else:
-        category_obj2 = CategoryLevel4.objects.filter(category_name__icontains=text)
-        for c in category_obj2:
-            cname = c.parent_category_id.parent_category_id.parent_category_id.parent_category_id
-            subcat2_name = c.parent_category_id.parent_category_id.category_name
-            subcat1_name = c.parent_category_id.parent_category_id.parent_category_id.category_name
-            category_name = c.parent_category_id.parent_category_id.parent_category_id.parent_category_id.category_name
-            business_obj = Business.objects.filter(category=cname)
-            for b in business_obj:
-                supplier_obj = b.supplier.business_name
-                supplier_id = b.supplier.supplier_id
-                address = str(b.supplier.address1)+' '+str(b.supplier.address2)+','+str(b.supplier.city)+'-'+str(b.supplier.pincode)
-                cat_obj = {'supplier_id':supplier_id,'business_name':supplier_obj,'category_name':category_name,'subcategory1':subcat1_name,'subcategory2':subcat2_name,'address':address}
+                category = str(category_obj1)+'>'+str(subcat1_name)+'>' +str(subcat2_name)
+                business_name = supplier_id.business_name
+                address = str(supplier_id.address1)+' '+str(supplier_id.address2)+','+str(supplier_id.city_place_id.city_id)+'-'+str(supplier_id.pincode)
+                cat_obj = {'supplier_id':supplier_id.supplier_id,'enquiry_service_name':enquiry_service_name,'business_name':business_name,'category':category,'address':address}
                 category_obj.append(cat_obj)
-            category_obj = category_obj[:10]
-        return category_obj
+        category_obj = category_obj[:20]
+    return category_obj
 
 
-def category_search5(text,area):
-    print '----------- 6 ---------'
-    category_obj=[]
-    if area:
-        category_obj2 = CategoryLevel5.objects.filter(category_name__icontains=text)
-        for c in category_obj2:
-            cname = c.parent_category_id.parent_category_id.parent_category_id.parent_category_id.parent_category_id
-            subcat2_name = c.parent_category_id.parent_category_id.parent_category_id.category_name
-            subcat1_name = c.parent_category_id.parent_category_id.parent_category_id.parent_category_id.category_name
-            category_name = c.parent_category_id.parent_category_id.parent_category_id.parent_category_id.parent_category_id.category_name
-            business_obj = Business.objects.filter(category=cname)
-            for b in business_obj:
-                print '-------b---------',b
-                b_obj = Supplier.objects.filter(supplier_id__icontains=b.supplier,area__icontains=area)
-                print '------------b obj----2------------',b_obj
-                for c in b_obj:
-                    supplier_obj = c.supplier.business_name
-                    supplier_id = c.supplier.supplier_id
-                    address = str(c.supplier.address1)+' '+str(c.supplier.address2)+','+str(c.supplier.city)+'-'+str(c.supplier.pincode)
-                    cat_obj = {'supplier_id':supplier_id,'business_name':supplier_obj,'category_name':category_name,'subcategory1':subcat1_name,'subcategory2':subcat2_name,'address':address}
-                    category_obj.append(cat_obj)
-                category_obj = category_obj[:10]
-            return category_obj
-
-    else:
-        category_obj2 = CategoryLevel5.objects.filter(category_name__icontains=text)
-        for c in category_obj2:
-            cname = c.parent_category_id.parent_category_id.parent_category_id.parent_category_id.parent_category_id
-            subcat2_name = c.parent_category_id.parent_category_id.parent_category_id.category_name
-            subcat1_name = c.parent_category_id.parent_category_id.parent_category_id.parent_category_id.category_name
-            category_name = c.parent_category_id.parent_category_id.parent_category_id.parent_category_id.parent_category_id.category_name
-            business_obj = Business.objects.filter(category=cname)
-            for b in business_obj:
-                supplier_obj = b.supplier.business_name
-                supplier_id = b.supplier.supplier_id
-                address = str(b.supplier.address1)+' '+str(b.supplier.address2)+','+str(b.supplier.city)+'-'+str(b.supplier.pincode)
-                cat_obj = {'supplier_id':supplier_id,'business_name':supplier_obj,'category_name':category_name,'subcategory1':subcat1_name,'subcategory2':subcat2_name,'address':address}
-                category_obj.append(cat_obj)
-            category_obj = category_obj[:10]
-        return category_obj
-
-# def city_search(text):
-#     data=[]
-#     city_obj = City.objects.filter(city_name__icontains=text)
-#     for c in city_obj:
-#         supplier_obj = Supplier.objects.filter(city=c)
-#         for s in supplier_obj:
-#             business_name = str(s.business_name)
-#             business_obj = Business.objects.filter(supplier=s)
-#             for b in business_obj:
-#                 cat = str(b.category)
-#                 cat_obj = Category.objects.filter(category_id=cat)
-#                 for cat in cat_obj:
-#                     cat_name = cat.category_name
-#                     city_obj = {'business_name':business_name,'category_name':cat_name}
-#                     data.append(city_obj)
-#         city_obj = data
-#         return city_obj
+# def b_search(sobj,area,city_place,category):
+#     print '----------- b search ---------',sobj,area,city_place,category
+#     cat = category
+#     category_obj=[]
+#     for b in sobj:
+#         print '----------cat obj---',b , cat
+#         a = Advert.objects.filter(supplier_id=b,city_place_id=city_place,area__icontains=area,category_id=cat)
+#         print '-----------supplier obj------',a
+#         for i in a:
+#             category_obj1 = i.category_id.category_name
+#             print '------------cat 1------',category_obj1
+#             if i.category_level_1:
+#                 subcat1_name = i.category_level_1.category_name
+#                 print '------------sub cat 1------',subcat1_name
+#             else:
+#                 subcat1_name = ''
+#             if i.category_level_2:
+#                 subcat2_name = i.category_level_2.category_name
+#                 print '-----------sub-cat 2------',subcat2_name
+#             else:
+#                 subcat2_name = ''
+#
+#             category = str(category_obj1)+'>'+str(subcat1_name)+'>' +str(subcat2_name)
+#             business_name = b.business_name
+#             address = str(b.address1)+' '+str(b.address2)+','+str(b.city_place_id.city_id)+'-'+str(b.pincode)
+#             cat_obj = {'supplier_id':b.supplier_id,'business_name':business_name,'category':category,'address':address}
+#             category_obj.append(cat_obj)
+#         category_obj = category_obj[:10]
+#     return category_obj
 
 
 

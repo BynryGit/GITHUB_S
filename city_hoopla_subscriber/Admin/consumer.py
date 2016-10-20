@@ -38,45 +38,46 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 
 # Location
-from geopy.geocoders import Nominatim
+
 # calender
 from datetime import date
 import calendar
 
+#SERVER_URL = "http://52.40.205.128"
+SERVER_URL = "http://192.168.0.5:8080" 
 def view_user_list(request):
     try:
         data = {}
         final_list = []
+        city_place = ''
         try:
-            print '===========in function========'
-            user_list = ConsumerProfile.objects.all()
+            print '===========in function====Sortby===='
+            sort_by = request.GET.get('sort_by')
+            print 'sort_by',sort_by
+            if sort_by == "oldest_first":
+                user_list = ConsumerProfile.objects.filter(consumer_type = 'register').order_by('-consumer_created_date').reverse()
+            else:
+                user_list = ConsumerProfile.objects.filter(consumer_type = 'register').order_by('-consumer_created_date')
             for user_obj in user_list:
                 #role_id = user_obj.user_role.role_name
                 consumer_id = user_obj.consumer_id
-                print '---------id------',consumer_id
+                bookings = CouponCode.objects.filter(user_id=consumer_id).count()
                 consumer_full_name = user_obj.consumer_full_name
                 consumer_contact_no = user_obj.consumer_contact_no
                 consumer_email_id = user_obj.consumer_email_id
-                latitude = user_obj.latitude
-                longitude = user_obj.longitude
                 consumer_area = user_obj.consumer_area
-                print latitude
-                print longitude
-                #geolocator = Nominatim()
-                #location = geolocator.reverse("18.5063759,73.8050206318")
-                #a= location.address
-                #b= a.split(',')
-                #print b
-                #area= b[-5]
-                #location = geolocator.reverse("52.509669,, longitude")
+                if user_obj.consumer_profile_pic:
+                    consumer_profile_pic=SERVER_URL + user_obj.consumer_profile_pic.url
+                else:
+                    consumer_profile_pic=SERVER_URL + '/static/assets/layouts/layout2/img/avatar.png'
                 
-                #print '===========location========',location
-                #area = location.address
-                #print area
+
                 view = '<a id="'+str(consumer_id)+'"  style="text-align: center;width:24%;" title="Edit" class="edit" data-toggle="modal" href="/booking/?consumer_id='+str(consumer_id)+'"><i class="fa fa-eye"></i></a>'
-                list = {'consumer_id':consumer_id,'consumer_full_name':consumer_full_name,'consumer_contact_no':consumer_contact_no,'consumer_email_id':consumer_email_id,'consumer_area':consumer_area,'view':view}
+                list = {'consumer_profile_pic':consumer_profile_pic,'consumer_id':consumer_id,'bookings':bookings,'consumer_full_name':consumer_full_name,'consumer_contact_no':consumer_contact_no,'consumer_email_id':consumer_email_id,'view':view}
                 final_list.append(list)
-            data = {'success':'true','data':final_list}
+
+            data = {'success':'true','sort_by':sort_by,'consumer_list':final_list,'city_places_list':get_city_places(request),'city_place' : city_place}
+
         except IntegrityError as e:
             print e
             data = {'success':'false','message':'Error in  loading page. Please try after some time'}
@@ -85,30 +86,50 @@ def view_user_list(request):
     except Exception,e:
         print 'Exception ',e
     print data
-    return HttpResponse(json.dumps(data), content_type='application/json')
+    return render(request,'Admin/consumer_list.html',data)
 
-
-def view_booking_list(request):
-
-
+def view_user_list1(request):
     try:
-        print '=======request======first===',request.GET.get('consumer_id')
         data = {}
         final_list = []
+        city_place = ''
         try:
-            user_list = CouponCode.objects.filter(user_id=request.GET.get('consumer_id'))
-            print user_list
-            for user_obj in user_list:
-                #role_id = user_obj.user_role.role_name
-                user_id = str(user_obj.user_id)
-                advert_id = str(user_obj.advert_id)
-                coupon_code = user_obj.coupon_code
-                creation_date = str((user_obj.creation_date).strftime("%m/%d/%Y"))
-                print '...........................creation date.....',creation_date
-                view = '<a  style="text-align: center;letter-spacing: 5px;width:24%;" title="View" class="edit" data-toggle="modal" href="/advert_booking/?coupon_id='+str(user_obj)+'"><i class="fa fa-eye"></i></a>'
-                list = {'user_id':user_id,'advert_id':advert_id,'coupon_code':coupon_code,'creation_date':creation_date,'view':view}
-                final_list.append(list)
-            data = {'success':'true','data':final_list}
+            print '===========in function====City===='
+            filter_by = request.GET.get('filter_by')
+            if filter_by:
+                user_list = ConsumerProfile.objects.filter(city_place_id = filter_by,consumer_type = 'register')
+                if user_list:
+                    for user_obj in user_list:
+                        #role_id = user_obj.user_role.role_name
+                        consumer_id = user_obj.consumer_id
+                        bookings = CouponCode.objects.filter(user_id=consumer_id).count()
+                        consumer_full_name = user_obj.consumer_full_name
+                        consumer_contact_no = user_obj.consumer_contact_no
+                        consumer_email_id = user_obj.consumer_email_id
+                        consumer_area = user_obj.consumer_area
+                        city_place = user_obj.city_place_id.city_id.city_name
+                        
+
+                        if user_obj.consumer_profile_pic:
+                            consumer_profile_pic=SERVER_URL + user_obj.consumer_profile_pic.url
+                        else:
+                            consumer_profile_pic=SERVER_URL + '/static/assets/layouts/layout2/img/avatar.png'
+                        
+                        view = '<a id="'+str(consumer_id)+'"  style="text-align: center;width:24%;" title="Edit" class="edit" data-toggle="modal" href="/booking/?consumer_id='+str(consumer_id)+'"><i class="fa fa-eye"></i></a>'
+                        list = {'consumer_profile_pic':consumer_profile_pic,'consumer_id':consumer_id,'bookings':bookings,'consumer_full_name':consumer_full_name,'consumer_contact_no':consumer_contact_no,'consumer_email_id':consumer_email_id,'view':view}
+                        final_list.append(list)
+                    data = {'success':'true','consumer_list':final_list,'city_places_list':get_city_places(request),'city_place' : city_place}
+                else :
+                    print 'in ----------else'
+
+                    final_list = []
+                    data = {'success':'true','consumer_list':final_list,'city_places_list':get_city_places(request)}
+
+            else :
+                print 'in ----------else'
+
+                final_list = []
+                data = {'success':'true','consumer_list':final_list,'city_places_list':get_city_places(request)}
         except IntegrityError as e:
             print e
             data = {'success':'false','message':'Error in  loading page. Please try after some time'}
@@ -117,7 +138,84 @@ def view_booking_list(request):
     except Exception,e:
         print 'Exception ',e
     print data
+    return render(request,'Admin/consumer_list.html',data)
+
+# TO GET THE CITY
+def get_city_places(request):
+   
+    city_list=[]
+    try:
+        city_objs=City_Place.objects.filter(city_status='1')
+        for city in city_objs:
+            city_list.append({'city_place_id': city.city_place_id,'city': city.city_id.city_name})
+        data =  city_list
+        return data
+
+    except Exception, ke:
+        print ke
+        data={'city_list': 'none','message':'No city available'}
     return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def consumer_booking_details(request):
+    #pdb.set_trace()
+    if not request.user.is_authenticated():
+        return redirect('backoffice')
+    else:
+        try:
+            # pdb.set_trace()
+            print '=======request=====last====',request.GET.get('consumer_id')
+            data = {}
+            final_list = []
+            consumer_id = request.GET.get('consumer_id')
+            consumer_obj=ConsumerProfile.objects.get(consumer_id=request.GET.get('consumer_id'))
+            consumer_full_name = consumer_obj.consumer_full_name
+
+            sort_by = ''
+            sort_by = request.GET.get('sort_by')
+            
+            if sort_by == "new":
+                consumer_obj1 = CouponCode.objects.filter(user_id=request.GET.get('consumer_id')).order_by('-creation_date')
+                consumer_count = CouponCode.objects.filter(user_id=request.GET.get('consumer_id')).order_by('-creation_date').count()
+            else:
+                consumer_count = CouponCode.objects.filter(user_id=request.GET.get('consumer_id')).count()
+                consumer_obj1 = CouponCode.objects.filter(user_id=request.GET.get('consumer_id'))
+
+
+            for consumer_obj in consumer_obj1:
+                coupon_code = consumer_obj.coupon_code
+                advert_name = consumer_obj.advert_id.advert_name
+                category_name = consumer_obj.advert_id.category_id.category_name
+                business_name = consumer_obj.advert_id.supplier_id.business_name
+                city_name = consumer_obj.advert_id.supplier_id.city_place_id.city_id.city_name
+                avail_date = consumer_obj.creation_date.strftime("%d/%m/%Y")
+                expiry_date_var = str(consumer_obj.advert_id.advert_id)
+                advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=str(consumer_obj.advert_id.advert_id))
+                expire_date = advert_sub_obj.business_id.end_date
+                expire_date = datetime.strptime(expire_date, "%d/%m/%Y")
+                coupon_expiry_date=expire_date.strftime("%d/%m/%Y")
+                pre_date = datetime.now().strftime("%d/%m/%Y")
+                pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
+                date_gap = expire_date - pre_date
+                date_gap=int(date_gap.days)
+                print 'date_gap',date_gap
+                if  date_gap>= 0:
+                    status = 'Active'
+                else:
+                    status = 'Inactive'
+
+                list = {'success':'true','coupon_expiry_date':coupon_expiry_date,'status':status,'city_name':city_name,'date_gap':date_gap,'coupon_code':coupon_code,'user_id':str(consumer_obj.user_id),
+                        'advert_name':advert_name,'category_name':category_name,'business_name':business_name,'avail_date':avail_date,'expire_date':expire_date }
+                final_list.append(list)
+            data = {'success':'true','sort_by':sort_by,'consumer_id':consumer_id,'consumer_count':consumer_count,'consumer_full_name':consumer_full_name,'consumer_bookings':final_list,'username':request.session['login_user'],}       
+        except MySQLdb.OperationalError, e:
+            print e
+        except Exception,e:
+            print 'Exception ',e
+        print data
+        return render(request,'Admin/consumer_details.html',data)
+
 
 def subscriber_bookings(request):
     consumer_id = request.GET.get('consumer_id')
@@ -327,108 +425,7 @@ def admin_send_sms(request):
 #         data = {'username':request.session['login_user']}
 #         return render(request,'Admin/advert_booking.html',data)
 
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def advert_booking(request):
-    #pdb.set_trace()
-    if not request.user.is_authenticated():
-        return redirect('backoffice')
-    else:
-        try:
-            print '=======request=====last====',request.GET.get('coupon_id')
-            data = {}
-            final_list = []
-            try:
-                ##############################Last 1 week new subscription view###############################
-                # current_date = datetime.now()
-                # first = calendar.day_name[current_date.weekday()]
-                # print '------------------------current_date------------------------',first
 
-                # last_date = (datetime.now() - timedelta(days=7))
-                # #print '====time========last_date==============',last_date
-                # last_date2 = calendar.day_name[last_date.weekday()]
-                # print '============last_date==============',last_date2
-
-                # list = []
-                # consumer_obj_list = Business.objects.filter(business_created_date__range=[last_date,current_date])
-                # print'sssssssssssssss...consumer_obj_list...ssssssssssssssssssss',consumer_obj_list
-                # mon=tue=wen=thus=fri=sat=sun=0
-                # if consumer_obj_list:
-                #     for consumer_obj in consumer_obj_list:
-                #         business_created_date=consumer_obj.business_created_date
-                #         consumer_day = calendar.day_name[business_created_date.weekday()]
-                #         print '.....................consumer_day............',consumer_day
-                #         if consumer_day== 'Monday' :
-                #             mon = mon+1
-                #         elif consumer_day== 'Tuesday' :
-                #             tue = tue+1
-                #         elif consumer_day== 'Wednesday' :
-                #             wen = wen+1
-                #         elif consumer_day== 'Thursday' :
-                #             thus = thus+1
-                #         elif consumer_day== 'Friday' :
-                #             fri = fri+1
-                #         elif consumer_day== 'Saturday' :
-                #             sat = sat+1
-                #         elif consumer_day== 'Sunday' :
-                #             sun = sun+1
-                #         else :
-                #             pass
-                #         list = {'mon':mon,'tue':tue,'wen':wen,'thus':thus,'fri':fri,'sat':sat,'sun':sun}
-                #         final_list.append(list)
-                #         print final_list
-
-
-                ########################################Today payment collection########################
-                for i in range(0,11):
-                    today_time = str(datetime.now())
-                    
-                    first_time = str((datetime.now() - timedelta(hours=i)))
-                    print 'time==========first_time============',first_time
-
-                    next_time = str((datetime.now() - timedelta(hours=i+1)))
-                    print 'time========next_time==============',next_time
-
-                    list = []
-                    consumer_obj_list = PaymentDetail.objects.filter(payment_created_date__range=[next_time,first_time])
-                    print'sssssssssssssss...consumer_obj_list...ssssssssssssssssssss',consumer_obj_list
-                    
-                    if consumer_obj_list:
-                        for consumer_obj in consumer_obj_list:
-                            total_amount = consumer_obj.total_amount
-                            print '...................total_amount............',total_amount
-                            list.append(str(total_amount))
-                        amount_list = set(list)
-
-                      
-
-                consumer_obj = CouponCode.objects.get(id=request.GET.get('coupon_id'))
-                print "..................consumer_obj.........",consumer_obj
-                coupon_code = consumer_obj.coupon_code
-                advert_name = consumer_obj.advert_id.advert_name
-                category_name = consumer_obj.advert_id.category_id.category_name
-                business_name = consumer_obj.advert_id.supplier_id.business_name
-                avail_date = consumer_obj.creation_date.strftime("%m/%d/%Y")
-                expiry_date_var = str(consumer_obj.advert_id.advert_id)
-                print "------------expiry_date_var-----------",expiry_date_var
-
-                advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=str(consumer_obj.advert_id.advert_id))
-                print "-----------advert_sub_obj------------",advert_sub_obj
-                expire_date = advert_sub_obj.business_id.end_date
-                print '=====================expire date=====',expire_date
-                # #expire_date =''   ,
-                      #  ,'expire_date':expire_date,
-                data = {'success':'true','coupon_code':coupon_code,'user_id':str(consumer_obj.user_id),
-                        'username':request.session['login_user'],'advert_name':advert_name,'category_name':category_name,'business_name':business_name,'avail_date':avail_date,'expire_date':expire_date }
-                print data
-            except IntegrityError as e:
-                print e
-                data = {'success':'false','message':'Error in  loading page. Please try after some time','username':request.session['login_user']}
-        except MySQLdb.OperationalError, e:
-            print e
-        except Exception,e:
-            print 'Exception ',e
-        print data
-        return render(request,'Admin/advert_booking.html',data)
 
 
 

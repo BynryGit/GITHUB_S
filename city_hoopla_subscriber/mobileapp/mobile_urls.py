@@ -42,6 +42,14 @@ mobileapp_urlpattern = patterns('',
     url(r'^save-sellticket/', 'mobileapp.views.save_sellticket',name='save_sellticket'),
     url(r'^view-list-sellticket/', 'mobileapp.views.view_list_sellticket',name='view_list_sellticket'),
     url(r'^view-sellticket-detail/','mobileapp.views.view_sellticket_detail',name='view_sellticket_detail'),
+    url(r'^like-sellticket/', 'mobileapp.views.like_sellticket',name='like_sellticket'),
+    url(r'^favourite-sellticket/', 'mobileapp.views.favourite_sellticket',name='favourite_sellticket'),
+    url(r'^post-sellticket-review/', 'mobileapp.views.post_sellticket_review',name='post_sellticket_review'),
+    url(r'^get-map-advert-list/', 'mobileapp.views.get_map_advert_list',name='get_map_advert_list'),
+    url(r'^post-advert-review/', 'mobileapp.views.post_advert_review',name='post_advert_review'),
 
-   
+    url(r'^get-about-city/', 'mobileapp.views.get_about_city',name='get_about_city'),
+    url(r'^user-advert-activity/', 'mobileapp.views.user_advert_activity',name='user_advert_activity'),
+    url(r'^guest-login/', 'mobileapp.views.guest_login',name='guest_login'),
+
 ) + static( settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

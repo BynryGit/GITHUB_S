@@ -39,14 +39,21 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'digispaceapp',
     'subscriberapp',
+    'crmapp',
     'captcha',
     'push_notifications',
     'digispaceapp.templatetags.my_template_tag',
-    'embed_video'
+    'djcelery',
+    'kombu.transport.django'
 )
 
+import djcelery
+djcelery.setup_loader()
+BROKER_URL="django://"
+CELERY_IMPORTS = ('DigiSpace.tasks')
+
 PUSH_NOTIFICATIONS_SETTINGS = {
-    "GCM_API_KEY": "AIzaSyAdxzP7nuEVzuWg18S5TdnyhGdEBVWtEOc",
+    "GCM_API_KEY": "AIzaSyDc3llc1alxNzkeoDgy9YpJnqUu4bQJJ_w",
 }
 
 MIDDLEWARE_CLASSES = (
@@ -56,7 +63,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
 CAPTCHA_IMAGE_SIZE=(142,35)
@@ -71,41 +78,16 @@ WSGI_APPLICATION = 'DigiSpace.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
-'''DATABASES = {
-   'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'digispace_db',
-            'USER': 'root',
-            'PASSWORD': 'root',
-            'HOST': '127.0.0.1',
-            'PORT': '3306',
-            'TIME_ZONE': 'Asia/Kolkata',
-
-   }
-}'''
-
-# DATABASES = {
-#     'default': {
-#              'ENGINE': 'django.db.backends.mysql',
-#              'NAME': 'digispace_parallel',
-#              'USER': 'root',
-#              'PASSWORD': 'root1234',
-#              'HOST': 'newdigispace.cdaktz8aqmgo.us-west-2.rds.amazonaws.com',
-#              'PORT': '3306'
-#              #'TIME_ZONE': 'Asia/Kolkata',
-#
-#     }
-#  }
 
 DATABASES = {
     'default': {
              'ENGINE': 'django.db.backends.mysql',
-             'NAME': 'digispace_all',
+             'NAME': 'ss_digispace',
              'USER': 'root',
              'PASSWORD': 'root',
              'HOST': 'localhost',
              'PORT': '3306'
-             #'TIME_ZONE': 'Asia/Kolkata',
+             # 'TIME_ZONE': 'Asia/Kolkata',
 
     }
  }
@@ -115,13 +97,18 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+#TIME_ZONE = 'UTC'
+
+TIME_ZONE = 'Asia/Kolkata'
+
+#TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+#USE_TZ = True
+USE_TZ = False
 
 TEMPLATE_DIRS = (
     BASE_DIR+'/templates',
@@ -131,7 +118,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'django.contrib.auth.context_processors.auth',
 )
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/

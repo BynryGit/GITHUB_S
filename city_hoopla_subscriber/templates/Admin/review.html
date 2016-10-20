@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<!-- 
+Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.6
+Version: 4.5.3
+Author: KeenThemes
+Website: http://www.keenthemes.com/
+Contact: support@keenthemes.com
+Follow: www.twitter.com/keenthemes
+Like: www.facebook.com/keenthemes
+Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes
+License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project.
+-->
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+    <!--<![endif]-->
+    <!-- BEGIN HEAD -->
+    {% load staticfiles %}
+    <head>
+        <meta charset="utf-8" />
+        <title>City Hoopla | Add Subscriber</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <meta content="" name="description" />
+        <meta content="" name="author" />
+        <!-- BEGIN GLOBAL MANDATORY STYLES -->
+       <!-- BEGIN GLOBAL MANDATORY STYLES -->
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.css" rel="stylesheet" type="text/css" /> 
+       <link href="{% static 'vendor/bootstrap-fileinput/jasny-bootstrap.min.css' %}" rel="stylesheet" media="screen">
+       <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" /> 
+        <link href="{% static 'assets/global/plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'assets/global/plugins/simple-line-icons/simple-line-icons.min.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'assets/global/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'assets/global/plugins/uniform/css/uniform.default.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css' %}" rel="stylesheet" type="text/css" />
+        <!-- END GLOBAL MANDATORY STYLES -->
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <link href="{% static 'assets/global/plugins/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css" />
+<!--         <link href="{% static 'assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css' %}" rel="stylesheet" type="text/css" /> -->
+        <link href="{% static 'assets/global/plugins/select2/css/select2-bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+<!--         <link href="{% static 'assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css' %}" rel="stylesheet" type="text/css" /> -->
+        <link href="{% static 'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'assets/global/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css' %}" rel="stylesheet" type="text/css" />
+        <!-- END PAGE LEVEL PLUGINS -->
+        <!-- BEGIN THEME GLOBAL STYLES -->
+        <link href="{% static 'assets/global/css/components.min.css' %}" rel="stylesheet" id="style_components" type="text/css" />
+        <link href="{% static 'assets/global/css/plugins.min.css' %}" rel="stylesheet" type="text/css" />
+        <!-- END THEME GLOBAL STYLES -->
+        <!-- BEGIN THEME LAYOUT STYLES -->
+        <link href="{% static 'assets/layouts/layout2/css/layout.min.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'assets/layouts/layout2/css/themes/blue.min.css' %}" rel="stylesheet" type="text/css" id="style_color" />
+        <link href="{% static 'assets/layouts/layout2/css/custom.min.css' %}" rel="stylesheet" type="text/css" />
+ <!--    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2016.2.504/styles/kendo.material.min.css"/> -->
+
+        <!-- END THEME LAYOUT STYLES -->
+        <link rel="shortcut icon" href="favicon.ico" /> </head>
+    <!-- END HEAD -->
+<style type="text/css">
+
+.has-success .control-label{
+	color : #333;
+}
+
+.has-success .form-control {
+	border: 1px solid #C2CAD8;
+}
+
+		div.dataTables_wrapper div.dataTables_info {
+    padding-top: 8px;
+    white-space: nowrap;
+    display: none;
+}
+div.dataTables_wrapper div.dataTables_length label {
+    font-weight: normal;
+    text-align: left;
+    white-space: nowrap;
+    display: none;
+}
+
+div.dataTables_filter label {
+    font-weight: normal;
+    white-space: nowrap;
+    text-align: left;
+    display: none;
+}
+
+.border_s{
+
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+.fa-lg {
+    font-size: 2.333333em;
+    line-height: .75em;
+    vertical-align: -15%;
+}
+
+div.checker span {
+    display: -moz-inline-box;
+    display: inline-block;
+    zoom: 1;
+    text-align: center;
+    background-position: 0 -260px;
+
+}
+
+#processing{
+    height: 100vh;
+    position: fixed;
+    width: 100%;
+    margin: 0px auto;
+    z-index: 9999;
+    background-color: #FFF;
+    background-image: none;
+    background-attachment: scroll;
+    background-position: 0% 0%;
+    background-clip: border-box;
+    background-origin: padding-box;
+    background-repeat: repeat;
+    background-size: inherit;
+    opacity: 0.5;
+}
+
+#loading{
+    width: 36%;
+    height: 22px;
+    position: absolute;
+    top: 26%;
+    left: 32%;
+    margin: -28px 0px 0px -25px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: #000;
+}
+
+.form-height{
+height: 65px;
+}
+
+.user-image img {
+    max-width: 100%;
+}
+
+.fileinput .thumbnail>img {
+    height: 178px !important;
+}
+
+.fileinput-preview.thumbnail {
+    max-width: 278px;
+}
+
+.btn-azure:hover {
+    background-color: #0095C8;
+    border-color: #0095C8;
+    color: #ffffff;
+}
+
+.btn-file {
+    overflow: hidden;
+    position: relative;
+    vertical-align: middle;
+}
+
+.user-image .user-image-buttons {
+    position: static;
+
+    <!--top: 20%;-->
+    <!--left: 37%;-->
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+.btn-red:hover {
+    background-color: #da4f4a !important;
+    border-color: #da4f4a;
+    color: #ffffff;
+    display: none;
+}
+
+.btn-red{
+    display: none;
+}
+
+.btn-sm, .btn-group-sm>.btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+
+.btn {
+    transition: all 0.3s ease 0s !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    position: relative;
+}
+
+.fileinput .btn {
+    vertical-align: middle;
+}
+
+.bootstrap-tagsinput {
+    line-height: 35px;
+    width: 980px;
+}
+
+.error{
+    font-weight: 400;
+    font-style: normal;
+    font-size: 12px;
+}
+
+.form-wizard .steps > li.active > a.step .desc {
+    color: #2F353B;
+    font-weight: 700;
+}
+
+.portlet.light {
+    <!--padding: 0px 0px 4px;-->
+    <!--background-color: #eef1f5;-->
+}
+
+.form-wizard .steps, .form-wizard .steps > li > a.step {
+    <!--background-color: #eef1f5;-->
+    background-image: none;
+    border: 0;
+    box-shadow: none;
+    filter: none;
+}
+
+.dropzone .dz-preview, .dropzone-previews .dz-preview{
+    margin: 3px !important;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #6B6B6B;
+    border-bottom: 0;
+}
+
+
+#tab2 {
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.map-wrapper {
+    float: left;
+    margin: 0px 0px 0 0px;
+}
+
+#map {
+    border: 1px solid #DDD;
+    width: 21em;
+    overflow: hidden;
+    height: 20em;
+    margin: 10px 0 10px 0;
+    -webkit-box-shadow: #AAA 0px 0px 15px;
+}
+
+#my-awesome-dropzone-3{
+    border: 3px dashed black !important;
+    min-height: 224px !important;
+    background: #ffffff;
+}
+
+#my-active-dropzone{
+    border: 3px dashed black !important;
+    min-height: 224px !important;
+    background: #ffffff;
+}
+
+.dropzone .dz-preview .dz-details img, .dropzone-previews .dz-preview .dz-details img {
+    position: absolute;
+    top: 0px;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.dropzone .dz-preview, .dropzone-previews .dz-preview {
+    background: rgba(255,255,255,0.8);
+    position: relative;
+    display: inline-block;
+    margin: 4px;
+    vertical-align: top;
+    border: 1px solid #acacac;
+    padding: 6px 6px 6px 6px;
+}
+
+.sel2{
+    width: 100%;
+}
+
+.tab-active{
+    background: rgb(13, 103, 230) none repeat scroll 0% 0% !important;
+    color: rgb(16, 245, 182) !important;
+}
+
+.sel2{
+    width: 100%;
+}
+
+.div-border-top{
+    border: 1px solid #cccccc;
+    border-bottom: none;
+}
+
+.div-border-bottom{
+    border: 1px solid #cccccc;
+    border-top: none;
+}
+
+.div-border-left-right{
+    border: 1px solid #cccccc;
+    border-top: none;
+    border-bottom: none;
+}
+
+.div-border{
+    border: 1px solid #cccccc;
+}
+
+.div-color{
+    background-color: rgb(243, 242, 242);
+    //border: 1px solid rgb(204, 204, 204) !important;
+    /*border-radius: 10px !important;
+    margin-right: 0.5%;
+    margin-left: 0.5%;
+    margin-bottom: 1%;*/
+}
+
+
+@media (min-width:992px) {
+    .col-lg-3 {
+        width:24% !important;
+    }
+    /*.col-xs-6 {
+        width: 46% !important;
+    }*/
+}
+
+.form-control {
+    border: 1px solid #c0c0c0;
+}
+
+.brad-crum-1{
+    font-size:16px;
+    color: #3eb199;
+}
+
+.brad-crum-2{
+    font-size:16px;
+    color: #00448b;
+}
+
+.brad-crum-3{
+    font-size:16px;
+    color: #00448b;
+    font-weight:700;
+}
+
+
+.form-wizard .steps > li > a.step .number {
+    background-color: #e2e1e1 !important;
+    color: #fff;
+    font-weight: 700;
+}
+
+.form-wizard .steps > li.active > a.step .number {
+    background-color: #00448b !important;
+    color: #fff;
+    font-weight: 700;
+}
+
+.form-wizard .steps > li > a.step .done {
+    color: #fff;
+    font-weight: 700;
+    background-color: #0d67e6;
+    background-image: url(images/linear_bg_1.png);
+    background-repeat: repeat-y;
+
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* IE 10 */
+    background: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+}
+
+
+.grey_color{
+    border: 1px solid rgb(72, 72, 72);
+    color: rgb(255, 255, 255);
+    background: rgb(72, 72, 72) none repeat scroll 0% 0%;
+    border-radius: 20px !important;
+}
+
+.done_btn{
+    color: rgb(255, 255, 255);
+    border-radius: 20px !important;
+    background-color: #0d67e6;
+    background-image: url(images/linear_bg_1.png);
+    background-repeat: repeat-y;
+
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* IE 10 */
+    background: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+}
+
+
+.font-14{
+    font-size:14px;
+}
+
+.font-12{
+    font-size:12px;
+}
+
+.font-16{
+    font-size:16px;
+}
+
+.font-15{
+    font-size:15px;
+}
+
+.font-18{
+    font-size:18px;
+}
+
+.font-green{
+    color: #3eb199 !important;
+}
+
+.font-blue{
+    color: #00448b !important;
+}
+
+.font-bold{
+    font-weight:700;
+}
+
+.font-regular{
+    font-weight:500;
+}
+
+.fa-pencil:hover {
+    color: #3eb199;
+}
+
+.fa-pencil {
+    color: #3eb199;
+}
+
+    .form-wizard .steps > li > a.step .desc {
+        color: #e2e1e1;
+        font-weight: 700;
+    }
+
+    .form-wizard .steps > li.active > a.step .desc {
+        color: #00448b;
+        font-weight: 700;
+    }
+
+    .form-wizard .steps > li > a.step .desc_done {
+        color: #00448b;
+        font-weight: 700;
+    }
+
+
+
+    </style>
+
+     <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
+        <!-- BEGIN HEADER -->
+        <div id="processing" style="display:none;">
+				<div id="loading">
+					<img  src="{% static 'assets/loading-bars.gif' %}" style="height : 100px;">
+					
+				</div>	
+  			</div>
+        <div class="page-header navbar navbar-fixed-top">
+                 <!-- BEGIN HEADER INNER -->
+            <div class="page-header-inner ">
+                <!-- BEGIN LOGO -->
+                <div class="page-logo">
+                    <a href="index.html">
+                        <img src="{% static 'assets/layouts/layout2/img/City_Hoopla_Logo.png' %}" alt="logo" class="logo-default" /> </a>
+                    <div class="menu-toggler sidebar-toggler">
+                        <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
+                    </div>
+                </div>
+                <!-- END LOGO -->
+                <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+                <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"> </a>
+                <!-- END RESPONSIVE MENU TOGGLER -->
+                <!-- BEGIN PAGE TOP -->
+                <div class="page-top">
+                    <!-- BEGIN TOP NAVIGATION MENU -->
+                    <div class="top-menu">
+                        <ul class="nav navbar-nav pull-right">
+                            <!-- BEGIN NOTIFICATION DROPDOWN -->
+                            <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                           
+                            <!-- END NOTIFICATION DROPDOWN -->   
+                            <!-- BEGIN USER LOGIN DROPDOWN -->
+                            <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                            <li class="dropdown dropdown-user">
+                                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                    <!-- <img alt="" class="img-circle" src="{% static 'assets/layouts/layout2/img/avatar3_small.jpg' %}" /> -->
+                                    <span class="username username-hide-on-mobile"> {{ user }} </span>
+                                    <i class="fa fa-angle-down"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-default">
+                                   <li>
+		                                <a href="/log-out/">
+		                                    <i class="icon-key"></i> Log Out </a>
+		                            </li>
+                                </ul>
+                            </li>
+                            <!-- END USER LOGIN DROPDOWN -->
+                        </ul>
+                    </div>
+                    <!-- END TOP NAVIGATION MENU -->
+                </div>
+                <!-- END PAGE TOP -->
+            </div>
+            <!-- END HEADER INNER -->
+        </div>
+        <!-- END HEADER -->
+        <!-- BEGIN HEADER & CONTENT DIVIDER -->
+        <div class="clearfix"> </div>
+        <!-- END HEADER & CONTENT DIVIDER -->
+        <!-- BEGIN CONTAINER -->
+        <div class="page-container">
+            <!-- BEGIN SIDEBAR -->
+            <div class="page-sidebar-wrapper">
+                <div class="page-sidebar navbar-collapse collapse">
+                    {% include 'Admin/side-panel.html' %}
+                </div>
+            </div>
+            <!-- END SIDEBAR -->
+            <!-- BEGIN CONTENT -->
+            <div class="page-content-wrapper">
+                <!-- BEGIN CONTENT BODY -->
+                <div class="page-content">
+                		
+                    <!-- BEGIN PAGE HEADER-->
+                  
+                    
+                    <!-- END PAGE HEADER-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="portlet light  ">
+                        <div class="portlet-body form">
+                            <!-- BEGIN FORM-->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <a class="brad-crum-1" href="/view-subscriber-list/">Subscriber</a>
+                                    <i class="fa fa-angle-right"></i>
+                                    <span class="brad-crum-2">Add Subscriber</span>
+                                  <div class="portlet-body">
+                                        <div class="portlet light " id="form_wizard_1">
+
+                                            <div class="portlet-body form">
+                                                    <div class="form-wizard">
+                                                        <div class="form-body">
+           
+
+                                                            <ul class="nav nav-pills nav-justified steps" style="padding-bottom: 0px;">
+                                                                <li id="tab_1">
+                                                                    <a href="#tab1" data-toggle="tab" class="step ">
+                                                                        <span id="number_1" style="padding-top:15px; padding-left:13px ; font-size:18px;" class="number fa fa-check done">  </span>
+                                                                        <br>
+                                                                        <span id="desc_1" class="desc">
+                                                                            <i class="fa fa-check"></i> Business Details
+                                                                        </span>
+                                                                    </a>
+                                                                </li>
+                                                                <li id="tab_2">
+                                                                    <a href="#tab2" data-toggle="tab" class="step ">
+                                                                        <span id="number_2" style="padding-top:15px; padding-left:13px ; font-size:18px;" class="number fa fa-check done">  </span>
+                                                                        <br>
+                                                                       <span id="desc_2" class="desc">
+                                                                            <i class="fa fa-check"></i> Subscription Details
+                                                                        </span>
+                                                                    </a>
+                                                                </li>
+                                                                <li id="tab_3">
+                                                                    <a href="#tab3" data-toggle="tab" class="step">
+                                                                        <span id="number_3" style="padding-top:15px; padding-left:13px ; font-size:18px;" class="number fa fa-check done">  </span>
+                                                                        <br>
+                                                                        <span id="desc_3" class="desc">
+                                                                            <i class="fa fa-check"></i> Payment Details
+                                                                        </span>
+                                                                    </a>
+                                                                </li> 
+                                                                 <li id="tab_4" class="active">
+                                                                    <a href="#tab4" data-toggle="tab" class="step">
+                                                                        <span id="number_4" class="number"> 4 </span>
+                                                                        <br>
+                                                                        <span id="desc_4" class="desc">
+                                                                            <i class="fa fa-check"></i> Review
+                                                                        </span>
+                                                                    </a>
+                                                                </li> 
+                                                            </ul>
+
+                                                            <!--<div id="bar" class="progress progress-striped"-->
+                                                                 <!--role="progressbar">-->
+                                                                <!--<div class="progress-bar progress-bar-success"></div>-->
+                                                            <!--</div>-->
+                                                   <div class="tab-content">
+                                                      <div class="tab-pane active" id="tab4">
+																			<hr>
+																				
+																			<div class="row">
+
+															 {% for subscriber in subscriber_info %}
+															
+															  <div class="col-lg-6 col-md-6 ">
+															  		<br>
+															 <div class="row div-color">
+																		<br>
+																<div class="col-md-12">
+																	<div class="row ">
+																	
+																		<div class=" col-md-4">
+																			<div class="form-group">
+															                <label class="brad-crum-2" style="font-size:15px; font-weight:700;">Business Details </label>
+															            </div>
+															          </div>  
+															          <div class=" col-md-8"> 
+															            <div class="form-group">
+															                <a class="fa fa-pencil " style="float: right !important;margin-top:8px;" href="/edit-subscriber/?subscriber_id={{ subscriber.subscriber_id}}&business_id={{ subscriber.business_id }}&flag=1"></a>
+															            </div>
+															           </div> 
+															       </div>
+															       <hr style="margin-top:0;">
+															
+															       <div class="row">
+																		 <div class="col-md-6" >
+																		 	<div class="item_image" style="text-align:center ;border: 1px solid #cccccc;  important;  background: white;">
+															              <img src="{{ subscriber.logo }}"
+															                   style="width: 100%; height: 100px !important;"
+															                   class="img-responsive"> </img>
+															 					</div>
+																		 </div>
+																		 
+																		 <div class="col-md-6 ">
+																		 	 <div class="row">
+																		 		<label class="control-label " style="font-size:15px; font-weight:700; ">{{ subscriber.business_name }}
+															                </label>
+															              </div> 
+															             <div class="row">
+															             	 <p style="font-size:15px; font-weight:500;">{{ subscriber.business_details }}</p>
+															             </div>     
+																		 </div>                                                                     
+															       </div>
+															  
+															       
+															       <div class="row">
+															       	<div class="col-md-6"  >
+															       		<div class="row">
+															             	<label class="control-label " style="font-size:15px; font-weight:700;margin-left: 12px !important;">Mobile Number
+															                      </label>
+															            </div>
+															            <div class="row">
+															            	<p style="font-size:15px; font-weight:500;margin-left:12px !important" >{{ subscriber.phone_no }}</p>
+															            </div>        
+															         </div>   
+															         <div class="col-md-6">
+															       		<div class="row">
+															             	<label class="control-label " style="font-size:15px; font-weight:700; ">Secondary Number
+															                      </label>
+															            </div>
+															            <div class="row">
+															            	<p style="font-size:15px; font-weight:500;">{{ subscriber.secondary_phone_no }}</p>
+															            </div>        
+															         </div>    
+															       </div>
+															       
+															       
+															       <div class="row">
+															       	<div class="col-md-6"  >
+															       		<div class="row">
+															             	<label class="control-label " style="font-size:15px; font-weight:700;margin-left: 12px !important;">Primary Email
+															                      </label>
+															            </div>
+															            <div class="row">
+															            	<p style="font-size:15px; font-weight:500;margin-left:12px !important" >{{ subscriber.supplier_email }}</p>
+															            </div>        
+															         </div>   
+															         <div class="col-md-6">
+															       		<div class="row">
+															             	<label class="control-label " style="font-size:15px; font-weight:700; ">Secondary Email
+															                      </label>
+															            </div>
+															            <div class="row">
+															            	<p style="font-size:15px; font-weight:500;">{{ subscriber.secondary_email }}</p>
+															            </div>        
+															         </div>    
+															       </div>
+															       
+															       
+															       <div class="row">
+															       	<div class="col-md-12">
+																			<div class="row">
+															               <label class="control-label " style="font-size:15px; font-weight:700; margin-left:12px !important">Address
+															                         </label>
+															             </div>
+															             <div class="row">
+															              		<p style="font-size:15px; font-weight:500; margin-left:12px !important;margin-bottom: 0px !important;">{{ subscriber.address1 }}</p>
+															              		{% if subscriber.address2%}
+															             		<p style="font-size:15px; font-weight:500;margin-left:12px !important;margin-top: 0px !important;margin-bottom: 0px !important;" >{{ subscriber.address2}} </p>
+															             		<p style="font-size:15px; font-weight:500;margin-left:12px !important;margin-top: 0px !important;" >{{ subscriber.city_place_id }}, {{ subscriber.state_id }},{{ subscriber.pincode_id}}</p>
+															             		{% else %}
+															            		<p style="font-size:15px; font-weight:500;margin-left:12px !important;margin-top: 0px !important;" >{{ subscriber.city_place_id }}, {{ subscriber.state_id }}, {{ subscriber.pincode_id}}</p>
+															            		{% endif %}
+															             </div>
+															        </div>                                                                          
+															       </div>
+															       
+															       <div class="row">
+															       	<div class="col-md-6">
+																			<div class="row">
+															               <label class="control-label " style="font-size:15px; font-weight:700; margin-left:12px !important">Primary Contact Details
+															                         </label>
+															             </div>
+															             <div class="row">
+															              		<p style="font-size:15px; font-weight:500; margin-left:12px !important">{{ subscriber.contact_person }}</p>
+															             
+															              		<p style="font-size:15px; font-weight:500; margin-left:12px !important; margin-top:-20px !important;">{{ subscriber.contact_email }}</p>
+															             
+															             
+															              		<p style="font-size:15px; font-weight:500; margin-left:12px !important; margin-top:-20px !important;">{{ subscriber.contact_no }}</p>
+															             </div>
+															        </div>                                                                          
+															       </div>
+															   
+															     </div>
+															   </div>
+															 </div>      
+															       
+																		
+																
+																<div class="col-lg-1 col-md-1">
+																</div>
+																
+																																						
+															<div class="col-lg-5 col-md-5 " style="width: 39.667% !important;">
+																		<br>
+															<div class="row" >
+															
+															<div class="row div-color">
+															<br>
+															
+																<div class="col-md-12 ">
+																<div class="row">
+																	<div class=" col-md-6">
+																		<div class="form-group">
+											                         <label class="brad-crum-2" style="font-size:15px; font-weight:700;">Subscription Details </label>
+											                     </div>
+											                   </div>  
+											                   <div class=" col-md-6"> 
+											                     <div class="form-group">
+											                         <a class="fa fa-pencil " style="float: right !important;margin-top:8px;" href="/edit-subscription/?business_id={{ subscriber.business_data.business_id }}&flag=1"></a>
+											                     </div>
+											                    </div> 
+											                </div>
+											                <hr style="margin-top:0;">
+											                
+											                 
+											                
+											                <div class="row">
+																	 <div class="col-md-6 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:700; ">Category :
+											                         </label>  
+																	 </div>   
+																	 <div class="col-md-6 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:500; ">{{ subscriber.business_data.category_name }}
+											                         </label>  
+																	 </div>                                                                  
+											                </div>
+											                
+											                <div class="row">
+																	 <div class="col-md-6 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:700; ">Basic Subscription ({{ subscriber.business_data.service_rate_card_duration }} Days):
+											                         </label>  
+																	 </div>   
+																	 <div class="col-md-3 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:500; ">Starts on {{ subscriber.business_data.start_date }}
+											                         </label>  
+																	 </div>
+																	 <div class="col-md-3 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:500; ">Ends on {{ subscriber.business_data.end_date }}
+											                         </label>  
+																	 </div>                                                                  
+											                </div>
+
+											                {% if subscriber.premium_service_list %}
+											                 <div class="row">
+											                	 <div class="col-md-12">
+											                	 	<label class="control-label " style="font-size:15px; font-weight:700; ">Premium Services:
+											                         </label> 
+											                	 </div>
+											                </div>
+											                {% for premium in subscriber.premium_service_list %}
+											                
+											                <div class="row">
+																	 <div class="col-md-6 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:500; ">{{ premium.premium_service_name }} ({{ premium.premium_service_duration }} Days):
+											                         </label>  
+																	 </div>   
+																	 <div class="col-md-3 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:500; ">Starts on {{ premium.premium_service_start_date }}
+											                         </label>  
+																	 </div>
+																	 <div class="col-md-3 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:500; ">Ends on {{ premium.premium_service_end_date }}
+											                         </label>  
+																	 </div>                                                                  
+											            	</div>
+											            	{% endfor %}
+											            	{% else %}
+											            	<div class="row">
+											            	</div>
+											
+															     {% endif %} 
+															     
+															     
+															       {% if subscriber.enquiry_service_data %}
+											                 <div class="row">
+											                	 <div class="col-md-12">
+											                	 	<label class="control-label " style="font-size:15px; font-weight:700; ">Telephone Enquiry Premium Service:
+											                         </label> 
+											                	 </div>
+											                </div>
+											             
+											                
+											                <div class="row">
+																	 <div class="col-md-6 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:500; ">{{ subscriber.enquiry_service_data.enquiry_service_name }} ({{ subscriber.enquiry_service_data.enquiry_service_duration }} Days) :
+											                         </label>  
+																	 </div>   
+																	 <div class="col-md-3 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:500; ">Starts on {{ subscriber.enquiry_service_data.enquiry_service_start_date }}
+											                         </label>  
+																	 </div>
+																	 <div class="col-md-3 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:500; ">Ends on {{ subscriber.enquiry_service_data.enquiry_service_end_date }}
+											                         </label>  
+																	 </div>                                                                  
+											            	</div>
+								
+											            	{% else %}
+											            	<div class="row">
+											            	</div>
+											
+															     {% endif %} 
+															     
+															            	
+	   
+																</div>
+																			</div>
+																			<br>
+			
+			
+														<div class="row div-color" >
+															<br>
+															<div class="col-md-12 ">
+																<div class="row">
+																	<div class=" col-md-6">
+																		<div class="form-group">
+											                         <label class="brad-crum-2" style="font-size:15px; font-weight:700;">Payment Details </label>
+											                     </div>
+											                   </div>  
+											                   <div class=" col-md-6"> 
+											                     <div class="form-group">
+											                         <a class="fa fa-pencil " style="float: right !important;margin-top:8px;" href="/review-payment/?business_id={{ subscriber.business_id }}&flag=1"></a>
+											                     </div>
+											                    </div> 
+											                </div>
+											                <hr style="margin-top:0;">
+											                
+											
+											                
+											                <div class="row">
+																	 <div class="col-md-6 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:500; ">Subscription Amount
+											                         </label>  
+																	 </div>   
+																	 <div class="col-md-3 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:500; ">{{  subscriber.payment_details.total_amount }}
+											                         </label>  
+																	 </div>                                                                  
+											                </div>
+											                
+											                <div class="row">
+																	 <div class="col-md-6 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:500; ">Tax
+											                         </label>  
+																	 </div>   
+																	 <div class="col-md-3 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:500; ">{{  subscriber.payment_details.tax }}
+											                         </label>  
+																	 </div>                                                              
+											                </div>
+																<br>
+																<hr style="border-top: 1px dashed #6B6B6B; margin-top: 0px; padding-top: 0px;">                                                                         
+											                <br>
+											                
+											                <div class="row">
+																	 <div class="col-md-6 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:700; ">Total Amount Payable
+											                         </label>  
+																	 </div>   
+																	 <div class="col-md-3 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:500; ">{{  subscriber.payment_details.payable_amount }}
+											                         </label>  
+																	 </div>                                                                  
+											                </div> 
+											                
+											                 <div class="row">
+																	 <div class="col-md-6 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:700; ">Total Amount Paid
+											                         </label>  
+																	 </div>   
+																	 <div class="col-md-3 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:500; ">{{  subscriber.payment_details.paid_amount }}
+											                         </label>  
+																	 </div>                                                                  
+											                </div> 
+											                
+											                <div class="row">
+																	 <div class="col-md-12 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:500; ">Paid By {{ subscriber.payment_details.payment_mode }}
+											                         </label> 
+																	 </div>
+																</div>
+																<div class="row">	    
+																	 <div class="col-md-12 ">
+																	 		<label class="control-label " style="font-size:15px; font-weight:500; ">{{  subscriber.payment_details.note }}
+											                         </label>  
+																	 </div>                                                                  
+											                </div> 
+											                
+											      
+											                
+															</div>	
+														</div>
+
+
+													</div>			
+													
+													<br>
+												</div>
+												
+													{% endfor %}
+													 
+											</div>
+											<br>
+												  <hr style="border-top: 1px dashed #6B6B6B; margin-top: 0px; padding-top: 0px;">
+                                    	<div class="row">
+                                           <div class="col-lg-12 col-md-12 text-right">
+                                               <a type="button"
+                                                      href="/view-subscriber-list/"
+                                                      class="btn btn-outline grey_color"> Cancel </a>
+                            
+                                                <a type="submit" href="/add-supplier-confirm/?business_id={{ business_id }}"
+                                                       class="btn btn-outline done_btn">
+                                                  &nbsp;&nbsp;&nbsp; Done &nbsp;&nbsp;&nbsp;
+                                               </a> 
+                                           </div>
+                                    	</div>
+													 
+												
+																					
+                                                         
+                                                       </div> 
+                                                    </div>
+                                                <!--</form>-->
+                                            </div>
+                                        </div>
+                                     </div>
+                                        
+
+
+                                                                <!-- <div class="tab-pane" id="tab4">
+
+                                                                </div> -->
+                                                            </div>
+                                      </div>
+                                    <!-- END FORM-->
+                                </div>
+                            </div>
+                            <!-- END PORTLET-->
+                        </div>
+                    </div>
+                </div>
+                <!-- END CONTENT BODY -->
+            </div>
+            <!-- END CONTENT -->
+        </div>
+       </div>
+     </div>   
+        <!-- END CONTAINER -->
+        <!-- /.modal -->
+              
+      	<!-- /.modal -->
+        <!-- BEGIN FOOTER -->
+        <div class="page-footer">
+            <div class="page-footer-inner"> 2016 &copy; DigiSpace.
+            </div>
+            <div class="scroll-to-top">
+                <i class="icon-arrow-up"></i>
+            </div>
+        </div>
+        <!-- END FOOTER -->
+       
+        
+        <!-- End -->
+        <!--[if lt IE 9]>
+<script src="../assets/global/plugins/respond.min.js"></script>
+<script src="../assets/global/plugins/excanvas.min.js"></script> 
+<![endif]-->
+<!-- BEGIN CORE PLUGINS -->
+        <script src="{% static 'assets/global/plugins/jquery.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/bootstrap/js/bootstrap.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/js.cookie.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/jquery.blockui.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/uniform/jquery.uniform.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js' %}" type="text/javascript"></script>
+        <!-- END CORE PLUGINS -->
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <script src="{% static 'assets/global/plugins/select2/js/select2.full.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/jquery-validation/js/jquery.validate.min.js' %}" type="text/javascript"></script>
+        <!-- <script src="{% static 'assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js' %}" type="text/javascript"></script>  -->
+        <!--  <script src="{% static 'assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js' %}" type="text/javascript"></script> -->  
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.js" ></script> 
+        <script src="{% static 'assets/global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/ckeditor/ckeditor.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/bootstrap-markdown/lib/markdown.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/bootstrap-markdown/js/bootstrap-markdown.js' %}" type="text/javascript"></script>
+        <!-- END PAGE LEVEL PLUGINS -->
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <script src="{% static 'assets/global/plugins/select2/js/select2.full.min.js' %}" type="text/javascript"></script>
+			<script src="{% static 'vendor/bootstrap-fileinput/jasny-bootstrap.js' %}"></script>
+
+        <script src="{% static 'assets/global/plugins/bootstrap-wizard/jquery.bootstrap.wizard.min.js' %}" type="text/javascript"></script>
+        <!-- END PAGE LEVEL PLUGINS -->
+         <!-- BEGIN PAGE LEVEL SCRIPTS -->
+        <script src="{% static 'assets/pages/scripts/form-wizard.min.js' %}" type="text/javascript"></script>
+        <!-- END PAGE LEVEL SCRIPTS -->
+        <!-- BEGIN THEME GLOBAL SCRIPTS -->
+        <script src="{% static 'assets/global/scripts/app.min.js' %}" type="text/javascript"></script>
+        <!-- END THEME GLOBAL SCRIPTS -->
+        <!-- BEGIN PAGE LEVEL SCRIPTS -->
+<!--         <script src="{% static 'assets/pages/scripts/form-validation.min.js' %}" type="text/javascript"></script> -->
+        <!-- END PAGE LEVEL SCRIPTS -->
+        <!-- BEGIN THEME LAYOUT SCRIPTS -->
+        <script src="{% static 'assets/layouts/layout2/scripts/layout.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/layouts/layout2/scripts/demo.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/layouts/global/scripts/quick-sidebar.min.js' %}" type="text/javascript"></script>
+        <!-- END THEME LAYOUT SCRIPTS -->
+        <script type="text/javascript">
+                $("#supplier_anchor").addClass("tab-active");
+    $("#supplier_icon").addClass("icon-active");
+    $("#supplier_active").css("display","block");
+
+
+		
+</script>
+
+    </body>
+
+</html>

@@ -165,7 +165,7 @@ div.checker span {
   color:#fff;
   font-size: 16px;
   font-weight: 500;
-  font-family: 'Regular';
+
 
   /* Safari 4-5, Chrome 1-9 */
   background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a));
@@ -301,7 +301,6 @@ height: 65px;
 }
 
 .error{
-    font-family: 'Roboto Bold', 'Roboto';
     font-weight: 400;
     font-style: normal;
     font-size: 12px;
@@ -310,7 +309,6 @@ height: 65px;
 .form-wizard .steps > li.active > a.step .desc {
     color: #2F353B;
     font-weight: 700;
-    font-family: 'Roboto Bold', 'Roboto';
 }
 
 .portlet.light {
@@ -395,9 +393,6 @@ hr {
     color: rgb(16, 245, 182) !important;
 }
 
-.sel2{
-    width: 100%;
-}
 
 .div-border-top{
     border: 1px solid #cccccc;
@@ -498,7 +493,7 @@ hr {
     float: left;
     width: 100%;
     background-size: 16% auto !important;
-    -webkit-background-size: 20% auto !important;
+    -webkit-background-size: 16% auto !important;
     -ms-background-size: 16% auto !important;
     -o-background-size: 16% auto !important;
     background-color: #0d67e6;
@@ -701,8 +696,24 @@ hr {
     }*/
 }
 
-    </style>
+.fileinput .thumbnail > img {
+    height: 151px !important;
+}
 
+.select21{
+    width: 186px;
+}
+
+.select2-container .select2-selection--single {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    height: 33px;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+</style>
 
 <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
 <!-- BEGIN HEADER -->
@@ -718,7 +729,7 @@ hr {
     <div class="page-header-inner ">
         <!-- BEGIN LOGO -->
         <div class="page-logo">
-            <a href="index.html">
+            <a href="/subscriber-portal/subscriber-dashboard">
                 <img src="{% static 'assets/layouts/layout2/img/City_Hoopla_Logo.png' %}" alt="logo"
                      class="logo-default"/> </a>
             <div class="menu-toggler sidebar-toggler">
@@ -736,20 +747,11 @@ hr {
 
             <div class="top-menu" style="display:inline-block;">
                 <ul class="nav navbar-nav pull-right">
-                    <!-- BEGIN NOTIFICATION DROPDOWN -->
-                    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                    <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
-                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
-                           data-close-others="true">
-                            <i class="icon-bell"></i>
-                            <span class="badge badge-default" style=" background-color: #d22917;"> 7 </span>
-                        </a>
-                    </li>
-                    <!-- END NOTIFICATION DROPDOWN -->
+                  
                     <li class="dropdown dropdown-user">
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
                            data-close-others="true">
-                            <img style=" width: 40px;" alt="" class="img-circle" src="{{request.session.user_image}}">
+                            
                             <span class="username username-hide-on-mobile"> {{ request.session.login_user }}  </span>
                             <i class="fa fa-angle-down"></i>
                         </a>
@@ -760,7 +762,7 @@ hr {
                             </li>
                             <li>
                                 <a href="/subscriber-portal/log-out/">
-                                    <i class="fa fa-sign-out" aria-hidden="true"></i> Sign Out </a>
+                                    <i class="icon-key" aria-hidden="true"></i> Log Out </a>
                             </li>
                         </ul>
                     </li>
@@ -842,22 +844,23 @@ hr {
             
   <!-- BEGIN CONTENT -->
   <div class="page-content-wrapper">
-  <!-- BEGIN CONTENT BODY -->
-   <div class="page-content">
-     <div class="portlet light" >
-    <div class="row" style="font-family: 'Roboto Light', 'Roboto';  font-weight: 300; font-style: normal; font-size: 24px;color: #2F353B;margin-top: -25px;" >
+    <!-- BEGIN CONTENT BODY -->
+     <div class="page-content">
+       <div class="portlet light" >
+         <div class="row" style=" font-style: normal; font-size: 24px;color: #2F353B;margin-top: -25px;" >
   				
   				<div class="col-sm-12" >
             <p> 
             <span> My Profile </span>
             </p> 
-          </div> 
-      </div>
+            </div> 
+         </div>
+         
 <div class="portlet-body form" id="profile_view">
   <!-- BEGIN FORM-->
     <div class="row" >
     
-   <div class="col-sm-12" style="margin-top: -28px; margin-left: -19px; ">
+     <div class="col-sm-12" style="margin-top: -28px; margin-left: -19px; ">
           <div class="portlet-body">
              <form   class="form-vertical">
                 <div class="form-body">
@@ -869,49 +872,47 @@ hr {
                              <div class="portlet light profile-sidebar-portlet " style="background-color: #f3f2f2; border: 1px solid #cccccc;">
                                  <!-- SIDEBAR USERPIC sssss-->
                                <div class="row" >
-                                  <div class="col-xs-12" style="margin-left: -10px;  height: 525px;">
+                                  <div class="col-xs-12" style="margin-left: -10px;  height: 695px;">
                          		
-                               		<div class="col-xs-2" >
-		                                    <div class="profile-userpic">
-															<img src="{{logo}}" style="height: 76px; width: 211px;border-radius:100%!important; margin-left: -8px;	" class="img-responsive" alt=""> 
-		                                    </div>
-                                    </div>
+	                               		<div class="col-xs-2" >
+			                                    <div class="profile-userpic">
+																<img src="{{logo}}" style="height: 76px; width: 211px;border-radius:100%!important; margin-left: -8px;	" class="img-responsive" alt=""> 
+			                                    </div>
+	                                    </div>
 				                           <div class="col-xs-8" >  
 				                      
-
-											<!--  {% for item in final_list2 %}
-												   <iframe width="420" height="315" controls preload="none"
-														src="{{item.video_s}}">
-														</iframe>
-											 {% endfor %}  -->
-											 
-										<!-- 	{% for item in final_list2 %}
-											 <video   width="465" height="315" controls="controls" >
-											    <source src="{{item.video_s}}" type="video/mp4">
-											 </video>
-										  {% endfor %} -->
 	                               				 	<div class="row">
-                                    				    <div class="col-xs-12"  style="font-family:'Roboto Light', 'Roboto';  font-size:18px;">
-                                  						    <p> 
+                                    				    <div class="col-xs-12"  style="font-size:16px;">
+                                  						    <p style="margin-bottom: 0px;">
+                                  						    
                                                          <span><b> {{business_name}} </b></span>
                                                          </p> 
                                                        
                                                     </div>
                                                    </div>
+                                                   
+                                                 <br>
+                                                 <br>
+                                                 <br>
+                                                 
                                                   <div class="row">
                                                  
-                                  							<div class="col-xs-12" style="font-family:'Roboto Light', 'Roboto';  font-size:16px;">
-                                                         <p> 
-                                                         <span> {{city}} </span>
+                                  							<div class="col-xs-12" style="font-size:16px;">
+                                                         <p style="margin-bottom: 0px;">
+                                                         <label> <b>Subscriber ID : </b></label>
+                                                         <span> {{supplier_id}} </span>
                                                          </p> 
                                                        </div> 
                                                   
                                                   </div>
                                                   
+                                                  <br>
+                                                  
                                                   <div class="row"> 
                                                   
-                                  							<div class="col-xs-12" style="font-family:'Roboto Light', 'Roboto';  font-size:16px;">
+                                  							<div class="col-xs-12" style="font-size:16px;">
                                                          <p> 
+                                                         <label> <b>Business Description : </b></label>
                                                          <span> {{business_details}}  </span>
                                                          </p> 
                                                        </div> 
@@ -920,47 +921,69 @@ hr {
                                                   
                                                         
                                                     <div class="row" >
-                                  								<div class="col-xs-6" style="font-family:'Roboto Light', 'Roboto';  font-size:16px;" >
+                                  								<div class="col-xs-6" style="font-size:16px;" >
                                                          <p> 
                                                          <span> <b> Mobile Number</b> <br>{{phone_no}}  </span>
                                                          </p> 
                                                      </div>
-                                                     <div class="col-xs-6" style="font-family:'Roboto Light', 'Roboto';  font-size:16px;" >
+                                                     <div class="col-xs-6" style="font-size:16px;" >
                                                          <p> 
                                                          <span>   <b>  Secondary Number </b> <br>{{secondary_phone_no}} </span>
                                                          </p> 
                                                      </div> 
                                                      </div>
                                              
-                                                      
-                                                    
-                                           
+                                                     
                                                       <div class="row" >
                                   								
-                                                     </div>
+                                                      </div>
                                                 
                                                     
                                                      
                                                       <div class="row" >
-                                  								<div class="col-xs-12" style="font-family:'Roboto Light', 'Roboto';  font-size:16px;" >
+                                  								<div class="col-xs-12" style="font-size:16px;" >
                                                          <p> 
                                                          <span>  <b>Primary Email</b>  <br> {{supplier_email}} </span>
                                                          </p> 
                                                         </div> 
-                                                   
-                                                     </div>
-                                                    
-                                                     <div class="row" >
-                                  								<div class="col-xs-12" style="font-family:'Roboto Light', 'Roboto';  font-size:16px;" >
-                                                         <p> 
-                                                         <span>  <b>Address</b> <br>  {{address1}}</span>
-                                                         </p> 
-                                                     </div> 
-                                                    
                                                      </div>
                                                      
                                                       <div class="row" >
-                                  								<div class="col-xs-12" style="font-family:'Roboto Light', 'Roboto';  font-size:16px;" >
+                                                        <div class="col-xs-12" style="font-size:16px;" >
+                                                         <p> 
+                                                         <span>  <b>Secondary Email</b>  <br> {{secondary_email}} </span>
+                                                         </p> 
+                                                        </div> 
+                                                     </div>
+                                                     
+                                                    
+                                                    {% if address2 != ''  %}
+                                                     <div class="row" >
+                                  								<div class="col-xs-12" style="font-size:16px;" >
+                                                         <p> 
+                                                         <span>  <b>Address</b> <br>  {{address1}} , {{address2}} , {{city_name}} ,
+                                                                  {{state_name}} , {{country_name}} , {{pincode_new}} 
+                                                         </span>
+                                                         </p> 
+                                                         </div> 
+                                                    
+                                                     </div>
+                                                     {% else %}
+                                                      <div class="row" >
+                                  								<div class="col-xs-12" style="font-size:16px;" >
+                                                         <p> 
+                                                         <span>  <b>Address</b> <br>  {{address1}} , {{city_name}} ,
+                                                                  {{state_name}} , {{country_name}} , {{pincode_new}} 
+                                                         </span>
+                                                         </p> 
+                                                         </div> 
+                                                    
+                                                      </div>
+                                                     
+                                                    {% endif %}
+                                                     
+                                                    <div class="row" >
+                                  								<div class="col-xs-12" style="font-size:16px;" >
                                                          <p> 
                                                          <span> <b> Primary Contact Details </b> <br>{{contact_person}}<br> {{contact_no}}<br> {{contact_email}} </span>
                                                          </p> 
@@ -975,9 +998,8 @@ hr {
 
 				                                  </div> 
 				                                  
-						                           </div>  
-						                       <!--     padding-left: 611px;margin-top: -1022px;  -->    
-						                        
+						                     </div>  
+					                        
 				                         
 				                   </div>
 				                <!-- END SIDEBAR USERPIC ssssssss -->
@@ -989,48 +1011,48 @@ hr {
 						 </div>
         				 <div class="col-sm-4">
                       <!-- BEGIN PROFILE CONTENT -->
-							 <div class="profile-content portlet light" style=" height: 556px;background-color:#f3f2f2;    border: 1px solid #cccccc;">
-                           <div class="row">
+							 <div class="profile-content portlet light" style=" height: 724px;background-color:#f3f2f2;    border: 1px solid #cccccc;">
+                            <div class="row">
                               <div class="col-xs-12" >
-                                 <h3 	 style="margin-top:0px;height: 16px;font-weight: 700;font-style: normal; font-size: 16px; color: #0D0D0D;left: 930px; top: 130px; width: 150px; font-family: 'Roboto Bold', 'Roboto';"><b>Preferences</b></h3>
+                                 <h3 	 style="margin-top:0px;height: 16px;font-weight: 700;font-style: normal; font-size: 16px; color: #0D0D0D;left: 930px; top: 130px; width: 150px;"><b>Preferences</b></h3>
 
                               </div>
-                            </div>
-                             <div class="row">
-                              <div class="col-xs-6" >
-                                	<h5 style=" font-family: 'Roboto Light', 'Roboto'; left: 930px; top: 168px;    font-weight: 300;
+                             </div>
+	                          <div class="row">
+	                           <div class="col-xs-6" >
+	                             	<h5 style=" left: 930px; top: 168px;    
 											    font-style: normal;
 											    font-size: 16px;
 											    color: #2F353B; width: 140px;	">Notifications</h5>
-                              </div>
-                              <div class="col-xs-6 form-group" style="padding-left: 41px;  ">
-                                	{% if notification_status == 'true' %}
-                                	<input type="checkbox" name=""  checked class="make-switch"   data-checkbox="Notifications">
-                                	{% else %}
-                                	<input type="checkbox" name="" class="make-switch"   data-checkbox="Notifications">
-                                	{% endif %}
-                              </div>
-                             </div>
+	                           </div>
+	                           <div class="col-xs-6 form-group" style="padding-left: 41px;  ">
+	                             	{% if notification_status == 'true' %}
+	                             	<input type="checkbox" name=""  checked class="make-switch"   data-checkbox="Notifications">
+	                             	{% else %}
+	                             	<input type="checkbox" name="" class="make-switch"   data-checkbox="Notifications">
+	                             	{% endif %}
+	                           </div>
+	                          </div>
                                 	
-                              <div class="row">
-                             <div class="col-xs-6">
-                                	<h5 style=" font-family: 'Roboto Light', 'Roboto'; left: 930px; top: 168px;    font-weight: 300;
+                             <div class="row">
+                              <div class="col-xs-6">
+                                	<h5 style=" left: 930px; top: 168px;    
 											    font-style: normal;
 											    font-size: 16px;
 											    color: #2F353B; width: 140px;	">Reminders</h5>
-                             </div>
-                             <div class="col-xs-6 form-group" style="padding-left: 41px;">
+                              </div>
+                              <div class="col-xs-6 form-group" style="padding-left: 41px;">
                                 	{% if reminders_status == 'true' %}
                                 	<input type="checkbox" name=""  checked class="make-switch" data-size="normal"  data-checkbox="Reminders">
                                  {% else %}
                                  <input type="checkbox" name="" class="make-switch" data-size="normal"  data-checkbox="Reminders">
                                 	{% endif %}
-                             </div>
+                              </div>
                             </div>
                                 	
-                              <div class="row">
+                            <div class="row">
                              <div class="col-xs-6">
-                                	<h5 style=" font-family: 'Roboto Light', 'Roboto'; left: 930px; top: 168px;    font-weight: 300;
+                                	<h5 style=" left: 930px; top: 168px;    
 											    font-style: normal;
 											    font-size: 16px;
 											    color: #2F353B; width: 140px;	">Discounts</h5>
@@ -1045,9 +1067,9 @@ hr {
                             </div>
                                 	
                                 	
-                              <div class="row">
+                            <div class="row">
                              <div class="col-xs-6">
-                                	<h5 style=" font-family: 'Roboto Light', 'Roboto'; left: 930px; top: 168px;    font-weight: 300;
+                                	<h5 style=" left: 930px; top: 168px;    
 											    font-style: normal;
 											    font-size: 16px;
 											    color: #2F353B; width: 140px;	">Request Call Back</h5>
@@ -1061,9 +1083,9 @@ hr {
                              </div>
                             </div>
                            
-                              <div class="row">   	
+                            <div class="row">   	
                               <div class="col-xs-6">
-                                	<h5 style=" font-family: 'Roboto Light', 'Roboto'; left: 930px; top: 168px;    font-weight: 300;
+                                	<h5 style=" left: 930px; top: 168px;    
 											    font-style: normal;
 											    font-size: 16px;
 											    color: #2F353B; width: 140px;	">No Call</h5>
@@ -1075,25 +1097,24 @@ hr {
                                  <input type="checkbox" name="" class="make-switch" data-size="normal"  data-checkbox="No_Call">
                                 	{% endif %}
                               </div> 
-                             </div>
+                            </div>
                               		
                            </div>
-							   </div>
-                    </div>
+					   </div>
+                </div>
 				              
-				 </div>      
-			 </form>      
-	      </div>
-		  </div>
-     <!-- END FORM-->
-      </div>
+			</div>      
+	    </form>      
+	   </div>
+	</div>
+ <!-- END FORM-->
+ </div>
       
-
-    <!-- END PORTLET-->
+<!-- END PORTLET-->
     
     <!--  $$$$$$$$$$$$$$$$$$$$$$$$   START NEW ONE   $$$$$$$$$$$$$$$$$$$$$$$$ -->
     
-  <div class="portlet-body form" id="edit_view" style="display:none;">
+<div class="portlet-body form" id="edit_view" style="display:none;">
   <!-- BEGIN FORM-->
     <div class="row" >
        <div class="col-sm-12" style="margin-top: -28px; margin-left: -19px; ">
@@ -1103,10 +1124,7 @@ hr {
                  
                     <div class="col-sm-8">
 				 
-				           
-						    
-						    <!-- <!-- <!-- <!-- <!-- <!--  -->     
-						  <!-- BEGIN PROFILE SIDEBAR -->
+						     <!-- BEGIN PROFILE SIDEBAR -->
 				              <div class="profile-sidebar"  id="edit_view"  >
                              <!-- PORTLET MAIN -->
                              <div class="portlet light profile-sidebar-portlet " style="background-color: #f3f2f2;    border: 1px solid #cccccc;" >
@@ -1116,268 +1134,256 @@ hr {
                          	
                                		 <div class="col-xs-4" >
                                             <div class="row">
-                                                	 <div class="form-group" style="height: 18px; font-family: 'Roboto Bold', 'Roboto';   font-size: 16px;  color: #2F353B;">
+                                                <div class="form-group" style="height: 18px;   font-size: 16px;  color: #2F353B;">
                      											<label class="control-label "><b>Business Logo </b></label>
-                        							       </div>
+                        							   </div>
                                                                         
 					                                                                        
-					                                      <div class="fileinput fileinput-new"
+					                                 <div class="fileinput fileinput-new"
 					                                                   data-provides="fileinput">
-					                                            <div class="user-image">
-					                                                 
-					                                               
-					                                                   <div class="fileinput-new thumbnail" style="width: 80%; height: auto;">
-					                                                      	<img id="user_img" src="{{logo}}"  >
-					                                                   </div>
-					                                                   <div class="user-image-buttons" style="position: absolute;left: 120px;top: 40px; ">
-		                                                               <span class="btn btn-azure btn-file btn-sm" style=" ">
-		                                                                 <span class="fileinput-new">
-		                                                                   <i class="fa fa-pencil"></i>
-		                                                                 </span>
-		                                                                 <span class="fileinput-exists">
-		                                                                   <i class="fa fa-pencil"></i>
-		                                                                 </span>
-		                                                                   <input type="file" id="logo" name="logo"  class="form-control" accept="image/*" placeholder="Upload Logo" >
-		                                                                   <label class="error" style="color:red; display:none;"></label>
-		                                                               </span>
-					                                                       <a href="#"
-					                                                          class="btn fileinput-exists btn-red btn-sm"
-					                                                          data-dismiss="fileinput">
-					                                                           <i class="fa fa-times"></i>
-					                                                       </a>
-					                                                   </div>
-					                                                   <div class="fileinput-preview fileinput-exists thumbnail"
-					                                                        style="width: 162px; height: 120px;">
-					
-					                                                   </div>
-					                                                 
-					                                               </div>
-					                                         </div>
-																	 </div>
-                                                 </div>
-				                           
-				                           
-				                           <div class="col-xs-8" > 
+		                                            <div class="user-image" style="width: 80%;">
+		                                                 
+		                                               
+		                                                   <div class="fileinput-new thumbnail" style="">
+		                                                      	<img id="user_img" src="{{logo}}"  >
+		                                                   </div>
+		                                                   <div class="user-image-buttons" style="position: absolute;left: 120px;top: 40px; ">
+                                                            <span class="btn btn-azure btn-file btn-sm" style=" ">
+                                                              <span class="fileinput-new">
+                                                                <i class="fa fa-pencil"></i>
+                                                              </span>
+                                                              <span class="fileinput-exists">
+                                                                <i class="fa fa-pencil"></i>
+                                                              </span>
+                                                                <input type="file" id="logo" name="logo"  class="form-control" accept="image/*" placeholder="Upload Logo" >
+                                                                <label class="error" style="color:red; display:none;"></label>
+                                                            </span>
+		                                                       <a href="#"
+		                                                          class="btn fileinput-exists btn-red btn-sm"
+		                                                          data-dismiss="fileinput">
+		                                                           <i class="fa fa-times"></i>
+		                                                       </a>
+		                                                   </div>
+		                                                   <div class="fileinput-preview fileinput-exists thumbnail"
+		                                                        style="">
+		
+		                                                   </div>
+		                                                 
+		                                               </div>
+					                                   </div>
+															</div>
+                                      </div>
+				                          <div class="col-xs-8" > 
 				                           {% csrf_token %} 
 				                           <form id="cityform" role="form" enctype="multipart/form-data" name="city-form" ,method="POST">
 															
-						                           <!-- <h3 class="block">Provide your account details</h3> -->
-                                                   <div class="form-group">
-                                           
-                                                        <div class="row">
-                                                        		<div class="row">
-                                                        	 		<div class="col-xs-12"  >
-	                                                            <label style="font-family: 'Roboto Light', 'Roboto';  font-size: 16px;" class="control-label">Business Name
-	                                                                <span class="required"> * </span>
-	                                                            </label>
-	                                                                <input style=" font-family: 'Roboto Light', 'Roboto';" value="{{business_name}}" id="business_name"  class="form-control" />
-																						 <label class="error" style="color:red; display:none;"></label>                                                          	
-                                                          		</div>
-                                                          	</div>
-                                        
-	                                                        	<div class="row"> 
-	                                                        	 	<div class="col-xs-12">
-	                                                            <label style="font-family: 'Roboto Light', 'Roboto';font-size: 16px;" class="control-label"> <br>Description  
-	                                                                <span class="required"> * </span>
-	                                                            </label>
-	                                                                <textarea style=" font-family: 'Roboto Light', 'Roboto'; " class="form-control" id="business" maxlength="5000" value="" name="business" onkeyup="myFunction(this)" >{{business_details}}</textarea> 
-	                                                          		                                                                                                             		                                                            
-	                                                   				<label style="float:right;font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 12px;">
-	                                                   				<span id="length_cal">{{business_details_length}}</span>
-	                                                   				<span>/5000 Characters</span></label>
-	                                                   				<span class="error" style="color:red; display:none;"></span>  
-	                                                              
-	                                                           </div>
-	                                                
-	                                                       
-	                                                   
-	                                                         </div>
-	                                                          
+                                          <div class="form-group">
+                                  
+                                               <div class="row">
+                                               		<div class="row">
+                                               	 		<div class="col-xs-12"  >
+                                                      <label style="font-size: 16px;" class="control-label">Business Name
+                                                          <span class="required"> * </span>
+                                                      </label>
+                                                          <input style="" value="{{business_name}}" id="business_name"  class="form-control" />
+																			 <label class="error" style="color:red; display:none;"></label>                                                          	
+                                                 		</div>
+                                                 	</div>
+                               
+                                                  	<div class="row"> 
+                                                  	 	<div class="col-xs-12">
+                                                      <label style="font-size: 16px;" class="control-label"> <br>Business Description
+                                                          <span class="required"> * </span>
+                                                      </label>
+                                                          <textarea style=" " class="form-control" id="business" maxlength="5000" value="" name="business" onkeyup="myFunction(this)" >{{business_details}}</textarea> 
+                                                    		                                                                                                             		                                                            
+                                             				<label style="float:right; font-style: normal; font-size: 12px;">
+                                             				<span id="length_cal">{{business_details_length}}</span>
+                                             				<span>/5000 Characters</span></label>
+                                             				<span class="error" style="color:red; display:none;"></span>  
+                                                      </div>
+                                                  </div>
+                                                  <div class="row">
+                                                    	<div class="col-xs-6">
+                                                         <label style="font-size: 16px;" class="control-label"> <br>Mobile Number
+                                                             <span class="required"> * </span>
+                                                         </label>
+                                                          <input style="" value="{{phone_no}}" id="phone_no" maxlength="10" class="form-control" onkeypress="return validateIntKeyPress(this,event);"  />
+                                                    		<label class="error" style="color:red; display:none;"></label>                                                          	
+                                                    	</div>
+                                                 	
+                                                    	<div class="col-xs-6">
+                                                         <label style="  font-style: normal; font-size: 16px;" class="control-label"> <br>Secondary Number
+                                                         </label>
+                                                          <input style="" value="{{secondary_phone_no}}" id="sec_phone_no" maxlength="10" class="form-control" onkeypress="return validateIntKeyPress(this,event);"  />
+                                                    		<label class="error" style="color:red; display:none;"></label>                                                          	
+                                                    	</div>
+                                                  </div>
+                                                    
+                                                  <div class="row">	
+                                                      <div class="col-xs-6">
+                                                      <label style="  font-size: 16px;" class="control-label"> <br>Primary Email 
+                                                          <span class="required"> * </span>
+                                                      </label>
+                                                          <input style="" value="{{supplier_email}}" type="text" id="pri_email" class="form-control"  />  
+                                                    		<label class="error" style="color:red; display:none;"></label>                                                          	                                                            
+                                                      </div>
+                                                    
+                                                       <div class="col-xs-6" style="margin-top: 21px ! important;">
+                                                      <label style="  font-style: normal; font-size: 16px;" class="control-label"> Secondary Email 
+                                                      </label>
+                                                          <input style="	" value="{{secondary_email}}" type="text" id="sec_email" class="form-control" />  
+                                                    		<label class="error" style="color:red; display:none;"></label>                                                          	                                                            
+                                                      </div>
+                                                  </div>
+                                                    
+                                                  <div class="row"> 
+                                                      <div class="col-xs-12"> 
+                                                   		<label style="font-size: 16px;" class="control-label"><br> <b> Address </b> </label>
+                                                   	</div>
+                                                  </div>
+                                                   
+                                                  <div class="row">  	
+                                                   <div class="col-xs-12">
+                                                      <label style="font-size: 16px;" class="control-label"><br>Address Line 1
+                                                          <span class="required"> * </span>
+                                                      </label>
+                                                          <input style="" value="{{address1}}" type="text" class="form-control"  id="address1" />
+                                                 		<label class="error" style="color:red; display:none;"></label>                                                          	                                                        		
+                                               		</div>
+                                               	 </div>
+                                               	
+                                               	 <div class="row">
+                                               		 <div class="col-xs-12">
+                                                      <label  style="font-size: 16px;" class="control-label"><br>Address Line 2
 
-																				<div class="row">
-	                                                          	<div class="col-xs-6">
-		                                                            <label style="font-family: 'Roboto Light', 'Roboto'; font-size: 16px;" class="control-label"> <br>Mobile Number
-		                                                                <span class="required"> * </span>
-		                                                            </label>
-		                                                             <input style=" font-family: 'Roboto Light', 'Roboto';" value="{{phone_no}}" id="phone_no" maxlength="10" class="form-control" onkeypress="return validateIntKeyPress(this,event);"  />
-	                                                          		<label class="error" style="color:red; display:none;"></label>                                                          	
-	                                                          	</div>
-	                                                       	
-	                                                          	<div class="col-xs-6">
-		                                                            <label style="width: 180px; height: 16px; font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 16px;" class="control-label"> <br>Secondary Number
-		                                                            </label>
-		                                                             <input style=" font-family: 'Roboto Light', 'Roboto';" value="{{secondary_phone_no}}" id="sec_phone_no" maxlength="10" class="form-control" onkeypress="return validateIntKeyPress(this,event);"  />
-	                                                          		<label class="error" style="color:red; display:none;"></label>                                                          	
-	                                                          	</div>
-	                                                          </div>
-	                                                          
-	                                                          <div class="row">	
-		                                                         <div class="col-xs-6">
-	                                                            <label style=" font-family: 'Roboto Light', 'Roboto';  font-size: 16px;" class="control-label"> <br>Primary Email 
-	                                                                <span class="required"> * </span>
-	                                                            </label>
-	                                                                <input style=" font-family: 'Roboto Light', 'Roboto';" value="{{supplier_email}}" type="text" id="pri_email" class="form-control"  />  
-	                                                          		<label class="error" style="color:red; display:none;"></label>                                                          	                                                            
-	                                                            </div>
-	                                                          
-		                                                          <div class="col-xs-6" style="margin-top: 21px ! important;">
-	                                                            <label style=" font-family: 'Roboto Light', 'Roboto';  font-weight: 300;font-style: normal; font-size: 16px;" class="control-label"> Secondary Email 
-	                                                            </label>
-	                                                                <input style=" font-family: 'Roboto Light', 'Roboto';	" value="{{secondary_email}}" type="text" id="sec_email" class="form-control" />  
-	                                                          		<label class="error" style="color:red; display:none;"></label>                                                          	                                                            
-	                                                            </div>
-	                                                          </div>
-	                                                          
-	                                                          <div class="row"> 
-	                                                            <div class="col-xs-12"> 
-	                                                         		<label style="font-family: 'Roboto Light', 'Roboto'; font-size: 16px;" class="control-label"><br> <b> Address </b> </label>
-	                                                         	</div>
-	                                                         </div>
-	                                                         
-	                                                       <div class="row">  	
-	                                                         <div class="col-xs-12">
-	                                                            <label style="font-family: 'Roboto Light', 'Roboto';  font-size: 16px;" class="control-label"><br>Address Line 1
-	                                                                <span class="required"> * </span>
-	                                                            </label>
-	                                                                <input style=" font-family: 'Roboto Light', 'Roboto';" value="{{address1}}" type="text" class="form-control"  id="address1" />
-                                                          		<label class="error" style="color:red; display:none;"></label>                                                          	                                                        		
-                                                        		</div>
-                                                        	</div>
-                                                        	
-                                                        	<div class="row">
-                                                        		 <div class="col-xs-12">
-	                                                            <label  style="font-family: 'Roboto Light', 'Roboto'; font-size: 16px;" class="control-label"><br>Address Line 2
-
-	                                                            </label>
-	                                                                <input style=" font-family: 'Roboto Light', 'Roboto';" value="{{address2}}" type="text" class="form-control"  id="address2" />
-                                                          		<label class="error" style="color:red; display:none;"></label>                                                          	                                                        		
-                                                        		</div>
-                                                        	</div>
-                                                        	
-                                                        	<div class="row">
-                                                        		 
- 																			 
- 																				 <div class="col-xs-6">
- 																				 		<label style="font-family: 'Roboto Light', 'Roboto';font-size: 16px;" class="control-label"> <br> Country
-	                                                                <span class="required"> * </span>
-	                                                            </label>
-	                                                           
-	                                                                <select style=" font-family: 'Roboto Light', 'Roboto';" onchange="getState()" name="country" id="country" class="form-control" required="">
-															                     	 <option value="">Select Country</option>
-															                     	{% for country in country_list %}
-															                     	<option value="{{ country.country_id }}"> {{ country.country_name }}</option>
-																		                 {% endfor %}
-																		                       	
-															                     </select>
-															                     <label class="error" style="color:red; display:none;"></label>
- 																				 </div>
+                                                      </label>
+                                                          <input style="" value="{{address2}}" type="text" class="form-control"  id="address2" />
+                                                 		<label class="error" style="color:red; display:none;"></label>                                                          	                                                        		
+                                               		</div>
+                                                 </div>
+                                               	
+                                               	 <div class="row">
+                                               		 <div class="col-xs-6">
+ 																	    <label style="font-size: 16px;" class="control-label"> <br> Country
+                                                          <span class="required"> * </span>
+                                                       </label>
+                                                     
+                                                        <select style="" onchange="getState()" name="country" id="country" class="form-control sel2 select21" required="">
+												                     	 <option value="">Select Country</option>
+												                     	{% for country in country_list %}
+												                     	<option value="{{ country.country_id }}"> {{ country.country_name }}</option>
+															                 {% endfor %}
+															                       	
+												                    </select>
+												                  <label class="error" style="color:red; display:none;"></label>
+ 																	 </div>
  																				 
- 																				 <div class="col-xs-6">
- 																				 		<label style="font-family: 'Roboto Light', 'Roboto'; font-size: 16px;" class="control-label"><br> State
-	                                                                <span class="required"> * </span>
-	                                                            </label>
-																						 
-	                                                                <select style=" font-family: 'Roboto Light', 'Roboto';" onchange="getCity()" id="state" name="state" class="form-control state" required > 
-																						 	<option value="">Select State</option> 
-																						 	                         
-															                        {% for state in state_list %}	
-															             	
-															                        												                        
-															                        <option value="{{ state.state_id }}"> {{ state.state_name }}</option>
-															                        
-															           
-															                        {% endfor %}
-															                     </select>
-															               <label class="error" style="color:red; display:none;"></label>                                                          	                                                        		
- 																				 </div>
+ 																	<div class="col-xs-6">
+ 																	   <label style=" font-size: 16px;" class="control-label"><br> State
+		                                                   <span class="required"> * </span>
+		                                                 </label>
+															 
+		                                                 <select style="" onchange="getCity()" id="state" name="state" class="form-control sel2 select21" required > 
+																		 	<option value="">Select State</option> 
+																		 	                         
+											                        {% for state in state_list %}	
+											             	
+											                        												                        
+											                        <option value="{{ state.state_id }}"> {{ state.state_name }}</option>
+											                        
+											           
+											                        {% endfor %}
+											                      </select>
+								                               <label class="error" style="color:red; display:none;"></label>                                                          	                                                        		
+ 																	</div>
  																				 
- 																			  </div>
+ 																</div>
  																			
- 																			<div class="row">	 
- 																				<div class="col-xs-6">
- 																				 		<label style="font-family: 'Roboto Light', 'Roboto'; font-size: 16px;" class="control-label"> <br> City
-	                                                                <span class="required"> * </span>
-	                                                            </label>
-	                                                           
-	                                                                <select style=" font-family: 'Roboto Light', 'Roboto';" onchange="getPincode()" name="city" id="city" class="form-control" required="">
-															                     	 <option value="">Select City</option>
-															                     	{% for city in city_list %}
-															                     	<option value="{{ city.city_id }}"> {{ city.city_name }}</option>
-																		                 {% endfor %}
-																		                       	
-															                     </select>
-															                     <label class="error" style="color:red; display:none;"></label>
- 																				 </div>
+ 															   <div class="row">	 
+ 																		 <div class="col-xs-6">
+ 																			<label style=" font-size: 16px;" class="control-label"> <br> City
+                                                          <span class="required"> * </span>
+                                                         </label>
+                                                     
+                                                         <select style="" onchange="getPincode()" name="city" id="city" class="form-control sel2 select21" required="">
+												                     	 <option value="">Select City</option>
+												                     	{% for city in city_list %}
+												                     	<option value="{{ city.city_id }}"> {{ city.city_name }}</option>
+															                 {% endfor %}
+															                       	
+												                     </select>
+												                     <label class="error" style="color:red; display:none;"></label>
+ 																		</div>
 
- 																			 <div class="col-xs-6" style="margin-top: 21px;">
- 																				 		<label style="font-family: 'Roboto Light', 'Roboto';font-size: 16px;" class="control-label">Pincode
-	                                                                <span class="required"> * </span>
-	                                                            </label>
-	                                                            <input style=" font-family: 'Roboto Light', 'Roboto';" type="hidden" value="{{pincode}}" id="selectedPincode"/>
-                                                 					<select style=" font-family: 'Roboto Light', 'Roboto'; " name="pincode" id="pincode" class="form-control" required="">
-                                                 					<option value="">Select Pincode</option>
-															                     		 			{% for pincode in pincode_list %}	
-																			                      
-																		                         
-																		                           <option value="{{pincode.pincode_id}}"> {{pincode.pincode}}</option>
-																		                                                
-																			                        {% endfor %}
-															                     </select>
-															                   <label class="error" style="color:red; display:none;"></label>  
- 																				 </div>
- 																		 </div>
+ 																		<div class="col-xs-6" style="margin-top: 21px;">
+ 																				<label style="font-size: 16px;" class="control-label ">Pincode
+                                                               <span class="required"> * </span>
+                                                            </label>
+                                                            <input style="" type="hidden" value="{{pincode}}" id="selectedPincode"/>
+	                                        				    	<select style=" " name="pincode" id="pincode" class="form-control sel2 select21" required="">
+	                                        					     <option value="">Select Pincode</option>
+									                     		 			{% for pincode in pincode_list %}	
+													                      
+												                         
+												                           <option value="{{pincode.pincode_id}}"> {{pincode.pincode}}</option>
+												                                                
+													                        {% endfor %}
+													                      </select>
+												                         <label class="error" style="color:red; display:none;"></label>  
+ 																		</div>
+ 															   </div>
  																				 
- 																			<div class="row">
- 																				  <div class="col-xs-12">
- 																				  <label style="font-family: 'Roboto Light', 'Roboto'; font-size: 16px;" class="control-label"> <br> <b>Primary Contact Details </b></label>
- 																				  </div>
- 																			</div>
+ 																<div class="row">
+ 																	<div class="col-xs-12">
+ 																	 <label style="font-size: 16px;" class="control-label"> <br> <b>Primary Contact Details </b></label>
+ 																	</div>
+ 																</div>
  																			
- 																				<div class="row">  
- 																				  <div class="col-xs-12">
- 																				 		<label style="font-family: 'Roboto Light', 'Roboto'; font-size: 16px;" class="control-label"><br>Name
-	                                                                <span class="required"> * </span>
-	                                                            </label>
-	                                                                <input style=" font-family: 'Roboto Light', 'Roboto';" value="{{contact_person}}" type="text" id="user_name" class="form-control" name="name" />
-                                                          		<label class="error" style="color:red; display:none;"></label>                                                                                                                 		
- 																				 	</div>
- 																				</div>
+ 																<div class="row">  
+ 																	<div class="col-xs-12">
+ 																		<label style="font-size: 16px;" class="control-label"><br>Name
+                                                         <span class="required"> * </span>
+                                                      </label>
+                                                      <input style="" value="{{contact_person}}" type="text" id="user_name" class="form-control" name="name" />
+                                           		      <label class="error" style="color:red; display:none;"></label>                                                                                                                 		
+ 																	</div>
+ 																</div>
  																				
- 																				
- 																				 <div class="row">
+ 																<div class="row">
  																				 <div class="col-xs-6" >
- 																				 		<label style="font-family: 'Roboto Light', 'Roboto'; font-size: 16px;" class="control-label"><br>Contact No
-	                                                                <span class="required"> * </span>
-	                                                            </label>
-	                                                                <input style=" font-family: 'Roboto Light', 'Roboto';" value="{{contact_no}}" type="text" maxlength="10" id="user_contact_no" class="form-control" onkeypress="return validateIntKeyPress(this,event);" name="contact_no" />
+ 																				 		<label style="font-size: 16px;" class="control-label"><br>Contact No
+                                                          <span class="required"> * </span>
+                                                      </label>
+                                                          <input style="" value="{{contact_no}}" type="text" maxlength="10" id="user_contact_no" class="form-control" onkeypress="return validateIntKeyPress(this,event);" name="contact_no" />
  																				 		<label class="error" style="color:red; display:none;"></label>
  																				 </div>
  																				 
  																				 <div class="col-xs-6" >
- 																				 		<label style=" font-family: 'Roboto Light', 'Roboto';  font-size: 16px;" class="control-label"><br>Email
+ 																	  <label style="  font-size: 16px;" class="control-label"><br>Email
 
-	                                                            </label>
-	                                                                <input style=" font-family: 'Roboto Light', 'Roboto';" readonly value="{{contact_email}}" type="text" id="user_email" class="form-control" name="city" />
- 																		            <label class="error" style="color:red; display:none;"></label>                                                                                                                 				 
- 																				 </div>
- 																				</div>
+                                                      </label>
+                                                       <input style="" readonly value="{{contact_email}}" type="text" id="user_email" class="form-control" name="city" />
+ 																		 <label class="error" style="color:red; display:none;"></label>                                                                                                                 				 
+ 																	</div>
+ 																</div>
  																		
-                                                         </div> 	
-                                                   </div>  
-                                                       <hr style="width: 643px; margin-left: -226px;">
-                                                      <div class="row">
-                                                       	<div class="col-xs-12 text-right">
-                                                       	<input  value="{{supplier_id}}" type="hidden" id="supplier_id" class="form-control" />
-                                                       		<button   type="button" class="btn btn-outline grey_color " onclick="location.href = '/subscriber-portal/subscriber-profile/?supplier_id={{supplier_id}}';" >Cancel</button>
-                                                        	<button    type="button"  id="save-continue"  class="btn btn-outline done_btn" >Save </button>
-                                                       	</div>
-                                                       </div>
+                                                </div> 	
+                                             </div>  
+                                             <hr style="width: 643px; margin-left: -226px;">
+                                             <div class="row">
+                                              	<div class="col-xs-12 text-right">
+                                              	<input  value="{{supplier_id}}" type="hidden" id="supplier_id" class="form-control" />
+                                              		<button   type="button" class="btn btn-outline grey_color " onclick="location.href = '/subscriber-portal/subscriber-profile/?supplier_id={{supplier_id}}';" >Cancel</button>
+                                               	<button    type="button"  id="save-continue"  class="btn btn-outline done_btn" >Save </button>
+                                              	</div>
+                                              </div>
                                                        
                                                        
-                                   				</form>
-														</div>
-						                    </div>
-				                   </div>
+                                   		   </form>
+												   </div>
+						                   </div>
+				                     </div>
 				                <!-- END SIDEBAR USERPIC  -->
                          </div>
 						      <!-- END PORTLET MAIN -->
@@ -1386,17 +1392,17 @@ hr {
 						 </div>
         				 <div class="col-sm-4">
                       <!-- BEGIN PROFILE CONTENT -->
-							 <div class="profile-content portlet light" style=" height: 1054px;background-color:#f3f2f2;    border: 1px solid #cccccc;">
+							 <div id="notificn_div" class="profile-content portlet light" style="background-color:#f3f2f2;    border: 1px solid #cccccc;">
                            <div class="row">
                               <div class="col-xs-12" >
-                                 <h3 	 style="margin-top:0px;height: 16px;font-weight: 700;font-style: normal; font-size: 16px; color: #0D0D0D;left: 930px; top: 130px; width: 150px; font-family: 'Roboto Bold', 'Roboto';"><b>Preferences</b></h3>
+                                 <h3 	 style="margin-top:0px;height: 16px;font-weight: 700;font-style: normal; font-size: 16px; color: #0D0D0D;left: 930px; top: 130px; width: 150px;"><b>Preferences</b></h3>
 
                               </div>
                              </div>
                              
                               <div class="row">
                               <div class="col-xs-6" >
-                                	<h5 style=" font-family: 'Roboto Light', 'Roboto'; left: 930px; top: 168px;    font-weight: 300;
+                                	<h5 style=" left: 930px; top: 168px;    
 											    font-style: normal;
 											    font-size: 16px;
 											    color: #2F353B; width: 140px;	">Notifications</h5>
@@ -1412,7 +1418,7 @@ hr {
                                 	
                              <div class="row">
                              <div class="col-xs-6">
-                                	<h5 style=" font-family: 'Roboto Light', 'Roboto'; left: 930px; top: 168px;    font-weight: 300;
+                                	<h5 style=" left: 930px; top: 168px;    
 											    font-style: normal;
 											    font-size: 16px;
 											    color: #2F353B; width: 140px;	">Reminders</h5>
@@ -1428,7 +1434,7 @@ hr {
                                 	
                              <div class="row"> 
                              <div class="col-xs-6">
-                                	<h5 style=" font-family: 'Roboto Light', 'Roboto'; left: 930px; top: 168px;    font-weight: 300;
+                                	<h5 style=" left: 930px; top: 168px;    
 											    font-style: normal;
 											    font-size: 16px;
 											    color: #2F353B; width: 140px;	">Discounts</h5>
@@ -1444,7 +1450,7 @@ hr {
                                 	
                             <div class="row">   	
                              <div class="col-xs-6">
-                                	<h5 style=" font-family: 'Roboto Light', 'Roboto'; left: 930px; top: 168px;    font-weight: 300;
+                                	<h5 style=" left: 930px; top: 168px;    
 											    font-style: normal;
 											    font-size: 16px;
 											    color: #2F353B; width: 140px;	">Request Call Back</h5>
@@ -1460,7 +1466,7 @@ hr {
                                 	
                                <div class="row">
                               <div class="col-xs-6">
-                                	<h5 style=" font-family: 'Roboto Light', 'Roboto'; left: 930px; top: 168px;    font-weight: 300;
+                                	<h5 style=" left: 930px; top: 168px;    
 											    font-style: normal;
 											    font-size: 16px;
 											    color: #2F353B; width: 140px;	">No Call</h5>
@@ -1501,14 +1507,17 @@ hr {
 
 
 <!-- BEGIN FOOTER -->
-        <div class="page-footer" >
-            <div class="page-footer-inner"> 2016 &copy; DigiSpace.
-            </div>
-            <div class="scroll-to-top">
-                <i class="icon-arrow-up"></i>
-            </div>
+    <div class="page-footer">
+        <div class="page-footer-inner"> 2016 © DigiSpace Software Private Limited
+            
         </div>
+        <div class="scroll-to-top">
+            <i class="icon-arrow-up"></i>
+        </div>
+    </div>
+</div>
 <!-- END FOOTER -->
+
 <div style="overflow-y:hidden;" id="affiliate-modal" class="modal fade" role="dialog">
         <div class="modal-dialog">
 
@@ -1525,8 +1534,8 @@ hr {
                     <h4 class="text-center">Your profile has been changed successfully</h4>
                         </div>
                         <div style="text-align:center !important;" class="modal-footer">
-							 <a href="/subscriber-profile/?supplier_id=110"> <input type="submit" value="OK"
-                                   class="btn btn-primary" id="btn-loading-demo"></a>
+							 <button type="button" data-dismiss="modal" onclick="javascript:location.reload();" 
+                                   class="btn btn-primary" id="btn-loading-demo">OK</button>
                             
                         </div>
                     </div>
@@ -1593,11 +1602,29 @@ hr {
         type="text/javascript"></script>
 <script src="{%static 'assets/global/plugins/bootstrap-datepicker/js/bootstrap-datetimepicker.min.js'%}"
         type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/select2/js/select2.full.min.js' %}" type="text/javascript"></script>
 <!-- END THEME LAYOUT SCRIPTS -->  
   <script type="text/javascript">
   
+ $(".sel2").select2({
+     width: '100%'
+ }); 
   
-  
+if (navigator.appVersion.indexOf("Chrome/") != -1) {
+   
+        $('#user_img').css("width", "100%");
+        $('#user_img').css("height", "150px");
+        $('#notificn_div').css("height", "1050px");
+        
+        
+}
+else {
+	  $('#user_img').css("width", "100%");
+     $('#user_img').css("height", "146px");
+     $('#notificn_div').css("height", "1086px");
+     
+     
+}
   
   $('#country').val({{country_id}}).change();
   
@@ -1647,15 +1674,13 @@ $(document).ready(function(){
 
 function validateData(){
 
-	if(checkLogo("#logo")&checkBusinessName("#business_name")&checkNumber("#phone_no")&checkSecNumber("#sec_phone_no")&checkEmail("#pri_email")&checkSecEmail("#sec_email")&checkaddress("#address1")&checkcountry("#country")&checkState("#state")&checkCity("#city")&checkPincode("#pincode")&checkBusiness('#business')&checkUserName('#user_name')&checkUserEmail('#user_email')&checkUserContactNo('#user_contact_no'))
-	{
+	if(checkLogo("#logo")&checkBusinessName("#business_name")&checkNumber("#phone_no")&checkSecNumber("#sec_phone_no")&checkEmail("#pri_email")&checkSecEmail("#sec_email")&checkaddress("#address1")&checkcountry("#country")&checkState("#state")&checkCity("#city")&checkPincode("#pincode")&checkBusiness('#business')&checkUserName('#user_name')&checkUserEmail('#user_email')&checkUserContactNo('#user_contact_no')){
 		return true;	
 	}
 	return false;
 }
 
 $("#save-continue").click(function(event)  {
-
 
 	event.preventDefault();  
 
@@ -1725,7 +1750,7 @@ $("#save-continue").click(function(event)  {
 
 
 function getState() {
-
+			
         country_id = $('#country :selected').val();
         //alert(country_id);
         if (country_id) {
@@ -1751,7 +1776,9 @@ function getState() {
             });
         }
         else {
-            $('#state').val("");
+            $('#state').html('');
+            $('#state').append("<option value=''>Select State</option>");
+            $('#state').val("").change();
         }
     }
     
@@ -1785,6 +1812,8 @@ function getCity() {
         }
         else {
             $('#city').val("");
+            $('#city').append("<option value=''>Select City</option>");
+            $('#city').val("").change();
         }
     }
   
@@ -1811,7 +1840,10 @@ function getCity() {
             });
         }
         else {
-            $('#city').val("");
+            $('#pincode').val("");
+            $('#pincode').append("<option value=''>Select Pincode</option>");
+            $('#pincode').val("").change();
+            
         }
     }
 
@@ -1863,8 +1895,9 @@ function checkEmail(pri_email){
    var namePattern = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;  
  
    if(namePattern.test(Email)){
-   return true;
+   
       $(pri_email).parent().children('.error').css("display", "none");
+      return true;
    }else{
  	$(pri_email).parent().children('.error').css("display", "block");
    $(pri_email).parent().children('.error').text("Please enter valid Email");
@@ -1938,7 +1971,7 @@ function checkcountry(state){
    return true;
    }else{
     $(state).parent().children('.error').css("display", "block");
-    $(state).parent().children('.error').text("Please select State");
+    $(state).parent().children('.error').text("Please select Country");
    return false; 
    }
 }
@@ -1995,7 +2028,7 @@ function checkBusiness(business){
    return true;
    }else{
     $( business).parent().children('.error').css("display", "block");
-    $( business).parent().children('.error').text("Please enter about Business");
+    $( business).parent().children('.error').text("Please enter about Business Description");
    return false; 
    }
 }

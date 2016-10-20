@@ -295,7 +295,7 @@
         </div>
     </div>
 
-<div class="copyright"> 2016 © DigiSpace.</div>
+<div class="copyright"> 2016 © DigiSpace Software Private Limited </div>
 <script src="{% static 'assets/global/plugins/respond.min.js' %}"></script>
 <script src="{% static 'assets/global/plugins/excanvas.min.js' %}"></script>
 <![endif]-->

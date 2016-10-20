@@ -31,6 +31,7 @@ License: You must have a valid license purchased only from themeforest(the above
           type="text/css"/>
     <link href="{% static 'assets/global/plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet"
           type="text/css"/>
+          <link href="{% static 'vendor/bootstrap-fileinput/jasny-bootstrap.min.css' %}" rel="stylesheet" media="screen">
     <link href="{% static 'assets/global/plugins/simple-line-icons/simple-line-icons.min.css' %}" rel="stylesheet"
           type="text/css"/>
     <link href="{% static 'assets/global/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"/>
@@ -71,6 +72,197 @@ License: You must have a valid license purchased only from themeforest(the above
 
 <!-- END HEAD -->
 <style type="text/css">
+
+
+
+.fileinput .btn {
+        vertical-align: middle;
+    }
+    
+    .user-image .user-image-buttons {
+        position: static;
+    }
+    
+       .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
+    
+        .fileinput .thumbnail>img {
+        height: 178px !important;
+    }
+
+    .fileinput-preview.thumbnail {
+        max-width: 250px;
+    }
+
+
+
+.btn-default-add {
+    color: #ffffff;
+    font-size: 14px;
+    border-color:#0d67e6;
+    border-radius: 19px !important;
+  background-color: #0d67e6;
+      /* Safari 4-5, Chrome 1-9 */
+  background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a));
+
+  /* Safari 5.1, Chrome 10+ */
+  background: -webkit-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* Firefox 3.6+ */
+  background: -moz-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* IE 10 */
+  background: -ms-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* Opera 11.10+ */
+  background: -o-linear-gradient(left, #0d67e6, #11ca9a);
+    
+}
+
+
+
+.form-height{
+height: 65px;
+}
+
+.user-image img {
+    max-width: 100%;
+}
+
+.error{
+    font-weight: 400;
+    font-style: normal;
+    font-size: 12px;
+}
+
+
+hr {
+    border: 0;
+    border-top: 1px solid #6B6B6B;
+    border-bottom: 0;
+}
+
+.div-border-top{
+    border: 1px solid #cccccc;
+    border-bottom: none;
+}
+
+.div-border-bottom{
+    border: 1px solid #cccccc;
+    border-top: none;
+}
+
+.div-border-left-right{
+    border: 1px solid #cccccc;
+    border-top: none;
+    border-bottom: none;
+}
+
+.div-border{
+    border: 1px solid #cccccc;
+}
+
+.div-color{
+    background-color: rgb(243, 242, 242);
+    border: 1px solid rgb(204, 204, 204) !important;
+    border-radius: 2px !important;
+    margin-right: 0.5%;
+    margin-left: 0.5%;
+    margin-bottom: 1%;
+}
+
+
+@media (min-width:992px) {
+    .col-md-3 {
+        width:24% !important;
+    }
+    /*.col-xs-6 {
+        width: 46% !important;
+    }*/
+}
+
+
+
+.form-control {
+    border: 1px solid #c0c0c0;
+}
+
+.brad-crum-1{
+    font-size:16px;
+    color: #3eb199;
+}
+
+.brad-crum-2{
+    font-size:16px;
+    color: #00448b;
+}
+
+.brad-crum-3{
+    font-size:16px;
+    color: #00448b;
+    font-weight:700;
+}
+
+
+.form-wizard .steps > li.active > a.step .number {
+    background-color: #0d67e6;
+    color: #fff;
+}
+
+.form-wizard .steps > li > a.step .number{
+  /* fallback */
+  background-color: #0d67e6;
+  background-image: url(images/linear_bg_1.png);
+  background-repeat: repeat-y;
+  color: #ffffff;
+  font-weight:500;
+
+  /* Safari 4-5, Chrome 1-9 */
+  background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a));
+
+  /* Safari 5.1, Chrome 10+ */
+  background: -webkit-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* Firefox 3.6+ */
+  background: -moz-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* IE 10 */
+  background: -ms-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* Opera 11.10+ */
+  background: -o-linear-gradient(left, #0d67e6, #11ca9a);
+}
+
+.page-header.navbar .menu-toggler {
+    background-image: url(/static/assets/layouts/layout2/img/sidebar_toggler_icon_blue.png);
+}
+
+#loading{
+	width: 36%;
+	height: 22px;
+	position: absolute;
+	top: 26%;
+	left: 32%;
+	margin: -28px 0px 0px -25px;
+	text-align: center;
+	font-size: 13px;
+	font-weight: 500;
+	color: #000;
+}
+
 #processing{
     height: 100vh;
     position: fixed;
@@ -88,103 +280,22 @@ License: You must have a valid license purchased only from themeforest(the above
     opacity: 0.5;
 }
 
-#loading{
-	width: 36%;
-	height: 22px;
-	position: absolute;
-	top: 26%;
-	left: 32%;
-	margin: -28px 0px 0px -25px;
-	text-align: center;
-	font-size: 13px;
-	font-weight: 500;
-	color: #000;
-}
 
 
-		div.dataTables_wrapper div.dataTables_info {
-    padding-top: 8px;
-    white-space: nowrap;
-    display: none;
-}
-div.dataTables_wrapper div.dataTables_length label {
-    font-weight: normal;
-    text-align: left;
-    white-space: nowrap;
-    display: none;
-}
-
-div.dataTables_filter label {
-    font-weight: normal;
-    white-space: nowrap;
-    text-align: left;
-    display: none;
-}
-
-.page-header.navbar .page-logo .logo-default {
-    margin: 2px 0 0;
-    width: 105px;
-    background: rgba(255, 255, 255, 0.48);
-}
-
-.page-header.navbar .page-logo {
-  /* fallback */
-  background-color: #0d67e6;
-  background-image: url(images/linear_bg_1.png);
-  background-repeat: repeat-y;
-
-  /* Safari 4-5, Chrome 1-9 */
-  background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a));
-
-  /* Safari 5.1, Chrome 10+ */
-  background: -webkit-linear-gradient(left, #0d67e6, #11ca9a);
-
-  /* Firefox 3.6+ */
-  background: -moz-linear-gradient(left, #0d67e6, #11ca9a);
-
-  /* IE 10 */
-  background: -ms-linear-gradient(left, #0d67e6, #11ca9a);
-
-  /* Opera 11.10+ */
-  background: -o-linear-gradient(left, #0d67e6, #11ca9a);
-}
-
-@media (max-width: 767px){
-.page-header.navbar {
-     background-color: #0d67e6;
-  background-image: url(images/linear_bg_1.png);
-  background-repeat: repeat-y;
-
-  /* Safari 4-5, Chrome 1-9 */
-  background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a));
-
-  /* Safari 5.1, Chrome 10+ */
-  background: -webkit-linear-gradient(left, #0d67e6, #11ca9a);
-
-  /* Firefox 3.6+ */
-  background: -moz-linear-gradient(left, #0d67e6, #11ca9a);
-
-  /* IE 10 */
-  background: -ms-linear-gradient(left, #0d67e6, #11ca9a);
-
-  /* Opera 11.10+ */
-  background: -o-linear-gradient(left, #0d67e6, #11ca9a);
-}
-}
 
 #city_canvas{
-    height: 230px !important;
+    height: 140px !important;
     width: 100% !important;
 }
 
 canvas{
-    height: 98px !important;
+    height: 140px !important;
     width: 100% !important;
 }
 
 .canvas_holder{
-    height: 100px !important;
-    width: 50% !important;
+    height: 140px !important;
+    width: 100% !important;
     border: 1px solid #ddd;
     margin: 0 auto;
     margin-top:2%;
@@ -194,17 +305,52 @@ canvas{
 input[type="file"]{
     padding-top: 0%;
 }
+.grey_color{
+    border: 1px solid rgb(72, 72, 72);
+    color: rgb(255, 255, 255);
+    background: rgb(72, 72, 72) none repeat scroll 0% 0%;
+    border-radius: 20px !important;
+}
+
+.done_btn{
+    color: rgb(255, 255, 255);
+    border-radius: 20px !important;
+    background-color: #0d67e6;
+    background-image: url(images/linear_bg_1.png);
+    background-repeat: repeat-y;
+
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* IE 10 */
+    background: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+}
 </style>
 
 <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
 <!-- BEGIN HEADER -->
-<input type="hidden" id="city_id" value="{{city.city_place_id}}" name="city_id"></input>
 <div id="processing" style="display:none;">
     <div id="loading">
         <img src="{% static 'assets/loading-bars.gif' %}" style="height : 100px;">
 
     </div>
 </div>
+
 <div class="page-header navbar navbar-fixed-top">
     <!-- BEGIN HEADER INNER -->
     <div class="page-header-inner ">
@@ -229,112 +375,15 @@ input[type="file"]{
                 <ul class="nav navbar-nav pull-right">
                     <!-- BEGIN NOTIFICATION DROPDOWN -->
                     <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                    <!-- <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
-                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                            <i class="icon-bell"></i>
-                            <span class="badge badge-default"> 7 </span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="external">
-                                <h3>
-                                    <span class="bold">12 pending</span> notifications</h3>
-                                <a href="page_user_profile_1.html">view all</a>
-                            </li>
-                            <li>
-                                <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
-                                    <li>
-                                        <a href="javascript:;">
-                                            <span class="time">just now</span>
-                                            <span class="details">
-                                                <span class="label label-sm label-icon label-success">
-                                                    <i class="fa fa-plus"></i>
-                                                </span> New user registered. </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;">
-                                            <span class="time">3 mins</span>
-                                            <span class="details">
-                                                <span class="label label-sm label-icon label-danger">
-                                                    <i class="fa fa-bolt"></i>
-                                                </span> Server #12 overloaded. </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;">
-                                            <span class="time">10 mins</span>
-                                            <span class="details">
-                                                <span class="label label-sm label-icon label-warning">
-                                                    <i class="fa fa-bell-o"></i>
-                                                </span> Server #2 not responding. </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;">
-                                            <span class="time">14 hrs</span>
-                                            <span class="details">
-                                                <span class="label label-sm label-icon label-info">
-                                                    <i class="fa fa-bullhorn"></i>
-                                                </span> Application error. </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;">
-                                            <span class="time">2 days</span>
-                                            <span class="details">
-                                                <span class="label label-sm label-icon label-danger">
-                                                    <i class="fa fa-bolt"></i>
-                                                </span> Database overloaded 68%. </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;">
-                                            <span class="time">3 days</span>
-                                            <span class="details">
-                                                <span class="label label-sm label-icon label-danger">
-                                                    <i class="fa fa-bolt"></i>
-                                                </span> A user IP blocked. </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;">
-                                            <span class="time">4 days</span>
-                                            <span class="details">
-                                                <span class="label label-sm label-icon label-warning">
-                                                    <i class="fa fa-bell-o"></i>
-                                                </span> Storage Server #4 not responding dfdfdfd. </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;">
-                                            <span class="time">5 days</span>
-                                            <span class="details">
-                                                <span class="label label-sm label-icon label-info">
-                                                    <i class="fa fa-bullhorn"></i>
-                                                </span> System Error. </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;">
-                                            <span class="time">9 days</span>
-                                            <span class="details">
-                                                <span class="label label-sm label-icon label-danger">
-                                                    <i class="fa fa-bolt"></i>
-                                                </span> Storage server failed. </span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li> -->
+                    
                     <!-- END NOTIFICATION DROPDOWN -->
                     <!-- BEGIN USER LOGIN DROPDOWN -->
                     <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                     <li class="dropdown dropdown-user">
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
                            data-close-others="true">
-
-                            <span class="username username-hide-on-mobile"> {{ username }}</span>
+                            <!--                                     <img alt="" class="img-circle" src="{% static 'assets/layouts/layout2/img/avatar3_small.jpg" /> -->
+                            <span class="username username-hide-on-mobile">{{ username }}</span>
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-default">
@@ -386,425 +435,301 @@ input[type="file"]{
     <div class="page-content-wrapper">
         <!-- BEGIN CONTENT BODY -->
         <div class="page-content">
-            <h3 class="page-title"> Reference Data
-            </h3>
-            <!-- BEGIN PAGE HEADER-->
-            <div class="page-bar">
-                <ul class="page-breadcrumb">
-                    <li>
-                        <a><span>Reference Data</span></a>
-                        <i class="fa fa-angle-right"></i>
-                    </li>
-                    <li>
-                        <a href="/reference-data/"><span>City</span></a>
-                        <i class="fa fa-angle-right"></i>
-                    </li>
-                    <li>
-                        <span> Edit</span>
-                    </li>
-                </ul>
-            </div>
+            
 
             <!-- END PAGE HEADER-->
             <div class="row">
                 <div class="col-lg-12">
                     <div class="portlet light  ">
-
-
                         <div class="portlet-body form">
                             <!-- BEGIN FORM-->
                             <div class="row">
                                 <div class="col-lg-12">
+                                		<a class="brad-crum-1" href="/reference-data/">City</a>
+                                    <i class="fa fa-angle-right"></i>
+                                    <span class="brad-crum-2">Edit City</span>
+                                    
                                     <div class="portlet-body">
+                                    	<br>
+                                    	
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12 text-right">
 
-                                        <div class="form-wizard">
-                                            <div class="form-body">
-                                                <!-- Start of tabs -->
-                                                <ul class="nav nav-tabs">
-                                                    <li class="active"><a data-toggle="tab" data-target="#tab1"
-                                                                          href="#tab1">City Info</a></li>
-                                                    <li class="tab"><a data-toggle="tab" data-target="#tab2"
-                                                                       href="#tab2">Places to Visit</a></li>
-                                                </ul>
+                                            <a type="button"
+                                                   href="/reference-data/"
+                                                   class="btn btn-outline grey_color"> Cancel </a>
+                                   
+                                            <button type="submit" 
+                                                    id="save_city"
+                                                    class="btn btn-outline done_btn">Update</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-3 div-border-top div-color" style="width: 20% !important;margin-top: 10px !important;">
+                                    	<div class="row">
+													   <div class="col-lg-12 col-md-12 ">
+														  <label class="control-label " style="font-size:15px; ">
+	                                            Display Image
+	                                         </label> 
+													  		 <div class = "canvas_holder">
+	                                              <canvas class="canvas_block" style="cursor:pointer;"  onclick="javascript:$('#city_image').click();" id="city_canvas"></canvas>
+	                                               <img hidden="" id="city_image_holder" src="{{ city.cityimage }}" height="200" width="200"> 
+	                                             </div> 
+	                                         <div class="form-group">
+                                  				
+                                             <input type="file" style="display:none;"  accept="image/*" name="email"
+                                                    id="city_image" class="form-control"
+                                                    placeholder="Upload Logo">
 
-                                                <div class="tab-content">
-                                                    <div id="tab1" class="tab-pane fade active in">
+                                             <label class="error"
+                                                    style="color:red; display:none;"></label>
+                                              </div>    
+                                          </div> 
+                                       </div>
+                                       
+                                       <div class="row">
+                                        <div class="col-lg-12 col-md-12 ">
+                                         <div class="form-group">
+                                             <label class="control-label " style="font-size:15px;">Country
 
-                                                        <form id="cityform" role="form" enctype="multipart/form-data"
-                                                              name="city-form" ,method="POST">
-                                                            {% csrf_token %}
-                                                            <div class="row">
-                                                            <div class="col-md-8" style="border-right:1px solid #ddd;">
-                                                            <div class="row">
-                                                            
-                                                              <div class="col-lg-4">
-                                                                    <div class="form-group">
-                                                                        <label class="control-label ">Country
-
-                                                                            <span class="required"> * </span>
-                                                                        </label>
-                                                                        <select id="country" name="country"
+                                                 <span class="required"> * </span>
+                                             </label>
+                                             <select id="country" name="country"
                                                                                 class="form-control">
-                                                                            <option value="">Select Country</option>
-                                                                            {% for countr in country_list %}
-                                                                            <option value="{{ countr.country_id }}">
-                                                                                {{countr.country_name }}
-                                                                            </option>
-                                                                            {% endfor %}
-                                                                        </select>
-                                                                        <label class="error" id="state_error"
-                                                                               style="color:red; display:none;"></label>
-                                                                    </div>
-                                                                </div>
-                                                            
-                                                            
+                                              <option value="">Select Country</option>
+                                              {% for countr in country_list %}
+                                              <option value="{{ countr.country_id }}">
+                                                  {{countr.country_name }}
+                                              </option>
+                                              {% endfor %}
+                                          </select>
+                                             <label class="error" id="state_error"
+                                                    style="color:red; display:none;"></label>
+                                         </div>
+                                       </div>  
+                                     </div>
+                                     
+                                    <div class="row"> 
+                                     <div class="col-lg-12">
+                                         <div class="form-group">
+                                             <label class="control-label " style="font-size:15px;">State
 
-                                                                <div class="col-lg-4">
-                                                                    <div class="form-group">
-                                                                        <label class="control-label ">State
-
-                                                                            <span class="required"> * </span>
-                                                                        </label>
-                                                                        <select id="state" name="state"
+                                                 <span class="required"> * </span>
+                                             </label>
+                                             <select id="state" name="state"
                                                                                 class="form-control">
-                                                                            <option value="">Select State</option>
-                                                                            {% for state in state_list %}
-                                                                            <option value="{{ state.state_id }}"> {{ state.state }}
-                                                                            </option>
-                                                                            {% endfor %}
-                                                                        </select>
-                                                                        <label class="error" id="state_error"
-                                                                               style="color:red; display:none;"></label>
-                                                                    </div>
-                                                                </div>
+	                                              <option value="">Select State</option>
+	                                              {% for state in state_list %}
+	                                              <option value="{{ state.state_id }}"> {{ state.state }}
+	                                              </option>
+	                                              {% endfor %}
+	                                          </select>
+                                             <label class="error" id="state_error"
+                                                    style="color:red; display:none;"></label>
+                                         </div>
+                                  		</div>
+                                  	</div>
+                                  	
+                                  	  <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label class="control-label" style="font-size:15px;">City
 
-                                                                <div class="col-lg-4">
-                                                                    <div class="form-group">
-                                                                        <label class="control-label ">City
-
-                                                                            <span class="required"> * </span>
-                                                                        </label>
-                                                                        <select id="city_name" name="city_name"
+                                                    <span class="required"> * </span>
+                                                </label>
+                                               <select id="city_name" name="city_name"
                                                                                 class="form-control">
-                                                                            <option value="">Select City</option>
-                                                                            {% for citys in city_list %}
-                                                                                <option value="{{ citys.city_id }}"> {{ citys.city_name }} </option>
-                                                                            {% endfor %}
-                                                                        </select>
-                                                                        <label class="error" id="city_error"
-                                                                               style="color:red; display:none;"></label>
-                                                                    </div>
-                                                                </div>
+                                                    <option value="">Select City</option>
+                                                    {% for citys in city_list %}
+                                                        <option value="{{ citys.city_id }}"> {{ citys.city_name }} </option>
+                                                    {% endfor %}
+                                                </select>
+                                                <label class="error" id="city_error"
+                                                       style="color:red; display:none;"></label>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label class="control-label" style="font-size:15px;">About City (Max
+                                                    5000 characters)
 
-                                                            </div>
-                                                            
-                                                            <div class="row">
-                                                            <div class="col-lg-4">
-                                                                    <div class="form-group">
-                                                                        <label class="control-label ">Currency
+                                                </label>
+                                             <textarea type="text" name="name"
+                                              maxlength="5000" id="about_city"
+                                              class="form-control">{{ city.about_city }}</textarea>
+                                                <label class="error"
+                                                       style="color:red; display:none;"></label>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      
+                                       <div class="row">
+                                       	<div class="col-lg-12">
+                                               <div class="form-group">
+                                                   <label class="control-label " style="font-size:15px;">Currency
 
-                                                                           <!--  <span class="required"> * </span> -->
-                                                                        </label>
-                                    													<input class="form-control" type="text" value="{{ city.currency }}" disabled id="currency"
+                                                   </label>
+               													<input class="form-control" type="text" value="{{ city.currency }}" disabled id="currency"
                                     													></input>
 
-                                                                        <label class="error" id="city_error"
-                                                                               style="color:red; display:none;"></label>
-                                                                    </div>
-                                                                </div>
-                                                            
-                                                            	  <div class="col-lg-4">
-                                                                    <div class="form-group">
-                                                                        <label class="control-label ">Climate
+                                                   <label class="error" id="city_error"
+                                                          style="color:red; display:none;"></label>
+                                               </div>
+                                           </div>
+                                       </div>
+                                       
+                                       <div class="row">
+                                           <div class="form-group col-lg-12">
+                                               <label class="control-label" style="font-size:15px;">Language </label>
 
-                                                                        </label>
-                                                                        <input type="text" name="name"
+
+                                           <input type="text" name="name"
+                                                                  value="{{ city.language }}" id="language"
+                                                                  class="form-control"/>
+
+                                               <label class="error"
+                                                      style="color:red; display:none;"></label>
+                                           </div> 
+                                        </div>
+                                        
+											<div class="row">	                                        
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label class="control-label " style="font-size:15px;">Climate
+
+                                                </label>
+                                                       <input type="text" name="name"
                                                                                value="{{ city.climate}}" id="climate"
                                                                                class="form-control"/>
-                                                                        <label class="error"
-                                                                               style="color:red; display:none;"></label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row">
-                                                                <div class="col-lg-12">
-                                                                    <div class="form-group">
-                                                                        <label class="control-label ">About City (Max
-                                                                            5000 characters)
-
-                                                                        </label>
-                                                                        <textarea type="text" name="name"
-                                                                                  maxlength="5000" id="about_city"
-                                                                                  class="form-control">{{ city.about_city }}</textarea>
-                                                                        <label class="error"
-                                                                               style="color:red; display:none;"></label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row">
-                                                                <div class="form-group col-lg-4">
-                                                                    <label class="control-label">Language </label>
-
-
-                                                                    <input type="text" name="name"
-                                                                           value="{{ city.language }}" id="language"
-                                                                           class="form-control"/>
-
-                                                                    <label class="error"
-                                                                           style="color:red; display:none;"></label>
-                                                                </div>
-                                                                <!-- <div class="col-lg-4">
-                                                                    <div class="form-group">
-                                                                        <label class="control-label ">Population
-                                                                        </label>
-                                                                        <input type="text"
-                                                                               onkeypress="return validateFloatKeyPresss(this,event);"
-                                                                               value="{{ city.population }}" name="name"
-                                                                               id="population" class="form-control"/>
-                                                                        <label class="error"
-                                                                               style="color:red; display:none;"></label>
-                                                                    </div>
-                                                                </div> -->
-                                                                <div class="col-lg-8">
-                                                                    <div class="form-group">
-                                                                        <label class="control-label ">Image<!-- <a
-                                                                                href="{{ city.cityimage }}" download
-                                                                                style="text-decoration: underline;color: #7160A9;"><span>{{ city.filename }}</span></a> -->
-                                                                        </label>
-                                                                        <input type="file" accept="image/*" name="email"
-                                                                               id="city_image" class="form-control"
-                                                                               placeholder="Upload Logo">
-
-
-                                                                        <!-- <input type="text" name="name" id="timezone" class="form-control" />  -->
-                                                                        <label class="error"
-                                                                               style="color:red; display:none;"></label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <!--<div class="row">-->
-                                                                <!--<div class="col-lg-6">-->
-                                                                    <!--<div class="form-group">-->
-                                                                        <!--<label>Time Zone </label>-->
-
-                                                                        <!--<select class="form-control" id="timezone">-->
-                                                                            <!--{% if not city.timezone %}-->
-                                                                            <!--<option value="">Select Time Zone</option>-->
-                                                                            <!--<option value="(UTC-8.00)Pacific time(US & Canada)"-->
-                                                                                    <!--selected>(UTC-8.00)Pacific time(US &-->
-                                                                                <!--Canada)-->
-                                                                            <!--</option>-->
-                                                                            <!--<option value="(UTC-5.00)Eastern time(US & Canada)">-->
-                                                                                <!--(UTC-5.00)Eastern time(US & Canada)-->
-                                                                            <!--</option>-->
-                                                                            <!--<option value="(UTC)Dublin,Edinburg,Lisbon,London">-->
-                                                                                <!--(UTC)Dublin,Edinburg,Lisbon,London-->
-                                                                            <!--</option>-->
-                                                                            <!--<option value="(UTC+05.30)Chennai,Kolkata,Mumbai,New Delhi">-->
-                                                                                <!--(UTC+05.30)Chennai,Kolkata,Mumbai,New-->
-                                                                                <!--Delhi-->
-                                                                            <!--</option>-->
-                                                                            <!--{% else %}-->
-                                                                            <!--{% if city.timezone == '(UTC-8.00)Pacific time(US & Canada)' %}-->
-                                                                            <!--<option value="(UTC-8.00)Pacific time(US & Canada)"-->
-                                                                                    <!--selected>(UTC-8.00)Pacific time(US &-->
-                                                                                <!--Canada)-->
-                                                                            <!--</option>-->
-                                                                            <!--<option value="(UTC-5.00)Eastern time(US & Canada)">-->
-                                                                                <!--(UTC-5.00)Eastern time(US & Canada)-->
-                                                                            <!--</option>-->
-                                                                            <!--<option value="(UTC)Dublin,Edinburg,Lisbon,London">-->
-                                                                                <!--(UTC)Dublin,Edinburg,Lisbon,London-->
-                                                                            <!--</option>-->
-                                                                            <!--<option value="(UTC+05.30)Chennai,Kolkata,Mumbai,New Delhi">-->
-                                                                                <!--(UTC+05.30)Chennai,Kolkata,Mumbai,New-->
-                                                                                <!--Delhi-->
-                                                                            <!--</option>-->
-                                                                            <!--{% elif city.timezone == '(UTC-5.00)Eastern-->
-                                                                            <!--time(US & Canada)' %}-->
-                                                                            <!--<option value="(UTC-5.00)Eastern time(US & Canada)"-->
-                                                                                    <!--selected>(UTC-5.00)Eastern time(US &-->
-                                                                                <!--Canada)-->
-                                                                            <!--</option>-->
-                                                                            <!--<option value="(UTC-8.00)Pacific time(US & Canada)">-->
-                                                                                <!--(UTC-8.00)Pacific time(US & Canada)-->
-                                                                            <!--</option>-->
-                                                                            <!--<option value="(UTC)Dublin,Edinburg,Lisbon,London">-->
-                                                                                <!--(UTC)Dublin,Edinburg,Lisbon,London-->
-                                                                            <!--</option>-->
-                                                                            <!--<option value="(UTC+05.30)Chennai,Kolkata,Mumbai,New Delhi">-->
-                                                                                <!--(UTC+05.30)Chennai,Kolkata,Mumbai,New-->
-                                                                                <!--Delhi-->
-                                                                            <!--</option>-->
-                                                                            <!--{% elif city.timezone ==-->
-                                                                            <!--'(UTC)Dublin,Edinburg,Lisbon,London' %}-->
-                                                                            <!--<option value="(UTC)Dublin,Edinburg,Lisbon,London"-->
-                                                                                    <!--selected>-->
-                                                                                <!--(UTC)Dublin,Edinburg,Lisbon,London-->
-                                                                            <!--</option>-->
-                                                                            <!--<option value="(UTC-8.00)Pacific time(US & Canada)">-->
-                                                                                <!--(UTC-8.00)Pacific time(US & Canada)-->
-                                                                            <!--</option>-->
-                                                                            <!--<option value="(UTC-5.00)Eastern time(US & Canada)">-->
-                                                                                <!--(UTC-5.00)Eastern time(US & Canada)-->
-                                                                            <!--</option>-->
-                                                                            <!--<option value="(UTC+05.30)Chennai,Kolkata,Mumbai,New Delhi">-->
-                                                                                <!--(UTC+05.30)Chennai,Kolkata,Mumbai,New-->
-                                                                                <!--Delhi-->
-                                                                            <!--</option>-->
-                                                                            <!--{% elif city.timezone ==-->
-                                                                            <!--'(UTC+05.30)Chennai,Kolkata,Mumbai,New-->
-                                                                            <!--Delhi' %}-->
-                                                                            <!--<option value="(UTC+05.30)Chennai,Kolkata,Mumbai,New Delhi"-->
-                                                                                    <!--selected>-->
-                                                                                <!--(UTC+05.30)Chennai,Kolkata,Mumbai,New-->
-                                                                                <!--Delhi-->
-                                                                            <!--</option>-->
-                                                                            <!--<option value="(UTC-8.00)Pacific time(US & Canada)">-->
-                                                                                <!--(UTC-8.00)Pacific time(US & Canada)-->
-                                                                            <!--</option>-->
-                                                                            <!--<option value="(UTC-5.00)Eastern time(US & Canada)">-->
-                                                                                <!--(UTC-5.00)Eastern time(US & Canada)-->
-                                                                            <!--</option>-->
-                                                                            <!--<option value="(UTC)Dublin,Edinburg,Lisbon,London">-->
-                                                                                <!--(UTC)Dublin,Edinburg,Lisbon,London-->
-                                                                            <!--</option>-->
-                                                                            <!--{% endif %}-->
-                                                                            <!--{% endif %}-->
-                                                                        <!--</select>-->
-                                                                        <!--<label class="error"-->
-                                                                               <!--style="color:red; display:none;"></label>-->
-                                                                    <!--</div>-->
-                                                                <!--</div>-->
-                                                            <!--</div>-->
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                            <canvas id="city_canvas"></canvas>
-                                                                <img hidden="" id="city_image_holder" src="{{ city.cityimage }}" height="200" width="200"> 
-                                                            </div>
-                                                            </div>
-                                                            <div class="form-actions text-right">
-                                                                <div class="row">
-                                                                    <div class="col-md-12">
-                                                                        <a href="/reference-data/" type="button"
-                                                                           class="btn default">Cancel</a>
-                                                                        <input type="button" id="save_city"
-                                                                               class="btn green" value="Save & Next">
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                        </form>
-                                                    </div>
-
-
-                                                    <div class="tab-pane fade" id="tab2">
-
-
-                                                        <div class="row">
-                                                            <div class="form-group col-lg-12">
-                                                               <h3 class="pull-left">Points of Interest </h3>
-                                                            <a class="fa fa-plus-circle fa-lg add_point_of_interest" style="margin-top: 2.7%;margin-left: 2%;"></a>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row panel panel-default" id="point_of_interest">
-                                                                        {% if not interest %}
-                                                                            <div class="col-lg-3" style="margin-top:2%;margin-bottom: 2%;">
-                                                                                <input type="text"
-                                                                                       name="point_of_interest_name"
-                                                                                       class="form-control interest_name">
-                                                                                <div class="canvas_holder">
-                                                                     <canvas class="canvas_block" id="canvas_poi0"></canvas>
-                                                                 </div>       
-                                                                                <input id="poi0" type="file"
-                                                                                       accept="image/*"
-                                                                                       name="point_of_interest_image[]"
-                                                                                       class="poi_img form-control"
-                                                                                       placeholder="Upload image" onchange="change_poi_img(this,event)">       
-                                                                                <label class="error"
-                                                                                       style="color:red; display:none;"></label>
-                                                                                <input type="hidden"
-                                                                                   class="interest_place_id"
-                                                                                   value="0"> </input>       
-                                                                            </div>                                           
+                                                <label class="error"
+                                                       style="color:red; display:none;"></label>
+                                            </div>
+                                    		</div>
+                                    	</div>	      	                                		
+                                    </div>
+                                    
+                                    <div class="col-md-9 " style="border-left:2px solid #CCC !important;margin-left: 11px !important;width: 77%;margin-top: 10px !important; ">
+                                      <div class="row div-border-top div-color">
+                                      	 <div class="row" style="margin-left: 18px !important;">	
+		                                 		 <div class="row">
+			                                          <div class="form-group col-lg-12">
+			                                          <label class="control-label " style="font-size:15px;">City Attractions
+		                                                </label>
+			                                          <a class="fa fa-plus-circle fa-lg add_point_of_interest" style="margin-top: 2.7%;margin-left: 2%;"></a>
+			                                          </div>
+			                                      </div>
+			                                      
+	                                      										<div class="row " id="point_of_interest">
+	                                      										
+	                                      										
+	                                      										
+                                                                        {% if not interest %}                                                                            
+												                                          <div class="col-lg-4" style="width: 31.333%; !important">
+												                                            
+												                                               <div class="canvas_holder">
+												                                                   <canvas class="canvas_block" style="cursor:pointer;" onclick="javascript:$('#poi0').click();" id="canvas_poi0"></canvas>
+												                                               </div>      
+												                                               <input type="file" style="display:none;" accept="image/*" id="poi0"
+												                                                     name="point_of_interest_image[]"
+												                                                     class="form-control"
+												                                                     placeholder="Upload image" onchange="change_poi_img(this,event)"> 
+												                                               <textarea style="margin-top:2%;margin-bottom: 2%;"  name="point_of_interest_name"
+											                                                          id="about_city" maxlength="5000"
+											                                                          class="form-control interest_name"></textarea> 
+												                                                <input name="new_poi" hidden value="new_poi" class="poi_status"></input>
+												                                                <input type="hidden" class="interest_place_id" value="0"> </input>
+                                                                                          
+												                                              <label class="error"
+												                                                     style="color:red; display:none;"></label>    
+												                                            </div>                                              
                                                                         {% else %}
+                                                                        
+                                                                        
                                                                         {% for int in interest %}
-                                                                            <div class="col-md-3 " style="margin-top:2%;margin-bottom: 2%;">
-                                                                                <input type="text"
-                                                                                       name="point_of_interest_name"
-                                                                                       value="{{ int.place_name }}"
-                                                                                       class="form-control interest_name">
+                                                                        	
+                                                                            <div class="col-lg-4"  style="width: 31.333%; !important;">
+                                                                                
                                                                 <div class="canvas_holder">
                                                                 <img alt="image preview" hidden="" src="{{int.place_image}}"> 
-                                                                <canvas class="canvas_block canvas_filled" id="canvas_poi{{int.image_id}}"></canvas>
-    <script>
-      var canvas{{int.place_id}} = document.getElementById('canvas_poi{{int.image_id}}');
-      var context{{int.place_id}} = canvas{{int.place_id}}.getContext('2d');
-      var imageObj{{int.place_id}} = new Image();
-
-      imageObj{{int.place_id}}.onload = function() {
-        canvas{{int.place_id}}.width = imageObj{{int.place_id}}.width;
-        canvas{{int.place_id}}.height = imageObj{{int.place_id}}.height;
-        context{{int.place_id}}.drawImage(imageObj{{int.place_id}}, 0, 0);
-      };
-      imageObj{{int.place_id}}.src = '{{int.place_image}}';
-    </script>
+                                                                <canvas class="canvas_block canvas_filled" style="cursor:pointer;" onclick="callChangeImage({{int.image_id}});" id="canvas_poi{{int.image_id}}"></canvas>
+																						    
+																						    <script>
+																						      var canvas{{int.place_id}} = document.getElementById('canvas_poi{{int.image_id}}');
+																						      var context{{int.place_id}} = canvas{{int.place_id}}.getContext('2d');
+																						      var imageObj{{int.place_id}} = new Image();
+																						
+																						      imageObj{{int.place_id}}.onload = function() {
+																						        canvas{{int.place_id}}.width = imageObj{{int.place_id}}.width;
+																						        canvas{{int.place_id}}.height = imageObj{{int.place_id}}.height;
+																						        context{{int.place_id}}.drawImage(imageObj{{int.place_id}}, 0, 0);
+																						      };
+																						      imageObj{{int.place_id}}.src = '{{int.place_image}}';
+																						      
+																						    </script>																						    
+																						    
+																						    
                                                                     </div>            
-                                                                                <input id="poi{{int.image_id}}"
+                                                                                <input id="poi{{int.image_id}}" style="display:none;"
                                                                                        type="file" accept="image/*"
                                                                                        name="point_of_interest_image[]"
                                                                                        class="poi_img form-control"
-                                                                                       placeholder="Upload image" onchange="change_poi_img(this,event)">       
+                                                                                       placeholder="Upload image" onchange="change_poi_img(this,event)">  
+                                                                                       
+                                                                                  <input id="old_poi{{ int.image_id }}" hidden name="old_poi{{ int.image_id }}" value="false" class="poi_status"></input>
+                                                                                <textarea style="margin-top:2%;margin-bottom: 2%;"  name="point_of_interest_name"
+											                                                          id="about_city" maxlength="5000"
+											                                                          class="form-control interest_name">{{ int.place_name }}</textarea>      
                                                                                 <label class="error"
                                                                                        style="color:red; display:none;"></label>
-                                                                            </div>
-                                                                            <input type="hidden"
+                                                                                       <input type="hidden" id="cp_id"
                                                                                    class="interest_place_id"
                                                                                    value="{{int.place_id}}"> </input>
+                                                                            </div>
+                                                                            
+                                                                       
                                                                         {% endfor %}
                                                                         {% endif %}
-                                                        </div>
+                                                         </div>
 
-                                                        <br>
-                                                        <div class="row">
-                                                            <div class="form-group col-lg-12">
-                                                                <h3 class="pull-left">Where to shop </h3>
-                                                                <a class="fa fa-plus-circle fa-lg add_shop" style="margin-top: 2.7%;margin-left: 2%;"></a>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="row panel panel-default" id="shop">
-                                                                        {% if not shops %}
-                                                                            <div class="col-lg-3" style="margin-top:2%;margin-bottom:2%;">
-                                                                            <input type="hidden" class="shop_id" value="0"> </input>
-                                                                                <input type="text" name="shopname"
-                                                                                       id="shopname"
-                                                                                       class="form-control where_to_shop">
-                                                                            <div class="canvas_holder">
-                                                                     <canvas class="canvas_block" id="canvas_shop0"></canvas>
-                                                                 </div>           
-                                                                            <input type="file" name="shop_image[]"
-                                                                                       id="shop0" accept="image/*"
-                                                                                       class="form-control"
-                                                                                       placeholder="Upload image" onchange="change_shop_img(this,event)">
-                                                                                <label class="error"
-                                                                                       style="color:red; display:none;"></label>
-                                                                            </div>
-                                                                        {% else %}
-                                                                        {% for shop in shops %}
-                                                                            <div class="col-lg-3" style="margin-top:2%;margin-bottom:2%;">
+	                                      <div class="row">
+                                             <div class="form-group col-lg-12">
+                                                 <label class="control-label " style="font-size:15px;">Shopping
+                                                </label>
+                                                 <a class="fa fa-plus-circle fa-lg add_shop" style="margin-top: 2.7%;margin-left: 2%;"></a>
+                                             </div>
+                                         </div>
+                                        
+                                             <div class="row " id="shop">
+                                              {% if not shops %}
+                                               
+	                                              <div class="col-lg-4" style="width: 31.333%; !important">
+	                                              <input type="hidden" class="shop_id" value="0"> </input>
+	                                               
+	                                              <div class="canvas_holder">
+	                                       			<canvas class="canvas_block" style="cursor:pointer;" onclick="javascript:$('#shop0').click();" id="canvas_shop0"></canvas>
+	                                   				</div>           
+	                                              <input type="file" style="display:none;" name="shop_image[]"
+	                                                         id="shop0" accept="image/*"
+	                                                         class="form-control"
+	                                                         placeholder="Upload image" onchange="change_shop_img(this,event)">
+	                                               <textarea  name="shopname" id="shopname" style="margin-top:2%;margin-bottom: 2%;"
+	                          									class="form-control where_to_shop">  </textarea>
+	                                                  <label class="error"
+	                                                         style="color:red; display:none;"></label>
+	                                              </div>
+	                                           
+                                                               {% else %}
+                                                                {% for shop in shops %}
+                                                                     
+                                                                            <div class="col-lg-4" style="width: 31.333%; !important">
                                                                                 <input type="hidden" class="shop_id"
                                                                                        value="{{shop.place_id}}"> </input>
-                                                                                <input type="text" name="shopname"
-                                                                                       id="shopname"
-                                                                                       value="{{ shop.place_name }}"
-                                                                                       class="form-control where_to_shop">
                                                                                 <div class="canvas_holder">
                                                                 <img alt="image preview" hidden="" src="{{shop.place_image}}"> 
-                                                                <canvas class="canvas_block canvas_filled" id="canvas_shop{{shop.image_id}}"></canvas>
+                                                                <canvas class="canvas_block canvas_filled" style="cursor:pointer;" onclick="javascript:$('#shop{{shop.image_id}}').click();"  id="canvas_shop{{shop.image_id}}"></canvas>
     <script>
       var canvas{{shop.place_id}} = document.getElementById('canvas_shop{{shop.image_id}}');
       var context{{shop.place_id}} = canvas{{shop.place_id}}.getContext('2d');
@@ -818,58 +743,61 @@ input[type="file"]{
       imageObj{{shop.place_id}}.src = '{{shop.place_image}}';
     </script>
                                                                     </div>       
-                                                                                <input type="file"
+                                                                                <input type="file" style="display:none"
                                                                                        id="shop{{shop.image_id}}"
                                                                                        name="shop_image[]"
                                                                                        accept="image/*"
                                                                                        class="form-control"
-                                                                                       placeholder="Upload image" onchange="change_shop_img(this,event)">       
+                                                                                       placeholder="Upload image" onchange="change_shop_img(this,event)">  
+                                                                                       <textarea  name="shopname" 
+                          									class="form-control where_to_shop">{{ shop.place_name }} </textarea>     
                                                                                 <label class="error"
                                                                                        style="color:red; display:none;"></label>
                                                                             </div>
+                                                                            
                                                                         {% endfor %}
                                                                         {% endif %}
                                                         </div>
-
-                                                        <br>
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <div class="form-group">
-                                                                    <h3 class="pull-left">Reputed Hospitals</h3>
-                                                                    <a class="fa fa-plus-circle fa-lg add_hospital" style="margin-top: 2.7%;margin-left: 2%;"></a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row panel panel-default" id="hospital">
+                                         
+                                         
+                                         <div class="row">
+                                             <div class="col-lg-12">
+                                                 <div class="form-group">
+                                                 	<label class="control-label " style="font-size:15px;">Hospitals
+                                                </label>
+                                                     <a class="fa fa-plus-circle fa-lg add_hospital" style="margin-top: 2.7%;margin-left: 2%;"></a>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                       
+                                             
+                                             								<div class="row " id="hospital">
                                                                         {% if not hospitals %}
-                                                                            <div class="col-lg-3" style="margin-top:2%;margin-bottom:2%;">
+                                                                            <div class="col-lg-4" style="width: 31.333%; !important">
                                                                             <input type="hidden" class="hospital_id" value="0"> </input>
-                                                                                <input type="text" name="hospitalname"
-                                                                                       id="hospitalname"
-                                                                                       class="form-control reputed_hospitals">
+                                                                               
                                                                              <div class="canvas_holder">
-                                                                     <canvas class="canvas_block" id="canvas_hospital0"></canvas>
-                                                                 </div>          
-                                                                                <input type="file"
+                                                                     				<canvas class="canvas_block" style="cursor:pointer;" onclick="javascript:$('#hospital0').click();" id="canvas_hospital0"></canvas>
+                                                                 				</div>          
+                                                                                <input type="file" style="display:none;"
                                                                                        name="hospital_image[]"
                                                                                        accept="image/*" id="hospital0"
                                                                                        class="form-control"
-                                                                                       placeholder="Upload image" onchange="change_hospital_img(this,event)">       
+                                                                                       placeholder="Upload image" onchange="change_hospital_img(this,event)">
+                                                                             <textarea  name="hospitalname" id="hospitalname"
+                                                    								 class="form-control reputed_hospitals"></textarea>          
                                                                                 <label class="error"
                                                                                        style="color:red; display:none;"></label>
                                                                             </div>
                                                                         {% else %}
                                                                         {% for hos in hospitals %}
-                                                                            <div class="col-lg-3" style="margin-top:2%;margin-bottom:2%;">
+                                                                            <div class="col-lg-4" style="width: 31.333%; !important">
                                                                                 <input type="hidden" class="hospital_id"
                                                                                        value="{{hos.place_id}}"> </input>
-                                                                                <input type="text" name="hospitalname"
-                                                                                       id="hospitalname"
-                                                                                       value="{{ hos.place_name }}"
-                                                                                       class="form-control reputed_hospitals">
+                                                             
                                                                                 <div class="canvas_holder">
                                                                 <img alt="image preview" hidden="" src="{{hos.place_image}}"> 
-                                                                <canvas class="canvas_block canvas_filled" id="canvas_hospital{{hos.image_id}}"></canvas>
+                                                                <canvas class="canvas_block canvas_filled" style="cursor:pointer;" onclick="javascript:$('#hospital{{hos.image_id}}').click();" id="canvas_hospital{{hos.image_id}}"></canvas>
     <script>
       var canvas{{hos.place_id}} = document.getElementById('canvas_hospital{{hos.image_id}}');
       var context{{hos.place_id}} = canvas{{hos.place_id}}.getContext('2d');
@@ -884,11 +812,13 @@ input[type="file"]{
     </script>
                                                                     </div>    
                                                                     <input type="file"
-                                                                                       id="hospital{{hos.image_id}}"
+                                                                                       id="hospital{{hos.image_id}}" style="display:none;"
                                                                                        name="hospital_image[]"
                                                                                        accept="image/*"
                                                                                        class="form-control"
-                                                                                       placeholder="Upload image" onchange="change_hospital_img(this,event)">    
+                                                                                       placeholder="Upload image" onchange="change_hospital_img(this,event)">   
+                                                                       <textarea  name="hospitalname" id="hospitalname"
+                                                    								 class="form-control reputed_hospitals">{{ hos.place_name }}</textarea>  
                                                                                 <label class="error"
                                                                                        style="color:red; display:none;"></label>
                                                                             </div>
@@ -897,31 +827,32 @@ input[type="file"]{
                                                                         {% endif %}                                                          
                                                         </div>
 
-                                                        <br>
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <div class="form-group">
-                                                                    <h3 class="pull-left">Colleges and
-                                                                        Universities</h3>
-                                                                        <a class="fa fa-plus-circle fa-lg add_college" style="margin-top: 2.7%;margin-left: 2%;"></a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row panel panel-default" id="college">
-                                                                        {% if not colleges %}
+
+                                         
+                                         <div class="row">
+                                             <div class="col-lg-12">
+                                                 <div class="form-group">
+                                                 	<label class="control-label " style="font-size:15px;">Education
+                                                </label>
+                                                   <a class="fa fa-plus-circle fa-lg add_college" style="margin-top: 2.7%;margin-left: 2%;"></a>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     		<div class="row" id="college">
+                                                              {% if not colleges %}
                                                                         <input type="hidden" class="college_id" value="0"> </input>
-                                                                            <div class="col-lg-3" style="margin-top:2%;margin-bottom:2%;">
-                                                                                <input type="text" name="collegename"
-                                                                                       id="collegename"
-                                                                                       class="form-control college_and_universities">
+                                                                            <div class="col-lg-4" style="width: 31.333%; !important">
+                                                                                
                                                                                 <div class="canvas_holder">
-                                                                     <canvas class="canvas_block" id="canvas_college0"></canvas>
-                                                                 </div>       
-                                                                                <input type="file"
+                                                                     				<canvas class="canvas_block" style="cursor:pointer;" onclick="javascript:$('#college0').click();" id="canvas_college0"></canvas>
+                                                                 					 </div>       
+                                                                                <input type="file" style="display:none;"
                                                                                        name="college_image[]"
                                                                                        id="college0" accept="image/*"
                                                                                        class="form-control"
-                                                                                       placeholder="Upload image" onchange="change_college_img(this,event)">       
+                                                                                       placeholder="Upload image" onchange="change_college_img(this,event)">
+                                                                                 <textarea name="collegename" id="collegename"
+                                                        										class="form-control college_and_universities"></textarea>        
                                                                                 <label class="error"
                                                                                        style="color:red; display:none;"></label>
                                                                             </div>
@@ -929,52 +860,46 @@ input[type="file"]{
                                                                         {% for clg in colleges %}
                                                                             <input type="hidden" class="college_id"
                                                                                    value="{{clg.place_id}}"> </input>
-                                                                            <div class="col-lg-3" style="margin-top:2%;margin-bottom:2%;">
-                                                                                <input type="text" name="collegename"
-                                                                                       id="collegename"
-                                                                                       value="{{ clg.place_name }}"
-                                                                                       class="form-control college_and_universities">
+                                                                            <div class="col-lg-4" style="width: 31.333%; !important">
+                                                                                
                                                                         <div class="canvas_holder">
-                                                                <img alt="image preview" hidden="" src="{{clg.place_image}}"> 
-                                                                <canvas class="canvas_block canvas_filled" id="canvas_college{{clg.image_id}}"></canvas>
-    <script>
-      var canvas{{clg.place_id}} = document.getElementById('canvas_college{{clg.image_id}}');
-      var context{{clg.place_id}} = canvas{{clg.place_id}}.getContext('2d');
-      var imageObj{{clg.place_id}} = new Image();
-
-      imageObj{{clg.place_id}}.onload = function() {
-        canvas{{clg.place_id}}.width = imageObj{{clg.place_id}}.width;
-        canvas{{clg.place_id}}.height = imageObj{{clg.place_id}}.height;
-        context{{clg.place_id}}.drawImage(imageObj{{clg.place_id}}, 0, 0);
-      };
-      imageObj{{clg.place_id}}.src = '{{clg.place_image}}';
-    </script>
+                                                                			<img alt="image preview" hidden="" src="{{clg.place_image}}"> 
+                                                                <canvas class="canvas_block canvas_filled" style="cursor:pointer;" onclick="javascript:$('#college{{clg.image_id}}').click();" id="canvas_college{{clg.image_id}}"></canvas>
+																							    <script>
+																							      var canvas{{clg.place_id}} = document.getElementById('canvas_college{{clg.image_id}}');
+																							      var context{{clg.place_id}} = canvas{{clg.place_id}}.getContext('2d');
+																							      var imageObj{{clg.place_id}} = new Image();
+																							
+																							      imageObj{{clg.place_id}}.onload = function() {
+																							        canvas{{clg.place_id}}.width = imageObj{{clg.place_id}}.width;
+																							        canvas{{clg.place_id}}.height = imageObj{{clg.place_id}}.height;
+																							        context{{clg.place_id}}.drawImage(imageObj{{clg.place_id}}, 0, 0);
+																							      };
+																							      imageObj{{clg.place_id}}.src = '{{clg.place_image}}';
+																							    </script>
                                                                     </div>
-                                                                                <input type="file"
+                                                                                <input type="file" style="display:none;"
                                                                                        id="college{{clg.image_id}}"
                                                                                        name="college_image[]"
                                                                                        accept="image/*"
                                                                                        class="form-control"
-                                                                                       placeholder="Upload image" onchange="change_college_img(this,event)">       
+                                                                                       placeholder="Upload image" onchange="change_college_img(this,event)"> 
+                                                                               <textarea name="collegename" id="collegename"
+                                                        										class="form-control college_and_universities">{{ clg.place_name }}</textarea>       
                                                                                 <label class="error"
                                                                                        style="color:red; display:none;"></label>
-                                                                            </div>                
-                                                                        {% endfor %}
-                                                                        {% endif %}
-                                                                    </div>
-                                                                      <div class="form-actions text-right">
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <a href="/reference-data/" type="button"
-                                                                       class="btn default">Cancel</a>
-                                                                    <button type="submit" id="save_place"
-                                                                            class="btn green">Update
-                                                                    </button>
+                                                                            </div> 
+                                                                                  {% endfor %}
+                                                                        {% endif %} 
+                                                                            
+                                         </div>
+                                         </div>
+                        					<br>
+                                       
+                                         </div>
+                                         
+                                    </div>
 
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                                </div>
                                                             </div>
                                                         </div>
 
@@ -1000,6 +925,8 @@ input[type="file"]{
     <!-- END CONTENT BODY -->
 </div>
 <!-- END CONTENT -->
+</div>
+</div>
 </div>
 </div>
 <!-- END CONTAINER -->
@@ -1184,13 +1111,26 @@ input[type="file"]{
 
 <script src="{%static 'assets/pages/scripts/dropzone1.js' %}" type="text/javascript"></script>
 <script>
-
-        $("#ref_data_nav").addClass("active");
+        $("#configure_anchor").addClass("tab-active");
+        $("#configure_icon").addClass("icon-active");
+        $("#configure_active").css("display","block");
         $("#city_nav").addClass("active");
 
+
+
+function callChangeImage(id){
+	$('#poi'+id).click();
+}
+
+//function callChangeImageValue(id){
+//	$('#old_poi_'+id).val('true');
+//}
+
 $(document).ready(function(){
+$("#shopname").val('');
 
 poi_index = {{poi_index}} + 1;
+
 shop_index = {{shop_index}} + 1;
 hospital_index = {{hospital_index}} + 1;
 college_index = {{college_index}} + 1;
@@ -1242,6 +1182,7 @@ else{
 }
 
 
+
 function handleImage(e){
     var reader = new FileReader();
     reader.onload = function(event){
@@ -1285,31 +1226,33 @@ ctx_c.fillText("Image Preview",90,80);
 }
         
 
-            $(".add_point_of_interest").click(function(){
-                    $('#point_of_interest').append(
-                        "<div class='col-lg-3' style='margin-top:2%;margin-bottom: 2%;'><input type='text' name='point_of_interestname'  class='form-control interest_name' >"+
-        "<div class='canvas_holder'>"+
-        "<canvas class='canvas_block' id='canvas_poi"+poi_index+"'></canvas>"+
-        "</div>"+
-"<input type='file' name='point_of_interest_image[]' id='poi"+poi_index+"' class='form-control' placeholder='Upload image' onchange='change_poi_img(this,event)'/>"+
-"<label class='error' style='color:red; display:none;'></label></div>"+
-"<input type='hidden' class='interest_place_id' value="+poi_index+"> </input>"
-                        );
-                    var canvas_new = document.getElementById('canvas_poi'+poi_index);
-                    var ctx_n = canvas_new.getContext('2d');
-                    ctx_n.font="20px Open Sans";
-                    ctx_n.fillText("Image Preview",90,80);
-                    poi_index++;
-            });
+$(".add_point_of_interest").click(function() {
+    $('#point_of_interest').append(
+        "<div class='col-lg-4' style='width: 31.333%; !important'>" +
+        "<div class='canvas_holder'>" +
+        "<canvas class='canvas_block' style='cursor:pointer;' onclick='javascript:$(poi" + poi_index + ").click();' id='canvas_poi" + poi_index + "'></canvas>" +
+        "</div>" +
+        "<input type='file' style='display:none;' name='point_of_interest_image[]' id='poi" + poi_index + "' class='form-control' placeholder='Upload image' onchange='change_poi_img(this,event)'/>" +
+        "<textarea type='text' style='margin-top:2%;margin-bottom: 2%;' name='point_of_interestname'  class='form-control interest_name' ></textarea>" +
+        "<label class='error' style='color:red; display:none;'></label></div>" +
+        "<input type='hidden' class='interest_place_id' value=" + poi_index + "> </input>"
+    );
+    var canvas_new = document.getElementById('canvas_poi' + poi_index);
+    var ctx_n = canvas_new.getContext('2d');
+    ctx_n.font = "20px Open Sans";
+    ctx_n.fillText("Image Preview", 90, 80);
+    poi_index++;
+});
  
 
             $(".add_shop").click(function(){
                     $('#shop').append(
-                        "<div class='col-lg-3' style='margin-top:2%;margin-bottom:2%;'><input type='text' name='shopname' class='form-control where_to_shop' >"+
+                        "<div class='col-lg-4' style='width: 31.333%; !important'>"+
                         "<div class='canvas_holder'>"+
-        "<canvas class='canvas_block' id='canvas_shop"+shop_index+"'></canvas>"+
+        "<canvas class='canvas_block' style='cursor:pointer;' onclick='javascript:$(shop"+shop_index+").click();' id='canvas_shop"+shop_index+"'></canvas>"+
         "</div>"+
-                        "<input type='file' id='shop"+shop_index+"' name='place_image[]' class='form-control' placeholder='Upload image' onchange='change_shop_img(this,event)'>"+
+                        "<input type='file' style='display:none;' id='shop"+shop_index+"' name='place_image[]' class='form-control' placeholder='Upload image' onchange='change_shop_img(this,event)'>"+
+                        "<textarea  name='shopname' class='form-control where_to_shop' ></textarea>"+
                         "<label class='error'  style='color:red; display:none;'></label></div>"+
 "<input type='hidden' class='shop_id' value="+shop_index+"> </input>"
                     );
@@ -1323,11 +1266,12 @@ ctx_c.fillText("Image Preview",90,80);
 
             $(".add_hospital").click(function(){
                     $('#hospital').append(
-                        "<div class='col-lg-3' style='margin-top:2%;margin-bottom:2%;'><input type='text' name='hospitalname'  class='form-control reputed_hospitals'>"+
+                        "<div class='col-lg-4' style='width: 31.333%; !important'>"+
                         "<div class='canvas_holder'>"+
-                        "<canvas class='canvas_block' id='canvas_hospital"+hospital_index+"'></canvas>"+
+                        "<canvas class='canvas_block' style='cursor:pointer;' onclick='javascript:$(hospital"+hospital_index+").click();' id='canvas_hospital"+hospital_index+"'></canvas>"+
                         "</div>"+
-                        "<input type='file' id='hospital"+hospital_index+"' name='place_image[]' class='form-control' placeholder='Upload image' onchange='change_hospital_img(this,event)'>"+
+                        "<input type='file' style='display:none;' id='hospital"+hospital_index+"' name='place_image[]' class='form-control' placeholder='Upload image' onchange='change_hospital_img(this,event)'>"+
+                        "<textarea  name='hospitalname'  class='form-control reputed_hospitals'></textarea>"+
                         "<label class='error'  style='color:red; display:none;'></label></div>"+
 "<input type='hidden' class='hospital_id' value="+hospital_index+"> </input>"
                     );      
@@ -1341,11 +1285,12 @@ ctx_c.fillText("Image Preview",90,80);
 
             $(".add_college").click(function(){
                     $('#college').append(
-                        "<div class='col-lg-3' style='margin-top:2%;margin-bottom:2%;'><input type='text' name='collegename'  class='form-control college_and_universities' >"+
+                        "<div class='col-lg-4' style='width: 31.333%; !important'>"+
                         "<div class='canvas_holder'>"+
-                        "<canvas class='canvas_block' id='canvas_college"+college_index+"'></canvas>"+
+                        "<canvas class='canvas_block' style='cursor:pointer;' onclick='javascript:$(college"+college_index+").click();' id='canvas_college"+college_index+"'></canvas>"+
                         "</div>"+
-                        "<input id='college"+college_index+"' type='file' name='place_image[]' class='form-control' placeholder='Upload image' onchange='change_college_img(this,event)'>"+
+                        "<input id='college"+college_index+"' style='display:none;' type='file' name='place_image[]' class='form-control' placeholder='Upload image' onchange='change_college_img(this,event)'>"+
+                        "<textarea  name='collegename'  class='form-control college_and_universities'></textarea>"+
                         "<label class='error'  style='color:red; display:none;'></label></div>"+
 "<input type='hidden' class='college_id' value="+college_index+"> </input>"
                     );
@@ -1633,11 +1578,6 @@ function checkCategory(category){
 			    	
 					isValid = true;
 
-			   }else if($.isNumeric($(this).val())){
-			   
-			   	$(this).parent().children('.error').css("display", "block");
-			    	$(this).parent().children('.error').text("Please enter valid Point of Interest Name");
-					isValid = false;
 			   }
 			   else{
 			   
@@ -1657,11 +1597,6 @@ function checkShop(where_to_shop){
 			    	
 					isValid = true;
 
-			   }else if($.isNumeric($(this).val())){
-			   	
-			   	$(this).parent().children('.error').css("display", "block");
-			    	$(this).parent().children('.error').text("Please enter valid Shop Name");
-					isValid = false;
 			   }
 			   else{
 			   
@@ -1681,11 +1616,6 @@ function checkHospital(reputed_hospitals){
 			    	
 					isValid = true;
 
-			   }else if($.isNumeric($(this).val())){
-			   	
-			   	$(this).parent().children('.error').css("display", "block");
-			    	$(this).parent().children('.error').text("Please enter valid Hospital Name");
-					isValid = false;
 			   }
 			   else{
 			   
@@ -1705,11 +1635,6 @@ function checkCollege(college_and_universities){
 			    	
 					isValid = true;
 
-			   }else if($.isNumeric($(this).val())){
-			   	
-			   	$(this).parent().children('.error').css("display", "block");
-			    	$(this).parent().children('.error').text("Please enter valid College and Universities Name");
-					isValid = false;
 			   }
 			   else{
 			   
@@ -1739,85 +1664,194 @@ function checkCollege(college_and_universities){
 	return false;
 } 
  
- $("#save_city").click(function(event){
- 	event.preventDefault();
- //	showSelectsd()
-	 	
- 	
-	if(validateCityData()){		
-	   var formData= new FormData();
-       formData.append("city_name",$('#city_name').val());
-       console.log("here");
-       console.log(formData);
-	  
-		var check_image = 0;
-		
-			var city_image = document.getElementById("city_image");
-         city_image = city_image.files[0];
-         
-         if (city_image == undefined) {
-                city_image = "";
-          }
-         else {
-          check_image = 1;
-          formData.append("city_image", city_image);
-      }
-     
-	//	formData.append("city_image",filep);
-		 formData.append("country",$('#country').val());
-	 formData.append("currency",$('#currency').val());
-	   formData.append("city_name",$('#city_name').val());
-	   formData.append("city_place_id",city_id);
-		formData.append("state",$('#state').val());
-		formData.append("about_city",$('#about_city').val());
-		formData.append("climate",$('#climate').val());
-		formData.append("language",$('#language').val());
-		formData.append("population",$('#population').val());
-		formData.append("timezone",$('#timezone').val());
-		formData.append("category",$('#selCat').val());
-		formData.append("check_image",check_image);
-	//alert(formData);
+ 
+  $("#save_city").click(function(event) {
+     event.preventDefault();
 
+
+     if (validateCityData()) {
+         var formData = new FormData();
+         formData.append("city_name", $('#city_name').val());
+
+
+
+			console.log('=======================>',poi_index);
+
+         for (var i = 0; i < poi_index; i++) {             
+             test="poi" + i;
+             console.log(test)
+             var point_of_interest_image = document.getElementById("poi" + i);
+
+             file = point_of_interest_image.files[0];
+             console.log(file);
+             formData.append("point_of_interest_image" + i, file);
+         }
+         
+         console.log('=======================>',poi_index);
+         
+         //return false;
+
+         formData.append("poi_range", poi_index);
+
+         //alert(shop_index);
+         for (var i = 0; i < shop_index; i++) {
+             var shop_image = document.getElementById("shop" + i);
+             file = shop_image.files[0];
+             formData.append("shop_image" + i, file);
+         }
+         formData.append("shop_range", shop_index);
+
+         for (var i = 0; i < hospital_index; i++) {
+             var hospital_image = document.getElementById("hospital" + i);
+             file = hospital_image.files[0];
+             formData.append("hospital_image" + i, file);
+         }
+         formData.append("hospital_range", hospital_index);
+
+         for (var i = 0; i < college_index; i++) {
+             var college_image = document.getElementById("college" + i);
+             file = college_image.files[0];
+             formData.append("college_image" + i, file);
+         }
+
+         formData.append("college_range", college_index);
+         
+         
+          var poi_list = []
+         poi_list = $('.poi_status').map(function() {
+
+             return $(this).val();
+         }).get();
+         
+         //alert(poi_list);
+         //return false;
+ 
+
+         var point_of_interest_list = []
+         point_of_interest_list = $('.interest_name').map(function() {
+
+             return $(this).val();
+         }).get();
+         //alert(point_of_interest_list);
+         
+
+
+         var shop_list = []
+         shop_list = $('.where_to_shop').map(function() {
+
+             return $(this).val();
+         }).get();
+         //alert(shop_list);
+
+         var hospital_list = []
+         hospital_list = $('.reputed_hospitals').map(function() {
+
+             return $(this).val();
+         }).get();
+         //alert(hospital_list);
+
+         var college_list = []
+         college_list = $('.college_and_universities').map(function() {
+
+             return $(this).val();
+         }).get();
+
+         var point_of_interest_id_list = []
+         $(".interest_place_id").each(function() {
+             point_of_interest_id_list.push($(this).val()+'_N');
+         });
+
+         var shop_id_list = []
+         $(".shop_id").each(function() {
+
+             shop_id_list.push($(this).val()+'_N');
+         });
+
+         var hospital_id_list = []
+         $(".hospital_id").each(function() {
+             hospital_id_list.push($(this).val()+'_N');
+         });
+
+         var college_id_list = []
+         $(".college_id").each(function() {
+             college_id_list.push($(this).val()+'_N');
+         });
+
+         var check_image = 0;
+
+         var city_image = document.getElementById("city_image");
+         city_image = city_image.files[0];
+
+         if (city_image == undefined) {
+             city_image = "";
+         } else {
+             check_image = 1;
+             formData.append("city_image", city_image);
+         }
+
+         //	formData.append("city_image",filep);
+         formData.append("country", $('#country').val());
+         formData.append("currency", $('#currency').val());
+         formData.append("city_name", $('#city_name').val());
+         formData.append("city_place_id", city_id);
+         formData.append("state", $('#state').val());
+         formData.append("about_city", $('#about_city').val());
+         formData.append("climate", $('#climate').val());
+         formData.append("language", $('#language').val());
+         formData.append("population", $('#population').val());
+         formData.append("timezone", $('#timezone').val());
+         formData.append("category", $('#selCat').val());
+         formData.append("check_image", check_image);
+         //alert(formData);
+         formData.append("college_id_list", college_id_list);
+         formData.append("hospital_id_list", hospital_id_list);
+         formData.append("shop_id_list", shop_id_list);
+
+         formData.append("point_of_interest_id_list", point_of_interest_id_list);
+
+         formData.append("point_of_interest_list", point_of_interest_list);
+         formData.append("shop_list", shop_list);
+         formData.append("hospital_list", hospital_list);
+         formData.append("college_list", college_list);
+          formData.append("poi_status_list", poi_list);
+         
+
+
+
+         $.ajax({
+             type: 'POST',
+             url: '/update-city/',
+             data: formData,
+             cache: false,
+             processData: false,
+             contentType: false,
+             success: function(response) {
+                 if (response.success == 'true') {
+                     $("#affiliate-modal").modal('show');
+                 } else {
+                     $("#error-modal").modal('show');
+                 }
+             },
+             beforeSend: function() {
+                 $("#processing").css('display', 'block');
+             },
+             complete: function() {
+                 $("#processing").css('display', 'none');
+             },
+             error: function(response) {
+                 alert('error');
+             }
+         });
+     }
+ });
 	
-	$.ajax({
-		type : 'POST',
-		url  : '/update-city/',
-		data : formData,
-		cache:false,
-		processData:false,
-		contentType:false,
-		success: function(response) {
-			if(response.success=='true'){
-			//$("#form_wizard_1").bootstrapWizard('show',1);
-			//alert('success');
-			
-		 $('.nav-tabs a[href="#tab2"]').tab('show');
-			$("#city_id").val(response.city_place_id);
-				//$('#myModal').modal('hide');
-				//$("#success_modal").modal('show');
-			}
-		else{		
-		$("#error-modal").modal('show');
-			}
-		},
-			beforeSend: function () {
-   $("#processing").css('display','block');
-   },
-   complete: function () {
-       $("#processing").css('display','none');
-   },
-		error: function(response){
-			alert('error');
-		}
-	});
-	}
-	});
 	
-$("#save_place").click(function(event){
+	
+	$("#save_place").click(function(event){
 	event.preventDefault();		
 	if(validatePlaceData()){	
 		var formData= new FormData();	
-        //alert(poi_index);
+       alert(poi_index);
 		for(var i = 0; i < poi_index; i++) {
  		var point_of_interest_image =  document.getElementById("poi"+i);
         //console.log(point_of_interest_image);
@@ -1940,7 +1974,8 @@ $("#save_place").click(function(event){
 		}
 	});
 }			   
-});  
+});
+	
 
     //---------------------------------------validation for number----------------//
 
@@ -1972,8 +2007,10 @@ $("#save_place").click(function(event){
     
 
 function change_poi_img(this_val,event){
+
 //alert($(this_val).attr('id'));
 var id_val = $(this_val).attr('id');
+$('#old_'+id_val).val('true');
 //alert(id_val);
 //var imageLoader1 = document.getElementById(id_val);
 //    imageLoader1.addEventListener('change', handleImage1, false);
@@ -2064,6 +2101,7 @@ var ctx_college = canvas_college.getContext('2d');
 }	
 
 </script>
+
 
 
 </body>
