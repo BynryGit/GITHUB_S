@@ -26,6 +26,7 @@ citystar_urlpatterns = patterns('',
     url(r'^save-citystar/', 'citystarapp.views.save_citystar',name='save-citystar'),
     url(r'^search-star/', 'citystarapp.views.search_star',name='search-star'),     
     url(r'^upload-star-image/', 'citystarapp.views.upload_star_image',name='upload_star_image'),        
-    url(r'^remove-star-image/', 'citystarapp.views.remove_star_image',name='remove_star_image'),             
+    url(r'^remove-star-image/', 'citystarapp.views.remove_star_image',name='remove_star_image'),
+    url(r'^get_star_dates/', 'citystarapp.views.get_star_dates',name='get_star_dates'),
        
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

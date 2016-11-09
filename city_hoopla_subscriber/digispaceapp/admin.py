@@ -43,7 +43,6 @@ admin.site.register(PremiumService);
 admin.site.register(PaymentDetail);
 admin.site.register(ServiceRateCard);
 admin.site.register(AdvertRateCard);
-admin.site.register(AdditionalAmenities);
 admin.site.register(Places);
 admin.site.register(ConsumerProfile);
 admin.site.register(Consumer_Feedback);
@@ -77,6 +76,5 @@ admin.site.register(AdvertCallbacks);
 admin.site.register(SellTicketDetails);
 admin.site.register(CityStarDetails);
 admin.site.register(StarImage);
-admin.site.register(citylife_category);
-admin.site.register(PostFileDetails);
-admin.site.register(PostDetails);
+admin.site.register(CategorywiseAmenity);
+

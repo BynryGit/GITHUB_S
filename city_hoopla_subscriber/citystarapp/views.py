@@ -35,10 +35,11 @@ from django.views.decorators.cache import cache_control
 # HTTP Response
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+import os
 
-SERVER_URL = "http://52.40.205.128"
-#SERVER_URL = "http://52.66.144.182"
-#SERVER_URL = "http://192.168.0.125:8011"
+#SERVER_URL = "http://52.40.205.128"
+SERVER_URL = "http://52.66.169.65"
+#SERVER_URL = "http://192.168.0.125:8017"
 
 #CTI CRM APIs=============================================================================
 
@@ -50,46 +51,76 @@ def starhome(request):
     if not request.user.is_authenticated():
         return redirect('backoffice')
     else:
-        print '-----------city obj-----',request.GET.get('city_id')
+        #print '-----------city obj-----',request.GET.get('city_id')
         city_obj_id = request.GET.get('city_id')
         city_name_obj = City_Place.objects.get(city_place_id=request.GET.get('city_id'))
         city_name = city_name_obj.city_id.city_name
 
         sts_value = request.GET.get('sts_val')
-        print '-------sts_value------',sts_value
-
+        #print '-------sts_value------',sts_value
+        current_status = ''
+        default_status = ''
         if request.GET.get('sts_val'):
-            if request.GET.get('sts_val') =='1' or request.GET.get('sts_val')=='0':
+            if request.GET.get('sts_val') =='current' or request.GET.get('sts_val')=='default' or request.GET.get('sts_val')=='expired' or request.GET.get('sts_val')=='active' or request.GET.get('sts_val')=='deactivated' :
                 sts = request.GET.get('sts_val')
                 user_obj = CityStarDetails.objects.filter(city=request.GET.get('city_id'),status=sts)
-                print '-----------user obj--in if---',user_obj
+                #print '-----------user obj--in if---',user_obj
+                sts_value = sts_value.title()
 
             else:
                 user_obj = CityStarDetails.objects.filter(city=request.GET.get('city_id'))
-                print '-----------user obj-- in else 1---',user_obj
+                #print '-----------user obj-- in else 1---',user_obj
         else:
             user_obj = CityStarDetails.objects.filter(city=request.GET.get('city_id'))
-            print '-----------user obj---in eles--',user_obj
+            #print '-----------user obj---in eles--',user_obj
+            sts_value = ''
+
+        # try:
+        #     current_status_obj = CityStarDetails.objects.filter(status = 'default',city=request.GET.get('city_id'))
+        #     print '------current status object----',current_status_obj
+        #     current_status = '1'
+        #     print '------current status ----',current_status
+        # except:
+        #     current_status_obj = ''
+        #     print '------current status object----',current_status_obj
+        #     current_status = '0'
+        #     print '------current status ---',current_status
+
+        try:
+            a = CityStarDetails.objects.get(status = 'current',city=request.GET.get('city_id'))
+            current_status = a
+            print '------current status object----',current_status
+        except:
+            # a = CityStarDetails.objects.get(status = 'current',city=request.GET.get('city_id'))
+            # current_status = a
+            print '------current status object----',current_status
+        try:
+            b = CityStarDetails.objects.get(status = 'default',city=request.GET.get('city_id'))
+            default_status = b
+            print '------current status object-1111---',default_status
+        except :
+            # b = CityStarDetails.objects.get(status = 'default',city=request.GET.get('city_id'))
+            # default_status = b
+            print '------current status object-1111---',default_status
+
 
         star_list=[]
         data={}
         star_count = len(user_obj)
 
         for obj in user_obj:
-            print '-------obj-----',obj
-            print '-------image-------',obj.image
-            print '-------city-------',obj.city
-            print '-----------datetime now---------',datetime.now().strftime("%d/%m/%Y")
-            print '-----------end time now---------',obj.end_date.strftime("%d/%m/%Y")
+            #print '-------obj-----',obj
+            #print '-------image-------',obj.image
+            #print '-------city-------',obj.city
+            #print '-----------datetime now---------',datetime.now().strftime("%d/%m/%Y")
+            #print '-----------end time now---------',obj.end_date.strftime("%d/%m/%Y")
             sdate = obj.start_date.strftime("%d/%m/%Y")
             tdate = datetime.now().strftime("%d/%m/%Y")
             edate = obj.end_date.strftime("%d/%m/%Y")
-            if tdate == edate :
-                obj.status = '0'
-                obj.save()
-            if tdate == sdate :
-                obj.status = '1'
-                obj.save()
+
+            # if tdate == sdate :
+            #     obj.status = '1'
+            #     obj.save()
             if obj.start_date.strftime("%d/%m/%Y"):
                 start_date = obj.start_date.strftime("%d/%m/%Y")
             else:
@@ -97,20 +128,21 @@ def starhome(request):
             star={'id':obj.citystarID,'title':obj.title,
                        'name':obj.name,
                        'summary':obj.summary,
+                       'status':obj.status,
                        'image':SERVER_URL + obj.image.url,
                        'city':obj.city,
                        'start_date':start_date,
                        'end_date':obj.end_date.strftime("%d/%m/%Y"),
-                       'likes':obj.likes,
-                       'views':obj.views,
+                       'likes': str(CityStar_Like.objects.filter(citystarID=obj.citystarID).count()),
+                       'views': str(CityStar_View.objects.filter(citystarID=obj.citystarID).count()),
                        'status':obj.status,
-                       'favourites':obj.favourites,
                        'shares':obj.shares
+
             }
 
             star_list.append(star)
-        data={'username':request.session['login_user'],'star_list':star_list,'city_id':str(city_obj_id),'city_name':str(city_name),'star_count':star_count}
-        print data
+        data={'username':request.session['login_user'],'star_list':star_list,'default_status':default_status,'current_status':current_status,'status_value':sts_value,'city_id':str(city_obj_id),'city_name':str(city_name),'star_count':star_count}
+
         return render(request,'City_Star/star_homepage.html',data)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -125,64 +157,78 @@ def citystar_home(request):
 
         city_obj = City_Place.objects.all()
         for c in city_obj:
-            print '------c-------',c
+            #print '---------default stars----',CityStarDetails.objects.filter(city=42,status='default')
             city=c.city_id.city_name
+            print '------city-----',city
             country = c.country_id.country_name
+            #country=''
+
             if c.city_image:
                 image=SERVER_URL + c.city_image.url
                 print '---------image----',image
             else:
                 image=''
-            #country = c.state_id.
 
-            #city_list={'city':city,'city_id':c,'image':image}
-            #citylist.append(city_list)
-            #if CityStarDetails.objects.get(city=c,status='1'):
             try:
-                user_obj = CityStarDetails.objects.get(city=c,status='1')
-                print '-----------user obj-----',user_obj
-                #for obj in user_obj:
-                #print '-------obj-----',obj
-                #print '-------status-------',obj.status
-                #if obj.status == '1':
+                today_date = datetime.now().strftime("%d/%m/%Y")
+                print '-------------234234234324234324-----------'
+                #if CityStarDetails.objects.get(city=str(c),status='current'):
+                try:
+                    user_obj = CityStarDetails.objects.get(city=c,status='current')
+                    print '-----------user obj-----',user_obj
+                    print '-----------------i----------'
+                    sid=user_obj.citystarID
+                    stitle=user_obj.title
+                    sstatus=user_obj.status
+                    sname=user_obj.name
+                    ssummary=user_obj.summary
+                    simage=SERVER_URL + user_obj.image.url
+                    scity=user_obj.city.city_id.city_name
+                    slike= str(CityStar_Like.objects.filter(citystarID=user_obj.citystarID).count())
+                    sview= str(CityStar_View.objects.filter(citystarID=user_obj.citystarID).count())
+                    sshares=user_obj.shares
 
-                #if user_obj.end_date == datetime.now()
-                print '-----------------i----------'
-                sid=user_obj.citystarID
-                print '------sid-----',sid
-                stitle=user_obj.title
-                sstatus=user_obj.status
-                sname=user_obj.name
-                ssummary=user_obj.summary
-                simage=SERVER_URL + user_obj.image.url
-                scity=user_obj.city.city_id.city_name
-                slikes=user_obj.likes
-                sviews=user_obj.views
-                sshares=user_obj.shares
-                # star={'id':user_obj.citystarID,'title':user_obj.title,'status':user_obj.status,
-                #            'name':user_obj.name,
-                #            'summary':user_obj.summary,
-                #            'image':SERVER_URL + user_obj.image.url,
-                #            'city':user_obj.city.city_id.city_name,
-                #            'likes':user_obj.likes,
-                #            'views':user_obj.views,
-                #            'favourites':user_obj.favourites,
-                #            'shares':user_obj.shares
-                # }
+                    star={'country':country,'city':city,'city_id':c,'cimage':image,'id':sid,'title':stitle,'status':sstatus,'name':sname,
+                      'summary':ssummary,'image':simage,'likes':slike,'views':sview,'shares':sshares}
+                    star_list.append(star)
 
-                #star_list.append(star)
-                #'country':country,
-                star={'country':country,'city':city,'city_id':c,'cimage':image,'id':sid,'title':stitle,'status':sstatus,'name':sname,
-                  'summary':ssummary,'image':simage,'likes':slikes,'views':sviews,'shares':sshares}
-                star_list.append(star)
+                #elif CityStarDetails.objects.get(city=str(c),status='default'):
+                except:
+                    #obj = CityStarDetails.objects.get(city=str(c),status='default')
+                    #print '--------in if----------'
+                    #star_obj = CityStarDetails.objects.filter(city=c)
+                    star_obj = CityStarDetails.objects.get(city=str(c),status='default')
+                    # for so in star_obj:
+                    #     sdate = (so.start_date).strftime("%d/%m/%Y")
+                    #     edate = (so.end_date).strftime("%d/%m/%Y")
+                    #     if sdate < today_date < edate:
+                    #         print '----a-------'
+                    #         user_obj = CityStarDetails.objects.get(city=c,status='default')
+                    sid=star_obj.citystarID
+                    stitle=star_obj.title
+                    sstatus=star_obj.status
+                    sname=star_obj.name
+                    ssummary=star_obj.summary
+                    simage=SERVER_URL + star_obj.image.url
+                    scity=star_obj.city.city_id.city_name
+                    slike= str(CityStar_Like.objects.filter(citystarID=star_obj.citystarID).count())
+                    sview= str(CityStar_View.objects.filter(citystarID=star_obj.citystarID).count())
+                    sshares=star_obj.shares
+
+                    star={'country':country,'city':city,'city_id':c,'cimage':image,'id':sid,'title':stitle,'status':sstatus,'name':sname,
+                      'summary':ssummary,'image':simage,'likes':slike,'views':sview,'shares':sshares}
+                    star_list.append(star)
+                    # else:
+                    #     pass
+
             except:
                 print '--------in else--------'
                 star={'country':country,'city':city,'city_id':c,'cimage':image,'id':'','title':'','status':'','name':'',
                   'summary':'','image':'','likes':'','views':'','shares':''}
                 star_list.append(star)
-        print star_list
+        #print star_list
         data={'username':request.session['login_user'],'star_list':star_list}
-        print data
+        #print data
         return render(request,'City_Star/citystar_home.html',data)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -191,60 +237,130 @@ def add_citystar(request):
         return redirect('backoffice')
     else:
         print '-------city id---------',request.GET.get('city_id')
-        data={'username':request.session['login_user'],'city_id':request.GET.get('city_id')}
+        city_star_obj = CityStarDetails.objects.filter(city=request.GET.get('city_id'))
+        print '----------city_star_obj--------',city_star_obj
+        for co in city_star_obj:
+            city_id = co.city
+        try:
+            if CityStarDetails.objects.get(status='default',city=city_id):
+                print '------in the if--------'
+                default_obj = '1'
+            else:
+                default_obj = '0'
+        except:
+            print '--------in the else------'
+            default_obj = '0'
+
+        cityobj = City_Place.objects.get(city_place_id=request.GET.get('city_id'))
+        print '---------cityobj---------',cityobj
+        city_name = cityobj.city_id.city_name
+        print '-------city_namr-------',city_name
+        data={'default_obj':default_obj,'username':request.session['login_user'],'city_name':city_name,'city_id':request.GET.get('city_id')}
+        print data
         return render(request,'City_Star/add_citystar.html',data)
+
+def get_star_dates(request):
+    print '---------in get start date------'
+    date_list=[]
+    data={}
+    print '-------city id---------',request.GET.get('city_id')
+    city_star_obj = CityStarDetails.objects.filter(status__in=["active","current","expired","default"],city=request.GET.get('city_id'))
+    print '----------city_star_obj--------',city_star_obj
+    for cst in city_star_obj:
+        start_date = cst.start_date.strftime("%m/%d/%Y")
+        end_date = cst.end_date.strftime("%m/%d/%Y")
+        dlist={'start_date':start_date,'end_date':end_date}
+        date_list.append(dlist)
+
+    data={'success':'true','date_list':date_list}
+    print '----------date data------',data
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
 
 def addcitystar(request):
     return render(request,'City_Star/addcitystar.html')
 
+# def activate_citystar(request):
+#     print '---------star id--------',request.GET.get('star_id')
+#     print '---------deactivate date--------',request.GET.get('ddate')
+#     star_obj = CityStarDetails.objects.get(citystarID=request.GET.get('star_id'))
+#     print '------star_obj------',star_obj
+#     city_id = star_obj.city
+#     print '-------city id-----',city_id
+#     try:
+#         act_star_obj = CityStarDetails.objects.get(status='current',city=city_id)
+#         print '------activate star id-----',act_star_obj
+#         act_star_obj.status = 'deactivated'
+#         act_star_obj.end_date=datetime.now()
+#         act_star_obj.save()
+#         print '-----------star 0-----'
+#     except:
+#         star_obj.status='1'
+#         star_obj.start_date = datetime.now()
+#         #star_obj.end_date = request.GET.get('ddate')
+#         star_obj.end_date = datetime.strptime(request.GET.get('ddate'),"%d/%m/%Y")
+#         star_obj.save()
+#         print '-----------star 1-----'
+#         data = {'success': 'true','city_id':str(city_id)}
+#         return HttpResponse(json.dumps(data), content_type='application/json')
+#
+#     star_obj.status='1'
+#     star_obj.start_date = datetime.now()
+#     #star_obj.end_date = request.GET.get('ddate')
+#     star_obj.end_date = datetime.strptime(request.GET.get('ddate'),"%d/%m/%Y")
+#     star_obj.save()
+#     print '-----------star 3-----'
+#
+#     data = {'success': 'true','city_id':str(city_id)}
+#     return HttpResponse(json.dumps(data), content_type='application/json')
+
 def activate_citystar(request):
     print '---------star id--------',request.GET.get('star_id')
-
-    print '---------deactivate date--------',request.GET.get('ddate')
-
+    #print '---------deactivate date--------',request.GET.get('ddate')
     star_obj = CityStarDetails.objects.get(citystarID=request.GET.get('star_id'))
     print '------star_obj------',star_obj
     city_id = star_obj.city
     print '-------city id-----',city_id
-    # if CityStarDetails.objects.get(status='1',city=city_id):
-    #     #CityStarDetails.objects.get(status='1',city=city_id)
-    #     act_star_obj = CityStarDetails.objects.get(status='1',city=city_id)
-    #     print '------activate star id-----',act_star_obj
-    #     act_star_obj.status = '0'
-    #     act_star_obj.end_date=datetime.now()
-    #     act_star_obj.save()
-    #     print '-----------star 0-----'
-    # else:
-    #     print '-------in else-------'
-    #     pass
-
     try:
-        #CityStarDetails.objects.get(status='1',city=city_id)
-        act_star_obj = CityStarDetails.objects.get(status='1',city=city_id)
+        act_star_obj = CityStarDetails.objects.get(citystarID=request.GET.get('star_id'),city=city_id)
         print '------activate star id-----',act_star_obj
-        act_star_obj.status = '0'
+        act_star_obj.status = 'deactivated'
         act_star_obj.end_date=datetime.now()
         act_star_obj.save()
-        print '-----------star 0-----'
+
     except:
-        star_obj.status='1'
-        star_obj.start_date = datetime.now()
-        #star_obj.end_date = request.GET.get('ddate')
-        star_obj.end_date = datetime.strptime(request.GET.get('ddate'),"%d/%m/%Y")
-        star_obj.save()
-        print '-----------star 1-----'
-        data = {'success': 'true','city_id':str(city_id)}
-        return HttpResponse(json.dumps(data), content_type='application/json')
-
-    star_obj.status='1'
-    star_obj.start_date = datetime.now()
-    #star_obj.end_date = request.GET.get('ddate')
-    star_obj.end_date = datetime.strptime(request.GET.get('ddate'),"%d/%m/%Y")
-    star_obj.save()
-    print '-----------star 1-----'
-
+        pass
     data = {'success': 'true','city_id':str(city_id)}
     return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+# def auto_activate_citystar(request):
+#     print '---------activation date--------',datetime.now().strftime("%d/%m/%Y")
+#     try:
+#         act_date = datetime.now().strftime("%d/%m/%Y")
+#
+#         star_obj = CityStarDetails.objects.filter(start_date=act_date)
+#         for cs in star_obj:
+#             cs.status = 'current'
+#             cs.end_date=datetime.now()
+#             cs.save()
+#
+#     except:
+#         pass
+#
+# def auto_deactivate_citystar(request):
+#     print '---------activation date--------',datetime.now().strftime("%d/%m/%Y")
+#     try:
+#         deact_date = datetime.now().strftime("%d/%m/%Y")
+#         star_obj = CityStarDetails.objects.filter(end_date=deact_date)
+#         for cs in star_obj:
+#             cs.status = 'deactivated'
+#             cs.end_date=datetime.now()
+#             cs.save()
+#
+#     except:
+#         pass
+
 
 @csrf_exempt
 def search_starcity(request):
@@ -262,13 +378,21 @@ def edit_citystar(request):
         s=''
         obj = CityStarDetails.objects.get(citystarID=request.GET.get('star_id'))
         print '-----------user obj-----',obj
+        city_id = obj.city
+        try:
+            if CityStarDetails.objects.get(status='default',city=city_id):
+                print '------in the if--------'
+                default_obj = '1'
+            else:
+                default_obj = '0'
+        except:
+            print '--------in the else------'
+            default_obj = '0'
         str_obj = StarImage.objects.filter(star_id=request.GET.get('star_id'))
         print '----------star obj------',str_obj
         for s in str_obj:
             print '----------starobj-------',s
             si_list.append(s)
-
-        #for obj in user_obj:
 
         print '-------image-------',obj.citystarID
         print '-------city image id-------',s
@@ -320,14 +444,7 @@ def edit_citystar(request):
             achievements = obj.achievements
         else:
             achievements=''
-        if obj.likes:
-            likes = obj.likes
-        else:
-            likes=''
-        if obj.views:
-            views = obj.views
-        else:
-            views=''
+
         if obj.shares:
             shares = obj.shares
         else:
@@ -346,15 +463,14 @@ def edit_citystar(request):
                    'image':SERVER_URL + obj.image.url,
                    'image_file':obj.image,
                    'city':obj.city,
+                   'city_name':obj.city.city_id.city_name,
                    'start_date':obj.start_date.strftime("%d/%m/%Y"),
                    'end_date':obj.end_date.strftime("%d/%m/%Y"),
                    'status':obj.status,
-                   'likes':likes,
-                   'views':views,
-                   'favourites':obj.favourites,
                    'shares':shares,
                    'si_list':si_list,
-                   'img':s
+                   'img':s,
+                   'default_obj':default_obj
         }
         #print '-------star_obj attachments-----',obj.attachment_list
         print data
@@ -365,12 +481,83 @@ def edit_citystar(request):
 def update_citystar(request):
     print '---------image file--------',request.POST.get('display_image1')
     data={}
-    #print '---------user_img file--------',request.POST.get('user_img')
+    print '---------city--------',request.POST.get('city')
+    status_val=''
+
+    print '---------status--------',request.POST.get('status')
+    print '---------status--------',request.POST.get('dstatus')
+    today_date = datetime.now().strftime("%d/%m/%Y")
+    print '--------today_date------',today_date
+    try:
+        sdate = datetime.strptime(request.POST.get('activate_date'),"%d/%m/%Y")
+        edate = datetime.strptime(request.POST.get('deactivate_date'),"%d/%m/%Y")
+        sdate = sdate.strftime("%d/%m/%Y")
+        print '-------sdate----------',sdate
+        print '-------sdate----------',edate
+    except:
+        pass
+
+    status_val = request.POST.get('status')
+    print '--------status val---1-----',status_val
+
+    try:
+        print '---------------in try-default-------'
+        if request.POST.get('dstatus') == 'default':
+            print '---------in if 123232323------------'
+            if CityStarDetails.objects.get(status='default',city=request.POST.get('city')):
+                print '-------in the if default----------'
+                default_star_obj = CityStarDetails.objects.get(status='default',city=request.POST.get('city'))
+                default_star_obj = default_star_obj.citystarID
+                print '-----------default-star-obj---------',default_star_obj
+                print '-----------default-star-o id---------',request.POST.get('id')
+                if str(default_star_obj) == str(request.POST.get('id')):
+                    pass
+                else:
+                    data = {'success': 'default-false'}
+                    return HttpResponse(json.dumps(data), content_type='application/json')
+
+        elif today_date == sdate:
+            print '-------in date comparison-----'
+            status_val = 'current'
+            print '--------status val---2-----',status_val
+
+        elif sdate and edate:
+            print '-------in date comparison-----'
+            status_val = 'active'
+            print '--------status val---4545-----',status_val
+
+        elif request.POST.get('status') == '':
+            status_val = 'active'
+            print '--------status val---3-----',status_val
+
+        # else:
+        #     print '-------in the else default----------'
+        #     status_val = 'default'
+        #     print '--------status val---4-----',status_val
+
+    except:
+        pass
+
+    if request.POST.get('dstatus') == 'default':
+        print '---------in if ----status------'
+        print '--------status val---5-----',status_val
+        status_val = 'default'
+        start_date = datetime.now()
+        end_date = datetime.now()
+    else:
+        print '---------in else ----status------'
+        start_date = datetime.strptime(request.POST.get('activate_date'),"%d/%m/%Y")+ timedelta(hours=6)
+        end_date = datetime.strptime(request.POST.get('deactivate_date'),"%d/%m/%Y")+ timedelta(hours=6)
+
+
+
     city_obj = City_Place.objects.get(city_place_id=request.POST.get('city'))
     print '---------city_obj--------',city_obj
     print '---------city_place_id obj--------',city_obj.city_place_id
+    a = city_obj.city_place_id
+    print '---------city_place_id obj a--------',a
     try:
-        print '------in try--------'
+        print '------in try--------',status_val
         star_obj = CityStarDetails(citystarID = request.POST.get('id'))
         print '-------------star object------',star_obj
         #pdb.set_trace()
@@ -384,20 +571,23 @@ def update_citystar(request):
         star_obj.education = request.POST.get('education')
         star_obj.summary = request.POST.get('summary')
         star_obj.city = city_obj
-        star_obj.occupation = request.POST.get('occupation')
+        star_obj.occupation = request.POST.get('prof')
         star_obj.description = request.POST.get('abs')
-        star_obj.achievements = request.POST.get('achievements')
-        star_obj.status = request.POST.get('status')
-        star_obj.likes = request.POST.get('likes')
-        star_obj.views = request.POST.get('views')
+        star_obj.achievements = request.POST.get('awards')
+        star_obj.email = request.POST.get('email')
+        #star_obj.status = request.POST.get('status')
+        star_obj.status = status_val
         star_obj.shares = request.POST.get('shares')
         try :
             star_obj.image = request.FILES['display_image']
         except:
             star_obj.image = request.POST.get('display_image1')
-        star_obj.start_date = datetime.strptime(request.POST.get('activate_date'),"%d/%m/%Y")
-        star_obj.end_date = datetime.strptime(request.POST.get('deactivate_date'),"%d/%m/%Y")
+        #star_obj.start_date = datetime.strptime(request.POST.get('activate_date'),"%d/%m/%Y")
+        star_obj.start_date = start_date
+        #star_obj.end_date = datetime.strptime(request.POST.get('deactivate_date'),"%d/%m/%Y")
+        star_obj.end_date = end_date
         star_obj.updation_date = datetime.now()
+        star_obj.updation_by = request.session['login_user']
 
         star_obj.save()
 
@@ -408,8 +598,8 @@ def update_citystar(request):
         attachment_list = request.POST.get('attachments')
         save_attachments(attachment_list, star_obj)
         print '--------attachment list-------',attachment_list
-        data = {'username':request.session['login_user'],'success': 'true','city_place_obj':city_obj.city_place_id,'city_id':str(city_obj),'star_id':str(star_obj)}
-
+        data = {'username':request.session['login_user'],'success': 'true','city_place_obj':str(request.POST.get('city')),'city_id':str(city_obj),'star_id':str(star_obj)}
+        print '------data-----',data
     except Exception, e:
         print 'Exception ', e
         data = {'username':request.session['login_user'],'success': 'false'}
@@ -422,6 +612,8 @@ def viewstarprofile(request):
 
     #for obj in user_obj:
     print '-------image-------',obj.citystarID
+    #like_obj = CityStar_Like.objects.get(citystarID=obj.citystarID)
+    #view_obj = CityStar_View.objects.get(citystarID=obj.citystarID)
     data={'username':request.session['login_user'],'id':obj.citystarID,'title':obj.title,'name':obj.name,'address':obj.address1,
                'phone':obj.phone,
                'email':obj.email,
@@ -438,9 +630,8 @@ def viewstarprofile(request):
                'start_date':obj.start_date.strftime("%d/%m/%Y"),
                'end_date':obj.end_date.strftime("%d/%m/%Y"),
                'status':obj.status,
-               'likes':obj.likes,
-               'views':obj.views,
-               'favourites':obj.favourites,
+               'likes' : str(CityStar_Like.objects.filter(citystarID=obj.citystarID).count()),
+               'views' : str(CityStar_View.objects.filter(citystarID=obj.citystarID).count()),
                'shares':obj.shares
     }
     print data
@@ -450,21 +641,54 @@ def search_star(request):
     print '-----keywords---------',request.POST.get('keyword')
 
 @csrf_exempt
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def save_citystar(request):
-    cst_obj = CityStarDetails.objects.get(status='1',city=request.POST.get('city'))
-    print '-------cst_obj--------',cst_obj
-    try:
-        cst_act_obj = CityStarDetails.objects.filter(start_date=request.POST.get('activate_date'),city=request.POST.get('city'))
-        print '--------cstar act date------',cst_act_obj
-    except:
-        cst_act_obj = ''
-    status_val = ''
+
     print '---------status--------',request.POST.get('status')
-    if request.POST.get('status') == 'status_1':
-        status_val = '1'
-        cst_obj.status='0'
-        cst_obj.end_date=datetime.now()
-        cst_obj.save()
+    today_date = datetime.now().strftime("%d/%m/%Y")
+    print '--------today_date------',today_date
+    try:
+        sdate = datetime.strptime(request.POST.get('activate_date'),"%d/%m/%Y")
+        sdate = sdate.strftime("%d/%m/%Y")
+        print '-------sdate----------',sdate
+    except:
+        pass
+    # if today_date == sdate:
+    #     print '-------in date comparison-----'
+    #     status_val = 'current'
+
+    try:
+        if request.POST.get('status') == 'default':
+            if CityStarDetails.objects.get(status='default',city=request.POST.get('city')):
+                print '-------in the if default----------'
+                data = {'success': 'default-false'}
+                return HttpResponse(json.dumps(data), content_type='application/json')
+
+        elif today_date == sdate:
+            print '-------in date comparison-----'
+            status_val = 'current'
+
+        elif request.POST.get('status') == '':
+            status_val = 'active'
+
+        else:
+            print '-------in the else default----------'
+            status_val = 'default'
+
+    except:
+        pass
+
+    if request.POST.get('status') == 'default':
+        print '---------in if ----status------'
+        status_val='default'
+        start_date = datetime.now()
+        end_date = datetime.now()
+    else:
+        print '---------in else ----status------'
+        start_date = datetime.strptime(request.POST.get('activate_date'),"%d/%m/%Y")+ timedelta(hours=6)
+        end_date = datetime.strptime(request.POST.get('deactivate_date'),"%d/%m/%Y")+ timedelta(hours=6)
+
+
     print '---------name--------',request.POST.get('title')
     print '---------city--------',request.POST.get('city')
     city_obj = City_Place.objects.get(city_place_id=request.POST.get('city'))
@@ -480,20 +704,20 @@ def save_citystar(request):
             experience = request.POST.get('exp'),
             education = request.POST.get('education'),
             summary = request.POST.get('summary'),
-            occupation = request.POST.get('occupation'),
-            description = request.POST.get('description'),
-            achievements = request.POST.get('achievements'),
+            occupation = request.POST.get('prof'),
+            description = request.POST.get('abs'),
+            achievements = request.POST.get('awards'),
+            email = request.POST.get('email'),
             image = request.FILES['display_image'],
             city = city_obj,
-            start_date = datetime.strptime(request.POST.get('activate_date'),"%d/%m/%Y"),
-            #end_date = request.POST.get('deactivate_date'),
-            end_date = datetime.strptime(request.POST.get('deactivate_date'),"%d/%m/%Y"),
+            #start_date = datetime.strptime(request.POST.get('activate_date'),"%d/%m/%Y"),
+            #end_date = datetime.strptime(request.POST.get('deactivate_date'),"%d/%m/%Y"),
+            start_date = start_date,
+            end_date = end_date,
             status = status_val,
-            likes = '0',
-            views = '0',
-            favourites = request.POST.get('favourites'),
             shares = '0',
             creation_date = datetime.now(),
+            creation_by = request.session['login_user'],
         )
         star_obj.save()
         print '--------star id------',star_obj
@@ -508,6 +732,8 @@ def save_citystar(request):
         print 'Exception ', e
         data = {'success': 'false'}
     return HttpResponse(json.dumps(data), content_type='application/json')
+
+
 
 
 @csrf_exempt
@@ -549,21 +775,52 @@ def save_attachments(attachment_list, star_id):
         print 'Exception ', e
     return HttpResponse(json.dumps(data), content_type='application/json')
 
+
+# def get_advert_images(request):
+#     advert_id = request.GET.get('advert_id')
+#     image_list = []
+#     advert_image = AdvertImage.objects.filter(advert_id=advert_id)
+#     for images in advert_image:
+#         image_path = images.advert_image.url
+#         filesize = os.stat('/home/admin1/Prod_backup/DigiSpace/' + images.advert_image.url).st_size
+#         image_size = round(filesize,2) #/ float(1024)
+#         image_path = image_path.split('/')
+#         image_name = image_path[-1]
+#         image_url = SERVER_URL + images.advert_image.url
+#         image_id = images.advert_image_id
+#         advert_image_data = {
+#             "image_url": image_url,
+#             "image_size": image_size,
+#             "image_name": image_name,
+#             "image_id": image_id,
+#             "image_thumbnail": '/home/admin1/Prod_backup/DigiSpace/' + images.advert_image.url
+#         }
+#         image_list.append(advert_image_data)
+#     data = {'data': 'true','image_list':image_list}
+#     return HttpResponse(json.dumps(data), content_type='application/json')
+
 def uploaded_images(request):
     try:
         print '----------in uploaded images--',request.GET.get('star_id')
         star_id = request.GET.get('star_id')
         image_list = []
         advert_image = StarImage.objects.filter(star_id=star_id)
+        print '-----------advert image--------',advert_image
         for images in advert_image:
             image_path = images.star_image.url
+            filesize = os.stat('/home/ec2-user/DigiSpace/' + images.star_image.url).st_size
+            image_size = round(filesize,2)
             image_path = image_path.split('/')
+            image_name = image_path[-1]
             image_id = images.star_image_id
+            image_url = SERVER_URL + images.star_image.url
             advert_image_data = {
+                "image_url": image_url,
                 "image_id":image_id,
                 "image_path": SERVER_URL + images.star_image.url,
-                "image_size": "12345",
-                "image_name": image_path[-1]
+                "image_size": image_size,
+                "image_name": image_path[-1],
+                "image_thumbnail": '/home/ec2-user/DigiSpace/' + images.star_image.url
             }
             image_list.append(advert_image_data)
         data = {'image_list': image_list}
@@ -586,3 +843,5 @@ def remove_star_image(request):
     except MySQLdb.OperationalError, e:
         data = {'success': 'false'}
     return HttpResponse(json.dumps(data), content_type='application/json')
+
+

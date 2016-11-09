@@ -818,7 +818,7 @@ hr {
                            style="display: inline-block; color: rgb(16, 245, 182) !important;"
                            aria-hidden="true"></i>
                         <span class="title" style="display: inline-block;width: 72%;">  Bookings 
-									<i class="fa fa-chevron-right" style="float:right; padding-top:7px;"
+                                    <i class="fa fa-chevron-right" style="float:right; padding-top:7px;"
                                        aria-hidden="true"></i>
                         </span>
                     </a>
@@ -859,12 +859,12 @@ hr {
                     <div class="col-sm-12">
                         <div class="col-sm-4 form-group" style="">
                             <div class="input-group form-group" style="width: 257px; margin-top:3px;">
-							                             <span class="input-group-btn">
-																	<span style=" height: 34px;"
+                                                         <span class="input-group-btn">
+                                                                    <span style=" height: 34px;"
                                                                           class="btn btn btn-default">
-								                                        <span class="fa fa-search"></span>
-								                                    </span>
-																</span>
+                                                                        <span class="fa fa-search"></span>
+                                                                    </span>
+                                                                </span>
                                 <input style=" font-size: 14px; " type="text"
                                        class="form-control " id="txtSearch"
                                        placeholder="Search Bookings" name="s">
@@ -894,7 +894,7 @@ hr {
                         </div>
 
 
-                        <div class="col-sm-2	 form-group" style=" margin-top: 10px;">
+                        <div class="col-sm-2     form-group" style=" margin-top: 10px;">
 
                             <i class="fa fa-filter" style=" font-size: 16px;" aria-hidden="true"></i>
 
@@ -937,8 +937,8 @@ hr {
                                                     <span style="font-weight: 500; font-size: 14px;" class="profile-text area">
                                                         {{consumer.consumer_area}}</span>
                                                     <br>
-                                                    <span style="font-weight: 700; font-size: 14px;" class="profile-text">
-                                                        {{consumer.user_id}}</span>
+                                                   <!--  <span style="font-weight: 700; font-size: 14px;" class="profile-text">
+                                                        {{consumer.user_id}}</span> -->
                                                 </div>
 
                                                 {% if consumer.status_advert == 1 %}
@@ -956,10 +956,10 @@ hr {
 
                                             </div>
                                             <div class="row" style=" padding-left: 12px;">
-                                                <span  style="font-weight: 500; font-size: 14px; ">
+                                                <span class="mobile_no" style="font-weight: 500; font-size: 14px; ">
                                                     {{consumer.consumer_contact_no}} </span> <br>
                                               
-                                                    <span style="font-weight: 500; font-size: 14px; color:#336699;">
+                                                    <span class="email_address" style="font-weight: 500; font-size: 14px; color:#336699;">
                                                         {{consumer.consumer_email_id}}
                                                     </span>
                                                
@@ -1017,113 +1017,110 @@ hr {
         </div>
     </div>
 
-    <div class="model_style">
-        <div class="modal fade bs-modal-lg" id="createNew" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content" style=" margin-left: 168px; width: 453px; height: auto;">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                        <h4 style=" font-size: 18px;">Apply Filters</h4>
+
+    <div class="modal fade bs-modal-lg" id="createNew" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 style=" font-size: 18px;">Apply Filters</h4>
+                </div>
+
+
+                <form id="scheduleFrm">
+                    <div class="row">
+                        <input id="supplier_id" name="supplier_id" hidden type="text" value="110">
                     </div>
 
 
-                    <form id="scheduleFrm">
+                    <div class="modal-body">
                         <div class="row">
-                            <input id="supplier_id" name="supplier_id" hidden type="text" value="110">
+                            <div class="form-group col-lg-12">
+                                <label style=" font-size: 16px;">
+                                    Category </label>
+                                <br>
+                                <select class="form-control sel2" style=" width: 142px;font-size: 14px;color: #797979;"
+                                        name="category_id" id="category_id">
+                                    <option value=""><b> All categories </b></option>
+                                    {% for obj_cat in category_list %}
+                                    <option value="{{obj_cat.category_id}}">{{obj_cat.category_name}}</option>
+                                    {%endfor%}
+                                </select>
+
+                            </div>
+
+                            <div class="form-group col-lg-12">
+                                <label style=" font-size: 16px;"> Time </label>
+                                <br>
+                                <input id="One_week" type="button" class="btn btn-outline green" name="Time"
+                                       value="1W" style="width: 19%;"
+                                       >
+                                <input id="One_month" type="button" class="btn btn-outline green" name="Time"
+                                       value="1M" style="width: 19%;"
+                                       >
+                                <input id="Three_month" type="button" class="btn btn-outline green" name="Time"
+                                       value="3M" style="width: 19%;"
+                                       >
+                                <input id="Six_month" type="button" class="btn btn-outline green" name="Time"
+                                       value="6M" style="width: 19%;"
+                                       >
+                                <input id="date_range" type="button" class="btn btn-outline green" name="Time"
+                                       value="Date Range" style="width: 19%;"
+                                       >
+                            </div>
+                        </div>
+
+                        <br>
+                        <div class="row ">
+                            <div id="active_date" class="form-group col-md-12 "
+                                 style=" margin-left: -14px;    margin-bottom: 0px;margin-top: -22px;">
+                                <div class="form-group col-md-1 " >
+                                    <label class="control-label" style="    margin-top: 5px; font-size: 16px;">
+                                        From</label>
+                                </div>
+                                <div class="form-group col-md-5 " >
+                                    <div class="input-append date form_datetime">
+                                        <input type="text"
+                                            readonly
+                                            name="startDate"
+                                            id="startDate"
+                                            class="form-control date-picker"
+                                        >
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-1 ">
+                                    <label style="    margin-top: 5px; font-size: 16px;">
+                                        To</label>
+                                </div>
+                                <div class="form-group col-md-5 " >
+                                    <div class="input-append date form_datetime">
+                                        <input type="text"
+                                            readonly
+                                            name="endDate"
+                                            id="endDate"
+                                            class="form-control date-picker"
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
 
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="form-group col-lg-12">
-                                    <label style=" font-size: 16px;">
-                                        Category </label>
-                                    <br>
-                                    <select class="form-control sel2" style=" width: 142px;font-size: 14px;color: #797979;"
-                                            name="category_id" id="category_id">
-                                        <option value=""><b> All categories </b></option>
-                                        {% for obj_cat in category_list %}
-                                        <option value="{{obj_cat.category_id}}">{{obj_cat.category_name}}</option>
-                                        {%endfor%}
-                                    </select>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline grey_color " data-dismiss="modal">Cancel
+                            </button>
+                            <button type="button" id="submit_btn" onclick="filter_advert();"
+                                    class="btn btn-outline done_btn">Apply
+                            </button>
 
-                                </div>
+                        </div>
+                </form>
 
-                                <div class="form-group col-lg-12">
-                                    <label style=" font-size: 16px;"> Time </label>
-                                    <br>
-                                    <input id="One_week" type="button" class="btn btn-outline green" name="Time"
-                                           value="1W"
-                                           onclick="activate_daterange();">
-                                    <input id="One_month" type="button" class="btn btn-outline green" name="Time"
-                                           value="1M"
-                                           onclick="activate_daterange();">
-                                    <input id="Three_month" type="button" class="btn btn-outline green" name="Time"
-                                           value="3M"
-                                           onclick="activate_daterange();">
-                                    <input id="Six_month" type="button" class="btn btn-outline green" name="Time"
-                                           value="6M"
-                                           onclick="activate_daterange();">
-                                    <input id="date_range" type="button" class="btn btn-outline green" name="Time"
-                                           value="Date Range"
-                                           onclick="activate_daterange();">
-                                </div>
-                            </div>
-
-                            <br>
-                            <div class="row ">
-                                <div id="active_date" class="form-group col-md-12 "
-                                     style=" margin-left: -14px;    margin-bottom: 0px;margin-top: -22px;">
-
-                                    <div class="form-group col-md-1 " style="width:9.3333%">
-                                        <label style=" font-size: 16px;">
-                                            From</label>
-                                    </div>
-                                    <div class="form-group col-md-5 " style="width: 40.66667%;">
-
-                                        <div class="input-append date form_datetime">
-                                            <input placeholder="DD-MM-YY" style="width: 124px;" name="startDate"
-                                                   id="startDate" size="16" type="text" value="" readonly>
-                                            <i class="fa fa-calendar" aria-hidden="true"></i>
-                                            <span class="add-on"><i class="icon-th"></i></span>
-                                        </div>
-
-                                    </div>
-                                    <div class="form-group col-md-1 ">
-
-                                        <label style=" font-size: 16px;">
-                                            To</label>
-                                    </div>
-                                    <div class="form-group col-md-5 " style="">
-
-                                        <div class="input-append date form_datetime">
-                                            <input placeholder="DD-MM-YY" style="width: 124px;" name="endDate"
-                                                   id="endDate" size="16" type="text" value="" readonly>
-                                            <i class="fa fa-calendar" aria-hidden="true"></i>
-                                            <span class="add-on"><i class="icon-th"></i></span>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-outline grey_color " data-dismiss="modal">Cancel
-                                </button>
-                                <button type="button" id="submit_btn" onclick="filter_advert();"
-                                        class="btn btn-outline done_btn">Apply
-                                </button>
-
-                            </div>
-                    </form>
-
-                </div>
             </div>
         </div>
     </div>
+
 
 
     <!-- END CONTAINER -->
@@ -1231,11 +1228,14 @@ $(document).ready(function(){
 
 
 function filter_advert() {
-	startDate_var = $('#startDate').val()
-	endDate_var = $('#endDate').val()
-	category_name_var = $('#category_id').val()
-	var supplier_id={{request.session.supplier_id}};
-	location.href = '/subscriber-portal/subscriber-booking/?supplier_id='+supplier_id+'&start_date_var='+startDate_var+'&end_date_var='+endDate_var+'&category_var	='+category_name_var+''
+
+    startDate_var = $('#startDate').val()
+    
+    endDate_var = $('#endDate').val()
+    category_name_var = $('#category_id').val()
+
+    var supplier_id={{request.session.supplier_id}};
+    location.href = '/subscriber-portal/subscriber-booking/?supplier_id='+supplier_id+'&start_date_var='+startDate_var+'&end_date_var='+endDate_var+'&category_var='+category_name_var+''
 }
 
 function sort_by(){
@@ -1244,120 +1244,138 @@ function sort_by(){
     location.href = '/subscriber-portal/subscriber-booking/?sort_by='+sortby+''
 }
 
-function activate_daterange() {
+var date_flag = "1";
 
-   $('input[type="button"]').click(function() {
-
-       if($(this).attr('id') == 'One_week') {            
-            
-            var date = new Date();
-
-           //var date = new Date($('#start_'+id).val());
-		        // days = parseInt($('#day_'+id).val(), 10) - 1;
-		        date.setDate(date.getDate() - 7 );
-		        var yyyy = date.getFullYear().toString();
-		        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-		        var dd  = date.getDate().toString();
-		        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        
-				$("#startDate").val(newdate);
-          
-           
-            var date = new Date();
-
-		        var yyyy = date.getFullYear().toString();
-		        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-		        var dd  = date.getDate().toString();
-		        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        
-				$("#endDate").val(newdate);
-
+    function date_init(){
+        $("#startDate").datepicker( "destroy" );
+        $("#endDate").datepicker( "destroy" );
+        $("#startDate").datepicker({
+            dateFormat: 'dd/mm/yy',
+        });
+        $("#endDate").datepicker({
+            dateFormat: 'dd/mm/yy',
+        });
     }
-    else if($(this).attr('id') == 'One_month'){
-                       var date = new Date();
 
-		        date.setDate(date.getDate() - 30 );
-		        var yyyy = date.getFullYear().toString();
-		        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-		        var dd  = date.getDate().toString();
-		        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        
-				$("#startDate").val(newdate);
-          
-           
-            var date = new Date();
+    $("#One_week").click(function() {
+        date_init();
+        var date = new Date();
+        date.setDate(date.getDate() - 7 );
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#startDate").val(newdate);
+        var date = new Date();
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#endDate").val(newdate);
+    });
+    $("#One_month").click(function() {
+        date_init();
+        var date = new Date();
+        date.setDate(date.getDate() - 30 );
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#startDate").val(newdate);
+        var date = new Date();
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#endDate").val(newdate);
+    });
+    $("#Three_month").click(function() {
+        date_init();
+        var date = new Date();
+        date.setDate(date.getDate() - 90 );
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#startDate").val(newdate);
+        var date = new Date();
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#endDate").val(newdate);
+    });
+    $("#Six_month").click(function() {
+        date_init();
+        var date = new Date();
+        date.setDate(date.getDate() - 180 );
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#startDate").val(newdate);
+        var date = new Date();
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#endDate").val(newdate);
+    });
+    $("#date_range").click(function() {
+        $("#startDate").val(null);
+        $("#startDate").datepicker( "destroy" );
+        $("#startDate").datepicker({
+            dateFormat: 'dd/mm/yy',
 
-		        var yyyy = date.getFullYear().toString();
-		        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-		        var dd  = date.getDate().toString();
-		        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        
-				$("#endDate").val(newdate);
-       }
-           else if($(this).attr('id') == 'Three_month'){
-                       var date = new Date();
+        });
+        date_flag = "0";
+        $("#endDate").val(null);
+    });
 
-		        date.setDate(date.getDate() - 90 );
-		        var yyyy = date.getFullYear().toString();
-		        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-		        var dd  = date.getDate().toString();
-		         newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        
-				$("#startDate").val(newdate);
-          
-           
-            var date = new Date();
+    $("#startDate").change(function(){
+        if(date_flag == "0"){
+            var from = $("#startDate").val().split("/");
+            var date = new Date(from[2], from[1] - 1, from[0]);
+            $("#endDate").datepicker( "destroy" );
+            $("#endDate").datepicker({
+                dateFormat: 'dd/mm/yy',
+                minDate: date,
 
-		        var yyyy = date.getFullYear().toString();
-		        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-		        var dd  = date.getDate().toString();
-		        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        
-				$("#endDate").val(newdate);
-       }
-           else if($(this).attr('id') == 'Six_month'){
-                       var date = new Date();
-
-		        date.setDate(date.getDate() - 180 );
-		        var yyyy = date.getFullYear().toString();
-		        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-		        var dd  = date.getDate().toString();
-		        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        
-				$("#startDate").val(newdate);
-          
-           
-            var date = new Date();
-
-		        var yyyy = date.getFullYear().toString();
-		        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-		        var dd  = date.getDate().toString();
-		        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-
-				$("#endDate").val(newdate);
-       }
-                  else if($(this).attr('id') == 'date_range'){
-        
-				$("#startDate").val(null);
-        
-				$("#endDate").val(null);
-       }
- 
-   });
-}
-
-document.getElementById("txtSearch").oninput=function(){
-    var matcher = new RegExp(document.getElementById("txtSearch").value, "gi");
-    for (var i=0;i<document.getElementsByClassName("connect-cat").length;i++) {
-        if (matcher.test(document.getElementsByClassName("name")[i].innerHTML) || matcher.test(document.getElementsByClassName("coupon_code")[i].innerHTML)
-        || matcher.test(document.getElementsByClassName("area")[i].innerHTML) || matcher.test(document.getElementsByClassName("avail_date")[i].innerHTML)
-        || matcher.test(document.getElementsByClassName("expire")[i].innerHTML)) {
-            document.getElementsByClassName("connect-cat")[i].style.display="inline-block";
-        } else {
-            document.getElementsByClassName("connect-cat")[i].style.display="none";
+            });
         }
-    }
-}
+    });
+
+$('#txtSearch').keyup(function(){
+        var valThis = $(this).val().toLowerCase();
+        if(valThis == ""){
+            $('.connect-cat').show();
+        } else {
+            $('.connect-cat').each(function(){
+                var text = $(this).find(".name").text().toLowerCase();
+                (text.indexOf(valThis) >= 0) ? $(this).show() : $(this).hide();
+                if (text.indexOf(valThis) < 0){
+                    var text = $(this).find(".area").text().toLowerCase();
+                    (text.indexOf(valThis) >= 0) ? $(this).show() : $(this).hide();
+                    if (text.indexOf(valThis) < 0){
+                        var text = $(this).find(".mobile_no").text().toLowerCase();
+                        (text.indexOf(valThis) >= 0) ? $(this).show() : $(this).hide();
+                        if (text.indexOf(valThis) < 0){
+                            var text = $(this).find(".email_address").text().toLowerCase();
+                            (text.indexOf(valThis) >= 0) ? $(this).show() : $(this).hide();
+                            if (text.indexOf(valThis) < 0){
+                                var text = $(this).find(".coupon_code").text().toLowerCase();
+                                (text.indexOf(valThis) >= 0) ? $(this).show() : $(this).hide();
+                                if (text.indexOf(valThis) < 0){
+                                    var text = $(this).find(".expire").text().toLowerCase();
+                                    (text.indexOf(valThis) >= 0) ? $(this).show() : $(this).hide();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        };
+    });
 
     </script>
 

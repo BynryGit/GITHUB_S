@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+import os
 # Create your views here.
 from django.shortcuts import render
 from django.contrib.auth.models import User
@@ -36,11 +36,20 @@ import random
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 import urllib2
+import os
+from django.db.models import Count
 
-SERVER_URL = "http://52.40.205.128"
-#SERVER_URL = "http://127.0.0.1:8000" 
+from PIL import Image
+from PIL import ImageFont
+from PIL import ImageDraw
+import textwrap
+import StringIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
-# SERVER_URL="http://192.168.0.126:8080"
+#SERVER_URL = "http://52.66.169.65"   
+SERVER_URL = "http://192.168.0.14:8088" 
+
+#SERVER_URL="http://192.168.0.180:9999"
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def advert_management(request):
     try:
@@ -54,15 +63,21 @@ def advert_management(request):
         else:
             logo = SERVER_URL + '/static/assets/layouts/layout2/img/City_Hoopla_Logo.png'
 
-        if subscriber_obj.secondary_email:
-           secondary_email = subscriber_obj.secondary_email
+        if subscriber_obj.supplier_email:
+           supplier_email = subscriber_obj.supplier_email
         else:
-            secondary_email = '--'    
+            supplier_email = '--'   
             
         if subscriber_obj.secondary_phone_no:
            secondary_phone_no = subscriber_obj.secondary_phone_no
         else:
             secondary_phone_no = '--'  
+
+
+        if subscriber_obj.phone_no:
+           phone_no = subscriber_obj.phone_no
+        else:
+            phone_no = '--' 
 
         # contact_person=subscriber_obj.contact_person
         # title=subscriber_obj.title
@@ -75,10 +90,9 @@ def advert_management(request):
         'subscriber_id':subscriber_obj.supplier_id,
         'subscriber_city':subscriber_obj.city_place_id.city_id.city_name,
         'business_details' :subscriber_obj.business_details,
-        'phone_no':subscriber_obj.phone_no,
+        'phone_no':phone_no,
         'secondary_phone_no':secondary_phone_no,
-        'supplier_email':subscriber_obj.supplier_email,
-        'secondary_email': secondary_email,
+        'supplier_email':supplier_email,
         'contact_person':subscriber_obj.contact_person,
         'contact_no':subscriber_obj.contact_no,
         'contact_email':subscriber_obj.contact_email,
@@ -318,6 +332,214 @@ def advert_management(request):
         data = {'success':'false' }
     return render(request, 'Admin/advert_management.html', data)
 
+@csrf_exempt
+def advert_stat(request):
+    try:
+        data = {}
+        final_list = []
+        final_list1 = []
+        final_list2 = []
+        print "----------------request--------------", request.GET
+        try:
+
+
+            #########################advert_views_total#############################
+            advert_views_total = 0
+            thumbs_count_total = 0
+            shares_count_total = 0
+
+            jan1 = feb1 = mar1 = apr1 = may1 = jun1 = jul1 = aug1 = sep1 = oct1 = nov1 = dec1 = 0
+            jan2 = feb2 = mar2 = apr2 = may2 = jun2 = jul2 = aug2 = sep2 = oct2 = nov2 = dec2 = 0
+            jan3 = feb3 = mar3 = apr3 = may3 = jun3 = jul3 = aug3 = sep3 = oct3 = nov3 = dec3 = 0
+
+            FY_MONTH_LIST = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+            today = date.today()
+            print '.......today.........', today
+            start_date = date(today.year, 01, 01)
+            print '...........start_date..........', start_date
+            end_date = date(today.year, 12, 31)
+
+            #for advert_obj in Advert_list1:
+            advert_obj = Advert.objects.get(advert_id = request.GET.get('advert_id'))
+            advert_id = advert_obj.advert_id
+            advert_nm=advert_obj.advert_name
+            print 'advert_nm',advert_nm
+            supplier_id =advert_obj.supplier_id
+            business_name = advert_obj.supplier_id.business_name
+            advert_views = AdvertView.objects.filter(advert_id=advert_id,
+                                                 creation_date__range=[start_date, end_date]).count()
+            thumbs_count = AdvertLike.objects.filter(advert_id=advert_id,
+                                                     creation_date__range=[start_date, end_date]).count()
+            shares_count = AdvertShares.objects.filter(advert_id=advert_id,
+                                                       creation_date__range=[start_date, end_date]).count()
+
+            advert_views_total = advert_views_total + advert_views
+            thumbs_count_total = thumbs_count_total + thumbs_count
+            shares_count_total = shares_count_total + shares_count
+
+            #######.................Total views Graph........for a year.......########
+
+            FY_MONTH_LIST = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+            today = date.today()
+            start_date = date(today.year, 01, 01)
+            end_date = date(today.year, 12, 31)
+            monthly_count = []
+            # jan,feb,mar,apr,may,jun,jul,aug,sep,octo,nov,dec
+
+            coupon_code_list = AdvertView.objects.filter(advert_id=advert_id,
+                                                     creation_date__range=[start_date, end_date]).extra(
+                select={'month': "EXTRACT(month FROM creation_date)"}).values('month').annotate(
+                count=Count('advert_id'))
+            print "...........coupon_code_list...11....", coupon_code_list
+            list = {}
+
+            for sub_obj in coupon_code_list:
+                # advert_id = sub_obj.advert_id
+                # print 'SS advert SS',advert_id
+                print "sub_obj.get('count')", sub_obj.get('count')
+                if sub_obj.get('month'):
+                    list[sub_obj.get('month')] = sub_obj.get('count') or '0.00'
+                    print list
+
+            for i in FY_MONTH_LIST:
+                try:
+                    monthly_count.append(list[i])
+                except:
+                    monthly_count.append(0)
+
+            jan1 = jan1 + monthly_count[0]
+            print jan1
+            feb1 = feb1 + monthly_count[1]
+            print feb1
+            mar1 = mar1 + monthly_count[2]
+            print mar1
+            apr1 = apr1 + monthly_count[3]
+            may1 = may1 + monthly_count[4]
+            jun1 = jun1 + monthly_count[5]
+            jul1 = jul1 + monthly_count[6]
+            aug1 = aug1 + monthly_count[7]
+            print aug1
+            sep1 = sep1 + monthly_count[8]
+            oct1 = oct1 + monthly_count[9]
+            nov1 = nov1 + monthly_count[10]
+            dec1 = dec1 + monthly_count[11]
+
+            #######.................Total Like Graph........for a year.......########
+
+            FY_MONTH_LIST = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+            today = date.today()
+            print '.......today......AdvertLike...', today
+            start_date = date(today.year, 01, 01)
+            print '...........start_date....AdvertLike......', start_date
+            end_date = date(today.year, 12, 31)
+            monthly_count = []
+            # jan,feb,mar,apr,may,jun,jul,aug,sep,octo,nov,dec
+            coupon_code_list = AdvertLike.objects.filter(advert_id=advert_id,
+                                                         creation_date__range=[start_date, end_date]).extra(
+                select={'month': "EXTRACT(month FROM creation_date)"}).values('month').annotate(
+                count=Count('advert_id'))
+            print "...........coupon_code_list....AdvertLike...", coupon_code_list
+            list = {}
+
+            for sub_obj in coupon_code_list:
+
+                print "sub_obj.get('count')", sub_obj.get('count')
+                if sub_obj.get('month'):
+                    list[sub_obj.get('month')] = sub_obj.get('count') or '0.00'
+                    print list
+
+            for i in FY_MONTH_LIST:
+                try:
+                    monthly_count.append(list[i])
+                except:
+                    monthly_count.append(0)
+
+            jan2 = jan2 + monthly_count[0]
+            print jan2
+            feb2 = feb2 + monthly_count[1]
+            print feb2
+            mar2 = mar2 + monthly_count[2]
+            print mar2
+            apr2 = apr2 + monthly_count[3]
+            may2 = may2 + monthly_count[4]
+            jun2 = jun2 + monthly_count[5]
+            jul2 = jul2 + monthly_count[6]
+            print jul2
+            aug2 = aug2 + monthly_count[7]
+            print aug2
+            sep2 = sep2 + monthly_count[8]
+            oct2 = oct2 + monthly_count[9]
+            nov2 = nov2 + monthly_count[10]
+            dec2 = dec2 + monthly_count[11]
+
+            #######.................Total shares Graph........for a year.......########
+
+            FY_MONTH_LIST = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+            today = date.today()
+            print '.......today.........', today
+            start_date = date(today.year, 01, 01)
+            print '...........start_date..........', start_date
+            end_date = date(today.year, 12, 31)
+            monthly_count = []
+            # jan,feb,mar,apr,may,jun,jul,aug,sep,octo,nov,dec
+            coupon_code_list = AdvertShares.objects.filter(advert_id=advert_id,
+                                                           creation_date__range=[start_date, end_date]).extra(
+                select={'month': "EXTRACT(month FROM creation_date)"}).values('month').annotate(
+                count=Count('advert_id'))
+            print "...........coupon_code_list.......", coupon_code_list
+            list = {}
+
+            for sub_obj in coupon_code_list:
+                print "sub_obj.get('count')", sub_obj.get('count')
+                if sub_obj.get('month'):
+                    list[sub_obj.get('month')] = sub_obj.get('count') or '0.00'
+                    print list
+
+            for i in FY_MONTH_LIST:
+                try:
+                    monthly_count.append(list[i])
+                except:
+                    monthly_count.append(0)
+
+            jan3 = jan3 + monthly_count[0]
+            print jan3
+            feb3 = feb3 + monthly_count[1]
+            print feb3
+            mar3 = mar3 + monthly_count[2]
+            print mar3
+            apr3 = apr3 + monthly_count[3]
+            may3 = may3 + monthly_count[4]
+            jun3 = jun3 + monthly_count[5]
+            jul3 = jul3 + monthly_count[6]
+            aug3 = aug3 + monthly_count[7]
+            print aug3
+            sep3 = sep3 + monthly_count[8]
+            oct3 = oct3 + monthly_count[9]
+            nov3 = nov3 + monthly_count[10]
+            dec3 = dec3 + monthly_count[11]
+
+            data = {'success': 'true', 'advert_nm': advert_nm, 'supplier_id': supplier_id, 
+                    'advert_views_total': advert_views_total, 'thumbs_count_total': thumbs_count_total,
+                    'shares_count_total': shares_count_total, 'jan1': jan1, 'feb1': feb1, 'mar1': mar1, 'apr1': apr1,
+                    'may1': may1, 'jun1': jun1, 'jul1': jul1, 'aug1': aug1, 'sep1': sep1, 'oct1': oct1, 'nov1': nov1,
+                    'dec1': dec1,'business_name':business_name,
+                    'jan2': jan2, 'feb2': feb2, 'mar2': mar2, 'apr2': apr2, 'may2': may2, 'jun2': jun2, 'jul2': jul2,
+                    'aug2': aug2, 'sep2': sep2, 'oct2': oct2, 'nov2': nov2, 'dec2': dec2,
+                    'jan3': jan3, 'feb3': feb3, 'mar3': mar3, 'apr3': apr3, 'may3': may3, 'jun3': jun3, 'jul3': jul3,
+                    'aug3': aug3, 'sep3': sep3, 'oct3': oct3, 'nov3': nov3, 'dec3': dec3}
+
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time',
+                    'username': request.session['login_user']}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    print './........777..........', data
+    return render(request, 'Admin/advert-stat.html', data)
+
+
 def premium_list(business_id):
     premium_ser_list = PremiumService.objects.filter(business_id=business_id)
     premium_service_list = []
@@ -455,7 +677,6 @@ def get_pincode_places(request):
         for pincode in pincode_list1:
             options_data = '<option value="'+ str(pincode.pincode_id) +'">' + str(pincode.pincode) + '</option>'
             pincode_list.append(options_data)
-            print pincode_list
         data = {'pincode_list': pincode_list}
 
     except Exception, ke:
@@ -488,6 +709,256 @@ def get_states(request):
 
 @csrf_exempt
 def save_advert(request):
+    # pdb.set_trace()
+    try:
+        if request.method == "POST":
+            print '===request========', request.POST.get('product_name_list')
+            advert_obj = Advert(
+                supplier_id=Supplier.objects.get(supplier_id=request.POST.get('supplier_id')),
+                category_id=Category.objects.get(category_id=request.POST.get('categ')),
+                advert_name=request.POST.get('advert_title'),
+                contact_name=request.POST.get('contact_name'),
+                contact_no=request.POST.get('phone_no'),
+                website=request.POST.get('website'),
+                latitude=request.POST.get('lat'),
+                longitude=request.POST.get('lng'),
+                short_description=request.POST.get('short_discription'),
+                product_description=request.POST.get('product_discription'),
+                currency=request.POST.get('currency'),
+                country_id = Country.objects.get(country_id=request.POST.get('country')) if request.POST.get('country') else None,
+                # product_price=request.POST.get('product_price'),
+                discount_description=request.POST.get('discount_discription'),
+                email_primary=request.POST.get('email_primary'),
+                email_secondary=request.POST.get('email_secondary'),
+                address_line_1=request.POST.get('address_line1'),
+                address_line_2=request.POST.get('address_line2'),
+                area=request.POST.get('area'),
+                landmark=request.POST.get('landmark'),
+                state_id=State.objects.get(state_id=request.POST.get('statec')) if request.POST.get('statec') else None,
+                city_place_id=City_Place.objects.get(city_place_id=request.POST.get('city')) if request.POST.get(
+                    'city') else None,
+                pincode_id=Pincode.objects.get(pincode=request.POST.get('pincode')) if request.POST.get(
+                    'pincode') else None,
+                property_market_rate=request.POST.get('pro_mark_rate'),
+                possesion_status=request.POST.get('possesion_status'),
+                date_of_delivery=request.POST.get('date_of_delivery'),
+                other_projects=request.POST.get('other_projects'),
+                distance_frm_railway_station=request.POST.get('dis_rail_stat'),
+                distance_frm_railway_airport=request.POST.get('dis_airport'),
+                speciality=request.POST.get('speciality'),
+                affilated_to=request.POST.get('affilated'),
+                course_duration=request.POST.get('course_duration'),
+                happy_hour_offer=request.POST.get('happy_hour_offer'),
+                facility=request.POST.get('facility'),
+                keywords=request.POST.get('advert_keywords'),
+                image_video_space_used=request.POST.get('image_and_video_space'),
+                other_amenity=request.POST.get('any_other_amenity'),
+                title=request.POST.get('title'),
+                created_by=request.session['login_user'],
+            );
+            advert_obj.save()
+            advert_id=advert_obj.advert_id
+
+            if request.POST.get('any_other_details'):
+                advert_obj.any_other_details = request.POST.get('any_other_details')
+                advert_obj.save()
+            if request.POST.get('subscription_id'):
+                map_subscription(request.POST.get('subscription_id'), advert_obj)
+
+            subcat_list = request.POST.get('subcat_list')
+            print subcat_list
+            subcat_lvl = 1
+            # String to list
+            subcat_list = subcat_list.split(',')
+            if subcat_list != '':
+                for subcat in subcat_list:
+                    if subcat:
+                        print 'Subcat: ', subcat, subcat_lvl
+                        if subcat_lvl == 1:
+                            advert_obj.category_level_1 = CategoryLevel1.objects.get(category_id=subcat)
+                            advert_obj.save()
+                        if subcat_lvl == 2:
+                            advert_obj.category_level_2 = CategoryLevel2.objects.get(category_id=subcat)
+                            advert_obj.save()
+                        if subcat_lvl == 3:
+                            advert_obj.category_level_3 = CategoryLevel3.objects.get(category_id=subcat)
+                            advert_obj.save()
+                        if subcat_lvl == 4:
+                            advert_obj.category_level_4 = CategoryLevel4.objects.get(category_id=subcat)
+                            advert_obj.save()
+                        if subcat_lvl == 5:
+                            advert_obj.category_level_5 = CategoryLevel5.objects.get(category_id=subcat)
+                            advert_obj.save()
+                        print 'Advert Subcat Mapping saved'
+                        subcat_lvl += 1
+            if request.POST['check_image'] == "1":
+                advert_obj.display_image = request.FILES['display_image']
+                advert_obj.save()
+
+                save_advert_image(advert_obj)
+
+            attachment_list = []
+            attachment_list = request.POST.get('attachments')
+            save_attachments(attachment_list, advert_obj)
+
+            video_list = []
+            video_list = request.POST.get('ac_attachment')
+            save_video(video_list, advert_obj)
+
+            # phone_category_list = request.POST.get('phone_category_list')
+            # phone_category_list = phone_category_list.split(',')
+            # phone_number_list = request.POST.get('phone_number_list')
+            # phone_number_list = phone_number_list.split(',')
+            # zipped = zip(phone_category_list, phone_number_list)
+            # save_phone_number(zipped, advert_obj)
+
+            product_name_list = request.POST.get('product_name_list')
+            product_name_list = product_name_list.split('_PRODUCT_NAME_IS_SEPARATED')
+            product_price_list = request.POST.get('product_price_list')
+            product_price_list = product_price_list.split('_PRODUCT_PRICE_IS_SEPARATED')
+            zipped_product = zip(product_name_list, product_price_list)
+            save_product(zipped_product, advert_obj)
+
+            opening_day_list = request.POST.get('opening_day_list')
+            opening_day_list = opening_day_list.split(',')
+
+            start_time_list = request.POST.get('start_time_list')
+            start_time_list = start_time_list.split(',')
+
+            end_time_list = request.POST.get('end_time_list')
+            end_time_list = end_time_list.split(',')
+
+            zipped_wk = zip(opening_day_list, start_time_list, end_time_list)
+            save_working_hours(zipped_wk, advert_obj)
+
+            amenity_list = request.POST.get('amenity_list')
+            amenity_list = amenity_list.split(',')
+            save_amenity(amenity_list, advert_obj)
+
+            near_attr_list = request.POST.get('near_attraction')
+            near_attr_list = near_attr_list.split(',')
+            save_near_attr(near_attr_list, advert_obj)
+
+            near_shopnmal = request.POST.get('near_shopnmal')
+            near_shopnmal = near_shopnmal.split(',')
+
+            near_shonmald = request.POST.get('near_shonmald')
+            near_shonmald = near_shonmald.split(',')
+
+            zipped_shopmal = zip(near_shopnmal, near_shonmald)
+            save_shpnmal(zipped_shopmal, advert_obj)
+
+            cat = advert_obj.category_id.category_name
+            if cat == 'Real Estate':
+                print "SCHOOL", request.POST.get('near_schol')
+                near_schol = request.POST.get('near_schol')
+                near_schol = near_schol.split(',')
+
+                print "SCHOOL DI SORTING", request.POST.get('near_schold')
+                near_schold = request.POST.get('near_schold')
+                near_schold = near_schold.split(',')
+
+                print "AFTER SCHOOL"
+
+                zipped_school = zip(near_schol, near_schold)
+                save_school(zipped_school, advert_obj)
+
+                near_hosp = request.POST.get('near_hosp')
+                near_hosp = near_hosp.split(',')
+
+                near_hospd = request.POST.get('near_hospd')
+                near_hospd = near_hospd.split(',')
+
+                zipped_hospital = zip(near_hosp, near_hospd)
+                save_hospital(zipped_hospital, advert_obj)
+            #advert_add_sms(advert_obj)
+            #advert_add_mail(advert_obj)
+            data = {'success': 'true','advert_id':advert_id}
+
+    except Exception, e:
+        print 'Exception :', e
+        data = {'data': 'none'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def save_advert_image(advert_obj):
+    os_path = '/home/ec2-user/DigiSpace'
+    # os_path = '/home/admin1/Prod_backup/DigiSpace'
+
+    discount_description = advert_obj.discount_description
+    advert_tilte = advert_obj.advert_name
+    contact_no = advert_obj.contact_no
+    address = advert_obj.address_line_1
+    if advert_obj.address_line_2:
+        address = address + ', ' + advert_obj.address_line_2
+    if advert_obj.area:
+        address = address + ', ' + advert_obj.area
+        landmark = advert_obj.area
+    if advert_obj.city_place_id:
+        address = address + ', ' + advert_obj.city_place_id.city_id.city_name
+        landmark = landmark + ' ' + advert_obj.city_place_id.city_id.city_name
+    if advert_obj.state_id:
+        address = address + ', ' + advert_obj.state_id.state_name
+    if advert_obj.pincode_id:
+        address = address + '-' + advert_obj.pincode_id.pincode
+    advert_address = address
+
+    # font = ImageFont.truetype("/home/admin1/Downloads/Khula-Regular.ttf", 20)
+    # bold_font = ImageFont.truetype("/home/admin1/Downloads/Khula-Bold.ttf", 30)
+    # semi_bold_font = ImageFont.truetype("/home/admin1/Downloads/Khula-SemiBold.ttf", 20)
+    font = ImageFont.truetype("/home/ec2-user/DigiSpace/static/Khula-Regular.ttf", 20)
+    bold_font = ImageFont.truetype("/home/ec2-user/DigiSpace/static/Khula-Bold.ttf", 30)
+    semi_bold_font = ImageFont.truetype("/home/ec2-user/DigiSpace/static/Khula-SemiBold.ttf", 20)
+
+    title_txt = Image.new('RGBA', (566, 100), (255, 255, 255, 255))
+    draw = ImageDraw.Draw(title_txt)
+
+    margin = 187
+    offset = 10
+    for line in textwrap.wrap(advert_tilte, width=30):
+        draw.text((margin, offset), line, font=bold_font, fill="#00448b")
+        offset += font.getsize(line)[1]
+
+    dis_img = Image.open(os_path + advert_obj.display_image.url)
+    dis_img = dis_img.resize((566, 570), Image.ANTIALIAS)
+
+    dis_txt = Image.new('RGBA', (566, 150), (255, 255, 255, 255))
+    draw = ImageDraw.Draw(dis_txt)
+
+    margin = 10
+    offset = 10
+    i = 0
+    for line in textwrap.wrap(discount_description, width=60):
+        if i > 1:
+            draw.text((margin, offset), "... and many more.", font=semi_bold_font, fill="#2EA489")
+            break
+        else:
+            draw.text((margin, offset), line, font=semi_bold_font, fill="#2EA489")
+            offset += font.getsize(line)[1] + 5
+        i = i + 1
+
+    margin = 180
+    offset = offset + 40
+    for line in textwrap.wrap(advert_address, width=35):
+        print line
+        draw.text((margin, offset), line, font=font, fill="#00448b")
+        offset += font.getsize(line)[1]
+
+    image_name = "new_advert_" + str(advert_obj.advert_id) + ".jpg"
+    blank_image = Image.new('RGBA', (566, 820), (255, 255, 255, 255))
+    draw = ImageDraw.Draw(blank_image)
+    blank_image.paste(title_txt, (0, 0))
+    blank_image.paste(dis_img, (0, 100))
+    blank_image.paste(dis_txt, (0, 670))
+    tempfile = blank_image
+    tempfile_io = StringIO.StringIO()
+    tempfile.save(tempfile_io, format='JPEG')
+    image_file = InMemoryUploadedFile(tempfile_io, None, image_name, 'image/jpeg', tempfile_io.len, None)
+    advert_obj.advert_image.save(image_name, image_file)
+    advert_obj.save()
+    return 1
+
+@csrf_exempt
+def save_advert_form(request):
     # pdb.set_trace()
     try:
         if request.method == "POST":
@@ -541,13 +1012,12 @@ def save_advert(request):
             if request.POST.get('subscription_id'):
                 map_subscription(request.POST.get('subscription_id'), advert_obj)
 
-            subcat_list = request.POST.get('subcat_list')
+            subcat_list = request.POST.getlist('subcat_list')
             print subcat_list
             subcat_lvl = 1
             # String to list
             if subcat_list != '':
-                sc_list = subcat_list.split(',')
-                for subcat in sc_list[1:5]:
+                for subcat in subcat_list:
                     if subcat:
                         print 'Subcat: ', subcat, subcat_lvl
                         if subcat_lvl == 1:
@@ -571,6 +1041,8 @@ def save_advert(request):
                 advert_obj.display_image = request.FILES['display_image']
                 advert_obj.save()
 
+                save_advert_image(advert_obj)
+
             attachment_list = []
             attachment_list = request.POST.get('attachments')
             save_attachments(attachment_list, advert_obj)
@@ -587,9 +1059,9 @@ def save_advert(request):
             # save_phone_number(zipped, advert_obj)
 
             product_name_list = request.POST.get('product_name_list')
-            product_name_list = product_name_list.split(',')
+            product_name_list = product_name_list.split('_PRODUCT_NAME_IS_SEPARATED')
             product_price_list = request.POST.get('product_price_list')
-            product_price_list = product_price_list.split(',')
+            product_price_list = product_price_list.split('_PRODUCT_PRICE_IS_SEPARATED')
             zipped_product = zip(product_name_list, product_price_list)
             save_product(zipped_product, advert_obj)
 
@@ -609,9 +1081,7 @@ def save_advert(request):
             amenity_list = amenity_list.split(',')
             save_amenity(amenity_list, advert_obj)
 
-            exe_amenity_list = request.POST.get('additional_amenity')
-            exe_amenity_list = exe_amenity_list.split(',')
-            save_exe_amenity(exe_amenity_list, advert_obj)
+
 
             near_attr_list = request.POST.get('near_attraction')
             near_attr_list = near_attr_list.split(',')
@@ -722,14 +1192,28 @@ def save_product(zipped_product, advert_id):
     ##    pdb.set_trace()
     print "IN SAVE PRODUCT"
     try:
+        i = 0
+        j = 0
         for product_name, product_price in zipped_product:
-
-            product_obj = Product(
-                advert_id=advert_id,
-                product_name=product_name,
-                product_price=product_price
-            )
-            product_obj.save()
+            product_name = product_name.strip()
+            if i != 0:
+                product_name = product_name[1:]
+            i = i + 1
+            product_price = product_price.strip()
+            if j != 0:
+                product_price = product_price[1:]
+            j = j + 1
+            if product_name:
+                if product_price =='TEST$PRICE$BLANK':
+                    product_price = ""
+                else:
+                    product_price == product_price
+                product_obj = Product(
+                    advert_id=advert_id,
+                    product_name=product_name,
+                    product_price=product_price
+                )
+                product_obj.save()
             data = {'success': 'true'}
 
     except Exception, e:
@@ -756,34 +1240,22 @@ def save_working_hours(zipped_wk, advert_id):
         print 'Exception ', e
     return HttpResponse(json.dumps(data), content_type='application/json')
 
+
 def save_amenity(amenity_list, advert_id):
     ##    pdb.set_trace()
     print "IN SAVE AMENITY"
     try:
         print "Advert Id", advert_id
         for amenity in amenity_list:
-            if amenity == 'car':
-                ame = 'Car Parking'
-            elif amenity == 'club':
-                ame = "Club House"
-            elif amenity == 'swim':
-                ame = "Swimming Pool"
-            elif amenity == 'power':
-                ame = "24 Hours Power Backup"
-            elif amenity == 'gym':
-                ame = "Gymanasium"
-
-            elif amenity == 'kids':
-                ame = "Kids Play Area"
-            elif amenity == 'rain_water':
-                ame = "Rain Water Harvesting"
+            if amenity != '':
+                ame_obj = Amenities(
+                    advert_id=advert_id,
+                    categorywise_amenity_id=CategorywiseAmenity.objects.get(categorywise_amenity_id=amenity)
+                )
+                ame_obj.save()
             else:
-                ame = "Garden"
-            ame_obj = Amenities(
-                advert_id=advert_id,
-                amenity=ame
-            )
-            ame_obj.save()
+                Amenities.objects.filter(advert_id=advert_id).delete()
+
             data = {'success': 'true'}
 
     except Exception, e:
@@ -1158,10 +1630,13 @@ def review_edit_advert(request):
     else:
         advert_id = request.GET.get('advert_id')
         tax_list = Tax.objects.all()
+        temp_data = ''
+        cat_amenities = []
 
         
         advert_obj = Advert.objects.get(advert_id = advert_id)
         supplier_id=str(advert_obj.supplier_id)
+        supplier_name=str(advert_obj.supplier_id.business_name)
 
         if advert_obj.category_level_1:
             category_l1_list = CategoryLevel1.objects.filter(parent_category_id = str(advert_obj.category_id.category_id))
@@ -1191,6 +1666,91 @@ def review_edit_advert(request):
                 parent_category_id=str(advert_obj.category_level_4.category_id))
         else:
             category_l5_list = []
+
+        business_id = request.GET.get('business_id')
+        business_obj = Business.objects.get(business_id = business_id)
+        premium_obj = PremiumService.objects.filter(business_id=business_id)
+        advert_flag = 'false'
+        if premium_obj:
+            for premium in premium_obj:
+                if premium.premium_service_name == "Top Advert":
+                    advert_flag = 'true'
+                elif premium.premium_service_name == "Advert Slider":
+                    advert_flag = 'true'
+        category_level_1 = ''
+        category_level_2 = ''
+        category_level_3 = ''
+        category_level_4 = ''
+        category_level_5 = ''
+        business_obj = Business.objects.get(business_id=business_id)
+        if business_obj.category:
+            category_id = str(business_obj.category.category_id)
+        if business_obj.category_level_1:
+            category_level_1 = str(business_obj.category_level_1.category_id)
+        if business_obj.category_level_2:
+            category_level_2 = str(business_obj.category_level_2.category_id)
+        if business_obj.category_level_3:
+            category_level_3 = str(business_obj.category_level_3.category_id)
+        if business_obj.category_level_4:
+            category_level_4 = str(business_obj.category_level_4.category_id)
+        if business_obj.category_level_5:
+            category_level_5 = str(business_obj.category_level_5.category_id)
+
+        cl1 = ''
+        if business_obj.category:
+            amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id)
+            for ck in amenity_list:
+                cl1= ck.category_level_1
+
+            if cl1:
+                if business_obj.category and business_obj.category_level_1: 
+                    amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id,category_level_1=category_level_1)
+
+                if business_obj.category and business_obj.category_level_1 and business_obj.category_level_2:
+                    amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id,category_level_1=category_level_1,category_level_2=category_level_2)
+
+                if business_obj.category and business_obj.category_level_1 and business_obj.category_level_2 and business_obj.category_level_3:
+                    amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id,category_level_1=category_level_1,category_level_3=category_level_3)
+
+                if business_obj.category and business_obj.category_level_1 and business_obj.category_level_2 and business_obj.category_level_3 and business_obj.category_level_4:
+                    amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id,category_level_1=category_level_1,category_level_3=category_level_3,category_level_4=category_level_4)
+
+                if business_obj.category and business_obj.category_level_1 and business_obj.category_level_2 and business_obj.category_level_3 and business_obj.category_level_4 and business_obj.category_level_5:
+                    amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id,category_level_1=category_level_1,category_level_3=category_level_3,category_level_4=category_level_4,category_level_5=category_level_5)
+
+        
+                ameninty_checked = "false"
+                for amnenity in amenity_list:
+                    try:
+                        amenities_obj = Amenities.objects.get(advert_id=advert_id,categorywise_amenity_id =str(amnenity.categorywise_amenity_id) )
+                        ameninty_checked = "true"
+                    except:
+                        ameninty_checked = "false"
+                        pass                
+                    temp_data ={
+                    'id':str(amnenity.categorywise_amenity_id),
+                    'amenity':str(amnenity.amenity),
+                    'checkced':ameninty_checked
+                    }
+                    cat_amenities.append(temp_data)
+                print "cat_amenities",cat_amenities
+
+            else:
+                amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id)
+                ameninty_checked = "false"
+                for amnenity in amenity_list:
+                    try:
+                        amenities_obj = Amenities.objects.get(advert_id=advert_id,categorywise_amenity_id =str(amnenity.categorywise_amenity_id) )
+                        ameninty_checked = "true"
+                    except:
+                        ameninty_checked = "false"
+                        pass                
+                    temp_data ={
+                    'id':str(amnenity.categorywise_amenity_id),
+                    'amenity':str(amnenity.amenity),
+                    'checkced':ameninty_checked
+                    }
+                    cat_amenities.append(temp_data)
 
 
 
@@ -1236,6 +1796,7 @@ def review_edit_advert(request):
             'keywords': advert_obj.keywords,
             'distance_frm_railway_station': advert_obj.distance_frm_railway_station,
             'distance_frm_airport': advert_obj.distance_frm_railway_airport,
+            'other_amenity':advert_obj.other_amenity
         }
 
         product_obj = Product.objects.filter(advert_id = advert_id)
@@ -1260,23 +1821,7 @@ def review_edit_advert(request):
                 }
                 time_list.append(time_data)
 
-        amenities_obj = Amenities.objects.filter(advert_id = advert_id)
-        amenities_list = []
-        if amenities_obj:
-            for amenities in amenities_obj:
-                amenities_data = {
-                    "amenity": amenities.amenity
-                }
-                amenities_list.append(amenities.amenity)
 
-        add_amenities_obj = AdditionalAmenities.objects.filter(advert_id = advert_id)
-        add_amenities_list = []
-        if amenities_obj:
-            for add_amenities in add_amenities_obj:
-                add_amenities_data = {
-                    "extra_amenity": add_amenities.extra_amenity
-                }
-                add_amenities_list.append(add_amenities_data)
 
         nr_attr_obj = NearByAttraction.objects.filter(advert_id = advert_id)
         nr_attr_list = []
@@ -1320,10 +1865,10 @@ def review_edit_advert(request):
         data = { 
                 'username': request.session['login_user'], 'category_list': get_category(request),
                 'country_list': get_country(request), 'phone_category': get_phone_category(request),
-                'state_list': get_states(request), 
-                'product_list':product_list,'time_list':time_list,
+                'state_list': get_states(request), 'advert_flag':advert_flag,
+                'product_list':product_list,'time_list':time_list,'cat_amenities':cat_amenities,
                 'advert_data':advert_data, 'advert_id':advert_id,'supplier_id':supplier_id,
-                'amenities_list':amenities_list, 'add_amenities_list':add_amenities_list,'nr_attr_list':nr_attr_list,
+                'nr_attr_list':nr_attr_list,'title' :advert_obj.title,'supplier_name':supplier_name,
                 'nr_shop_list':nr_shop_list,'nr_shcl_list':nr_shcl_list,'nr_hosp_list':nr_hosp_list,
                 'category_l1_list':category_l1_list,'category_l2_list':category_l2_list,'category_l3_list':category_l3_list,
                 'category_l4_list':category_l4_list,'category_l5_list':category_l5_list
@@ -1335,10 +1880,11 @@ def review_edit_advert(request):
 def delete_product(request):
     try:
         print "product_id", request.POST.get('product_id')
+        request.POST.get('product_id')
         pro_obj = Product.objects.filter(product_id=request.POST.get('product_id'))
         pro_obj.delete()
 
-        data = {'message': 'Product Deleted Successfully', 'success': 'true'}
+        data = {'message': 'Product Deleted Successfully', 'success': 'true','del_flag':'3'}
     except IntegrityError as e:
         print e
     except Exception, e:
@@ -1412,12 +1958,12 @@ def add_subscription(request):
                                 );
                                 advert_obj.save()
                                 print '===============after save advert================='
-                                subcat_list = request.POST.get('subcat_list')
+                                subcat_list = request.POST.getlist('subcat_list')
+                                print subcat_list
                                 subcat_lvl = 1
                                 # String to list
                                 if subcat_list != '':
-                                    sc_list = subcat_list.split(',')
-                                    for subcat in sc_list:
+                                    for subcat in subcat_list:
                                         print 'Subcat: ', subcat, subcat_lvl
                                         if subcat_lvl == 1:
                                             advert_obj.category_level_1 = CategoryLevel1.objects.get(category_id=subcat)
@@ -1440,6 +1986,8 @@ def add_subscription(request):
                                     advert_obj.display_image = request.FILES['display_image']
                                     advert_obj.save()
 
+                                    save_advert_image(advert_obj)
+
                                 attachment_list = []
                                 attachment_list = request.POST.get('attachments')
                                 save_attachments(attachment_list, advert_obj)
@@ -1456,9 +2004,9 @@ def add_subscription(request):
                                 save_phone_number(zipped, advert_obj)
 
                                 product_name_list = request.POST.get('product_name_list')
-                                product_name_list = product_name_list.split(',')
+                                product_name_list = product_name_list.split('_PRODUCT_NAME_IS_SEPARATED')
                                 product_price_list = request.POST.get('product_price_list')
-                                product_price_list = product_price_list.split(',')
+                                product_price_list = product_price_list.split('_PRODUCT_PRICE_IS_SEPARATED')
                                 zipped_product = zip(product_name_list, product_price_list)
                                 save_product(zipped_product, advert_obj)
 
@@ -1478,9 +2026,6 @@ def add_subscription(request):
                                 amenity_list = amenity_list.split(',')
                                 save_amenity(amenity_list, advert_obj)
 
-                                exe_amenity_list = request.POST.get('additional_amenity')
-                                exe_amenity_list = exe_amenity_list.split(',')
-                                save_exe_amenity(exe_amenity_list, advert_obj)
 
                                 near_attr_list = request.POST.get('near_attraction')
                                 near_attr_list = near_attr_list.split(',')
@@ -1618,12 +2163,12 @@ def add_subscription(request):
                         advert_obj.save()
                         advert_add_mail(advert_obj)
                         advert_add_sms(advert_obj)
-                        subcat_list = request.POST.get('subcat_list')
+                        subcat_list = request.POST.getlist('subcat_list')
+                        print subcat_list
                         subcat_lvl = 1
                         # String to list
                         if subcat_list != '':
-                            sc_list = subcat_list.split(',')
-                            for subcat in sc_list:
+                            for subcat in subcat_list:
                                 print 'Subcat: ', subcat, subcat_lvl
                                 if subcat_lvl == 1:
                                     advert_obj.category_level_1 = CategoryLevel1.objects.get(category_id=subcat)
@@ -1646,6 +2191,8 @@ def add_subscription(request):
                             advert_obj.display_image = request.FILES['display_image']
                             advert_obj.save()
 
+                            save_advert_image(advert_obj)
+
                         attachment_list = []
                         attachment_list = request.POST.get('attachments')
                         save_attachments(attachment_list, advert_obj)
@@ -1662,9 +2209,9 @@ def add_subscription(request):
                         save_phone_number(zipped, advert_obj)
 
                         product_name_list = request.POST.get('product_name_list')
-                        product_name_list = product_name_list.split(',')
+                        product_name_list = product_name_list.split('_PRODUCT_NAME_IS_SEPARATED')
                         product_price_list = request.POST.get('product_price_list')
-                        product_price_list = product_price_list.split(',')
+                        product_price_list = product_price_list.split('_PRODUCT_PRICE_IS_SEPARATED')
                         zipped_product = zip(product_name_list, product_price_list)
                         save_product(zipped_product, advert_obj)
 
@@ -1684,9 +2231,7 @@ def add_subscription(request):
                         amenity_list = amenity_list.split(',')
                         save_amenity(amenity_list, advert_obj)
 
-                        exe_amenity_list = request.POST.get('additional_amenity')
-                        exe_amenity_list = exe_amenity_list.split(',')
-                        save_exe_amenity(exe_amenity_list, advert_obj)
+
 
                         near_attr_list = request.POST.get('near_attraction')
                         near_attr_list = near_attr_list.split(',')
@@ -1838,8 +2383,8 @@ def advert_add_sms(advert_obj):
  #    print '---------contact_no------',contact_no
 
     mobiles = "+919403884595"
-    message = "A new Advert \t" +str(advert_obj.advert_name) + "\t for your business \t"+ str(advert_obj.supplier_id.business_name) +"\t under category \t"+str(advert_obj.category_id.category_name)+"\t has been added successfully on your profile with City Hoopla"
-    sender = "DGSPCE"
+    message = "A new Advert \t" +str(advert_obj.advert_name) + "\t for your business \t"+ str(advert_obj.supplier_id.business_name) +"\t under category \t"+str(advert_obj.category_id.category_name)+"\t has been added successfully on your profile with CityHoopla"
+    sender = "CTHPLA"
     route = "4"
     country = "91"
     values = {
@@ -1973,8 +2518,8 @@ def delete_add_sms(advert_obj):
  #    print '---------contact_no------',contact_no
 
     mobiles = "+919403884595"
-    message = "Advert \t" +str(advert_obj.advert_name) + "\t for your business \t"+ str(advert_obj.supplier_id.business_name) +"\t under category \t"+str(advert_obj.category_id.category_name)+"\t has been deactivated  successfully on your profile with City Hoopla"
-    sender = "DGSPCE"
+    message = "Advert \t" +str(advert_obj.advert_name) + "\t for your business \t"+ str(advert_obj.supplier_id.business_name) +"\t under category \t"+str(advert_obj.category_id.category_name)+"\t has been deactivated  successfully on your profile with CityHoopla"
+    sender = "CTHPLA"
     route = "4"
     country = "91"
     values = {
@@ -2017,7 +2562,7 @@ def active_advert(request):
 def advert_active_mail(adv_obj):
     gmail_user = "cityhoopla2016"
     gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     # pdb.set_trace()
     try:
@@ -2044,7 +2589,7 @@ def get_category(request):
     try:
         category = Category.objects.filter(category_status='1').order_by('category_name')
         for cat in category:
-            if cat.category_name !="Event Ticket Resale":
+            if cat.category_name !="Ticket Resell":
                 cat_list.append(
                     {'category_id': cat.category_id, 'category': cat.category_name})
 
@@ -2073,10 +2618,13 @@ def edit_advert(request):
     else:
         advert_id = request.GET.get('advert_id')
         tax_list = Tax.objects.all()
+        temp_data = ''
+        cat_amenities = []
 
         advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=advert_id)
         business_obj = Business.objects.get(business_id=str(advert_sub_obj.business_id))
         supplier_obj = Supplier.objects.get(supplier_id=str(advert_sub_obj.advert_id.supplier_id))
+        supplier_name =supplier_obj.business_name
         city_place_id = str(supplier_obj.city_place_id)
         telephone_rate_card = TelephoneEnquiryRateCard.objects.filter(city_place_id=city_place_id)
         business_data = {
@@ -2135,10 +2683,82 @@ def edit_advert(request):
             category_lvl5_list = CategoryLevel5.objects.filter(
                 parent_category_id=str(business_obj.category_level_4.category_id))
 
+        if business_obj.category:
+            category_id = str(business_obj.category.category_id)
+        if business_obj.category_level_1:
+            category_level_1 = str(business_obj.category_level_1.category_id)
+        if business_obj.category_level_2:
+            category_level_2 = str(business_obj.category_level_2.category_id)
+        if business_obj.category_level_3:
+            category_level_3 = str(business_obj.category_level_3.category_id)
+        if business_obj.category_level_4:
+            category_level_4 = str(business_obj.category_level_4.category_id)
+        if business_obj.category_level_5:
+            category_level_5 = str(business_obj.category_level_5.category_id)
+
+
+        cl1 = ''
+        if business_obj.category:
+            amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id)
+            for ck in amenity_list:
+                cl1= ck.category_level_1
+
+            if cl1:
+                if business_obj.category and business_obj.category_level_1: 
+                    amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id,category_level_1=category_level_1)
+
+                if business_obj.category and business_obj.category_level_1 and business_obj.category_level_2:
+                    amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id,category_level_1=category_level_1,category_level_2=category_level_2)
+
+                if business_obj.category and business_obj.category_level_1 and business_obj.category_level_2 and business_obj.category_level_3:
+                    amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id,category_level_1=category_level_1,category_level_3=category_level_3)
+
+                if business_obj.category and business_obj.category_level_1 and business_obj.category_level_2 and business_obj.category_level_3 and business_obj.category_level_4:
+                    amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id,category_level_1=category_level_1,category_level_3=category_level_3,category_level_4=category_level_4)
+
+                if business_obj.category and business_obj.category_level_1 and business_obj.category_level_2 and business_obj.category_level_3 and business_obj.category_level_4 and business_obj.category_level_5:
+                    amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id,category_level_1=category_level_1,category_level_3=category_level_3,category_level_4=category_level_4,category_level_5=category_level_5)
+
+        
+                ameninty_checked = "false"
+                for amnenity in amenity_list:
+                    try:
+                        amenities_obj = Amenities.objects.get(advert_id=advert_id,categorywise_amenity_id =str(amnenity.categorywise_amenity_id) )
+                        ameninty_checked = "true"
+                    except:
+                        ameninty_checked = "false"
+                        pass                
+                    temp_data ={
+                    'id':str(amnenity.categorywise_amenity_id),
+                    'amenity':str(amnenity.amenity),
+                    'checkced':ameninty_checked
+                    }
+                    cat_amenities.append(temp_data)
+                print "cat_amenities",cat_amenities
+
+            else:
+                amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id)
+                ameninty_checked = "false"
+                for amnenity in amenity_list:
+                    try:
+                        amenities_obj = Amenities.objects.get(advert_id=advert_id,categorywise_amenity_id =str(amnenity.categorywise_amenity_id) )
+                        ameninty_checked = "true"
+                    except:
+                        ameninty_checked = "false"
+                        pass                
+                    temp_data ={
+                    'id':str(amnenity.categorywise_amenity_id),
+                    'amenity':str(amnenity.amenity),
+                    'checkced':ameninty_checked
+                    }
+                    cat_amenities.append(temp_data)
+
         rate_obj = CategoryWiseRateCard.objects.get(
                         service_name='Subscription',
                         category_id=cat_id,
-                        category_level=cat_lvl
+                        category_level=cat_lvl,
+                        rate_card_status = 1,
+                        city_place_id = city_place_id
                     )
 
         if business_obj.duration == '3':
@@ -2173,17 +2793,18 @@ def edit_advert(request):
                     rate_obj = CategoryWiseRateCard.objects.get(
                         service_name=premium_service.premium_service_name,
                         category_id=str(premium_service.category_id),
-                        category_level=str(premium_service.category_level)
+                        category_level=str(premium_service.category_level),
+                        rate_card_status = 1
                     )
-                    if premium_service.no_of_days == '3':
+                    if int(premium_service.no_of_days) == 3:
                         amount_1 = float(rate_obj.cost_for_3_days)
-                    if premium_service.no_of_days == '7':
+                    if int(premium_service.no_of_days) == 7:
                         amount_1 = float(rate_obj.cost_for_7_days)
-                    if premium_service.no_of_days == '30':
+                    if int(premium_service.no_of_days) == 30:
                         amount_1 = float(rate_obj.cost_for_30_days)
-                    if premium_service.no_of_days == '90':
+                    if int(premium_service.no_of_days) == 90:
                         amount_1 = float(rate_obj.cost_for_90_days)
-                    if premium_service.no_of_days == '180':
+                    if int(premium_service.no_of_days) == 180:
                         amount_1 = float(rate_obj.cost_for_180_days)
 
                 if premium_service.premium_service_name == 'No.2 Listing':
@@ -2191,16 +2812,17 @@ def edit_advert(request):
                         service_name=premium_service.premium_service_name,
                         category_id=premium_service.category_id,
                         category_level=premium_service.category_level,
+                        rate_card_status = 1
                     )
-                    if premium_service.no_of_days == '3':
+                    if int(premium_service.no_of_days) == 3:
                         amount_2 = float(rate_obj.cost_for_3_days)
-                    if premium_service.no_of_days == '7':
+                    if int(premium_service.no_of_days) == 7:
                         amount_2 = float(rate_obj.cost_for_7_days)
-                    if premium_service.no_of_days == '30':
+                    if int(premium_service.no_of_days) == 30:
                         amount_2 = float(rate_obj.cost_for_30_days)
-                    if premium_service.no_of_days == '90':
+                    if int(premium_service.no_of_days) == 90:
                         amount_2 = float(rate_obj.cost_for_90_days)
-                    if premium_service.no_of_days == '180':
+                    if int(premium_service.no_of_days) == 180:
                         amount_2 = float(rate_obj.cost_for_180_days)
 
                 if premium_service.premium_service_name == 'No.3 Listing':
@@ -2208,46 +2830,49 @@ def edit_advert(request):
                         service_name=premium_service.premium_service_name,
                         category_id=premium_service.category_id,
                         category_level=premium_service.category_level,
+                        rate_card_status = 1
                     )
-                    if premium_service.no_of_days == '3':
+                    if int(premium_service.no_of_days) == 3:
                         amount_3 = float(rate_obj.cost_for_3_days)
-                    if premium_service.no_of_days == '7':
+                    if int(premium_service.no_of_days) == 7:
                         amount_3 = float(rate_obj.cost_for_7_days)
-                    if premium_service.no_of_days == '30':
+                    if int(premium_service.no_of_days) == 30:
                         amount_3 = float(rate_obj.cost_for_30_days)
-                    if premium_service.no_of_days == '90':
+                    if int(premium_service.no_of_days) == 90:
                         amount_3 = float(rate_obj.cost_for_90_days)
-                    if premium_service.no_of_days == '180':
+                    if int(premium_service.no_of_days) == 180:
                         amount_3 = float(rate_obj.cost_for_180_days)
 
                 if premium_service.premium_service_name == 'Advert Slider':
                     rate_obj = RateCard.objects.get(service_name=premium_service.premium_service_name,
                                                     city_place_id=premium_service.city_place_id,
+                                                    rate_card_status = 1
                                                     )
-                    if premium_service.no_of_days == '3':
+                    if int(premium_service.no_of_days) == 3:
                         amount_4 = float(rate_obj.cost_for_3_days)
-                    if premium_service.no_of_days == '7':
+                    if int(premium_service.no_of_days) == 7:
                         amount_4 = float(rate_obj.cost_for_7_days)
-                    if premium_service.no_of_days == '30':
+                    if int(premium_service.no_of_days) == 30:
                         amount_4 = float(rate_obj.cost_for_30_days)
-                    if premium_service.no_of_days == '90':
+                    if int(premium_service.no_of_days) == 90:
                         amount_4 = float(rate_obj.cost_for_90_days)
-                    if premium_service.no_of_days == '180':
+                    if int(premium_service.no_of_days) == 180:
                         amount_4 = float(rate_obj.cost_for_180_days)
 
                 if premium_service.premium_service_name == 'Top Advert':
                     rate_obj = RateCard.objects.get(service_name=premium_service.premium_service_name,
                                                     city_place_id=premium_service.city_place_id,
+                                                    rate_card_status = 1
                                                     )
-                    if premium_service.no_of_days == '3':
+                    if int(premium_service.no_of_days) == 3:
                         amount_5 = float(rate_obj.cost_for_3_days)
-                    if premium_service.no_of_days == '7':
+                    if int(premium_service.no_of_days) == 7:
                         amount_5 = float(rate_obj.cost_for_7_days)
-                    if premium_service.no_of_days == '30':
+                    if int(premium_service.no_of_days) == 30:
                         amount_5 = float(rate_obj.cost_for_30_days)
-                    if premium_service.no_of_days == '90':
+                    if int(premium_service.no_of_days) == 90:
                         amount_5 = float(rate_obj.cost_for_90_days)
-                    if premium_service.no_of_days == '180':
+                    if int(premium_service.no_of_days) == 180:
                         amount_5 = float(rate_obj.cost_for_180_days)
         except Exception as e:
             pass
@@ -2474,6 +3099,12 @@ def edit_advert(request):
         else:
             category_l5_list = []
 
+
+        if advert_obj.any_other_details:
+            any_other_details =advert_obj.any_other_details
+        else:
+            any_other_details = ""
+
         advert_data = {
             'category_id': advert_obj.category_id.category_id,
             'category_level_1': advert_obj.category_level_1.category_id if advert_obj.category_level_1 else '',
@@ -2481,7 +3112,7 @@ def edit_advert(request):
             'category_level_3': advert_obj.category_level_3.category_id if advert_obj.category_level_3 else '',
             'category_level_4': advert_obj.category_level_4.category_id if advert_obj.category_level_4 else '',
             'category_level_5': advert_obj.category_level_5.category_id if advert_obj.category_level_5 else '',
-            'advert_name': advert_obj.advert_name,
+            'advert_name': advert_obj.advert_name,'city_place_id':city_place_id,
             'contact_name': advert_obj.contact_name,
             'contact_no': advert_obj.contact_no,
             'latitude': advert_obj.latitude,
@@ -2505,7 +3136,7 @@ def edit_advert(request):
             'possesion_status': advert_obj.possesion_status,
             'other_projects': advert_obj.other_projects,
             'date_of_delivery': advert_obj.date_of_delivery,
-            'any_other_details': advert_obj.any_other_details,
+            'any_other_details': any_other_details,
             'speciality': advert_obj.speciality,
             'happy_hour_offer': advert_obj.happy_hour_offer,
             'course_duration': advert_obj.course_duration,
@@ -2515,6 +3146,7 @@ def edit_advert(request):
             'keywords': advert_obj.keywords,
             'distance_frm_railway_station': advert_obj.distance_frm_railway_station,
             'distance_frm_airport': advert_obj.distance_frm_railway_airport,
+            'other_amenity':advert_obj.other_amenity
         }
 
         product_obj = Product.objects.filter(advert_id=advert_id)
@@ -2522,6 +3154,7 @@ def edit_advert(request):
         if product_obj:
             for products in product_obj:
                 product_data = {
+                    "product_id":products.product_id,
                     "product_name": products.product_name,
                     "product_price": products.product_price
                 }
@@ -2538,23 +3171,6 @@ def edit_advert(request):
                 }
                 time_list.append(time_data)
 
-        amenities_obj = Amenities.objects.filter(advert_id=advert_id)
-        amenities_list = []
-        if amenities_obj:
-            for amenities in amenities_obj:
-                amenities_data = {
-                    "amenity": amenities.amenity
-                }
-                amenities_list.append(amenities.amenity)
-
-        add_amenities_obj = AdditionalAmenities.objects.filter(advert_id=advert_id)
-        add_amenities_list = []
-        if amenities_obj:
-            for add_amenities in add_amenities_obj:
-                add_amenities_data = {
-                    "extra_amenity": add_amenities.extra_amenity
-                }
-                add_amenities_list.append(add_amenities_data)
 
         nr_attr_obj = NearByAttraction.objects.filter(advert_id=advert_id)
         nr_attr_list = []
@@ -2606,20 +3222,65 @@ def edit_advert(request):
                 'tel_amount_1': tel_amount_1, 'tel_amount_2': tel_amount_2, 'tel_amount_3': tel_amount_3,
                 'tel_amount_4': tel_amount_4, 'tel_amount_5': tel_amount_5, 'tel_amount_6': tel_amount_6,
                 'category_lvl1_list': category_lvl1_list,'supplier_id':supplier_id,
-                'category_lvl2_list': category_lvl2_list,
-                'category_lvl3_list': category_lvl3_list,
-                'category_lvl4_list': category_lvl4_list,
-                'category_lvl5_list': category_lvl5_list,
+                'category_lvl2_list': category_lvl2_list,'city_place_id':city_place_id,
+                'category_lvl3_list': category_lvl3_list,'supplier_name':supplier_name,
+                'category_lvl4_list': category_lvl4_list,'title' :advert_obj.title,
+                'category_lvl5_list': category_lvl5_list,'cat_amenities':cat_amenities,
                 'cat_id': cat_id, 'cat_lvl': cat_lvl, 'telephone_rate_card': telephone_rate_card,
                 'premium_service_list': premium_service_list,'enquiry_service_data':enquiry_service_data,
-                'amenities_list': amenities_list, 'add_amenities_list': add_amenities_list,
-                'nr_attr_list': nr_attr_list,
+                'nr_attr_list': nr_attr_list,'advert_id':advert_id,
                 'nr_shop_list': nr_shop_list, 'nr_shcl_list': nr_shcl_list, 'nr_hosp_list': nr_hosp_list,
                 'category_l1_list': category_l1_list, 'category_l2_list': category_l2_list,
                 'category_l3_list': category_l3_list,
                 'category_l4_list': category_l4_list, 'category_l5_list': category_l5_list
                 }
         return render(request, 'Admin/edit_advert.html', data)
+
+def get_advert_images(request):
+    advert_id = request.GET.get('advert_id')
+    image_list = []
+    advert_image = AdvertImage.objects.filter(advert_id=advert_id)
+    for images in advert_image:
+        image_path = images.advert_image.url
+        filesize = os.stat('/home/ec2-user/DigiSpace/' + images.advert_image.url).st_size
+        image_size = round(filesize,2) #/ float(1024)
+        image_path = image_path.split('/')
+        image_name = image_path[-1]
+        image_url = SERVER_URL + images.advert_image.url
+        image_id = images.advert_image_id
+        advert_image_data = {
+            "image_url": image_url,
+            "image_size": image_size,
+            "image_name": image_name,
+            "image_id": image_id,
+            "image_thumbnail": '/home/ec2-user/DigiSpace/' + images.advert_image.url
+        }
+        image_list.append(advert_image_data)
+    data = {'data': 'true','image_list':image_list}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def get_advert_videos(request):
+    advert_id = request.GET.get('advert_id')
+    image_list = []
+    advert_image = Advert_Video.objects.filter(advert_id=advert_id)
+    for images in advert_image:
+        image_path = images.advert_video_name.url
+        filesize = os.stat('/home/ec2-user/DigiSpace/' + images.advert_video_name.url).st_size
+        image_size = round(filesize,2) #/ float(1024)
+        image_path = image_path.split('/')
+        image_name = image_path[-1]
+        image_url = SERVER_URL + images.advert_video_name.url
+        image_id = images.advert_video_id
+        advert_image_data = {
+            "image_url": image_url,
+            "image_size": image_size,
+            "image_name": image_name,
+            "image_id": image_id,
+            "image_thumbnail": '/home/ec2-user/DigiSpace/' + images.advert_video_name.url
+        }
+        image_list.append(advert_image_data)
+    data = {'data': 'true','image_list':image_list}
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 def get_city_category(city_place_id):
     ##    pdb.set_trace()
@@ -2628,7 +3289,7 @@ def get_city_category(city_place_id):
         cat_city_map = CategoryCityMap.objects.filter(city_place_id=city_place_id)
         for cat in cat_city_map:
             category = Category.objects.get(category_id=str(cat.category_id))
-            if category.category_name != "Event Ticket Resale":
+            if category.category_name != "Ticket Resell":
                 cat_list.append(
                     {'category_id': category.category_id, 'category': category.category_name})
     except Exception, e:
@@ -2639,197 +3300,202 @@ def get_city_category(city_place_id):
 @csrf_exempt
 def update_advert(request):
     # pdb.set_trace()
-    print "IN SAVE ADVERT METHOD", #request.POST
-    try:
-        if request.method == "POST":
-            print '===request========', request.POST.get('supplier_id')
-            advert_id = request.POST.get('advert_id')
-            advert_obj = Advert.objects.get(advert_id = request.POST.get('advert_id'))
+    if not request.user.is_authenticated():
+        data = {'success':'Expired'}
 
-            advert_obj.supplier_id=Supplier.objects.get(supplier_id=request.POST.get('supplier_id'))
-            advert_obj.category_id=Category.objects.get(category_id=request.POST.get('categ'))
-            advert_obj.advert_name=request.POST.get('advert_title')
-            advert_obj.contact_name=request.POST.get('contact_name')
-            advert_obj.contact_no=request.POST.get('phone_no')
-            advert_obj.website=request.POST.get('website')
-            advert_obj.latitude=request.POST.get('lat')
-            advert_obj.longitude=request.POST.get('lng')
-            advert_obj.short_description=request.POST.get('short_discription')
-            advert_obj.product_description=request.POST.get('product_discription')
-            advert_obj.currency=request.POST.get('currency')
-            advert_obj.country_id=Country.objects.get(country_id=request.POST.get('country')) if request.POST.get(
-                'country') else None
-            # product_price=request.POST.get('product_price'),
-            advert_obj.discount_description=request.POST.get('discount_discription')
-            advert_obj.email_primary=request.POST.get('email_primary')
-            advert_obj.email_secondary=request.POST.get('email_secondary')
-            advert_obj.address_line_1=request.POST.get('address_line1')
-            advert_obj.address_line_2=request.POST.get('address_line2')
-            advert_obj.area=request.POST.get('area')
-            advert_obj.landmark=request.POST.get('landmark')
-            advert_obj.state_id=State.objects.get(state_id=request.POST.get('statec')) if request.POST.get('statec') else None
-            advert_obj.city_place_id=City_Place.objects.get(city_place_id=request.POST.get('city')) if request.POST.get(
-                'city') else None
-            advert_obj.pincode_id=Pincode.objects.get(pincode_id=request.POST.get('pincode')) if request.POST.get(
-                'pincode') else None
-            advert_obj.property_market_rate=request.POST.get('pro_mark_rate')
-            advert_obj.possesion_status=request.POST.get('possesion_status')
-            advert_obj.date_of_delivery=request.POST.get('date_of_delivery')
-            advert_obj.other_projects=request.POST.get('other_projects')
-            advert_obj.distance_frm_railway_station=request.POST.get('dis_rail_stat')
-            advert_obj.distance_frm_railway_airport=request.POST.get('dis_airport')
-            advert_obj.speciality=request.POST.get('speciality')
-            advert_obj.affilated_to=request.POST.get('affilated')
-            advert_obj.course_duration=request.POST.get('course_duration')
-            advert_obj.happy_hour_offer=request.POST.get('happy_hour_offer')
-            advert_obj.facility=request.POST.get('facility')
-            advert_obj.keywords=request.POST.get('advert_keywords')
-            advert_obj.image_video_space_used=request.POST.get('image_and_video_space')
-            advert_obj.save()
-            print "advert updated"
+    else:    
+        print "IN SAVE ADVERT METHOD", #request.POST
+        try:
+            if request.method == "POST":
+                print '===request========', request.POST.get('supplier_id')
+                advert_id = request.POST.get('advert_id')
+                advert_obj = Advert.objects.get(advert_id = request.POST.get('advert_id'))
 
-            if request.POST.get('any_other_details'):
-                advert_obj.any_other_details = request.POST.get('any_other_details')
+                advert_obj.supplier_id=Supplier.objects.get(supplier_id=request.POST.get('supplier_id'))
+                advert_obj.category_id=Category.objects.get(category_id=request.POST.get('categ'))
+                advert_obj.advert_name=request.POST.get('advert_title')
+                advert_obj.contact_name=request.POST.get('contact_name')
+                advert_obj.contact_no=request.POST.get('phone_no')
+                advert_obj.website=request.POST.get('website')
+                advert_obj.latitude=request.POST.get('lat')
+                advert_obj.longitude=request.POST.get('lng')
+                advert_obj.short_description=request.POST.get('short_discription')
+                advert_obj.product_description=request.POST.get('product_discription')
+                advert_obj.currency=request.POST.get('currency')
+                advert_obj.country_id=Country.objects.get(country_id=request.POST.get('country')) if request.POST.get(
+                    'country') else None
+                # product_price=request.POST.get('product_price'),
+                advert_obj.discount_description=request.POST.get('discount_discription')
+                advert_obj.email_primary=request.POST.get('email_primary')
+                advert_obj.email_secondary=request.POST.get('email_secondary')
+                advert_obj.address_line_1=request.POST.get('address_line1')
+                advert_obj.address_line_2=request.POST.get('address_line2')
+                advert_obj.area=request.POST.get('area')
+                advert_obj.landmark=request.POST.get('landmark')
+                advert_obj.state_id=State.objects.get(state_id=request.POST.get('statec')) if request.POST.get('statec') else None
+                advert_obj.city_place_id=City_Place.objects.get(city_place_id=request.POST.get('city')) if request.POST.get(
+                    'city') else None
+                advert_obj.pincode_id=Pincode.objects.get(pincode_id=request.POST.get('pincode')) if request.POST.get(
+                    'pincode') else None
+                advert_obj.property_market_rate=request.POST.get('pro_mark_rate')
+                advert_obj.possesion_status=request.POST.get('possesion_status')
+                advert_obj.date_of_delivery=request.POST.get('date_of_delivery')
+                advert_obj.other_projects=request.POST.get('other_projects')
+                advert_obj.distance_frm_railway_station=request.POST.get('dis_rail_stat')
+                advert_obj.distance_frm_railway_airport=request.POST.get('dis_airport')
+                advert_obj.speciality=request.POST.get('speciality')
+                advert_obj.affilated_to=request.POST.get('affilated')
+                advert_obj.course_duration=request.POST.get('course_duration')
+                advert_obj.happy_hour_offer=request.POST.get('happy_hour_offer')
+                advert_obj.facility=request.POST.get('facility')
+                advert_obj.keywords=request.POST.get('advert_keywords')
+                advert_obj.image_video_space_used=request.POST.get('image_and_video_space')
+                advert_obj.other_amenity=request.POST.get('any_other_amenity')
+                advert_obj.title =request.POST.get('title')
                 advert_obj.save()
+                print "advert updated"
 
-            print "advert updated"
+                if request.POST.get('any_other_details'):
+                    advert_obj.any_other_details = request.POST.get('any_other_details')
+                    advert_obj.save()
 
-            subcat_list = request.POST.get('subcat_list')
-            print subcat_list
-            subcat_lvl = 1
-            # String to list
-            if subcat_list != '':
-                sc_list = subcat_list.split(',')
-                for subcat in sc_list[0:5]:
-                    if subcat:
-                        print 'Subcat: ', subcat, subcat_lvl
-                        if subcat_lvl == 1:
-                            advert_obj.category_level_1 = CategoryLevel1.objects.get(category_id=subcat)
-                            advert_obj.save()
-                        if subcat_lvl == 2:
-                            advert_obj.category_level_2 = CategoryLevel2.objects.get(category_id=subcat)
-                            advert_obj.save()
-                        if subcat_lvl == 3:
-                            advert_obj.category_level_3 = CategoryLevel3.objects.get(category_id=subcat)
-                            advert_obj.save()
-                        if subcat_lvl == 4:
-                            advert_obj.category_level_4 = CategoryLevel4.objects.get(category_id=subcat)
-                            advert_obj.save()
-                        if subcat_lvl == 5:
-                            advert_obj.category_level_5 = CategoryLevel5.objects.get(category_id=subcat)
-                            advert_obj.save()
-                        print 'Advert Subcat Mapping saved'
-                        subcat_lvl += 1
-            if request.POST['check_image'] == "1":
-                advert_obj.display_image = request.FILES['display_image']
-                advert_obj.save()
+                print "advert updated"
 
-            attachment_list = []
-            attachment_list = request.POST.get('attachments')
-            save_attachments(attachment_list, advert_obj)
+                subcat_list = request.POST.get('subcat_list')
+                print subcat_list
+                subcat_lvl = 1
+                # String to list
+                subcat_list = subcat_list.split(',')
+                if subcat_list != '':
+                    for subcat in subcat_list:
+                        if subcat:
+                            print 'Subcat: ', subcat, subcat_lvl
+                            if subcat_lvl == 1:
+                                advert_obj.category_level_1 = CategoryLevel1.objects.get(category_id=subcat)
+                                advert_obj.save()
+                            if subcat_lvl == 2:
+                                advert_obj.category_level_2 = CategoryLevel2.objects.get(category_id=subcat)
+                                advert_obj.save()
+                            if subcat_lvl == 3:
+                                advert_obj.category_level_3 = CategoryLevel3.objects.get(category_id=subcat)
+                                advert_obj.save()
+                            if subcat_lvl == 4:
+                                advert_obj.category_level_4 = CategoryLevel4.objects.get(category_id=subcat)
+                                advert_obj.save()
+                            if subcat_lvl == 5:
+                                advert_obj.category_level_5 = CategoryLevel5.objects.get(category_id=subcat)
+                                advert_obj.save()
+                            print 'Advert Subcat Mapping saved'
+                            subcat_lvl += 1
+                if request.POST['check_image'] == "1":
+                    advert_obj.display_image = request.FILES['display_image']
+                    advert_obj.save()
 
-            video_list = []
-            video_list = request.POST.get('ac_attachment')
-            save_video(video_list, advert_obj)
+                    save_advert_image(advert_obj)
 
-            print "advert updated"
+                attachment_list = []
+                attachment_list = request.POST.get('attachments')
+                save_attachments(attachment_list, advert_obj)
 
-            # phone_category_list = request.POST.get('phone_category_list')
-            # phone_category_list = phone_category_list.split(',')
-            # phone_number_list = request.POST.get('phone_number_list')
-            # phone_number_list = phone_number_list.split(',')
-            # zipped = zip(phone_category_list, phone_number_list)
-            # save_phone_number(zipped, advert_obj)
+                video_list = []
+                video_list = request.POST.get('ac_attachment')
+                save_video(video_list, advert_obj)
 
-            if request.POST.get('product_name_list'):
-                Product.objects.filter(advert_id=advert_id).delete()
-            if request.POST.get('opening_day_list'):
-                WorkingHours.objects.filter(advert_id=advert_id).delete()
-            if request.POST.get('amenity_list'):
-                Amenities.objects.filter(advert_id=advert_id).delete()
-            if request.POST.get('additional_amenity'):
-                AdditionalAmenities.objects.filter(advert_id=advert_id).delete()
-            if request.POST.get('near_attraction'):
-                NearByAttraction.objects.filter(advert_id=advert_id).delete()
-            if request.POST.get('near_shopnmal'):
-                NearestShopping.objects.filter(advert_id=advert_id).delete()
+                print "advert updated"
 
-            product_name_list = request.POST.get('product_name_list')
-            product_name_list = product_name_list.split(',')
-            product_price_list = request.POST.get('product_price_list')
-            product_price_list = product_price_list.split(',')
-            zipped_product = zip(product_name_list, product_price_list)
-            save_product(zipped_product, advert_obj)
+                # phone_category_list = request.POST.get('phone_category_list')
+                # phone_category_list = phone_category_list.split(',')
+                # phone_number_list = request.POST.get('phone_number_list')
+                # phone_number_list = phone_number_list.split(',')
+                # zipped = zip(phone_category_list, phone_number_list)
+                # save_phone_number(zipped, advert_obj)
 
-            opening_day_list = request.POST.get('opening_day_list')
-            opening_day_list = opening_day_list.split(',')
+                if request.POST.get('product_name_list'):
+                    Product.objects.filter(advert_id=advert_id).delete()
+                if request.POST.get('opening_day_list'):
+                    WorkingHours.objects.filter(advert_id=advert_id).delete()
+                if request.POST.get('amenity_list'):
+                    Amenities.objects.filter(advert_id=advert_id).delete()
+                if request.POST.get('additional_amenity'):
+                    AdditionalAmenities.objects.filter(advert_id=advert_id).delete()
+                if request.POST.get('near_attraction'):
+                    NearByAttraction.objects.filter(advert_id=advert_id).delete()
+                if request.POST.get('near_shopnmal'):
+                    NearestShopping.objects.filter(advert_id=advert_id).delete()
 
-            start_time_list = request.POST.get('start_time_list')
-            start_time_list = start_time_list.split(',')
+                product_name_list = request.POST.get('product_name_list')
+                product_name_list = product_name_list.split('_PRODUCT_NAME_IS_SEPARATED')
+                product_price_list = request.POST.get('product_price_list')
+                product_price_list = product_price_list.split('_PRODUCT_PRICE_IS_SEPARATED')
+                zipped_product = zip(product_name_list, product_price_list)
+                save_product(zipped_product, advert_obj)
 
-            end_time_list = request.POST.get('end_time_list')
-            end_time_list = end_time_list.split(',')
+                opening_day_list = request.POST.get('opening_day_list')
+                opening_day_list = opening_day_list.split(',')
 
-            zipped_wk = zip(opening_day_list, start_time_list, end_time_list)
-            save_working_hours(zipped_wk, advert_obj)
+                start_time_list = request.POST.get('start_time_list')
+                start_time_list = start_time_list.split(',')
 
-            amenity_list = request.POST.get('amenity_list')
-            amenity_list = amenity_list.split(',')
-            save_amenity(amenity_list, advert_obj)
+                end_time_list = request.POST.get('end_time_list')
+                end_time_list = end_time_list.split(',')
 
-            exe_amenity_list = request.POST.get('additional_amenity')
-            exe_amenity_list = exe_amenity_list.split(',')
-            save_exe_amenity(exe_amenity_list, advert_obj)
+                zipped_wk = zip(opening_day_list, start_time_list, end_time_list)
+                save_working_hours(zipped_wk, advert_obj)
 
-            near_attr_list = request.POST.get('near_attraction')
-            near_attr_list = near_attr_list.split(',')
-            save_near_attr(near_attr_list, advert_obj)
+                amenity_list = request.POST.get('amenity_list')
+                amenity_list = amenity_list.split(',')
+                save_amenity(amenity_list, advert_obj)
 
-            near_shopnmal = request.POST.get('near_shopnmal')
-            near_shopnmal = near_shopnmal.split(',')
 
-            near_shonmald = request.POST.get('near_shonmald')
-            near_shonmald = near_shonmald.split(',')
+                near_attr_list = request.POST.get('near_attraction')
+                near_attr_list = near_attr_list.split(',')
+                save_near_attr(near_attr_list, advert_obj)
 
-            zipped_shopmal = zip(near_shopnmal, near_shonmald)
-            save_shpnmal(zipped_shopmal, advert_obj)
+                near_shopnmal = request.POST.get('near_shopnmal')
+                near_shopnmal = near_shopnmal.split(',')
 
-            cat = advert_obj.category_id.category_name
-            if cat == 'Real Estate':
-                print "SCHOOL", request.POST.get('near_schol')
-                if request.POST.get('near_schol'):
-                    NearestSchool.objects.filter(advert_id=advert_id).delete()
+                near_shonmald = request.POST.get('near_shonmald')
+                near_shonmald = near_shonmald.split(',')
 
-                near_schol = request.POST.get('near_schol')
-                near_schol = near_schol.split(',')
+                zipped_shopmal = zip(near_shopnmal, near_shonmald)
+                save_shpnmal(zipped_shopmal, advert_obj)
 
-                print "SCHOOL DI SORTING", request.POST.get('near_schold')
-                near_schold = request.POST.get('near_schold')
-                near_schold = near_schold.split(',')
+                cat = advert_obj.category_id.category_name
+                if cat == 'Real Estate':
+                    print "SCHOOL", request.POST.get('near_schol')
+                    if request.POST.get('near_schol'):
+                        NearestSchool.objects.filter(advert_id=advert_id).delete()
 
-                print "AFTER SCHOOL"
+                    near_schol = request.POST.get('near_schol')
+                    near_schol = near_schol.split(',')
 
-                zipped_school = zip(near_schol, near_schold)
-                save_school(zipped_school, advert_obj)
+                    print "SCHOOL DI SORTING", request.POST.get('near_schold')
+                    near_schold = request.POST.get('near_schold')
+                    near_schold = near_schold.split(',')
 
-                if request.POST.get('near_hosp'):
-                    NearestHospital.objects.filter(advert_id=advert_id).delete()
+                    print "AFTER SCHOOL"
 
-                near_hosp = request.POST.get('near_hosp')
-                near_hosp = near_hosp.split(',')
+                    zipped_school = zip(near_schol, near_schold)
+                    save_school(zipped_school, advert_obj)
 
-                near_hospd = request.POST.get('near_hospd')
-                near_hospd = near_hospd.split(',')
+                    if request.POST.get('near_hosp'):
+                        NearestHospital.objects.filter(advert_id=advert_id).delete()
 
-                zipped_hospital = zip(near_hosp, near_hospd)
-                save_hospital(zipped_hospital, advert_obj)
-            # advert_add_sms(advert_obj)
-            # advert_add_mail(advert_obj)
-            data = {'success': 'true'}
+                    near_hosp = request.POST.get('near_hosp')
+                    near_hosp = near_hosp.split(',')
 
-    except Exception, e:
-        print 'Exception :', e
-        data = {'data': 'none'}
+                    near_hospd = request.POST.get('near_hospd')
+                    near_hospd = near_hospd.split(',')
+
+                    zipped_hospital = zip(near_hosp, near_hospd)
+                    save_hospital(zipped_hospital, advert_obj)
+                # advert_add_sms(advert_obj)
+                # advert_add_mail(advert_obj)
+                data = {'success': 'true'}
+
+        except Exception, e:
+            print 'Exception :', e
+            data = {'data': 'none'}
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
@@ -2912,7 +3578,7 @@ def update_advert_video(request):
 def advert_add_mail(advert_obj):
     gmail_user = "cityhoopla2016"
     gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     # pdb.set_trace()
     try:
@@ -2936,7 +3602,7 @@ def advert_add_mail(advert_obj):
 def advert_edit_mail(advert_obj):
     gmail_user = "cityhoopla2016"
     gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     # pdb.set_trace()
     try:
@@ -2960,7 +3626,7 @@ def advert_edit_mail(advert_obj):
 def advert_inactive_mail(advert_obj):
     gmail_user = "cityhoopla2016"
     gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     # pdb.set_trace()
     try:
@@ -2984,30 +3650,35 @@ def advert_inactive_mail(advert_obj):
 @csrf_exempt
 def check_category(request):
     # pdb.set_trace()
-    print request.POST
-    try:
-        if request.POST.get('cat_level') == '1':
-            cat_obj = CategoryLevel1.objects.filter(parent_category_id=request.POST.get('category_id'))
-        if request.POST.get('cat_level') == '2':
-            cat_obj = CategoryLevel2.objects.filter(parent_category_id=request.POST.get('category_id'))
-        if request.POST.get('cat_level') == '3':
-            cat_obj = CategoryLevel3.objects.filter(parent_category_id=request.POST.get('category_id'))
-        if request.POST.get('cat_level') == '4':
-            cat_obj = CategoryLevel4.objects.filter(parent_category_id=request.POST.get('category_id'))
-        if request.POST.get('cat_level') == '5':
-            cat_obj = CategoryLevel5.objects.filter(parent_category_id=request.POST.get('category_id'))
-        print cat_obj
-        cat_list = []
-        if cat_obj:
-            for cat in cat_obj:
-                options_data = '<option value=' + str(cat.category_id) + '>' + cat.category_name + '</option>'
-                cat_list.append(options_data)
-            data = {'category_list': cat_list}
-        else:
-            data = {'success': 'false'}
-        print data
-    except Exception, e:
-        print e
+    if not request.user.is_authenticated():
+        data = {'success':'Expired'}
+
+    else:
+        print 'SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS'
+        print '.......request.POST......',request.POST
+        try:
+            if request.POST.get('cat_level') == '1':
+                cat_obj = CategoryLevel1.objects.filter(parent_category_id=request.POST.get('category_id'))
+            if request.POST.get('cat_level') == '2':
+                cat_obj = CategoryLevel2.objects.filter(parent_category_id=request.POST.get('category_id'))
+            if request.POST.get('cat_level') == '3':
+                cat_obj = CategoryLevel3.objects.filter(parent_category_id=request.POST.get('category_id'))
+            if request.POST.get('cat_level') == '4':
+                cat_obj = CategoryLevel4.objects.filter(parent_category_id=request.POST.get('category_id'))
+            if request.POST.get('cat_level') == '5':
+                cat_obj = CategoryLevel5.objects.filter(parent_category_id=request.POST.get('category_id'))
+            print '.........cat_obj.............',cat_obj
+            cat_list = []
+            if cat_obj:
+                for cat in cat_obj:
+                    options_data = '<option value=' + str(cat.category_id) + '>' + cat.category_name + '</option>'
+                    cat_list.append(options_data)
+                data = {'success': 'true','category_list': cat_list}
+            else:
+                data = {'success': 'false'}
+            print 'SSSSSSSSSSSSSSSSSSSSSSSSS',data
+        except Exception, e:
+            print e
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
@@ -3461,5 +4132,6 @@ def advert_booking_list(request):
         data = {'supplier_id':supplier_id,'coupon_list':coupon_list,'advert_name':advert_obj.advert_name,'booking_count':len(coupon_list),
                 'username': request.session['login_user']}
         return render(request, 'Admin/advert_bookings.html', data)
+
 
 

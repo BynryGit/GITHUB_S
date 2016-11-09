@@ -624,37 +624,16 @@ hr {
 	
 	   <div class="row">
 			<div class="col-lg-12">		
-			
-
-					<div class="portlet light ">
-			
-				       <!-- BEGIN PAGE HEADER-->
-
-                    <!-- BEGIN PAGE TITLE-->
-                         
-                         <div class="row" >
-  				
-						  		 <div class="col-md-12" style="margin-left: -14px;" >
+			         
+			         <div class="portlet light ">
+			            <div class="row" >
+  				          	 <div class="col-md-12" style="margin-left: -14px;" >
 						  			 <div class="col-md-2"  style="font-weight: 300; font-style: normal; font-size: 24px;color: #2F353B;margin-top: -25px;">
 						            <p> 
 						            <span> Dashboard </span>
 						            </p> 
 						          </div>
 						    
-						        <div class="col-lg-3" id="citys" style="font-size: 12px;">
-                                 <select   class="form-control sel2"  onchange="change_data();">
-                                 
-													 <option   value="all" > All</option>													 
-													 {% for city in city_places_list %}
-												    
-												    <option   value="{{ city.city_place_id }}" > {{ city.city }}</option>
-
-													  {% endfor %}
-											</select>
-											
-                   		    </div>
-                   		
-                   		       
                    		 </div>
 						      </div>
 						      <br>
@@ -667,8 +646,21 @@ hr {
 						            <span> Statistics </span>
 						            </p> 
 						          </div>
-						    
-						        <div class="col-lg-3" id="week" style="font-size: 12px;    margin-top: -4px;">
+						          
+						          <div class="col-lg-3" id="citys" style="font-size: 12px;  margin-top: -4px;">
+                                 <select   class="form-control sel2"  onchange="change_data1();">
+                                 
+													 <option   value="all" > All</option>													 
+													 {% for city in city_places_list %}
+												    
+												    <option   value="{{ city.city_place_id }}" > {{ city.city }}</option>
+
+													  {% endfor %}
+											</select>
+											
+                   		    </div>
+                   		    
+						          <div class="col-lg-3" id="week" style="font-size: 12px; margin-top: -4px;">
                                  <select   class="form-control sel2"  onchange="change_data1();">
 
 												    <option   value="week" >Current Week</option>
@@ -677,19 +669,15 @@ hr {
 											</select>
                    		    </div>
                    		
-                   		       
                    		 </div>
 						      </div>
-						     
-                    <!-- END PAGE TITLE-->
-                    <!-- END PAGE HEADER-->
+						  
                     
-  			<div class="portlet-body form">
-          <!-- BEGIN FORM-->
-
-							<div class="row">
-					       <div class="col-lg-12"  >
-					     			<div class="col-lg-2" style="margin-top: 9px;border:1px solid #cccccc; margin-right: 23px;height: 110px; width: 210px;box-shadow: 2px 2px 5px #bdbcbc;">
+  			   
+                 <!-- BEGIN FORM-->
+                	<div class="row">
+					       <div class="col-lg-12"  style="padding-left: 29px;">
+					     			<div class="col-lg-2" style="margin-top: 9px;border:1px solid #cccccc; margin-right: 23px;height: 110px; width: 225px;box-shadow: 2px 2px 5px #bdbcbc;">
 											<div  style="	    font-weight: 300;
 																	    font-style: normal;
 																	    font-size: 30px;
@@ -700,7 +688,7 @@ hr {
 												<center>  Payment Received </center>
 											</div>   			
 					     			</div>
-					     			<div class="col-lg-2" style="margin-top: 9px;border:1px solid #cccccc;margin-right: 23px;height: 110px; width: 210px;box-shadow: 2px 2px 5px #bdbcbc;">
+					     			<div class="col-lg-2" style="margin-top: 9px;border:1px solid #cccccc;margin-right: 23px;height: 110px; width: 225px;box-shadow: 2px 2px 5px #bdbcbc;">
 											    
 											    <div style="
 																	    font-weight: 300;
@@ -714,7 +702,7 @@ hr {
 											</div> 
 																     			
 					     			</div>
-					     			<div class="col-lg-2" style="margin-top: 9px;border:1px solid #cccccc;margin-right: 23px;height: 110px; width: 210px;box-shadow: 2px 2px 5px #bdbcbc;" >
+					     			<div class="col-lg-2" style="margin-top: 9px;border:1px solid #cccccc;margin-right: 23px;height: 110px; width: 225px;box-shadow: 2px 2px 5px #bdbcbc;" >
 					     					    <div style="
 																	    font-weight: 300;
 																	    font-style: normal;
@@ -727,7 +715,7 @@ hr {
 											</div> 
 											
 					     			</div>
-					     			<div class="col-lg-2" style="margin-top: 9px;border:1px solid #cccccc;margin-right: 23px;height: 110px; width: 210px;box-shadow: 2px 2px 5px #bdbcbc;">
+					     			<div class="col-lg-2" style="margin-top: 9px;border:1px solid #cccccc;margin-right: 23px;height: 110px; width: 225px;box-shadow: 2px 2px 5px #bdbcbc;">
 					     					<div style="
 																	    font-weight: 300;
 																	    font-style: normal;
@@ -745,9 +733,9 @@ hr {
 								
 					       </div>
 					     </div>
-					     
-					    <br>
-					     
+					  </div>   
+			 <div class="portlet light ">
+			   <div class="portlet-body form">   
 					   <div class="row" >
   				
 						  		 <div class="col-md-12">
@@ -761,18 +749,32 @@ hr {
 					</div>
 					     
 					   <div class="row">
-					       <div class="col-lg-12" style="margin-left: -14px;">
+					       <div class="col-lg-12" >
 					       
-					       <div class="col-md-6 col-sm-6" style="width: 476px;">
+					       <div class="col-md-6 col-sm-6" style="width: 500px;">
 
                                 <div class="portlet light " style="border:1px solid #cccccc; box-shadow: 2px 2px 5px #bdbcbc;">
                                     <div class="portlet-title">
-                                        <div class="">
-
-                                            <span  style="font-style: normal; font-size: 14px;">Today's Login</span>
-                                            
-                                        <span style="float: right; font-style: normal; font-size: 12px;" > Last 24 hours</span>
-                                      </div>
+                                       
+    														<div class="col-lg-6">
+                                                <span  style="font-style: normal; font-size: 14px;">Today's Login</span>
+                                             </div>
+ 														<!-- 	<div class="col-lg-4">			                                        
+                                                <span style="float: right; font-style: normal; font-size: 12px;" > Last 24 hours</span>
+   														</div>      -->                                 
+                                             <div class="col-lg-5" id="citys_login" style="font-size: 12px; float: right">
+				                                   <select   class="form-control sel2"  onchange="change_data_login();">
+				                                 
+																	 <option   value="all" > All</option>													 
+																	 {% for city in city_places_list %}
+																    
+																    <option   value="{{ city.city_place_id }}" > {{ city.city }}</option>
+				
+																	  {% endfor %}
+														   </select>
+														   </div>
+                   		    
+                                      
                                     
                                     </div>
                                     <div class="portlet-body">
@@ -784,72 +786,108 @@ hr {
 
                             </div>
 					     		                          
-                          <div class="col-md-6 col-sm-6" style="width: 476px;padding-left: 0px;">
+                          <div class="col-md-6 col-sm-6" style="width: 500px;padding-left: 0px;">
                                 <!-- BEGIN PORTLET-->
                                 <div class="portlet light " style="border:1px solid #cccccc; box-shadow: 2px 2px 5px #bdbcbc;">
                                     <div class="portlet-title">
                                         <div class="">
                                            <!--  <i class="icon-bar-chart font-green"></i> -->
-                                            <span  style="font-style: normal; font-size: 14px;">Total Subscriptions</span>
-                                            
+                                            <div class="col-lg-6"> 
+                                               <span  style="font-style: normal; font-size: 14px;">Total Subscriptions</span>
+                                            </div>
                                             <!-- <span class="caption-helper">daily stats</span> -->
+                                            
+                                            <div class="col-lg-5" id="citys_sub" style="font-size: 12px; float: right">
+				                                   <select   class="form-control sel2"  onchange="change_data_subsctn();">
+				                                 
+																	 <option   value="" > Select City</option>													 
+																	 {% for city in city_places_list %}
+																    
+																    <option   value="{{ city.city_place_id }}" > {{ city.city }}</option>
+				
+																	  {% endfor %}
+														   </select>
+														   </div>
                                        
-                                        <span style="float: right; font-style: normal; font-size: 12px;" > Last 12 months</span>
+                                        <!-- <span style="float: right; font-style: normal; font-size: 12px;" > Last 12 months</span> -->
                                       </div>
                                     
                                     </div>
                                     <div class="portlet-body">
                                         <div class="portlet-body">
-                                            <div id="highchart_1" style="height:290px;"></div>
+                                            <div id="total_subscription" style="height:290px;"></div>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- END PORTLET-->
                             </div>
                         
-                        <div class="col-md-6 col-sm-6" style="width: 476px;">
+                        <div class="col-md-6 col-sm-6" style="width: 500px;">
 
                             <div class="portlet light " style="border:1px solid #cccccc; box-shadow: 2px 2px 5px #bdbcbc;">
                                 <div class="portlet-title" >
                                     <div class="">
                                         <i class="icon-share font-red-sunglo hide"></i>
-                                        <span style="font-style: normal; font-size: 14px;"> Last 1 Week New Subscriptions</span>
-
-                                        <span style="float: right;font-style: normal; font-size: 12px;" > Last 7 days</span>
+                                            <div class="col-lg-6">  
+                                              <span style="font-style: normal; font-size: 14px;"> Last 1 Week New Subscriptions</span>
+													     </div>
+													     <div class="col-lg-5" id="citys_sub1" style="font-size: 12px; float: right">
+				                                   <select   class="form-control sel2"  onchange="change_data_subsctn1();">
+				                                 
+																	 <option   value="" > Select City</option>													 
+																	 {% for city in city_places_list %}
+																    
+																    <option   value="{{ city.city_place_id }}" > {{ city.city }}</option>
+				
+																	  {% endfor %}
+														     </select>
+														  </div>
+														   
+                                       <!--  <span style="float: right;font-style: normal; font-size: 12px;" > Last 7 days</span> -->
                                     </div>
                                  
                                 </div>
                                 <div class="portlet-body">
-                                        <div id="Payment_Collection2" style="height: 300px;"> </div>
+                                        <div id="total_subscription1" style="height: 300px;"> </div>
                                 </div>
                             </div>
 
                         </div>
                         
-                          <div class="col-md-6 col-sm-6" style="width: 476px;padding-left: 0px;">
+                          <div class="col-md-6 col-sm-6" style="width: 500px;padding-left: 0px;">
                             <!-- BEGIN PORTLET-->
                             <div class="portlet light " style="border:1px solid #cccccc; box-shadow: 2px 2px 5px #bdbcbc;">
                                 <div class="portlet-title" >
                                     <div class="">
                                         <i class="icon-share font-red-sunglo hide"></i>
-                                        <span style="font-style: normal; font-size: 14px;">Payment Received</span>
+                                        
+                                        <div class="col-lg-5">
+                                            <span style="font-style: normal; font-size: 14px;"> Today's Payment Collection</span>
+                                        </div>
+                                        <div class="col-lg-5" id="city_payment" style="font-size: 12px; float: right">
+			                                   <select   class="form-control sel2"  onchange="change_data_payment();">
+			                                 
+																 <option   value="" > Select City</option>													 
+																 {% for city in city_places_list %}
+															    
+															    <option   value="{{ city.city_place_id }}" > {{ city.city }}</option>
+			
+																  {% endfor %}
+													     </select>
+													 </div>
+														  
                                         <!-- <span class="caption-helper">daily stats</span> -->
-                                        <span style="float: right; font-style: normal; font-size: 12px;" > Last 7 days</span>
+                                        <!-- <span style="float: right; font-style: normal; font-size: 12px;" > Last 7 days</span> -->
                                     </div>
                                  
                                 </div>
                                 <div class="portlet-body">
-                                        <div id="Payment_Collection1" style="height: 300px;"> </div>
+                                        <div id="Payment_Collection_1" style="height: 300px;"> </div>
                                 </div>
                             </div>
 
                         </div>
                         
-                          
-                        
-                         
-                        
-			
 					       </div>
 					     </div>
 				       </div>
@@ -948,6 +986,269 @@ $(".sel2").select2({
             width: '100%'
         })
         
+function change_data_login(){
+
+citys_var = $('#citys_login :selected').val();
+
+	$.ajax({
+  	  	  type	: "GET",
+		  url 	: '/get-login-graph-data/',
+			data : {'citys_var':citys_var},
+	
+
+	     success: function (response) {
+	     		console.log(response);
+	     	
+	     	             $("#highchart_2").highcharts({
+                chart:{
+                    style:{
+                        fontFamily:"Open Sans"
+                    }
+                },
+                title:{
+                    text:"",
+                    x:-20
+                },
+                //subtitle:{text:"Source: WorldClimate.com",x:-20},
+                xAxis:{
+                    title:{
+                        text:""
+                    },
+                    categories:["00.00","08.00","16.00","23.59"]
+                },
+                yAxis:{
+                    tickInterval: 2,
+                    title:{
+                        text:""
+                    },
+                    plotLines:[{value:0,width:1,color:"#808080"}]
+                },
+                tooltip:{
+                    valueSuffix:""
+                },
+                legend:{
+                    layout:"vertical",
+                    align:"right",
+                    verticalAlign:"middle",
+                    borderWidth:0
+                },
+                series:[
+                    {name: "Registered Users",data:[response.count_zero1,response.count_first,response.count_second,response.count_third]}, 
+                    {name: "Guest Users",data:[response.count_zero_guest,response.count_first_guest,response.count_second_guest,response.count_third_guest]}, 
+                ]
+            }) 
+	     	
+	     	
+	      },
+	      error : function(response){
+	         	alert("_Error");
+	   	},
+	                  
+	  });
+}
+
+function change_data_subsctn(){
+
+citys_var = $('#citys_sub :selected').val();
+
+	$.ajax({
+  	  	  type	: "GET",
+		  url 	: '/get-subscription-graph/',
+			data : {'citys_var':citys_var},
+	
+
+	 success: function (response) {
+	     console.log(response);   
+			                    
+	     	   var chart = AmCharts.makeChart( "total_subscription", {
+	     	   			     	   			 
+				  "type": "serial",
+				  "theme": "light",
+				  //"rotate": true,
+				  "dataProvider": response.final_list,
+				  "valueAxes": [ {
+				
+				    "gridColor": "#FFFFFF",
+				    "gridAlpha": 0.2,
+				    "dashLength": 0,
+
+				  } ],
+				  "gridAboveGraphs": true,
+				  "startDuration": 1,
+				  "graphs": [ {
+				    "balloonText": "[[category]]: <b>[[value]]</b>",
+				    "fillAlphas": 0.8,
+				    "lineAlpha": 0.2,
+				    "type": "column",
+				    "autoColor": true,
+				    "valueField": "visits",
+				    "fixedColumnWidth": 20
+				  } ],
+				  
+				  "chartCursor": {
+				    "categoryBalloonEnabled": false,
+				    "cursorAlpha": 0,
+				    "zoomable": false
+				  },
+				  "categoryField": "day",
+				  "categoryAxis": {
+				    "gridPosition": "start",
+				    "gridAlpha": 0,
+				    "labelRotation": 45,
+				    "autoWrap": true,
+				    "tickPosition": "start",
+				    "tickLength": 5
+				  },
+				  
+				  
+				} );
+				
+	    },
+	      error : function(response){
+	         	alert("_Error");
+	   	},
+	                  
+	  });
+}
+
+function change_data_subsctn1(){
+
+citys_var = $('#citys_sub1 :selected').val();
+
+	$.ajax({
+  	  	  type	: "GET",
+		  url 	: '/get-subscription-graph1/',
+			data : {'citys_var':citys_var},
+	
+
+	 success: function (response) {
+	     console.log(response);
+	     			
+            
+	     	   var chart = AmCharts.makeChart( "total_subscription1", {
+				
+				
+				  "type": "serial",
+				  "theme": "light",
+				  "dataProvider": response.final_list,
+				  "valueAxes": [ {
+				
+				   //"autoMargins":"false", 
+				  //"marginRight":"5",
+				
+				
+				    "gridColor": "#FFFFFF",
+				    "gridAlpha": 0.2,
+				    "dashLength": 0
+				  } ],
+				  "gridAboveGraphs": true,
+				  "startDuration": 1,
+				  "graphs": [ {
+				    "balloonText": "[[category]]: <b>[[value]]</b>",
+				    "fillAlphas": 0.8,
+				    "lineAlpha": 0.2,
+				    "type": "column",
+				    "autoColor": true,
+				    "valueField": "visits",
+				    "fixedColumnWidth": 20
+				  } ],
+				  "chartCursor": {
+				    "categoryBalloonEnabled": false,
+				    "cursorAlpha": 0,
+				    "zoomable": false
+				  },
+				  "categoryField": "day",
+				  "categoryAxis": {
+				    "gridPosition": "start",
+				    "gridAlpha": 0,
+				     "labelRotation": 45,
+				    "tickPosition": "start",
+				    "tickLength": 5
+				  },
+				  "export": {
+				    "enabled": true
+				  }
+				
+				} );
+				
+	    },
+	      error : function(response){
+	         	alert("_Error");
+	   	},
+	                  
+	  });
+}
+
+function change_data_payment(){
+
+citys_var = $('#city_payment :selected').val();
+
+	$.ajax({
+  	  	  type	: "GET",
+		  url 	: '/get-payment-graph/',
+			data : {'citys_var':citys_var},
+	
+
+	 success: function (response) {
+	     console.log(response);
+	     			
+            
+	     	   var chart = AmCharts.makeChart( "Payment_Collection_1", {
+				
+				
+				  "type": "serial",
+				  "theme": "light",
+				  "dataProvider": response.final_list,
+				  "valueAxes": [ {
+				
+				   //"autoMargins":"false", 
+				  //"marginRight":"5",
+				
+				
+				    "gridColor": "#FFFFFF",
+				    "gridAlpha": 0.2,
+				    "dashLength": 0
+				  } ],
+				  "gridAboveGraphs": true,
+				  "startDuration": 1,
+				  "graphs": [ {
+				    "balloonText": "[[category]]: <b>[[value]]</b>",
+				    "fillAlphas": 0.8,
+				    "lineAlpha": 0.2,
+				    "type": "column",
+				    "autoColor": true,
+				    "valueField": "visits",
+				    "fixedColumnWidth": 20
+				  } ],
+				  "chartCursor": {
+				    "categoryBalloonEnabled": false,
+				    "cursorAlpha": 0,
+				    "zoomable": false
+				  },
+				  "categoryField": "day",
+				  "categoryAxis": {
+				    "gridPosition": "start",
+				    "gridAlpha": 0,
+				     "labelRotation": 45,
+				    "tickPosition": "start",
+				    "tickLength": 5
+				  },
+				  "export": {
+				    "enabled": true
+				  }
+				
+				} );
+				
+	    },
+	      error : function(response){
+	         	alert("_Error");
+	   	},
+	                  
+	  });
+}
+
+
+
 function change_data1(){
 
 
@@ -987,6 +1288,8 @@ citys_var = $('#citys :selected').val();
 	                  
 	  });
 }
+
+
 	     		    
 function change_data(){
 
@@ -1077,7 +1380,8 @@ function change_data(){
                     borderWidth:0
                 },
                 series:[
-                    {name: "Registered Users",data:[response.count_zero1,response.count_11,response.count_22,response.count_33]},
+                    {name: "Registered Users",data:[response.count_zero1,response.count_11,response.count_22,response.count_33]}, 
+                    {name: "Guest Users",data:[response.count_zero_guest,response.count_first_guest,response.count_second_guest,response.count_third_guest]}, 
                 ]
             }) 
             
@@ -1128,7 +1432,8 @@ function change_data(){
 				    "lineAlpha": 0.2,
 				    "type": "column",
 				    "autoColor": true,
-				    "valueField": "visits"
+				    "valueField": "visits",
+				    "fixedColumnWidth": 20
 				  } ],
 				  "chartCursor": {
 				    "categoryBalloonEnabled": false,
@@ -1139,8 +1444,9 @@ function change_data(){
 				  "categoryAxis": {
 				    "gridPosition": "start",
 				    "gridAlpha": 0,
+				     "labelRotation": 45,
 				    "tickPosition": "start",
-				    "tickLength": 20
+				    "tickLength": 5
 				  },
 				  "export": {
 				    "enabled": true
@@ -1149,7 +1455,7 @@ function change_data(){
 				} );
 				
 				
-	var chart = AmCharts.makeChart( "Payment_Collection2", {
+	var chart = AmCharts.makeChart( "total_subscription", {
 				
 				
 				  "type": "serial",
@@ -1194,7 +1500,8 @@ function change_data(){
 				    "lineAlpha": 0.2,
 				    "type": "column",
 				    "autoColor": true,
-				    "valueField": "visits"
+				    "valueField": "visits",
+				    "fixedColumnWidth": 20
 				  } ],
 				  "chartCursor": {
 				    "categoryBalloonEnabled": false,
@@ -1205,8 +1512,9 @@ function change_data(){
 				  "categoryAxis": {
 				    "gridPosition": "start",
 				    "gridAlpha": 0,
+				     "labelRotation": 45,
 				    "tickPosition": "start",
-				    "tickLength": 20
+				    "tickLength": 5
 				  },
 				  "export": {
 				    "enabled": true
@@ -1215,8 +1523,6 @@ function change_data(){
 				} );
 				
 		            
-
-            
 	     		}
 	     		
 	     		else {
@@ -1307,7 +1613,7 @@ function change_data(){
                     borderWidth:0
                 },
                 series:[
-                    {name: "Registered Users",data:[{{count_zero}},{{count_1}},{{count_2}},{{count_3}}]},
+                    {name: "Registered Users",data:[{{count_zero}},{{count_first}},{{count_second}},{{count_third}}]},
                     {name: "Guest Users",data:[{{count_zero_guest}},{{count_first_guest}},{{count_second_guest}},{{count_third_guest}}]},
                 ]
             }) 
@@ -1358,7 +1664,8 @@ var chart = AmCharts.makeChart( "Payment_Collection1", {
     "lineAlpha": 0.2,
     "type": "column",
     "autoColor": true,
-    "valueField": "visits"
+    "valueField": "visits",
+    "fixedColumnWidth": 20
   } ],
   "chartCursor": {
     "categoryBalloonEnabled": false,
@@ -1369,8 +1676,9 @@ var chart = AmCharts.makeChart( "Payment_Collection1", {
   "categoryAxis": {
     "gridPosition": "start",
     "gridAlpha": 0,
+     "labelRotation": 45,
     "tickPosition": "start",
-    "tickLength": 20
+    "tickLength": 5
   },
   "export": {
     "enabled": true
@@ -1424,7 +1732,8 @@ var chart = AmCharts.makeChart( "Payment_Collection2", {
     "lineAlpha": 0.2,
     "type": "column",
     "autoColor": true,
-    "valueField": "visits"
+    "valueField": "visits",
+    "fixedColumnWidth": 20
   } ],
   "chartCursor": {
     "categoryBalloonEnabled": false,
@@ -1435,8 +1744,9 @@ var chart = AmCharts.makeChart( "Payment_Collection2", {
   "categoryAxis": {
     "gridPosition": "start",
     "gridAlpha": 0,
+     "labelRotation": 45,
     "tickPosition": "start",
-    "tickLength": 20
+    "tickLength": 5
   },
   "export": {
     "enabled": true

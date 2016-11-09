@@ -44,7 +44,9 @@ from datetime import date
 import calendar
 
 #SERVER_URL = "http://52.40.205.128"
-SERVER_URL = "http://192.168.0.5:8080" 
+#SERVER_URL = "http://127.0.0.1:8000" 
+SERVER_URL = "http://52.66.169.65"    
+
 def view_user_list(request):
     try:
         data = {}
@@ -155,7 +157,6 @@ def get_city_places(request):
         print ke
         data={'city_list': 'none','message':'No city available'}
     return HttpResponse(json.dumps(data), content_type='application/json')
-
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def consumer_booking_details(request):

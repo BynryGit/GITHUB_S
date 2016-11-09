@@ -36,9 +36,9 @@ from django.views.decorators.cache import cache_control
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 
-#SERVER_URL = "http://52.40.205.128"
+SERVER_URL = "http://52.66.169.65"
 #SERVER_URL = "http://52.66.144.182"
-SERVER_URL = "http://192.168.0.5:8080" 
+#SERVER_URL = "http://192.168.0.125:8011"
 
 
 
@@ -155,25 +155,25 @@ def city_life(request):
         try:
             pre_date = datetime.now().strftime("%Y-%m-%d")
             post_list = PostDetails.objects.all()
-            print '........post_details list...ALL....',post_list
+            print '........post_list.......',post_list
             for post_obj in post_list:
-                print '............posting_date_old....',posting_date_old
+                print 'WWWWWWWWWWWWW',posting_date_old
                 city_id = post_obj.city_id
-                print '............city_id...............',city_id
+                print 'AAAAAAAAAAAA',city_id
                 new_list = PostDetails.objects.filter(city_id = city_id)
-                print '....LIST BY CITY PARTICULAR....',new_list
+                print 'BBBBBBBBBBBB',new_list
                 for obj in new_list:
-                    city_name = obj.city_id.city_id.city_name
+                    city_name = obj.city_id.city_name
                     country_name = obj.country_id.country_name
                     unread_post = obj.post_file_id.unread_post
                     post_var = post_var + int(unread_post)
                    
-                    posting_date = obj.posting_date.strftime("%Y-%m-%d")
-                    if posting_date == pre_date :
-                        today_post_count = today_post_count + 1
+                    creation_date = obj.creation_date.strftime("%Y-%m-%d")
+                    if creation_date == pre_date :
+                        today_post_count = today_post_count +1
                 
                     posting_date_new = obj.posting_date.strftime("%Y-%m-%d")
-                    if posting_date_new >= posting_date_old:
+                    if posting_date_new > posting_date_old:
                         posting_date_old = posting_date_new
                         username = obj.username
                         posting_date = obj.posting_date.strftime("%Y-%m-%d")
@@ -193,10 +193,6 @@ def city_life(request):
 
                 }
                 final_list.append(post_data)
-
-                posting_date_old = '2000-01-01'
-                post_var = 0
-                today_post_count = 0
 
             data = {'success':'true','final_list':final_list,'country_list':get_country(request)
                    }

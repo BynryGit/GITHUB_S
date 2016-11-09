@@ -16,17 +16,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='AdditionalAmenities',
-            fields=[
-                ('extra_amenity_id', models.AutoField(serialize=False, editable=False, primary_key=True)),
-                ('extra_amenity', models.CharField(max_length=50, null=True, blank=True)),
-                ('creation_date', models.DateTimeField(null=True, blank=True)),
-                ('created_by', models.CharField(max_length=500, null=True, blank=True)),
-                ('updated_by', models.CharField(max_length=500, null=True, blank=True)),
-                ('updation_date', models.DateTimeField(null=True, blank=True)),
-            ],
-        ),
-        migrations.CreateModel(
             name='Advert',
             fields=[
                 ('advert_id', models.AutoField(serialize=False, editable=False, primary_key=True)),
@@ -42,6 +31,8 @@ class Migration(migrations.Migration):
                 ('discount_description', models.CharField(max_length=5000, null=True, blank=True)),
                 ('currency', models.CharField(max_length=50, null=True, blank=True)),
                 ('display_image', models.FileField(max_length=500, null=True, upload_to=b'images/user_images/', blank=True)),
+                ('advert_image', models.FileField(max_length=500, null=True, upload_to=b'images/advert_images/', blank=True)),
+                ('advert_slider_image', models.FileField(max_length=500, null=True, upload_to=b'images/advert_images/', blank=True)),
                 ('address_line_1', models.CharField(max_length=50, null=True, blank=True)),
                 ('address_line_2', models.CharField(max_length=50, null=True, blank=True)),
                 ('area', models.CharField(max_length=50, null=True, blank=True)),
@@ -67,6 +58,8 @@ class Migration(migrations.Migration):
                 ('updation_date', models.DateTimeField(null=True, blank=True)),
                 ('advert_views', models.CharField(max_length=10, null=True, blank=True)),
                 ('keywords', models.CharField(max_length=1000, null=True, blank=True)),
+                ('other_amenity', models.CharField(max_length=500, null=True, blank=True)),
+                ('title', models.CharField(default=None, max_length=50, null=True, blank=True)),
             ],
         ),
         migrations.CreateModel(
@@ -184,7 +177,6 @@ class Migration(migrations.Migration):
             name='Amenities',
             fields=[
                 ('amenity_id', models.AutoField(serialize=False, editable=False, primary_key=True)),
-                ('amenity', models.CharField(max_length=50, null=True, blank=True)),
                 ('creation_date', models.DateTimeField(null=True, blank=True)),
                 ('created_by', models.CharField(max_length=500, null=True, blank=True)),
                 ('updated_by', models.CharField(max_length=500, null=True, blank=True)),
@@ -214,6 +206,7 @@ class Migration(migrations.Migration):
                 ('first_name', models.CharField(default=None, max_length=100, null=True, blank=True)),
                 ('last_name', models.CharField(default=None, max_length=100, null=True, blank=True)),
                 ('IncomingTelNo', models.CharField(default=None, max_length=200, null=True, blank=True)),
+                ('TelNo', models.CharField(default=None, max_length=200, null=True, blank=True)),
                 ('email', models.CharField(default=None, max_length=200, null=True, blank=True)),
                 ('CallerArea', models.CharField(default=None, max_length=100, null=True, blank=True)),
                 ('caller_created_date', models.DateTimeField(null=True, blank=True)),
@@ -335,6 +328,24 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='CategorywiseAmenity',
+            fields=[
+                ('categorywise_amenity_id', models.AutoField(serialize=False, editable=False, primary_key=True)),
+                ('amenity', models.CharField(max_length=50, null=True, blank=True)),
+                ('status', models.CharField(default=b'1', max_length=150, null=True, choices=[(b'1', b'1'), (b'0', b'0')])),
+                ('creation_date', models.DateTimeField(null=True, blank=True)),
+                ('created_by', models.CharField(max_length=500, null=True, blank=True)),
+                ('updated_by', models.CharField(max_length=500, null=True, blank=True)),
+                ('updation_date', models.DateTimeField(null=True, blank=True)),
+                ('category', models.ForeignKey(blank=True, to='digispaceapp.Category', null=True)),
+                ('category_level_1', models.ForeignKey(blank=True, to='digispaceapp.CategoryLevel1', null=True)),
+                ('category_level_2', models.ForeignKey(blank=True, to='digispaceapp.CategoryLevel2', null=True)),
+                ('category_level_3', models.ForeignKey(blank=True, to='digispaceapp.CategoryLevel3', null=True)),
+                ('category_level_4', models.ForeignKey(blank=True, to='digispaceapp.CategoryLevel4', null=True)),
+                ('category_level_5', models.ForeignKey(blank=True, to='digispaceapp.CategoryLevel5', null=True)),
+            ],
+        ),
+        migrations.CreateModel(
             name='CategoryWiseRateCard',
             fields=[
                 ('rate_card_id', models.AutoField(serialize=False, editable=False, primary_key=True)),
@@ -370,7 +381,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('city_place_id', models.AutoField(serialize=False, editable=False, primary_key=True)),
                 ('currency', models.CharField(max_length=500, null=True, blank=True)),
-                ('about_city', models.CharField(max_length=5000, null=True, blank=True)),
+                ('about_city', models.CharField(max_length=50000, null=True, blank=True)),
                 ('city_image', models.FileField(max_length=500, null=True, upload_to=b'images/user_images/', blank=True)),
                 ('climate', models.CharField(max_length=500, null=True, blank=True)),
                 ('language', models.CharField(max_length=100, null=True, blank=True)),
@@ -395,6 +406,20 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='CityStar_Like',
+            fields=[
+                ('id', models.AutoField(serialize=False, editable=False, primary_key=True)),
+                ('creation_date', models.DateTimeField(null=True, blank=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='CityStar_View',
+            fields=[
+                ('id', models.AutoField(serialize=False, editable=False, primary_key=True)),
+                ('creation_date', models.DateTimeField(null=True, blank=True)),
+            ],
+        ),
+        migrations.CreateModel(
             name='CityStarDetails',
             fields=[
                 ('citystarID', models.AutoField(serialize=False, editable=False, primary_key=True)),
@@ -402,6 +427,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(default=None, max_length=100, null=True, blank=True)),
                 ('address1', models.CharField(default=None, max_length=400, null=True, blank=True)),
                 ('address2', models.CharField(default=None, max_length=400, null=True, blank=True)),
+                ('phone', models.CharField(default=None, max_length=100, null=True, blank=True)),
                 ('email', models.CharField(default=None, max_length=100, null=True, blank=True)),
                 ('education', models.CharField(default=None, max_length=100, null=True, blank=True)),
                 ('age', models.CharField(default=None, max_length=100, null=True, blank=True)),
@@ -409,18 +435,18 @@ class Migration(migrations.Migration):
                 ('summary', models.CharField(default=None, max_length=1000, null=True, blank=True)),
                 ('occupation', models.CharField(default=None, max_length=200, null=True, blank=True)),
                 ('description', models.CharField(default=None, max_length=5000, null=True, blank=True)),
-                ('image', models.FileField(max_length=500, null=True, upload_to=b'images/user_images/', blank=True)),
                 ('achievements', models.CharField(default=None, max_length=500, null=True, blank=True)),
-                ('phone', models.CharField(default=None, max_length=100, null=True, blank=True)),
+                ('image', models.FileField(max_length=500, null=True, upload_to=b'images/user_images/', blank=True)),
                 ('start_date', models.DateTimeField(null=True, blank=True)),
                 ('end_date', models.DateTimeField(null=True, blank=True)),
-                ('status', models.CharField(default=b'1', max_length=100, null=True, blank=True, choices=[(b'1', b'1'), (b'0', b'0')])),
+                ('status', models.CharField(default=b'active', max_length=100, null=True, blank=True, choices=[(b'current', b'current'), (b'default', b'default'), (b'expired', b'expired'), (b'active', b'active'), (b'deactivated', b'deactivated')])),
                 ('likes', models.CharField(max_length=100, null=True, blank=True)),
                 ('views', models.CharField(max_length=100, null=True, blank=True)),
                 ('shares', models.CharField(max_length=100, null=True, blank=True)),
-                ('favourites', models.CharField(max_length=100, null=True, blank=True)),
                 ('creation_date', models.DateTimeField(null=True, blank=True)),
                 ('creation_by', models.CharField(max_length=100, null=True, blank=True)),
+                ('updation_date', models.DateTimeField(null=True, blank=True)),
+                ('updation_by', models.CharField(max_length=100, null=True, blank=True)),
                 ('city', models.ForeignKey(blank=True, to='digispaceapp.City_Place', null=True)),
             ],
         ),
@@ -629,7 +655,7 @@ class Migration(migrations.Migration):
                 ('paid_amount', models.CharField(max_length=30, null=True, blank=True)),
                 ('payable_amount', models.CharField(max_length=30, null=True, blank=True)),
                 ('total_amount', models.CharField(max_length=30, null=True, blank=True)),
-                ('payment_created_date', models.DateTimeField(null=True, blank=True)),
+                ('payment_created_date', models.DateTimeField(default=django.utils.timezone.now, null=True, blank=True)),
                 ('payment_created_by', models.CharField(max_length=30, null=True, blank=True)),
                 ('payment_updated_by', models.CharField(max_length=30, null=True, blank=True)),
                 ('payment_updated_date', models.DateTimeField(null=True, blank=True)),
@@ -642,7 +668,6 @@ class Migration(migrations.Migration):
             fields=[
                 ('phone_category_id', models.AutoField(serialize=False, editable=False, primary_key=True)),
                 ('phone_category_name', models.CharField(max_length=15)),
-                ('phone_category_status', models.CharField(default=b'1', max_length=15, null=True, blank=True, choices=[(b'1', b'1'), (b'0', b'0')])),
                 ('phone_category_created_date', models.DateTimeField(null=True, blank=True)),
                 ('phone_category_created_by', models.CharField(max_length=30, null=True, blank=True)),
                 ('phone_category_updated_by', models.CharField(max_length=30, null=True, blank=True)),
@@ -679,7 +704,7 @@ class Migration(migrations.Migration):
             name='Places',
             fields=[
                 ('place_id', models.AutoField(serialize=False, primary_key=True)),
-                ('place_name', models.CharField(default=None, max_length=5000, null=True, blank=True)),
+                ('place_name', models.CharField(default=None, max_length=50000, null=True, blank=True)),
                 ('place_image', models.FileField(max_length=500, null=True, upload_to=b'images/user_images/', blank=True)),
                 ('place_type', models.CharField(default=None, max_length=30, null=True, blank=True)),
                 ('created_date', models.DateTimeField(default=datetime.datetime.now, null=True, blank=True)),
@@ -1069,6 +1094,26 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(blank=True, to='digispaceapp.ConsumerProfile', null=True),
         ),
         migrations.AddField(
+            model_name='citystar_view',
+            name='citystarID',
+            field=models.ForeignKey(blank=True, to='digispaceapp.CityStarDetails', null=True),
+        ),
+        migrations.AddField(
+            model_name='citystar_view',
+            name='user_id',
+            field=models.ForeignKey(blank=True, to='digispaceapp.ConsumerProfile', null=True),
+        ),
+        migrations.AddField(
+            model_name='citystar_like',
+            name='citystarID',
+            field=models.ForeignKey(blank=True, to='digispaceapp.CityStarDetails', null=True),
+        ),
+        migrations.AddField(
+            model_name='citystar_like',
+            name='user_id',
+            field=models.ForeignKey(blank=True, to='digispaceapp.ConsumerProfile', null=True),
+        ),
+        migrations.AddField(
             model_name='city_place',
             name='country_id',
             field=models.ForeignKey(blank=True, to='digispaceapp.Country', null=True),
@@ -1147,6 +1192,11 @@ class Migration(migrations.Migration):
             model_name='business',
             name='supplier',
             field=models.ForeignKey(blank=True, to='digispaceapp.Supplier', null=True),
+        ),
+        migrations.AddField(
+            model_name='amenities',
+            name='categorywise_amenity_id',
+            field=models.ForeignKey(blank=True, to='digispaceapp.CategorywiseAmenity', null=True),
         ),
         migrations.AddField(
             model_name='advertview',
@@ -1247,10 +1297,5 @@ class Migration(migrations.Migration):
             model_name='advert',
             name='supplier_id',
             field=models.ForeignKey(blank=True, to='digispaceapp.Supplier', null=True),
-        ),
-        migrations.AddField(
-            model_name='additionalamenities',
-            name='advert_id',
-            field=models.ForeignKey(related_name='add_ame', blank=True, to='digispaceapp.Advert', null=True),
         ),
     ]

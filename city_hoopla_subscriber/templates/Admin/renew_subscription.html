@@ -77,14 +77,14 @@ License: You must have a valid license purchased only from themeforest(the above
             <style type="text/css">
 
 .has-success .control-label{
-	color : #333;
+    color : #333;
 }
 
 .has-success .form-control {
-	border: 1px solid #C2CAD8;
+    border: 1px solid #C2CAD8;
 }
 
-		div.dataTables_wrapper div.dataTables_info {
+        div.dataTables_wrapper div.dataTables_info {
     padding-top: 8px;
     white-space: nowrap;
     display: none;
@@ -549,31 +549,20 @@ hr {
                 <ul class="nav navbar-nav pull-right">
                     <!-- BEGIN NOTIFICATION DROPDOWN -->
                     <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                    <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
-                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
-                           data-close-others="true">
-                            <i class="icon-bell"></i>
-                            <span class="badge badge-default" style="    background-color: #d22917;"> 7 </span>
-                        </a>
-                    </li>
+                    
                     <!-- END NOTIFICATION DROPDOWN -->
                     <li class="dropdown dropdown-user">
-                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
+                       <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
                            data-close-others="true">
-                            <img style="    width: 40px;" alt="" class="img-circle"
-                                 src="{{request.session.user_image}}">
+                            <!-- <img alt="" class="img-circle" src="{% static 'assets/layouts/layout2/img/avatar3_small.jpg" /> -->
                             <span class="username username-hide-on-mobile"> {{ request.session.login_user }} </span>
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-default">
                             <li>
-                                <a href="/subscriber-portal/subscriber-profile/?supplier_id={{request.session.supplier_id}}">
-                                    <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
-                            </li>
-                            <li>
-                                <a href="/subscriber-portal/log-out/">
-                                    <i class="fa fa-sign-out" aria-hidden="true"></i> Sign Out </a>
-                            </li>
+                                        <a href="/log-out/">
+                                        <i class="icon-key"></i> Log Out </a>
+                                    </li>
                         </ul>
                     </li>
                     <!-- END USER LOGIN DROPDOWN -->
@@ -888,7 +877,7 @@ hr {
                                                                                             Date </label>
                                                                                         <input type="text"
                                                                                                name="start_date"
-                                                                                               id="dt50"
+                                                                                               id="dt50" disabled
                                                                                                onchange="basic_subscription()"
                                                                                                class="form-control date-picker">
                                                                                         <label id="basicStartDate"
@@ -924,6 +913,7 @@ hr {
                                                                                     </label>
                                                                                     <hr style="border-top: 1px dashed #6B6B6B; margin-top: 0px; padding-top: 0px;">
                                                                                     {% for advert_service in advert_service_list %}
+
                                                                                     <ul class="radio-list list-inline"
                                                                                         data-error-container="#form_2_membership_error">
                                                                                         <div class="row">
@@ -934,9 +924,9 @@ hr {
                                                                                                            class="font-15 font-regular">
                                                                                                         <input type="checkbox"
                                                                                                            autocomplete="off"
-                                                                                                           id="check_{{advert_service.advert_rate_card_id}}"
+                                                                                                           id="check_{{advert_service.advert_rate_card_id}}_{{ forloop.counter }}"
                                                                                                            value="{{advert_service.service_name}}"
-                                                                                                           onclick='check_advert({{advert_service.advert_rate_card_id}});'
+                                                                                                           onclick='check_advert({{advert_service.advert_rate_card_id}},{{ forloop.counter }});'
                                                                                                            name="premium_service"
                                                                                                            class="premium_checkbox"/>{{advert_service.service_name}}</label>
                                                                                                 </li>
@@ -948,7 +938,7 @@ hr {
                                                                                                 <select id="day_{{advert_service.advert_rate_card_id}}"
                                                                                                         disabled="disabled"
                                                                                                         name="premium_ser_duration"
-                                                                                                        onchange="premium_duration({{advert_service.advert_rate_card_id}})"
+                                                                                                        onchange="premium_duration({{advert_service.advert_rate_card_id}},{{ forloop.counter }})"
                                                                                                         class="form-control days">
                                                                                                 </select>
 
@@ -959,10 +949,10 @@ hr {
                                                                                                 </label>
 
                                                                                                 <input type="text"
-                                                                                                       id="start_{{advert_service.advert_rate_card_id}}"
+                                                                                                       id="start_{{ forloop.counter }}"
                                                                                                        autocomplete="off"
                                                                                                        disabled="disabled"
-                                                                                                       onchange="premium_startdate({{advert_service.advert_rate_card_id}})"
+                                                                                                       onchange="premium_startdate({{advert_service.advert_rate_card_id}},{{ forloop.counter }})"
                                                                                                        class="form-control pre_start_date date-picker1"
                                                                                                        name="premium_start_date">
 
@@ -973,7 +963,7 @@ hr {
                                                                                                 </label>
 
                                                                                                 <input type="text"
-                                                                                                       id="end_{{advert_service.advert_rate_card_id}}"
+                                                                                                       id="end_{{ forloop.counter }}"
                                                                                                        class="form-control pre_end_date"
                                                                                                        readonly
                                                                                                        autocomplete="off"
@@ -1175,7 +1165,7 @@ hr {
                                                                                     Amount Paid
                                                                                 </label>
                                                                                 <input type="text" id="paid_amount"
-                                                                                       onkeypress="return validateIntKeyPress(this,event);"
+                                                                                       onkeypress="return validateFloatKeyPress(this,event);"
                                                                                        class="form-control"
                                                                                        name="total_paid_amount"/>
                                                                                 <label class="error font-12 font-regular"
@@ -1273,7 +1263,7 @@ hr {
                                                                                 <label class="control-label font-15 font-regular">Note
                                                                                     <span class="required"> * </span>
                                                                                 </label>
-                                                                                    <textarea type="text" id="note"
+                                                                                    <textarea type="text" id="note" maxlength="5000"
                                                                                               class="form-control"
                                                                                               name="payment_note"></textarea>
                                                                                 <label class="error col-lg-12 font-12 font-regular"
@@ -1348,7 +1338,7 @@ hr {
 <!-- /.modal -->
 <!-- BEGIN FOOTER -->
 <div class="page-footer">
-    <div class="page-footer-inner"> 2016 &copy; DigiSpace.
+    <div class="page-footer-inner"> 2016 &copy; DigiSpace Software Private Limited
     </div>
     <div class="scroll-to-top">
         <i class="icon-arrow-up"></i>
@@ -1698,8 +1688,8 @@ hr {
 <script src="{% static 'assets/bootstrap-tagsinput.js' %}" type="text/javascript"></script>
 <script src="{% static 'assets/global/plugins/ion.rangeslider/js/ion.rangeSlider.min.js' %}"></script>
 <script type="text/javascript">
-		
-	 $("#supplier_anchor").addClass("tab-active");
+        
+     $("#supplier_anchor").addClass("tab-active");
     $("#supplier_icon").addClass("icon-active");
     $("#supplier_active").css("display","block");
     
@@ -1721,7 +1711,7 @@ hr {
         return false;
     });
 
-	
+    
 
 $( document ).ready(function() {
         $('.subcat_select').select2();
@@ -1760,16 +1750,27 @@ $( document ).ready(function() {
 
     var cat_lvl = {{cat_lvl}};
     var cat_id = {{cat_id}};
+    var has_platinum = ''
+    var has_diamond = ''
+    var has_gold = ''
+    var has_silver = ''
+    var has_bronze = ''
+    var has_value = ''
 
     function check_cat(lvl,this_val){
-    supplier_id=$("#supplier_id_hidden").val();
+        supplier_id=$("#supplier_id_hidden").val();
         if($(this_val).attr('data-level')=="0"){
-        clear_subcat();
+            clear_subcat();
+        }
+        if($(this_val).val() == ""){
+            $('#lvl'+lvl+'_row').hide();
+            $("#subscription_div").css("display","none");
+            return false;
         }
         $.ajax({
             type    : "POST",
             url : '/check-category-supplier/',
-            data : {'category_id':$(this_val).val(),'cat_level':lvl,'supplier_id':supplier_id},
+            data : {'category_id':$(this_val).val(),'cat_level':lvl,'supplier_id':supplier_id,'city_place_id':{{city_place_id}}},
             success: function (response) {
                 if(response.success!='false'){
                     $('#lvl'+lvl).html('');
@@ -1797,6 +1798,7 @@ $( document ).ready(function() {
                         cat_id = '';
                         $("#subscription_div").css("display","none");
                     }
+
                 }
             },
             error : function(response){
@@ -1827,10 +1829,101 @@ $( document ).ready(function() {
         } else {
             alert("Invalid Date");
         }
+        $("#mismatch-days").css("display", "none");
+        $('.premium_checkbox').prop("disabled", true);
+        $('.telephone_radio').prop("disabled", true);
+        $('.checker').addClass("disabled");
+        $('.checker').addClass("focus");
+        $('.checker').children("span").removeClass("checked");
+        $('.radio').addClass("disabled");
+        $('.radio').addClass("focus");
+        $('.radio').children("span").removeClass("checked");
+        $('.days').empty();
+        $('.days').prop("disabled", true);
+        $('.days').html('').select2({data: {id:null, text: null}});
+        $('.pre_start_date').prop("disabled", true);
+        $('.pre_start_date').val('');
+        $('.pre_end_date').val('');
+
         $(".premium_checkbox").prop("disabled", false);
         $('.telephone_radio').prop("disabled", false);
         $(".checker").removeClass("disabled");
         $(".radio").removeClass("disabled");
+        $(".pre_start_date").val("");
+        $(".pre_end_date").val("");
+
+        amount_1 = 0;
+        amount_2 = 0;
+        amount_3 = 0;
+        amount_4 = 0;
+        amount_5 = 0;
+        tel_amount_1 = 0;
+        tel_amount_2 = 0;
+        tel_amount_3 = 0;
+        tel_amount_4 = 0;
+        tel_amount_5 = 0;
+        tel_amount_6 = 0;
+        total_amount = amount;
+        $("#amount").val(parseFloat(total_amount).toFixed(2));
+
+        $.ajax({
+            type : "POST",
+            url : '/get-telephone-service-slots/',
+            data : {
+                'cat_id':cat_id,
+                'cat_lvl':cat_lvl,
+                'city_place_id':{{city_place_id}},
+                'start_date':$("#dt50").val(),
+                'end_date':$("#dt2").val(),
+            },
+            success: function (response) {
+                if(response.success=='true'){
+                    has_platinum = response.has_platinum;
+                    has_diamond = response.has_diamond;
+                    has_gold = response.has_gold;
+                    has_silver = response.has_silver;
+                    has_bronze = response.has_bronze;
+                    has_value = response.has_value;
+                }
+                if (response.success == "false") {
+                    $("#error-modal1").modal('show');
+                    $("#error-message1").text(response.message);
+                }
+            },
+            beforeSend: function () {
+                $("#processing").css('display','block');
+            },
+            complete: function () {
+                $("#processing").css('display','none');
+                if(has_platinum == "true"){
+                    $('#tel_check_1').prop("disabled", true);
+                    $("#uniform-tel_check_1").addClass("disabled");
+                }
+                if(has_diamond == "true"){
+                    $('#tel_check_2').prop("disabled", true);
+                    $("#uniform-tel_check_2").addClass("disabled");
+                }
+                if(has_gold == "true"){
+                    $('#tel_check_3').prop("disabled", true);
+                    $("#uniform-tel_check_3").addClass("disabled");
+                }
+                if(has_silver == "true"){
+                    $('#tel_check_4').prop("disabled", true);
+                    $("#uniform-tel_check_4").addClass("disabled");
+                }
+                if(has_bronze == "true"){
+                    $('#tel_check_5').prop("disabled", true);
+                    $("#uniform-tel_check_5").addClass("disabled");
+                }
+                if(has_value == "true"){
+                    $('#tel_check_6').prop("disabled", true);
+                    $("#uniform-tel_check_6").addClass("disabled");
+                }
+            },
+            error : function(response){
+                    alert("_Error");
+            }
+        });
     }
 
     $("#duration_list").change(function(){
@@ -1843,11 +1936,9 @@ $( document ).ready(function() {
         $('.checker').addClass("disabled");
         $('.checker').addClass("focus");
         $('.checker').children("span").removeClass("checked");
-        $('.checker').children("span").find("input").prop('checked', false);
         $('.radio').addClass("disabled");
         $('.radio').addClass("focus");
         $('.radio').children("span").removeClass("checked");
-        $('.radio').children("span").find("input").prop('checked', false);
         $('.days').empty();
         $('.days').prop("disabled", true);
         $('.days').html('').select2({data: {id:null, text: null}});
@@ -1872,18 +1963,6 @@ $( document ).ready(function() {
                     if(response.success=='true'){
                         amount = response.amount;
                         $("#amount").val(parseFloat(response.amount).toFixed(2));
-                        amount_1 = 0;
-                        amount_2 = 0;
-                        amount_3 = 0;
-                        amount_4 = 0;
-                        amount_5 = 0;
-                        tel_amount_1 = 0;
-                        tel_amount_2 = 0;
-                        tel_amount_3 = 0;
-                        tel_amount_4 = 0;
-                        tel_amount_5 = 0;
-                        tel_amount_6 = 0;
-                        total_amount = response.amount;
                     }
                     if (response.success == "false") {
                         $("#error-modal1").modal('show');
@@ -1906,13 +1985,20 @@ $( document ).ready(function() {
         }
     })
 
-    function check_advert(id)
+    var no1_ranges = '';
+    var no2_ranges = '';
+    var no3_ranges = '';
+    var no4_ranges = '';
+    var no5_ranges = '';
+
+    //-----------------events on premium list selection
+    function check_advert(id,counter)
     {
         var check_id = id;
         duration = $("#duration_list").val();
-        if(document.getElementById('check_'+id).checked) {
+        if(document.getElementById('check_'+id+'_'+counter).checked) {
             $('#day_'+id).prop("disabled", false);
-            service_name = $('#check_'+id).val();
+            service_name = $('#check_'+id+'_'+counter).val();
             if (service_name.trim() == 'No.1 Listing'){
                 total_amount = parseInt(total_amount) - parseInt(amount_1);
                 amount_1 = 0;
@@ -1929,8 +2015,8 @@ $( document ).ready(function() {
                 $("#amount").val(parseFloat(total_amount).toFixed(2));
             }
             if (service_name.trim() == 'Advert Slider'){
-                total_amount = parseInt(total_amount) - parseInt(amount_5);
-                amount_5 = 0;
+                total_amount = parseInt(total_amount) - parseInt(amount_4);
+                amount_4 = 0;
                 $("#amount").val(parseFloat(total_amount).toFixed(2));
             }
             if (service_name.trim() == 'Top Advert'){
@@ -1938,12 +2024,57 @@ $( document ).ready(function() {
                 amount_5 = 0;
                 $("#amount").val(parseFloat(total_amount).toFixed(2));
             }
+            $.ajax({
+                type : "POST",
+                url : '/get-booked-slots/',
+                data : {
+                    'cat_id':cat_id,
+                    'cat_lvl':cat_lvl,
+                    'service_name':service_name.trim(),
+                    'city_place_id':{{city_place_id}},
+                    'start_date':$("#dt50").val(),
+                    'end_date':$("#dt2").val(),
+                    },
+                success: function (response) {
+                    if(response.success=='true'){
+                        if(counter == 1){
+                            no1_ranges = response.date_list;
+                        }
+                        if(counter == 2){
+                            no2_ranges = response.date_list;
+                        }
+                        if(counter == 3){
+                            no3_ranges = response.date_list;
+                        }
+                        if(counter == 4){
+                            no4_ranges = response.booked_date_list;
+                        }
+                        if(counter == 5){
+                            no5_ranges = response.date_list;
+                        }
+                    }
+                    if (response.success == "false") {
+                        $("#error-modal1").modal('show');
+                        $("#error-message1").text(response.message);
+                    }
+                },
+                beforeSend: function () {
+                    $("#processing").css('display','block');
+                },
+                complete: function () {
+                    $("#processing").css('display','none');
+                },
+                error : function(response){
+                        alert("_Error");
+                }
+            });
+
         } else {
             $('#day_'+id).prop("disabled", true);
-            $('#start_'+id).prop("disabled", true);
-            $('#start_'+id).val('');
-            $('#end_'+id).val('');
-            service_name = $('#check_'+id).val();
+            $('#start_'+counter).prop("disabled", true);
+            $('#start_'+counter).val('');
+            $('#end_'+counter).val('');
+            service_name = $('#check_'+id+'_'+counter).val();
             if (service_name.trim() == 'No.1 Listing'){
                 total_amount = parseInt(total_amount) - parseInt(amount_1);
                 amount_1 = 0;
@@ -1971,7 +2102,7 @@ $( document ).ready(function() {
             }
 
         }
-        service_name = $('#check_'+id).val();
+        service_name = $('#lebel_'+id).text();
         var list = referanceDay[duration];
         list = list.split(",");
         $('.service-duration').val('');
@@ -1987,35 +2118,6 @@ $( document ).ready(function() {
         }
     }
 
-    $("#clear_selection").click(function(){
-        $('.radio').addClass("focus");
-        $('.radio').children("span").removeClass("checked");
-        $('.radio').children("span").find("input").prop('checked', false);
-        $(".tel_start_date").each(function() {
-            $(this).val('');
-        });
-        $(".tel_end_date").each(function() {
-            $(this).val('');
-        });
-        $(".tel_dur").each(function() {
-            $('.tel_dur').html('').select2({data: {id:null, text: null}});
-            $('.tel_dur').prop("disabled", true);
-        });
-        total_amount = parseInt(total_amount) - parseInt(tel_amount_1);
-        total_amount = parseInt(total_amount) - parseInt(tel_amount_2);
-        total_amount = parseInt(total_amount) - parseInt(tel_amount_3);
-        total_amount = parseInt(total_amount) - parseInt(tel_amount_4);
-        total_amount = parseInt(total_amount) - parseInt(tel_amount_5);
-        total_amount = parseInt(total_amount) - parseInt(tel_amount_6);
-        $("#amount").val(parseFloat(total_amount).toFixed(2));
-        tel_amount_1 = 0;
-        tel_amount_2 = 0;
-        tel_amount_3 = 0;
-        tel_amount_4 = 0;
-        tel_amount_5 = 0;
-        tel_amount_6 = 0;
-    });
-
     function check_tel(id){
         var check_id = id;
         duration = $("#duration_list").val();
@@ -2030,7 +2132,6 @@ $( document ).ready(function() {
             $('.tel_dur').prop("disabled", true);
         });
         $('#tel_dur_'+id).prop("disabled", false);
-
         service_name = $('#tel_lebel_'+id).text();
         total_amount = parseInt(total_amount) - parseInt(tel_amount_1);
         total_amount = parseInt(total_amount) - parseInt(tel_amount_2);
@@ -2056,11 +2157,9 @@ $( document ).ready(function() {
         });
     }
 
+    //-----------------Change event on duration list for premium service
     function telphone_duration(id){
         duration = $('#tel_dur_'+id).val();
-        if(duration == ""){
-            return false;
-        }
         service_name = $('#tel_lebel_'+id).text();
         if(duration == "0"){
             return false;
@@ -2079,11 +2178,11 @@ $( document ).ready(function() {
         }
         $("#tel_start_"+id).val($("#dt50").val());
         $("#tel_end_"+id).val(newdate);
-
+        supplier_id=$("#supplier_id_hidden").val();
         $.ajax({
             type : "POST",
             url : '/get-telephone-subscription-amount/',
-            data : {'duration':duration,'service_name':service_name.trim(),'cat_lvl':cat_lvl,'cat_id':cat_id,'supplier_id':{{supplier_id}}},
+            data : {'duration':duration,'service_name':service_name.trim(),'supplier_id':supplier_id},
             success: function (response) {
                 if(response.success=='true'){
                     if (service_name.trim() == 'Platinum'){
@@ -2155,27 +2254,126 @@ $( document ).ready(function() {
         });
     }
 
-    function premium_duration(id){
+    //-----------------Change event on duration list for premium service
+    function premium_duration(id,counter){
         var from = $("#dt50").val().split("/");
         var startDate = new Date(from[2], from[1] - 1, from[0]);
         var from = $("#dt2").val().split("/");
         var endDate = new Date(from[2], from[1] - 1, from[0]);
-        $( "#start_"+id ).val('');
-        $( "#end_"+id ).val('');
-        $( "#start_"+id ).prop("disabled", false);
-        $( "#start_"+id ).datepicker({
-            minDate: "",
-            maxDate: "",
-        });
-        $( "#start_"+id ).datepicker( "destroy" );
-        $( ".pre_start_date" ).datepicker({
-            minDate: new Date(startDate),
-            maxDate: new Date(endDate),
-            dateFormat: 'dd/mm/yy'
-        });
+        $( "#start_"+counter ).val('');
+        $( "#end_"+counter ).val('');
+        $( "#start_"+counter ).prop("disabled", false);
+        $( "#start_"+counter ).datepicker( "destroy" );
+        ranges = '';
+        if(counter == 1){
+            ranges1 = no1_ranges;
+            $( "#start_"+counter ).datepicker({
+                numberOfMonths: 1,
+                minDate: new Date(startDate),
+                maxDate: new Date(endDate),
+                beforeShowDay: function(date) {
+                    for(var i=0; i<ranges1.length; i++) {
+                        if(date >= new Date(ranges1[i].start_date) && date <= new Date(ranges1[i].end_date)) return [false, ''];
+                    }
+                    if($( "#start_2" ).val() && $( "#end_2" ).val()){
+                        var from = $('#start_2').val().split("/");
+                        var from2 = $('#end_2').val().split("/");
+                        if(date >= new Date(from[2], from[1] - 1, from[0]) && date <= new Date(from2[2], from2[1] - 1, from2[0])) return [false, ''];
+                    }
+                    if($( "#start_3" ).val() && $( "#end_3" ).val()){
+                        var from = $('#start_3').val().split("/");
+                        var from2 = $('#end_3').val().split("/");
+                        if(date >= new Date(from[2], from[1] - 1, from[0]) && date <= new Date(from2[2], from2[1] - 1, from2[0])) return [false, ''];
+                    }
+                    return [true, ''];
+                },
+                dateFormat: 'dd/mm/yy'
+            });
+        }
+        if(counter == 2){
+            ranges2 = no2_ranges;
+            $( "#start_"+counter ).datepicker({
+                numberOfMonths: 1,
+                minDate: new Date(startDate),
+                maxDate: new Date(endDate),
+                beforeShowDay: function(date) {
+                    for(var i=0; i<ranges2.length; i++) {
+                        if(date >= new Date(ranges2[i].start_date) && date <= new Date(ranges2[i].end_date)) return [false, ''];
+                    }
+                    if($( "#start_1" ).val() && $( "#end_1" ).val()){
+                        var from = $('#start_1').val().split("/");
+                        var from2 = $('#end_1').val().split("/");
+                        if(date >= new Date(from[2], from[1] - 1, from[0]) && date <= new Date(from2[2], from2[1] - 1, from2[0])) return [false, ''];
+                    }
+                    if($( "#start_3" ).val() && $( "#end_3" ).val()){
+                        var from = $('#start_3').val().split("/");
+                        var from2 = $('#end_3').val().split("/");
+                        if(date >= new Date(from[2], from[1] - 1, from[0]) && date <= new Date(from2[2], from2[1] - 1, from2[0])) return [false, ''];
+                    }
+                    return [true, ''];
+                },
+                dateFormat: 'dd/mm/yy'
+            });
+        }
+        if(counter == 3){
+            ranges3 = no3_ranges;
+            $( "#start_"+counter ).datepicker({
+                numberOfMonths: 1,
+                beforeShowDay: function(date) {
+                    for(var i=0; i<ranges3.length; i++) {
+                        if(date >= new Date(ranges3[i].start_date) && date <= new Date(ranges3[i].end_date)) return [false, ''];
+                    }
+                    if($( "#start_1" ).val() && $( "#end_1" ).val()){
+                        var from = $('#start_1').val().split("/");
+                        var from2 = $('#end_1').val().split("/");
+                        if(date >= new Date(from[2], from[1] - 1, from[0]) && date <= new Date(from2[2], from2[1] - 1, from2[0])) return [false, ''];
+                    }
+                    if($( "#start_2" ).val() && $( "#end_2" ).val()){
+                        var from = $('#start_2').val().split("/");
+                        var from2 = $('#end_2').val().split("/");
+                        if(date >= new Date(from[2], from[1] - 1, from[0]) && date <= new Date(from2[2], from2[1] - 1, from2[0])) return [false, ''];
+                    }
+                    return [true, ''];
+                },
+                minDate: new Date(startDate),
+                maxDate: new Date(endDate),
+                dateFormat: 'dd/mm/yy'
+            });
+        }
+        if(counter == 4){
+            ranges4 = no4_ranges;
+            $( "#start_"+counter ).datepicker({
+                numberOfMonths: 1,
+                beforeShowDay: function(date) {
+                    for(var i=0; i<ranges4.length; i++) {
+                        if(date >= new Date(ranges4[i]) && date <= new Date(ranges4[i])) return [false, ''];
+                    }
+                    return [true, ''];
+                },
+                minDate: new Date(startDate),
+                maxDate: new Date(endDate),
+                dateFormat: 'dd/mm/yy'
+            });
+        }
+        if(counter == 5){
+            ranges5 = no5_ranges;
+            $( "#start_"+counter ).datepicker({
+                numberOfMonths: 1,
+                beforeShowDay: function(date) {
+                    for(var i=0; i<ranges5.length; i++) {
+                        if(date >= new Date(ranges5[i].start_date) && date <= new Date(ranges5[i].end_date)) return [false, ''];
+                    }
+                    return [true, ''];
+                },
+                minDate: new Date(startDate),
+                maxDate: new Date(endDate),
+                dateFormat: 'dd/mm/yy'
+            });
+        }
+
 
         duration = $('#day_'+id).val();
-        service_name = $('#check_'+id).val();
+        service_name = $('#check_'+id+'_'+counter).val();
 
         if(duration == "0"){
             return false;
@@ -2226,9 +2424,40 @@ $( document ).ready(function() {
         });
     }
 
-    function premium_startdate(id){
-        var from = $('#start_'+id).val().split("/");
+    $("#clear_selection").click(function(){
+        $('.radio').addClass("focus");
+        $('.radio').children("span").removeClass("checked");
+        $('.radio').children("span").find("input").prop('checked', false);
+        $(".tel_start_date").each(function() {
+            $(this).val('');
+        });
+        $(".tel_end_date").each(function() {
+            $(this).val('');
+        });
+        $(".tel_dur").each(function() {
+            $('.tel_dur').html('').select2({data: {id:null, text: null}});
+            $('.tel_dur').prop("disabled", true);
+        });
+        total_amount = parseInt(total_amount) - parseInt(tel_amount_1);
+        total_amount = parseInt(total_amount) - parseInt(tel_amount_2);
+        total_amount = parseInt(total_amount) - parseInt(tel_amount_3);
+        total_amount = parseInt(total_amount) - parseInt(tel_amount_4);
+        total_amount = parseInt(total_amount) - parseInt(tel_amount_5);
+        total_amount = parseInt(total_amount) - parseInt(tel_amount_6);
+        $("#amount").val(parseFloat(total_amount).toFixed(2));
+        tel_amount_1 = 0;
+        tel_amount_2 = 0;
+        tel_amount_3 = 0;
+        tel_amount_4 = 0;
+        tel_amount_5 = 0;
+        tel_amount_6 = 0;
+    });
+
+    function premium_startdate(id,counter){
+        var from = $('#start_'+counter).val().split("/");
+        $("#end_"+counter).val('');
         var date = new Date(from[2], from[1] - 1, from[0]);
+        var startDate = new Date(from[2], from[1] - 1, from[0]);
         days = parseInt($('#day_'+id).val(), 10) - 1;
         if(!isNaN(date.getTime())){
             date.setDate(date.getDate() + days);
@@ -2237,8 +2466,56 @@ $( document ).ready(function() {
             var dd  = date.getDate().toString();
             newdate = (dd[1]?dd:"0"+dd[0]) + "/" + (mm[1]?mm:"0"+mm[0]) + "/"+ yyyy  ; // padding
             new_date = (mm[1]?mm:"0"+mm[0]) + "/" + (dd[1]?dd:"0"+dd[0]) + "/"+ yyyy  ; // padding
-            $("#end_"+id).val(newdate);
 
+            ranges = '';
+            if(counter == '1'){
+                ranges = no1_ranges;
+            }
+            if(counter == '2'){
+                ranges = no2_ranges;
+            }
+            if(counter == '3'){
+                ranges = no3_ranges;
+            }
+            if(counter == '4'){
+                ranges = no4_ranges;
+            }
+            if(counter == '5'){
+                ranges = no5_ranges;
+            }
+            var date_flag = '0';
+            date_array = getDates(startDate, new Date(new_date));
+            if(counter != '4'){
+                $.each(date_array, function (index, items) {
+                    $.each(ranges, function (index, item) {
+                        var from = new Date(item.start_date);
+                        var to   = new Date(item.end_date);
+                        var check = items;
+                        if(check > from && check < to){
+                            date_flag = '1';
+                        }
+                    });
+                });
+            }
+            else{
+                $.each(date_array, function (index, items) {
+                    $.each(ranges, function (index, item) {
+                        var from = new Date(item);
+                        var check = items;
+                        if(check.toDateString() === from.toDateString()){
+                            date_flag = '1';
+                        }
+                    });
+                });
+            }
+
+            if(date_flag == '1'){
+                $('#mismatch-days').css("display", "block");
+                $('#mismatch-days').text("Premium Service is not available for selected Date and Duration");
+                return false;
+            }
+
+            $("#end_"+counter).val(newdate);
             var from = $('#dt2').val().split("/");
             if(new Date(from[2], from[1] - 1, from[0]) < new Date(new_date))
             {
@@ -2248,7 +2525,7 @@ $( document ).ready(function() {
             else{
                 var from = newdate.split("/");
                 var newdate = new Date(from[2], from[1] - 1, from[0]);
-                var from = $('#start_'+id).val().split("/");
+                var from = $('#start_'+counter).val().split("/");
                 var date = new Date(from[2], from[1] - 1, from[0]);
                 $('#mismatch-days').css("display", "none");
                 $('#mismatch-days').text("");
@@ -2256,6 +2533,19 @@ $( document ).ready(function() {
         } else {
             alert("Invalid Date");
         }
+    }
+
+    function getDates(startDate, stopDate) {
+        var dateArray = new Array();
+        var date = startDate;
+        var currentDate = startDate;
+        while (currentDate <= stopDate) {
+
+            //currentDate = currentDate.addDays(1);
+            currentDate = date.setDate(date.getDate() + 1);
+            dateArray.push( new Date (currentDate) );
+        }
+        return dateArray;
     }
 
     $("#save-service-detail").click(function(e){
@@ -2342,7 +2632,7 @@ $( document ).ready(function() {
             check_id = $(this).attr('id');
             id = check_id.split('_');
             var from_1 = $('#dt2').val().split("/");
-            var from_2 = $("#end_"+id[1]).val().split("/");
+            var from_2 = $("#end_"+id[2]).val().split("/");
 
             if($("#day_"+id[1]).val() == "0" || $("#day_"+id[1]).val() == ""){
                 $("#mismatch-days").css("display", "block");
@@ -2351,16 +2641,16 @@ $( document ).ready(function() {
                 flag = 1;
                 return false;
             }
-            else if($("#start_"+id[1]).val() == ""){
+            else if($("#start_"+id[2]).val() == ""){
                 $("#mismatch-days").css("display", "block");
                 msg = "Please add Start Date for "+$(this).val();
                 $("#mismatch-days").text(msg);
                 flag = 1;
                 return false;
             }
-            else if($("#end_"+id[1]).val() == ""){
+            else if($("#end_"+id[2]).val() == ""){
                 $("#mismatch-days").css("display", "block");
-                msg = "Please add Start Date for "+$(this).val();
+                msg = $(this).val()+" is not available for selected Date and Duration";
                 $("#mismatch-days").text(msg);
                 flag = 1;
                 return false;
@@ -2825,6 +3115,42 @@ $( document ).ready(function() {
         }
         return true;
     }
+
+            //------------------------------validation for float field -------------------//
+
+    function validateFloatKeyPress(el, evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        var number = el.value.split('.');
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+
+        if (number.length > 1 && charCode == 46) {
+            return false;
+        }
+
+        var caratPos = getSelectionStart(el);
+        var dotPos = el.value.indexOf(".");
+        if (caratPos > dotPos && dotPos > -1 && (number[1].length > 1)) {
+            if (charCode == 8)
+                return true;
+            else
+                return false;
+        }
+        return true;
+    }
+
+    //thanks: http://javascript.nwbox.com/cursor_position/
+    function getSelectionStart(o) {
+        if (o.createTextRange) {
+            var r = document.selection.createRange().duplicate()
+            r.moveEnd('character', o.value.length)
+            if (r.text == '') return o.value.length
+            return o.value.lastIndexOf(r.text)
+        } else return o.selectionStart
+    }
+
+    //-----------------------------------end-------------------------//
 
 </script>
 

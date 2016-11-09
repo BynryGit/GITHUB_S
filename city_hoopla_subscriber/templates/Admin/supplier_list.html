@@ -66,6 +66,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
     <link href="{% static 'assets/pages/css/dropzone.css' %}" rel="stylesheet" type="text/css"/>
     <link href="{% static 'assets/bootstrap-tagsinput.css' %}" rel="stylesheet" type="text/css"/>
+
         <!-- END THEME LAYOUT STYLES -->
 
 
@@ -341,19 +342,19 @@ vertical-align: -webkit-baseline-middle;
 
 
      <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
-		<!-- <div id="processing" style="display:none;">
-		    <div id="loading">
-		        <img src="../assets/loading-bars.gif" style="height : 100px;">
-		
-		    </div>
-		</div> -->
+        <!-- <div id="processing" style="display:none;">
+            <div id="loading">
+                <img src="../assets/loading-bars.gif" style="height : 100px;">
+        
+            </div>
+        </div> -->
         <!-- BEGIN HEADER -->
         <div id="processing" style="display:none;">
-				<div id="loading">
-					<img  src="{% static 'assets/loading-bars.gif' %}" style="height : 100px;">
-					
-				</div>	
-  			</div>
+                <div id="loading">
+                    <img  src="{% static 'assets/loading-bars.gif' %}" style="height : 100px;">
+                    
+                </div>  
+            </div>
         <div class="page-header navbar navbar-fixed-top">
                  <!-- BEGIN HEADER INNER -->
             <div class="page-header-inner ">
@@ -374,25 +375,25 @@ vertical-align: -webkit-baseline-middle;
                     <!-- BEGIN TOP NAVIGATION MENU -->
                   <!--  <div class="input-group form-group" style="width: 257px;float: left; padding-left: 10px; padding-top: 17px;">
                              <span class="input-group-btn">
-										<span style="border: none !important;"  class="btn btn btn-default">
-	                                        <span class="fa fa-search"></span>
-	                                    </span>
-									</span>
+                                        <span style="border: none !important;"  class="btn btn btn-default">
+                                            <span class="fa fa-search"></span>
+                                        </span>
+                                    </span>
                              <input style="border: none !important; padding-left: 0px ; font-family: 'Roboto Light', 'Roboto';" type="text" class="form-control " id="txtSearch"
                                     placeholder="Search " name="s">
-									
+                                    
                          </div> -->
                     <div class="top-menu">
                         <ul class="nav navbar-nav pull-right">
                            <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-				                   <!--  <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
-				                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
-				                           data-close-others="true">
-				                            <i class="icon-bell"></i>
-				                            <span class="badge badge-default" style="    background-color: #d22917;"> 7 </span>
-				                        </a>
-				                    </li> -->
-                    			<!-- END NOTIFICATION DROPDOWN -->
+                                   <!--  <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+                                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
+                                           data-close-others="true">
+                                            <i class="icon-bell"></i>
+                                            <span class="badge badge-default" style="    background-color: #d22917;"> 7 </span>
+                                        </a>
+                                    </li> -->
+                                <!-- END NOTIFICATION DROPDOWN -->
                             <!-- BEGIN USER LOGIN DROPDOWN -->
                             <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                             <li class="dropdown dropdown-user">
@@ -448,53 +449,55 @@ vertical-align: -webkit-baseline-middle;
                                     <span class="brad-crum-2">Subscriber</span>
                                     <div class="portlet-body">
                                         <div class="row " >
-	                                			<div class="col-lg-3 col-md-3 form-group" >
-	                                       	  <div class="input-group form-group" style="width: 224px;margin-top: 0px;">
-						                                <span class="input-group-btn">
-						                                    <span style=" height: 34px;"
-						                                          class="btn btn btn-default">
-						                                        <span class="fa fa-search"></span>
-						                                    </span>
-						                                </span>
-						                                <input style=" font-size: 14px; " type="text"
-						                                       class="form-control " id="txtSearch"
-						                                       placeholder="Search Subscriber" name="s">
-						                            </div>	
-	                                        </div>
-	                                        
-	                                        <div class="col-lg-1"
-						                             style="border: none !important;  margin-top: 7px;font-size: 16px; padding: 0px;">
-						                            <span>Sort By:  </span>
-						                        </div>
-		                                
-                                   			<div class="form-group col-lg-3 col-md-3" >
-                                   				<select id="sortby" onchange="sort_by()" class="form-control sel2" style="color: #797979;">
-						                                {% if sort_by != "oldest_first"%}
-						                                <option style="font-size: 14px" selected value="newest_first">Newest First</option>
-						                                {% else %}
-						                                <option style="font-size: 14px" value="newest_first">Newest First</option>
-						                                {% endif %}
-						                                {% if sort_by == "oldest_first"%}
-						                                    <option style="font-size: 14px" selected value="oldest_first">Oldest First</option>
-						                                {% else %}
-						                                    <option style="font-size: 14px" value="oldest_first">Oldest First</option>
-						                                {% endif %}
-						                            </select>
-                                     		</div> 
-                                     		
-		                                		<div class="col-lg-2	col-md-2 form-group" style="margin-top: 0.5% ! important;">
-		                                			<span >
-																<i class="fa fa-filter "   aria-hidden="true"></i>
-                                               <a data-toggle="modal"  href="#createNew" type="submit">Filters</a>
+                                                <div class="col-lg-3 col-md-3 form-group" >
+                                              <div class="input-group form-group" style="width: 224px;margin-top: 0px;">
+                                                        <span class="input-group-btn">
+                                                            <span style=" height: 34px;"
+                                                                  class="btn btn btn-default">
+                                                                <span class="fa fa-search"></span>
+                                                            </span>
+                                                        </span>
+                                                        <input style=" font-size: 14px; " type="text"
+                                                               class="form-control " id="txtSearch"
+                                                               placeholder="Search Subscriber" name="s">
+                                                    </div>  
+                                            </div>
+                                            
+                                            <div class="col-lg-1"
+                                                     style="border: none !important;  margin-top: 7px;font-size: 16px; padding: 0px;">
+                                                    <span>Sort By:  </span>
+                                                </div>
+                                        
+                                            <div class="form-group col-lg-3 col-md-3" >
+                                                <select id="sortby" onchange="sort_by()" class="form-control sel2" style="color: #797979;">
+                                                			
+                                                        {% if sort_by != "oldest_first"%}
+                                                        <option style="font-size: 14px" selected value="newest_first">Newest First</option>
+                                                        
+                                                        {% else %}
+                                                        <option style="font-size: 14px" value="newest_first">Newest First</option>
+                                                        {% endif %}
+                                                        {% if sort_by == "oldest_first"%}
+                                                            <option style="font-size: 14px" selected value="oldest_first">Oldest First</option>
+                                                        {% else %}
+                                                            <option style="font-size: 14px" value="oldest_first">Oldest First</option>
+                                                        {% endif %}
+                                                    </select>
+                                            </div> 
+                                            
+                                                <div class="col-lg-2    col-md-2 form-group" style="margin-top: 0.5% ! important;">
+                                                    <span >
+                                                                <i class="fa fa-filter "   aria-hidden="true"></i>
+                                               <a data-toggle="modal"  data-target="#createNew" type="submit">Filters</a>
                                              </span>  
-		                                		</div>
-		                                		
-		                                		<div class=" col-lg-3 col-md-3 form-group">
-				                                    <div class="pull-right">
-				                                        <a class="btn btn-default-add"  href="/add-subscriber/" > Add Subscriber</a>
-				                                   	</div>
-				                                </div>
-		                    					</div>
+                                                </div>
+                                                
+                                                <div class=" col-lg-3 col-md-3 form-group">
+                                                    <div class="pull-right">
+                                                        <a class="btn btn-default-add"  href="/add-subscriber/" > Add Subscriber</a>
+                                                    </div>
+                                                </div>
+                                                </div>
                                         <hr>
                                         <div class="row">
                                             <div class="col-md-12">
@@ -502,38 +505,42 @@ vertical-align: -webkit-baseline-middle;
                                             {% for subscriber in subscriber_list %}
                                                 <div class="col-md-3 col-sm-3  div-color connect-cat">    
                                                     <div class="row">
-	                                            				<div class="col-md-2 col-sm-2 " style="background-color:red;border-top-left-radius: 9px !important;padding-top: 32px !important;height: 88px !important;">
-	                                            					<span style="color:#ffffff;font-size: 14px;font-weight:700; " class="id">{{ subscriber.subscriber_id }}</span>
-	                                            				</div>
-	                                            				<div class="col-md-6 col-sm-6 " style="padding-top: 8px !important;">
-	                                            					<span style="color:#00448b;font-size: 14px;font-weight:700; " class="bname">{{ subscriber.business_name }}</span><br>
-	                                            					<span style="font-weight:500;" class="city_name">{{ subscriber.subscriber_city }}
-	                                            					</span>
-	                                            				</div>
-	                                            				
-	                                            						
-												                          
-												                           {% if subscriber.status == '0' %}
-												                           <div class="col-md-4 col-sm-4 " style=" padding-top: 11px !important;">
-	                                            							<div class="pull-right">
-												                         			<a class="fa fa fa-repeat" onclick="active_subscriber({{subscriber.subscriber_id}})" style="color:#3eb199; font-size:17px;"
-												                                                       ></a>
-												                         		</div>
-												                           </div>                            
-												                         {% else %}
-												                         <div class="col-md-4 col-sm-4 " style=" padding-top: 4px !important;">
-	                                            							<div class="pull-right">
-												                          		<a class="fa fa-pencil" href="/edit-subscriber/?subscriber_id= {{subscriber.subscriber_id}}" style="color:#3eb199; font-size:17px;"
-												                                                       ></a>
-												                           		<span style="font-size:20px;">|</span>
-												                         		<a class="fa fa-trash-o" onclick="delete_user_detail({{subscriber.subscriber_id}})" style="color:#3eb199; font-size:17px;"
-												                                                       ></a>
-												                          </div>	
-                                            			 			</div>                             
-												                          {% endif %} 
-												                                                      
-	                                            					</div>
-	                                            				
+                                                                {% if subscriber.status == '0' %}
+                                                                    <div class="col-md-2 col-sm-2 " style="background-color:red;border-top-left-radius: 9px !important;padding-top: 32px !important;height: 88px !important;">
+                                                                {% else %}
+                                                                    <div class="col-md-2 col-sm-2 " style="background-color:green;border-top-left-radius: 9px !important;padding-top: 32px !important;height: 88px !important;">
+                                                                {% endif %}
+                                                                    <span style="color:#ffffff;font-size: 14px;font-weight:700; " class="id">{{ subscriber.subscriber_id }}</span>
+                                                                </div>
+                                                                <div class="col-md-6 col-sm-6 " style="padding-top: 8px !important;">
+                                                                    <span style="color:#00448b;font-size: 14px;font-weight:700; " class="bname">{{ subscriber.business_name }}</span><br>
+                                                                    <span style="font-weight:500;" class="city_name">{{ subscriber.subscriber_city }}
+                                                                    </span>
+                                                                </div>
+                                                                
+                                                                        
+                                                                          
+                                                                           {% if subscriber.status == '0' %}
+                                                                           <div class="col-md-4 col-sm-4 " style=" padding-top: 11px !important;">
+                                                                            <div class="pull-right">
+                                                                                    <a class="fa fa fa-repeat" onclick="active_subscriber({{subscriber.subscriber_id}})" style="color:#3eb199; font-size:17px;"
+                                                                                                       ></a>
+                                                                                </div>
+                                                                           </div>                            
+                                                                         {% else %}
+                                                                         <div class="col-md-4 col-sm-4 " style=" padding-top: 4px !important;">
+                                                                            <div class="pull-right">
+                                                                                <a class="fa fa-pencil" href="/edit-subscriber/?subscriber_id= {{subscriber.subscriber_id}}" style="color:#3eb199; font-size:17px;"
+                                                                                                       ></a>
+                                                                                <span style="font-size:20px;">|</span>
+                                                                                <a class="fa fa-trash-o" onclick="delete_user_detail({{subscriber.subscriber_id}})" style="color:#3eb199; font-size:17px;"
+                                                                                                       ></a>
+                                                                          </div>    
+                                                                    </div>                             
+                                                                          {% endif %} 
+                                                                                                      
+                                                                    </div>
+                                                                
                                                     <div class="row">
                                                         <div class="col-md-12 col-xs-12" >
                                                             <!-- <div class="row"
@@ -558,32 +565,32 @@ vertical-align: -webkit-baseline-middle;
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                         					<div class="col-md-12">
-                                         						<span style="font-size: 14px; font-weight:500" class="user_contact">{{ subscriber.user_contact_no }}
-                                         						</span>
-                                         					</div>
-                                         					<div class="col-md-12">
-                                         						<span style="font-size: 14px; font-weight:500" class="user_email">{{ subscriber.user_email_id }}
-                                         						</span>
-                                         					</div>
-                                            			</div>
-                                            			{% if subscriber.status == '1' %}
-                                            			<div class="row"  style="background-color:#3eb199;border-bottom-right-radius: 8px !important;border-bottom-left-radius: 8px !important;height:40px !important;margin-top: 10px !important;">
-                                         					<div class="col-md-2 col-sm-2 col-xs-2">
-                                         						<span class="center-align-active" style="color:#ffffff;font-size: 16px; font-weight:900">{{ subscriber.advert_count }}</span>
-                                         					</div>
-                                         					<div class="col-md-8 col-sm-8 col-xs-8">
-                                         						<span class="center-align">Active Adverts</span>
-                                         					</div>
-                                         					<div class="col-md-2 col-sm-2 col-xs-2">		
-                                                 			<a class="fa  fa-plus fa-lg-p" href ="/advert-management/?subscriber_id={{subscriber.subscriber_id}}"></a>
-                                            				</div>
-                                            			</div>
-                                            			{% else %}
-                                            			<div class="row"  style="background-color:lightgrey;border-bottom-right-radius: 8px !important;border-bottom-left-radius: 8px !important;height:40px !important;margin-top: 10px !important;">
-                                         					
-                                            			</div>
-                                            			{% endif %}
+                                                            <div class="col-md-12">
+                                                                <span style="font-size: 14px; font-weight:500" class="user_contact">{{ subscriber.user_contact_no }}
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <span style="font-size: 14px; font-weight:500" class="user_email">{{ subscriber.user_email_id }}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        {% if subscriber.status == '1' %}
+                                                        <div class="row"  style="background-color:#3eb199;border-bottom-right-radius: 8px !important;border-bottom-left-radius: 8px !important;height:40px !important;margin-top: 10px !important;">
+                                                            <div class="col-md-2 col-sm-2 col-xs-2">
+                                                                <span class="center-align-active" style="color:#ffffff;font-size: 16px; font-weight:900">{{ subscriber.advert_count }}</span>
+                                                            </div>
+                                                            <div class="col-md-8 col-sm-8 col-xs-8">
+                                                                <span class="center-align">Active Adverts</span>
+                                                            </div>
+                                                            <div class="col-md-2 col-sm-2 col-xs-2">        
+                                                            <a class="fa  fa-plus fa-lg-p" href ="/advert-management/?subscriber_id={{subscriber.subscriber_id}}"></a>
+                                                            </div>
+                                                        </div>
+                                                        {% else %}
+                                                        <div class="row"  style="background-color:lightgrey;border-bottom-right-radius: 8px !important;border-bottom-left-radius: 8px !important;height:40px !important;margin-top: 10px !important;">
+                                                            
+                                                        </div>
+                                                        {% endif %}
                                                 </div>
                                                 {% endfor %}
                                                 
@@ -611,7 +618,7 @@ vertical-align: -webkit-baseline-middle;
 
         <!-- BEGIN FOOTER -->
         <div class="page-footer">
-            <div class="page-footer-inner"> 2016 &copy; DigiSpace.
+            <div class="page-footer-inner"> 2016 &copy; DigiSpace Software Private Limited
             </div>
             <div class="scroll-to-top">
                 <i class="icon-arrow-up"></i>
@@ -642,7 +649,7 @@ vertical-align: -webkit-baseline-middle;
                     <div class="modal-content">
                     <div class="modal-header">
 
-                    		<img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+                            <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
 
                 </div>                                                
                         <div class="modal-body">
@@ -665,7 +672,7 @@ vertical-align: -webkit-baseline-middle;
                 <div class="modal-dialog">
                     <div class="modal-content">
                      <div class="modal-header">
-                    		<img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+                            <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
 
                     </div>                                                
                         <div class="modal-body">
@@ -688,7 +695,7 @@ vertical-align: -webkit-baseline-middle;
                 <div class="modal-dialog">
                     <div class="modal-content">
                      <div class="modal-header">
-                    		<img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+                            <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
 
                     </div>                                                
                         <div class="modal-body">
@@ -709,23 +716,26 @@ vertical-align: -webkit-baseline-middle;
                 <!-- /.modal-dialog -->
             </div>
         </div>
-        <div class="model_style">
-        <div class="modal fade bs-modal-lg" id="createNew" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content" style="width: 453px; margin-left: 168px;">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                        <h4 style=" font-size: 18px;">Apply Filters</h4>
+        
+        <!-- <div class="modal fade " id="createNew" tabindex="-1" role="basic" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                     <div class="modal-header">
+                     		<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                           <label class="control-label font-18 font-bold ">Apply Filters
+                                                                          </label>
                     </div>
+                                                                    
+                        <div class="modal-body">
 
-
-                    <form id="scheduleFrm">
+			                <div class="form-body">
+			                	<form id="scheduleFrm">
                         <div class="row">
                             <input id="supplier_id" name="supplier_id" hidden type="text" value="110">
                         </div>
 
 
-                        <div class="modal-body">
+                       
                             <div class="row">
                                 <div class="form-group col-lg-12">
                                     <label style=" font-size: 16px;">
@@ -767,32 +777,37 @@ vertical-align: -webkit-baseline-middle;
                                 <div id="active_date" class="form-group col-md-12 "
                                      style=" margin-left: -14px;    margin-bottom: 0px;margin-top: -22px;">
 
-                                    <div class="form-group col-md-1 " style="width:9.3333%">
+                                    <div class="form-group col-md-2" style="padding-right: 0px !important;width: 10.6667%;">
                                         <label style=" font-size: 16px;">
                                             From</label>
                                     </div>
-                                    <div class="form-group col-md-5 " style="width: 40.66667%;">
+                                    <div class="form-group col-md-4 " style="padding-right: 0px !important;width: 28.333%;">
 
                                         <div class="input-append date form_datetime" >
                                             <input placeholder="DD-MM-YY" style="width: 124px;" name="startDate" 
                                                    id="startDate" size="16" type="text" value="" readonly>
+                                                   
                                             <i class="fa fa-calendar" aria-hidden="true"></i>
                                             <span class="add-on"><i class="icon-th"></i></span>
+                                            <label class="error"
+                                               style="color:red; display:none;"></label>
                                         </div>
 
                                     </div>
-                                    <div class="form-group col-md-1 ">
+                                    <div class="form-group col-md-2 " style="padding-right: 0px !important;width: 10.6667%;">
 
                                         <label style=" font-size: 16px;">
                                             To</label>
                                     </div>
-                                    <div class="form-group col-md-5 " style="">
+                                    <div class="form-group col-md-4 " style="padding-right: 0px !important;width: 28.333%;">
 
                                         <div class="input-append date form_datetime">
                                             <input placeholder="DD-MM-YY"  style="width: 124px;" name="endDate"
                                                    id="endDate" size="16" type="text" value="" readonly>
                                             <i class="fa fa-calendar" aria-hidden="true"></i>
                                             <span class="add-on"><i class="icon-th"></i></span>
+                                            <label class="error"
+                                               style="color:red; display:none;"></label>
                                         </div>
 
                                     </div>
@@ -806,15 +821,15 @@ vertical-align: -webkit-baseline-middle;
                                 <div class="form-group col-lg-12" style=" margin-left: -14px;">
 
                                     <div class=" col-lg-4">
-                                        <input id="Active" type="radio" name="stat" value="1" checked> Active
+                                        <input id="Active" type="radio"  name="stat" value="1" checked> Active
                                     </div>
 
                                     <div class=" col-lg-4">
-                                        <input id="Expired" type="radio" name="stat" value="0"> Inactive
+                                        <input id="Expired" type="radio"  name="stat" value="0"> Inactive
                                     </div>
 
                                     <div class=" col-lg-4">
-                                        <input id="Show_All" type="radio" name="stat" value=""> Show All
+                                        <input id="Show_All" type="radio"  name="stat" value=""> Show All
                                     </div>
 
                                 </div>
@@ -831,11 +846,160 @@ vertical-align: -webkit-baseline-middle;
 
                             </div>
                     </form>
-
+			                    
+			                </div>
+                    </div>
+             
                 </div>
+                
+            </div>
+        </div> -->
+        
+        
+     <div class="modal fade bs-modal-lg" id="createNew" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 style=" font-size: 18px;">Apply Filters</h4>
+                </div>
+                <form id="scheduleFrm">
+                    <div class="row">
+                        <input id="supplier_id" name="supplier_id" hidden type="text" value="110">
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="form-group col-lg-12">
+                                    <label style=" font-size: 16px;">
+                                        City 
+                                       <span class="required"> * </span> 
+                                        </label>
+                                    <br>
+                                    <select class="form-control sel2" style="font-size: 14px;color: #797979;"
+                                            name="city_id" id="city_id">
+                                        <option value=""><b>Select City </b></option>
+                                        <option value="all">All</option>
+                                        {% for obj_cat in city_list %}
+                                        <option value="{{obj_cat.city_id}}">{{obj_cat.city_name}}</option>
+                                        {%endfor%}
+                                    </select>
+											<label class="error"
+                                         style="color:red; display:none;"></label>
+                                </div>
+                             </div>  
+                         <div class="row">     
+                            <div class="form-group col-lg-12">
+                                <label style=" font-size: 16px;"> Time </label>
+                                <br>
+                                <input id="One_week" type="button" class="btn btn-outline green" name="Time"
+                                       value="1W" style="width: 19%;"
+                                       >
+                                <input id="One_month" type="button" class="btn btn-outline green" name="Time"
+                                       value="1M" style="width: 19%;"
+                                       >
+                                <input id="Three_month" type="button" class="btn btn-outline green" name="Time"
+                                       value="3M" style="width: 19%;">
+                                       
+                                <input id="Six_month" type="button" class="btn btn-outline green" name="Time"
+                                       value="6M" style="width: 19%;"
+                                       >
+                                <input id="date_range" type="button" class="btn btn-outline green" name="Time"
+                                       value="Date Range" style="width: 19%;"
+                                       >
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row ">
+                            <div id="active_date" class="form-group col-md-12 "
+                                 style=" margin-left: -14px;    margin-bottom: 0px;margin-top: -22px;">
+                                <div class="form-group col-md-1 " >
+                                    <label class="control-label" style="    margin-top: 5px; font-size: 16px;">
+                                        From</label>
+                                </div>
+                                <div class="form-group col-md-5 " >
+                                    <div class="input-append date form_datetime">
+                                        <input type="text"
+                                            readonly
+                                            name="startDate"
+                                            id="startDate"
+                                            class="form-control date-picker"
+                                        >
+                                         <input type="text"
+                                            readonly
+                                            name="startDate"
+                                            id="startDate1"
+                                            class="form-control "
+                                        >
+                                        <label class="error"
+                                               style="color:red; display:none;"></label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-1 ">
+                                    <label style="    margin-top: 5px; font-size: 16px;">
+                                        To</label>
+                                </div>
+                                <div class="form-group col-md-5 " >
+                                    <div class="input-append date form_datetime">
+                                        <input type="text"
+                                            readonly
+                                            name="endDate"
+                                            id="endDate"
+                                            class="form-control date-picker"
+                                        >
+                                         <input type="text"
+                                            readonly
+                                            name="endDate"
+                                            id="endDate1"
+                                            class="form-control date-picker"
+                                        >
+                                        <label class="error"
+                                               style="color:red; display:none;"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-12 ">
+                                <label> <b>Status </b> </label>
+                            </div>
+
+                            <div class="form-group col-lg-12">
+                                <div class=" col-lg-4">
+                                    <label class="font-15 font-regular">
+                                    <input type="radio"
+                                           id="Active" name="stat"
+                                           value="1" 
+                                           class="telephone_radio"/>Active</label>
+                                </div>
+                                <div class=" col-lg-4">
+                                    <label class="font-15 font-regular">
+                                    <input type="radio"
+                                           id="Expired" name="stat"
+                                           value="0"
+                                           class="telephone_radio"/>Expired</label>
+                                </div>
+                                <div class=" col-lg-4">
+                                    <label class="font-15 font-regular">
+                                    <input type="radio"
+                                           id="Show_All" name="stat"
+                                           value="" 
+                                           class="telephone_radio"/>Show All</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline grey_color " data-dismiss="modal">Cancel
+                            </button>
+                            <button type="button" id="submit_btn" onclick="filter_advert();"
+                                    class="btn btn-outline done_btn">Apply
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+
+ <!-- END CONTAINER -->
        
         <!--[if lt IE 9]>
 <script src="../assets/global/plugins/respond.min.js"></script>
@@ -901,6 +1065,7 @@ vertical-align: -webkit-baseline-middle;
 <script src="{% static 'assets/pages/scripts/dropzone1.js' %}"></script>
 <script src="{% static 'assets/bootstrap-tagsinput.js' %}" type="text/javascript"></script>
 <script src="{% static 'assets/global/plugins/ion.rangeslider/js/ion.rangeSlider.min.js' %}"></script>
+
         <!-- END THEME LAYOUT SCRIPTS -->
     </body>
     
@@ -911,137 +1076,443 @@ vertical-align: -webkit-baseline-middle;
     $("#supplier_active").css("display","block");
     
     $(document).ready(function(){
+        	$("#startDate1").hide();
+    	$("#endDate1").hide();
 $("#sortby").select2({});
-$("#city_id").select2({});
+$("#city_id").select2({
+width: '100%'
+});
     $("#startDate").datepicker({
-			
+            
         dateFormat: 'dd/mm/yy'
     });
     
     $("#endDate").datepicker({
-			
+            
         dateFormat: 'dd/mm/yy'
     });
+     $.datepicker._clearDate(this);
+    
 });
+
+flag =0;
 
 
 function filter_advert() {
+
+		checkCity
+		var city_status =checkCity()
+		
+				 
+			if (city_status == false){
+				
+				return false;		
+		}
+		
+		
+
+			if (flag == 1){ 
+		var ck_status =check_date_range()
+
+		 isValid = false;
+			if (ck_status == false){
+				
+				return false;		
+		}
+		
+	}
+	
+	if($('#startDate1').val() == ""){
+	    startDate_var = $('#startDate').val()
+    endDate_var = $('#endDate').val()
+    city_name_var = $('#city_id').val()
+    stat_var = $("input[name='stat']:checked").val()
+	
+	}else{
+	
+		    startDate_var = $('#startDate1').val()
+    endDate_var = $('#endDate').val()
+    city_name_var = $('#city_id').val()
+    stat_var = $("input[name='stat']:checked").val()
+	
+	
+	}
 
     startDate_var = $('#startDate').val()
     endDate_var = $('#endDate').val()
     city_name_var = $('#city_id').val()
     stat_var = $("input[name='stat']:checked").val()
-
+    
+	if(stat_var == undefined){
+			stat_var = ""
+	}
 
     location.href = '/view-subscriber-list/?start_date_var='+startDate_var+'&end_date_var='+endDate_var+'&status_var='+stat_var+'&city_var='+city_name_var+''
 }
+
+$('#date_range').on('click', function() {
+flag=1
+
+});
+
+function check_date_range(){
+
+  
+        if(check_start_date() & check_end_date() )
+        {
+            return true;
+        }else{
+     
+				return false;
+			}
+		
+}
+
+function check_start_date(){
+            var isValid = false;
+                if($("#startDate").val() ==""  || $("#startDate").val()== null)
+                {
+
+                    $("#startDate").parent().children('.error').css("display", "block");
+                    $("#startDate").parent().children('.error').text("Please select Start Date ");
+                  isValid = false;
+               }else{
+
+                    $("#startDate").parent().children('.error').css("display", "none");
+                isValid =  true;
+               }
+               return isValid;
+
+        }
+        
+ function check_end_date(){
+            var isValid = false;
+                if($("#endDate").val() ==""  || $("#endDate").val()== null)
+                {
+
+                    $("#endDate").parent().children('.error').css("display", "block");
+                    $("#endDate").parent().children('.error').text("Please select End Date ");
+                  isValid = false;
+               }else{
+
+                    $("#endDate").parent().children('.error').css("display", "none");
+                isValid =  true;
+               }
+               return isValid;
+
+        }
+        
+        function checkCity(){
+
+            city1 = $("#city_id").val();
+
+
+             if(city1 == '' || city1 == null)
+            {
+            $("#city_id").parent().children('.error').css("display", "block");
+                $("#city_id").parent().children('.error').text("Please select City");
+            return false;
+            }
+           else{
+            $("#city_id").parent().children('.error').css("display", "none");
+           return true;
+           }
+        }
 
 function sort_by(){
     sortby = $("#sortby").val();
     location.href = '/view-subscriber-list/?sort_by='+sortby+''
 }
 
-function activate_daterange() {
+    var date_flag = "1";
 
-   $('input[type="button"]').click(function() {
+    $("#One_week").click(function() {
 
-       if($(this).attr('id') == 'One_week') {
+    $('#One_week').css({
+        'background-color': '#32C5D2',
+      'color': '#FFF',
+       
+    });
+    
+       $('#date_range').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
 
-            var date = new Date();
+    $('#Six_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#One_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#Three_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
 
-           //var date = new Date($('#start_'+id).val());
-            // days = parseInt($('#day_'+id).val(), 10) - 1;
-            date.setDate(date.getDate() - 7 );
-            var yyyy = date.getFullYear().toString();
-            var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-            var dd  = date.getDate().toString();
-            newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+    	$("#startDate").hide();
+    	$("#endDate").hide();
+    	$("#startDate1").show();
+    	$("#endDate1").show();
+    	
+        var date = new Date();
+        date.setDate(date.getDate() - 7 );
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#startDate").val(newdate);
+        $("#startDate1").val(newdate);
+        var date = new Date();
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#endDate").val(newdate);
+        $("#endDate1").val(newdate);
+    });
+    $("#One_month").click(function() {
+	
+		    $('#One_month').css({
+        'background-color': '#32C5D2',
+      'color': '#FFF',
+       
+    });    
+    
+       $('#date_range').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
 
-            $("#startDate").val(newdate);
+    $('#Six_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#Three_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#One_week').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+    
+        	$("#startDate").hide();
+    	$("#endDate").hide();
+    	$("#startDate1").show();
+    	$("#endDate1").show();
+        var date = new Date();
+        date.setDate(date.getDate() - 30 );
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#startDate").val(newdate);
+         $("#startDate1").val(newdate);
+        var date = new Date();
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#endDate").val(newdate);
+         $("#endDate1").val(newdate);
+    });
+    $("#Three_month").click(function() {
+    
+    				    $('#Three_month').css({
+        'background-color': '#32C5D2',
+      'color': '#FFF',
+       
+    }); 
+    
+       $('#date_range').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
 
+    $('#Six_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#One_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#One_week').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+       
+	
+   
+    
+        	$("#startDate").hide();
+    	$("#endDate").hide();
+    	$("#startDate1").show();
+    	$("#endDate1").show();
+        var date = new Date();
+        date.setDate(date.getDate() - 90 );
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#startDate").val(newdate);
+        $("#startDate1").val(newdate);
+        var date = new Date();
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#endDate").val(newdate);
+         $("#endDate1").val(newdate);
+    });
+    $("#Six_month").click(function() {
+    
+    				    $('#Six_month').css({
+        'background-color': '#32C5D2',
+      'color': '#FFF',
+       
+    });
+    
+        $('#date_range').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
 
-            var date = new Date();
+    $('#Three_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#One_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#One_week').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+       
+    
+        	$("#startDate").hide();
+    	$("#endDate").hide();
+    	$("#startDate1").show();
+    	$("#endDate1").show();
+        var date = new Date();
+        date.setDate(date.getDate() - 180 );
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#startDate").val(newdate);
+        $("#startDate1").val(newdate);
+        var date = new Date();
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#endDate").val(newdate);
+         $("#endDate1").val(newdate);
+    });
+    
+    
+    $("#date_range").click(function() {
 
-            var yyyy = date.getFullYear().toString();
-            var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-            var dd  = date.getDate().toString();
-             newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+	    $('#date_range').css({
+        'background-color': '#32C5D2',
+      'color': '#FFF',
 
-            $("#endDate").val(newdate);
+    });
+      
+    $('#Six_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
 
-    }
-    else if($(this).attr('id') == 'One_month'){
-                       var date = new Date();
+    $('#Three_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#One_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#One_week').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+       
 
-                date.setDate(date.getDate() - 30 );
-                var yyyy = date.getFullYear().toString();
-                var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-                var dd  = date.getDate().toString();
-                  newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+    
+    
+    
+      $("#startDate").show();
+    	$("#endDate").show();
+    	$("#startDate1").hide();
+    	$("#endDate1").hide();
+        $("#startDate").val(null);
+        $("#startDate").datepicker( "destroy" );
+        $("#startDate").datepicker({
+            dateFormat: 'dd/mm/yy',
 
-                $("#startDate").val(newdate);
+        });
+        date_flag = "0";
+        $("#endDate").val(null);
+    });
 
+    $("#startDate").change(function(){
+        if(date_flag == "0"){
+            var from = $("#startDate").val().split("/");
+            var date = new Date(from[2], from[1] - 1, from[0]);
+            $("#endDate").datepicker( "destroy" );
+            $("#endDate").datepicker({
+                dateFormat: 'dd/mm/yy',
+                minDate: date,
 
-            var date = new Date();
-
-                var yyyy = date.getFullYear().toString();
-                var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-                var dd  = date.getDate().toString();
-                 newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-
-                $("#endDate").val(newdate);
-       }
-           else if($(this).attr('id') == 'Three_month'){
-                       var date = new Date();
-
-                date.setDate(date.getDate() - 90 );
-                var yyyy = date.getFullYear().toString();
-                var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-                var dd  = date.getDate().toString();
-                  newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-
-                $("#startDate").val(newdate);
-
-
-            var date = new Date();
-
-                var yyyy = date.getFullYear().toString();
-                var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-                var dd  = date.getDate().toString();
-                   newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-
-                $("#endDate").val(newdate);
-       }
-           else if($(this).attr('id') == 'Six_month'){
-                       var date = new Date();
-
-                date.setDate(date.getDate() - 180 );
-                var yyyy = date.getFullYear().toString();
-                var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-                var dd  = date.getDate().toString();
-                 newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-
-                $("#startDate").val(newdate);
-
-
-            var date = new Date();
-
-                var yyyy = date.getFullYear().toString();
-                var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-                var dd  = date.getDate().toString();
-                 newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-
-                $("#endDate").val(newdate);
-       }
-                  else if($(this).attr('id') == 'date_range'){
-
-                $("#startDate").val(null);
-
-                $("#endDate").val(null);
-       }
-
-   });
-}
+            });
+        }
+    });
 
 
     var xyz;
@@ -1051,7 +1522,7 @@ function activate_daterange() {
    }
 
 function inactive_user() {
-	$("#delete_user").modal('hide');
+    $("#delete_user").modal('hide');
         var  user_id = xyz;
         $.ajax({
             type: 'POST',
@@ -1060,7 +1531,7 @@ function inactive_user() {
             success: function (response) {
             console.log(response);
                 if (response.success == 'true') {
-                	$("#delete_user").modal('hide');
+                    $("#delete_user").modal('hide');
                   $("#remove_user").modal('show');
                   
                 }
@@ -1068,7 +1539,7 @@ function inactive_user() {
                     alert(response.message);
                 }
             },
-            				beforeSend: function () {
+                            beforeSend: function () {
             $("#processing").css('display','block');
             },
             complete: function () {
@@ -1085,7 +1556,7 @@ function inactive_user() {
 function active_subscriber(id){
   var1 = id;
   $("#active_premium_service").modal('show');
-	}
+    }
     
 function activate_subscriber() {
         var subscriber_id = var1;
@@ -1097,7 +1568,7 @@ function activate_subscriber() {
             success: function (response) {
             console.log(response);
                 if (response.success == 'true') {
-                	$("#active_premium_service").modal('hide');
+                    $("#active_premium_service").modal('hide');
                   $("#activate_premium_service").modal('show');
                
                 }
@@ -1105,7 +1576,7 @@ function activate_subscriber() {
                     
                 }
             },
-				beforeSend: function () {
+                beforeSend: function () {
             $("#processing").css('display','block');
             },
             complete: function () {

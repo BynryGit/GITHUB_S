@@ -38,7 +38,7 @@ from django.views.decorators.cache import cache_control
 import ast
 import urllib2
 
-SERVER_URL = "http://52.40.205.128"
+SERVER_URL = "http://52.66.169.65"
 #SERVER_URL = "http://192.168.0.151:9090"
 
 
@@ -206,6 +206,7 @@ def save_category(request):
                         except Exception:
                             cat_obj_level_1 = CategoryLevel1(
                                 category_name=i['level_1'],
+                                category_created_by = request.session['login_user'],
                                 category_created_date=datetime.now(),
                                 category_updated_date=datetime.now(),
                                 category_status='1',
@@ -220,6 +221,7 @@ def save_category(request):
                             except Exception:
                                 cat_obj_level_2 = CategoryLevel2(
                                     category_name=j,
+                                    category_created_by = request.session['login_user'],
                                     category_created_date=datetime.now(),
                                     category_updated_date=datetime.now(),
                                     category_status='1',
@@ -234,6 +236,7 @@ def save_category(request):
                             except Exception:
                                 cat_obj_level_3 = CategoryLevel3(
                                     category_name=j,
+                                    category_created_by = request.session['login_user'],
                                     category_created_date=datetime.now(),
                                     category_updated_date=datetime.now(),
                                     category_status='1',
@@ -248,6 +251,7 @@ def save_category(request):
                             except Exception:
                                 cat_obj_level_4 = CategoryLevel4(
                                     category_name=j,
+                                    category_created_by = request.session['login_user'],
                                     category_created_date=datetime.now(),
                                     category_updated_date=datetime.now(),
                                     category_status='1',
@@ -262,6 +266,7 @@ def save_category(request):
                             except Exception:
                                 cat_obj_level_5 = CategoryLevel5(
                                     category_name=j,
+                                    category_created_by = request.session['login_user'],
                                     category_created_date=datetime.now(),
                                     category_updated_date=datetime.now(),
                                     category_status='1',
@@ -294,7 +299,7 @@ def add_category_sms(category_obj):
     category_name= category_obj.category_name
     print '....................category_name.......',category_name
     message = "Hi Admin,"+'\n'+"Category "+category_name+" has been added successfully"
-    sender = "DGSPCE"
+    sender = "CTHPLA"
     route = "4"
     country = "91"
 
@@ -387,11 +392,11 @@ def search_category_list(request):
                 else:
                     for advert_obj in advert_obj_list:
                         advert_id = str(advert_obj.advert_id)
-                        pre_date = datetime.now().strftime("%m/%d/%Y")
-                        pre_date = datetime.strptime(pre_date, "%m/%d/%Y")
+                        pre_date = datetime.now().strftime("%d/%m/%Y")
+                        pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
                         advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=advert_id)
                         end_date = advert_sub_obj.business_id.end_date
-                        end_date = datetime.strptime(end_date, "%m/%d/%Y")
+                        end_date = datetime.strptime(end_date, "%d/%m/%Y")
                         date_gap = end_date - pre_date
                         if int(date_gap.days) >= 0:
                             active_advert = 'Yes'
@@ -577,11 +582,11 @@ def category_list(request):
                     else:
                         for advert_obj in advert_obj_list:
                             advert_id = str(advert_obj.advert_id)
-                            pre_date = datetime.now().strftime("%m/%d/%Y")
-                            pre_date = datetime.strptime(pre_date, "%m/%d/%Y")
+                            pre_date = datetime.now().strftime("%d/%m/%Y")
+                            pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
                             advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=advert_id)
                             end_date = advert_sub_obj.business_id.end_date
-                            end_date = datetime.strptime(end_date, "%m/%d/%Y")
+                            end_date = datetime.strptime(end_date, "%d/%m/%Y")
                             date_gap = end_date - pre_date
                             if int(date_gap.days) >= 0:
                                 active_advert = 'Yes'
@@ -652,7 +657,7 @@ def delete_category_sms(cat_obj):
     authkey = "118994AIG5vJOpg157989f23"
     mobiles = "+919403884595"
     message = "Hi Admin,"+'\n'+"Category "+category_name+" has been deactivated successfully "
-    sender = "DGSPCE"
+    sender = "CTHPLA"
     route = "4"
     country = "91"
     values = {
@@ -762,11 +767,11 @@ def edit_category(request):
                 advert_obj_list = Advert.objects.filter(category_id = category_id)
                 for advert_obj in advert_obj_list:
                     advert_id = str(advert_obj.advert_id)
-                    pre_date = datetime.now().strftime("%m/%d/%Y")
-                    pre_date = datetime.strptime(pre_date, "%m/%d/%Y")
+                    pre_date = datetime.now().strftime("%d/%m/%Y")
+                    pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
                     advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=advert_id)
                     end_date = advert_sub_obj.business_id.end_date
-                    end_date = datetime.strptime(end_date, "%m/%d/%Y")
+                    end_date = datetime.strptime(end_date, "%d/%m/%Y")
                     date_gap = end_date - pre_date
                     if int(date_gap.days) >= 0:
                         active_advert = 'Yes'
@@ -876,11 +881,9 @@ def edit_category(request):
 @csrf_exempt
 def update_category(request):
     #print request.POST
-    image = request.POST.get('img')
     cat_color = request.POST.get('cat_color')
     print cat_color
-    if image:
-        image = request.FILES['img']
+    
     x = request.POST.get('list')
     form_data = request.POST.get('form_data')
     cat_name = request.POST.get('cat_name')
@@ -909,11 +912,13 @@ def update_category(request):
         cat_obj.category_name = cat_name
         cat_obj.category_updated_date = datetime.now()
         cat_obj.category_updated_by = request.session['login_user']
-        cat_obj.updated_by = cat_color
+        cat_obj.category_color = cat_color
         cat_obj.save()
-        if image:
+        try:
             cat_obj.category_image = request.FILES['img']
             cat_obj.save()
+        except KeyError as e:
+            pass
         CategoryCityMap.objects.filter(category_id=cat_obj).delete()
         if city_list != ['']:
             cat_map = create_city_map_obj(city_list, sequence_list, cat_obj)
@@ -1036,7 +1041,7 @@ def edit_category_sms(cat_obj):
     category_name= cat_obj.category_name
     print '....................category_name.......',category_name
     message = "Hi Admin,"+'\n'+"Category "+category_name+" has been updated successfully"
-    sender = "DGSPCE"
+    sender = "CTHPLA"
     route = "4"
     country = "91"
     print 'kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk'
@@ -1063,7 +1068,7 @@ def edit_category_sms(cat_obj):
 def add_category_mail(cat_obj):
     gmail_user = "cityhoopla2016"
     gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     # pdb.set_trace()
     try:
@@ -1087,7 +1092,7 @@ def add_category_mail(cat_obj):
 def edit_category_mail(cat_obj):
     gmail_user = "cityhoopla2016"
     gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     # pdb.set_trace()
     try:
@@ -1111,7 +1116,7 @@ def edit_category_mail(cat_obj):
 def inactive_category_mail(cat_obj):
     gmail_user = "cityhoopla2016"
     gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     # pdb.set_trace()
     try:
@@ -1139,7 +1144,7 @@ def active_category(request):
         cat_obj = Category.objects.get(category_id=request.POST.get('category_id'))
         cat_obj.category_status = '1'
         cat_obj.save()
-        data = {'message': 'Category activeted Successfully', 'success': 'true'}
+        data = {'message': 'Category activated Successfully', 'success': 'true'}
         category_active_mail(cat_obj)
 
     except IntegrityError as e:
@@ -1153,7 +1158,7 @@ def active_category(request):
 def category_active_mail(cat_obj):
     gmail_user = "cityhoopla2016"
     gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     # pdb.set_trace()
     try:

@@ -52,4 +52,10 @@ mobileapp_urlpattern = patterns('',
     url(r'^user-advert-activity/', 'mobileapp.views.user_advert_activity',name='user_advert_activity'),
     url(r'^guest-login/', 'mobileapp.views.guest_login',name='guest_login'),
 
+    url(r'^get-city-star/', 'mobileapp.views.get_city_star',name='get_city_star'),
+    url(r'^like-city-star/', 'mobileapp.views.like_city_star',name='like_city_star'),
+    url(r'^share-city-star/', 'mobileapp.views.share_city_star',name='share_city_star'),
+
+    url(r'^search-sellticket/', 'mobileapp.views.search_sellticket',name='search_sellticket'),
+
 ) + static( settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

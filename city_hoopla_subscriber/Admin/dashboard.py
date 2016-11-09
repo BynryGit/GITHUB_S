@@ -37,7 +37,7 @@ import random
 from django.views.decorators.cache import cache_control
 import ast
 
-from geopy.geocoders import Nominatim
+
 import datetime
 from datetime import datetime
 import calendar
@@ -45,7 +45,7 @@ from django.db.models import Count
 
 # SERVER_URL = "http://52.40.205.128"
 # SERVER_URL = "http://192.168.0.151:9090"
-SERVER_URL = "http://52.66.144.182"
+SERVER_URL = "http://52.66.169.65"   
 
 
 @csrf_exempt
@@ -80,7 +80,7 @@ def get_advert_health(request):
                 to_date = datetime.strptime(to_date, "%d/%m/%Y")
                 from_date = from_date.strftime("%Y-%m-%d")
                 to_date = to_date.strftime("%Y-%m-%d")
-                advert = Advert.objects.get(advert_id=request.GET.get('advert_id'))
+                advert = Advert.objects.get(advert_id=request.GET.get('advert_id'),supplier_id=request.GET.get('sub_id'))
                 coupon_objs = CouponCode.objects.filter(advert_id=str(advert.advert_id),
                                                         creation_date__range=[from_date, to_date])
                 advert_fav_objs = AdvertFavourite.objects.filter(advert_id=str(advert.advert_id),
@@ -1137,14 +1137,6 @@ def admin_dashboard(request):
         final_list = []
         final_list1 = []
         try:
-
-            # to find out logo of supplier
-            # Supplier_obj = Supplier.objects.get(supplier_id=request.session['supplier_id'])
-            # print "..................Supplier_obj.........",Supplier_obj
-            # supplier_id = Supplier_obj.supplier_id
-
-            # logo= SERVER_URL + Supplier_obj.logo.url
-
             #########.............Dashboard Stats.........................#####
             total_payment_count = 0
             total_new_subscriber = 0
@@ -1174,6 +1166,105 @@ def admin_dashboard(request):
             last_date = (datetime.now() + timedelta(days=7)).strftime("%m/%d/%Y")
             total_advert_expiring = Business.objects.filter(end_date__range=[current_date, last_date]).count()
             print "..#########......total_advert_expiring.........", total_advert_expiring
+
+
+
+            ############################...Todays Login...REGISTERED USER..(1)....###############################
+            count_zero = 0
+            count_first = 0
+            count_second = 0
+            count_third = 0
+
+            current_date = datetime.now()
+            year = current_date.year
+            month = current_date.month
+            day = current_date.day
+
+            past_date = datetime(year,month,day)
+            present_date = datetime.now()
+            list = []
+
+            consumer_lst = ConsumerProfile.objects.filter(last_time_login__gt=past_date,last_time_login__lt=present_date)
+            for obj in consumer_lst:
+                consumer_id = obj.consumer_id
+
+                consumer_list0 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=' 00:',consumer_type='register').count()
+                count_zero = count_zero + consumer_list0
+
+                for hour in range(0, 9):
+                    hour = ' 0' + str(hour) + ':'
+                    consumer_list = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='register').count()
+                    count_first = count_first + consumer_list
+                count_first = int(count_first)
+
+                for hour in range(9, 17):
+                    if hour == 9:
+                        hour = ' 0' + str(hour) + ':'
+                    else:
+                        hour = ' ' + str(hour) + ':'
+                    consumer_list1 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='register').count()
+                    count_second = count_second + consumer_list1
+                count_second = int(count_second)
+
+                for hour in range(17, 24):
+                    hour = ' ' + str(hour) + ':'
+                    consumer_list2 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='register').count()
+                    count_third = count_third + consumer_list2
+                count_third = int(count_third)
+
+                print '..........count_zero..........', count_zero
+                print '..........count_1..........', count_first
+                print '..........count_2..........', count_second
+                print '..........count_3..........', count_third
+
+            ############################...Todays Login....GUEST USER.(1)....###############################
+            count_zero_guest = 0
+            count_first_guest = 0
+            count_second_guest = 0
+            count_third_guest = 0
+
+            current_date = datetime.now()
+            year = current_date.year
+            month = current_date.month
+            day = current_date.day
+
+            past_date = datetime(year,month,day)
+            present_date = datetime.now()
+            list = []
+
+            consumer_lst = ConsumerProfile.objects.filter(last_time_login__gt=past_date,last_time_login__lt=present_date)
+            for obj in consumer_lst:
+                consumer_id = obj.consumer_id
+
+                consumer_list0 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=' 0:',consumer_type='guest').count()
+                count_zero_guest = count_zero_guest + consumer_list0
+
+                for hour in range(0, 9):
+                    hour = ' 0' + str(hour) + ':'
+                    consumer_list = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='guest').count()
+                    count_first_guest = count_first_guest + consumer_list
+                count_first_guest = int(count_first_guest)
+
+                for hour in range(9, 17):
+                    if hour == 9:
+                        hour = ' 0' + str(hour) + ':'
+                    else:
+                        hour = ' ' + str(hour) + ':'
+                    consumer_list1 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='guest').count()
+                    count_second_guest = count_second_guest + consumer_list1
+                count_second_guest = int(count_second_guest)
+
+                for hour in range(17, 24):
+                    hour = ' ' + str(hour) + ':'
+                    consumer_list2 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='guest').count()
+                    count_third_guest = count_third_guest + consumer_list2
+                count_third_guest = int(count_third_guest)
+
+                print '..........count_zero_guest..........', count_zero_guest
+                print '..........count_1..........', count_first_guest
+                print '..........count_2..........', count_second_guest
+                print '..........count_3..........', count_third_guest
+
 
             #######.............Total subscription  Graph......(1)....########
 
@@ -1253,75 +1344,7 @@ def admin_dashboard(request):
                         pass
             print 'ZZZZZZZZZZZZZZZZZZZZZZZZZZZ', mon, tue, wen, thus, fri, sat, sun
 
-            ############################...Todays Login...REGISTERED USER..(3)....###############################
-            count_zero = 0
-            count_first = 0
-            count_second = 0
-            count_third = 0
 
-            consumer_list0 = ConsumerProfile.objects.filter(last_time_login__regex=' 0:',consumer_type='register').count()
-            count_zero = count_zero + consumer_list0
-
-            for hour in range(0, 9):
-                hour = ' 0' + str(hour) + ':'
-                consumer_list = ConsumerProfile.objects.filter(last_time_login__regex=hour,consumer_type='register').count()
-                count_first = count_first + consumer_list
-            count_1 = str(count_first)
-
-            for hour in range(9, 17):
-                if hour == 9:
-                    hour = ' 0' + str(hour) + ':'
-                else:
-                    hour = ' ' + str(hour) + ':'
-                consumer_list1 = ConsumerProfile.objects.filter(last_time_login__regex=hour,consumer_type='register').count()
-                count_second = count_second + consumer_list1
-            count_2 = str(count_second)
-
-            for hour in range(17, 24):
-                hour = ' ' + str(hour) + ':'
-                consumer_list2 = ConsumerProfile.objects.filter(last_time_login__regex=hour,consumer_type='register').count()
-                count_third = count_third + consumer_list2
-            count_3 = str(count_third)
-
-            print '..........count_zero..........', count_zero
-            print '..........count_1..........', count_1
-            print '..........count_2..........', count_2
-            print '..........count_3..........', count_3
-
-            ############################...Todays Login....GUEST USER.(3)....###############################
-            count_zero_guest = 0
-            count_first_guest = 0
-            count_second_guest = 0
-            count_third_guest = 0
-
-            consumer_list0 = ConsumerProfile.objects.filter(last_time_login__regex=' 0:',consumer_type='guest').count()
-            count_zero_guest = count_zero_guest + consumer_list0
-
-            for hour in range(0, 9):
-                hour = ' 0' + str(hour) + ':'
-                consumer_list = ConsumerProfile.objects.filter(last_time_login__regex=hour,consumer_type='guest').count()
-                count_first_guest = count_first_guest + consumer_list
-            count_first_guest = str(count_first_guest)
-
-            for hour in range(9, 17):
-                if hour == 9:
-                    hour = ' 0' + str(hour) + ':'
-                else:
-                    hour = ' ' + str(hour) + ':'
-                consumer_list1 = ConsumerProfile.objects.filter(last_time_login__regex=hour,consumer_type='guest').count()
-                count_second_guest = count_second_guest + consumer_list1
-            count_second_guest = str(count_second_guest)
-
-            for hour in range(17, 24):
-                hour = ' ' + str(hour) + ':'
-                consumer_list2 = ConsumerProfile.objects.filter(last_time_login__regex=hour,consumer_type='guest').count()
-                count_third_guest = count_third_guest + consumer_list2
-            count_third_guest = str(count_third_guest)
-
-            print '..........count_zero..........', count_zero_guest
-            print '..........count_1..........', count_first_guest
-            print '..........count_2..........', count_second_guest
-            print '..........count_3..........', count_third_guest
 
             ###########################....... New subscription view...(4).....######################
             current_date = datetime.now()
@@ -1354,8 +1377,7 @@ def admin_dashboard(request):
                     else:
                         pass
 
-            data = {'success': 'true', 'count_zero': count_zero, 'count_1': count_1, 'count_2': count_2,
-                    'count_3': count_3, 'count_zero_guest': count_zero_guest, 'count_first_guest': count_first_guest, 'count_second_guest': count_second_guest,
+            data = {'success': 'true','count_zero_guest': count_zero_guest, 'count_first_guest': count_first_guest, 'count_second_guest': count_second_guest,
                     'count_third_guest': count_third_guest,  'total_payment_count': total_payment_count,
                     'total_new_subscriber': total_new_subscriber,
                     'total_new_booking': total_new_booking, 'total_advert_expiring': total_advert_expiring, 'jan': jan,
@@ -1364,7 +1386,7 @@ def admin_dashboard(request):
                     'thus': thus, 'fri': fri, 'sat': sat, 'sun': sun, 'mon1': mon1, 'tue1': tue1, 'wen1': wen1,
                     'thus1': thus1, 'fri1': fri1, 'sat1': sat1, 'sun1': sun1,
                     'city_places_list': get_city_places(request),
-                    'count_zero': count_zero, 'count_1': count_1, 'count_2': count_2, 'count_3': count_3}
+                    'count_zero': count_zero, 'count_first': count_first, 'count_second': count_second, 'count_third': count_third}
 
         except IntegrityError as e:
             print e
@@ -1394,6 +1416,21 @@ def get_city_places(request):
         data = {'city_list': 'none', 'message': 'No city available'}
     return HttpResponse(json.dumps(data), content_type='application/json')
 
+# TO GET THE CITY
+def get_city_places1(request):
+    city_list = []
+    try:
+        city_objs = City_Place.objects.all()
+        for city in city_objs:
+            city_list.append({'city_place_id': city.city_place_id, 'city': city.city_id.city_name})
+        data = city_list
+        return data
+
+    except Exception, ke:
+        print ke
+        data = {'city_list': 'none', 'message': 'No city available'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
 
 @csrf_exempt
 def get_admin_filter(request):
@@ -1401,6 +1438,14 @@ def get_admin_filter(request):
         data = {}
         final_list = []
         final_list1 = []
+        count_zero1 = 0
+        count_11 = 0
+        count_22 = 0
+        count_33 = 0
+        count_zero_guest = 0
+        count_first_guest = 0
+        count_second_guest = 0
+        count_third_guest = 0
         try:
             city_front = request.GET.get('citys_var')
             print '//......$$$$$$$$.....city_front......//', city_front
@@ -1478,42 +1523,99 @@ def get_admin_filter(request):
                         else:
                             pass
 
-                # ##########.....Todays Login.(3)... for a week  ##########
+                ############################...Todays Login...REGISTERED USER..(3)....###############################
                 count_zero1 = 0
                 count_first = 0
                 count_second = 0
                 count_third = 0
 
-                consumer_list0 = ConsumerProfile.objects.filter(last_time_login__regex=' 0:').count()
-                count_zero1 = count_zero1 + consumer_list0
+                current_date = datetime.now()
+                year = current_date.year
+                month = current_date.month
+                day = current_date.day
 
-                for hour in range(0, 9):
-                    print "HOur", hour
-                    hour = ' 0' + str(hour) + ':'
-                    print "hour", hour
-                    consumer_list = ConsumerProfile.objects.filter(last_time_login__regex=hour).count()
-                    count_first = count_first + consumer_list
-                count_11 = count_first
+                past_date = datetime(year,month,day)
+                present_date = datetime.now()
+                list = []
 
-                for hour in range(9, 17):
-                    if hour == 9:
+                consumer_lst = ConsumerProfile.objects.filter(last_time_login__gt=past_date,last_time_login__lt=present_date)
+                print '..........consumer_lst.........',consumer_lst
+                for obj in consumer_lst:
+                    consumer_id = obj.consumer_id
+
+                    consumer_list0 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=' 00:',consumer_type='register').count()
+                    count_zero1 = count_zero1 + consumer_list0
+
+                    for hour in range(0, 9):
                         hour = ' 0' + str(hour) + ':'
-                    else:
+                        consumer_list = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='register').count()
+                        count_first = count_first + consumer_list
+                    count_11 = int(count_first)
+
+                    for hour in range(9, 17):
+                        if hour == 9:
+                            hour = ' 0' + str(hour) + ':'
+                        else:
+                            hour = ' ' + str(hour) + ':'
+                        consumer_list1 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='register').count()
+                        count_second = count_second + consumer_list1
+                    count_22 = int(count_second)
+
+                    for hour in range(17, 24):
                         hour = ' ' + str(hour) + ':'
-                    consumer_list1 = ConsumerProfile.objects.filter(last_time_login__regex=hour).count()
-                    count_second = count_second + consumer_list1
-                count_22 = count_second
+                        consumer_list2 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='register').count()
+                        count_third = count_third + consumer_list2
+                    count_33 = int(count_third)
 
-                for hour in range(17, 24):
-                    hour = ' ' + str(hour) + ':'
-                    consumer_list2 = ConsumerProfile.objects.filter(last_time_login__regex=hour).count()
-                    count_third = count_third + consumer_list2
-                count_33 = count_third
+                    print '..........count_zero...REGISTERD.......', count_zero1
+                    print '..........count_1.....REGISTERD.....', count_11
+                    print '..........count_2......REGISTERD....', count_22
+                    print '..........count_3......REGISTERD....', count_33
 
-                print '..........count_zero..........', count_zero1
-                print '..........count_1..........', count_11
-                print '..........count_2..........', count_22
-                print '..........count_3..........', count_33
+
+                ############################...Todays Login....GUEST USER.(3)....###############################
+
+                current_date = datetime.now()
+                year = current_date.year
+                month = current_date.month
+                day = current_date.day
+
+                past_date = datetime(year,month,day)
+                present_date = datetime.now()
+                list = []
+
+                consumer_lst = ConsumerProfile.objects.filter(last_time_login__gt=past_date,last_time_login__lt=present_date)
+                for obj in consumer_lst:
+                    consumer_id = obj.consumer_id
+
+                    consumer_list0 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=' 0:',consumer_type='guest').count()
+                    count_zero_guest = count_zero_guest + consumer_list0
+
+                    for hour in range(0, 9):
+                        hour = ' 0' + str(hour) + ':'
+                        consumer_list = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='guest').count()
+                        count_first_guest = count_first_guest + consumer_list
+                    count_first_guest = int(count_first_guest)
+
+                    for hour in range(9, 17):
+                        if hour == 9:
+                            hour = ' 0' + str(hour) + ':'
+                        else:
+                            hour = ' ' + str(hour) + ':'
+                        consumer_list1 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='guest').count()
+                        count_second_guest = count_second_guest + consumer_list1
+                    count_second_guest = int(count_second_guest)
+
+                    for hour in range(17, 24):
+                        hour = ' ' + str(hour) + ':'
+                        consumer_list2 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='guest').count()
+                        count_third_guest = count_third_guest + consumer_list2
+                    count_third_guest = int(count_third_guest)
+
+                    print '..........count_zero_guest..........', count_zero_guest
+                    print '..........count_first_guest..........', count_first_guest
+                    print '..........count_second_guest..........', count_second_guest
+                    print '..........count_third_guest..........', count_third_guest
 
                 ##########..... New subscription view...(4).... for a week  ##########
                 current_date = datetime.now()
@@ -1623,44 +1725,109 @@ def get_admin_filter(request):
                         else:
                             pass
 
-                # ##########.....Todays Login.(3)... for a week  ##########
+                ############################...Todays Login...REGISTERED USER..(3)....###############################
                 count_zero1 = 0
                 count_first = 0
                 count_second = 0
                 count_third = 0
 
-                consumer_list0 = ConsumerProfile.objects.filter(last_time_login__regex=' 0:',
-                                                                city_place_id=city_front).count()
-                count_zero1 = count_zero1 + consumer_list0
+                current_date = datetime.now()
+                year = current_date.year
+                month = current_date.month
+                day = current_date.day
 
-                for hour in range(0, 9):
-                    hour = ' 0' + str(hour) + ':'
-                    consumer_list = ConsumerProfile.objects.filter(last_time_login__regex=hour,
-                                                                   city_place_id=city_front).count()
-                    count_first = count_first + consumer_list
-                count_11 = count_first
+                past_date = datetime(year,month,day)
+                present_date = datetime.now()
+                list = []
 
-                for hour in range(9, 17):
-                    if hour == 9:
+                consumer_lst = ConsumerProfile.objects.filter(last_time_login__gt=past_date,
+                                                                   city_place_id=city_front,last_time_login__lt=present_date)
+                print '..........consumer_lst.........',consumer_lst
+                for obj in consumer_lst:
+                    consumer_id = obj.consumer_id
+
+                    consumer_list0 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=' 00:',consumer_type='register').count()
+                    count_zero1 = count_zero1 + consumer_list0
+
+                    for hour in range(0, 9):
                         hour = ' 0' + str(hour) + ':'
-                    else:
+                        consumer_list = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='register').count()
+                        count_first = count_first + consumer_list
+                    count_11 = int(count_first)
+
+                    for hour in range(9, 17):
+                        if hour == 9:
+                            hour = ' 0' + str(hour) + ':'
+                        else:
+                            hour = ' ' + str(hour) + ':'
+                        consumer_list1 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='register').count()
+                        count_second = count_second + consumer_list1
+                    count_22 = int(count_second)
+
+                    for hour in range(17, 24):
                         hour = ' ' + str(hour) + ':'
-                    consumer_list1 = ConsumerProfile.objects.filter(last_time_login__regex=hour,
-                                                                    city_place_id=city_front).count()
-                    count_second = count_second + consumer_list1
-                count_22 = count_second
+                        consumer_list2 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='register').count()
+                        count_third = count_third + consumer_list2
+                    count_33 = int(count_third)
 
-                for hour in range(17, 24):
-                    hour = ' ' + str(hour) + ':'
-                    consumer_list2 = ConsumerProfile.objects.filter(last_time_login__regex=hour,
-                                                                    city_place_id=city_front).count()
-                    count_third = count_third + consumer_list2
-                count_33 = count_third
+                    print '..........count_zero...REGISTERD.......', count_zero1
+                    print '..........count_1.....REGISTERD.....', count_11
+                    print '..........count_2......REGISTERD....', count_22
+                    print '..........count_3......REGISTERD....', count_33
 
-                print '..........count_zero..........', count_zero1
-                print '..........count_1..........', count_11
-                print '..........count_2..........', count_22
-                print '..........count_3..........', count_33
+
+                ############################...Todays Login....GUEST USER.(3)....###############################
+                count_zero_guest = 0
+                count_first_guest = 0
+                count_second_guest = 0
+                count_third_guest = 0
+                count_zero1 = 0
+                count_first_guest = 0
+                count_second_guest = 0 
+                count_third_guest = 0
+    
+                current_date = datetime.now()
+                year = current_date.year
+                month = current_date.month
+                day = current_date.day
+
+                past_date = datetime(year,month,day)
+                present_date = datetime.now()
+                list = []
+
+                consumer_lst = ConsumerProfile.objects.filter(last_time_login__gt=past_date,
+                                                                   city_place_id=city_front,last_time_login__lt=present_date)
+                for obj in consumer_lst:
+                    consumer_id = obj.consumer_id
+
+                    consumer_list0 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=' 0:',consumer_type='guest').count()
+                    count_zero_guest = count_zero_guest + consumer_list0
+
+                    for hour in range(0, 9):
+                        hour = ' 0' + str(hour) + ':'
+                        consumer_list = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='guest').count()
+                        count_first_guest = count_first_guest + consumer_list
+                    count_first_guest = int(count_first_guest)
+
+                    for hour in range(9, 17):
+                        if hour == 9:
+                            hour = ' 0' + str(hour) + ':'
+                        else:
+                            hour = ' ' + str(hour) + ':'
+                        consumer_list1 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='guest').count()
+                        count_second_guest = count_second_guest + consumer_list1
+                    count_second_guest = int(count_second_guest)
+
+                    for hour in range(17, 24):
+                        hour = ' ' + str(hour) + ':'
+                        consumer_list2 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='guest').count()
+                        count_third_guest = count_third_guest + consumer_list2
+                    count_third_guest = int(count_third_guest)
+
+                    print '..........count_zero_guest..........', count_zero_guest
+                    print '..........count_first_guest..........', count_first_guest
+                    print '..........count_second_guest..........', count_second_guest
+                    print '..........count_third_guest..........', count_third_guest
 
                 ##########..... New subscription view...(4).... for a week  ##########
                 current_date = datetime.now()
@@ -1697,8 +1864,7 @@ def get_admin_filter(request):
                     'wen2': wen2, 'thus2': thus2,
                     'fri2': fri2, 'sat2': sat2, 'sun2': sun2, 'mon4': mon4, 'tue4': tue4, 'wen4': wen4, 'thus4': thus4,
                     'fri4': fri4, 'sat4': sat4, 'sun4': sun4, 'city_places_list': get_city_places(request),
-                    'count_zero1': count_zero1, 'count_11': count_11, 'count_22': count_22, 'count_33': count_33}
-
+                    'count_zero1': count_zero1, 'count_11': count_11, 'count_22': count_22, 'count_33': count_33,'count_zero_guest': count_zero_guest, 'count_first_guest': count_first_guest, 'count_second_guest': count_second_guest, 'count_third_guest': count_third_guest}
 
         except IntegrityError as e:
             print e
@@ -1936,6 +2102,9 @@ def admin_report(request):
             # to find out subscriber list
             subscriber_obj = Supplier.objects.filter(supplier_status='1')
 
+            # to find out category
+            category_obj = Category.objects.filter(category_status='1').exclude(category_name= 'Ticket Resell')
+
             # to find last 1 month previous date
             today_date = datetime.now().strftime("%d/%m/%Y")
             dates = today_date.split('/')
@@ -1961,8 +2130,8 @@ def admin_report(request):
 
             # Supplier_list = Supplier.objects.all().values('sales_person_name').distinct()
 
-            data = {'success': 'true', 'subscriber_data': subscriber_obj, 'Supplier_data': Supplier_list,
-                    'today_date': today_date, 'pre_date': pre_date, 'city_places_list': get_city_places(request)}
+            data = {'success': 'true', 'subscriber_data': subscriber_obj, 'category_data': category_obj, 'Supplier_data': Supplier_list,
+                    'today_date': today_date, 'pre_date': pre_date, 'city_places_list': get_city_places1(request)}
 
         except IntegrityError as e:
             print e
@@ -1982,16 +2151,11 @@ def admin_report(request):
 @csrf_exempt
 def get_subscriber_list(request):
     city_id = request.GET.get('city_id')
-    advert_obj = CategoryCityMap.objects.filter(city_place_id=city_id)
-    advert_list = []
-    for ad_obj in advert_obj:
-        advert_data = {
-            'category_id': ad_obj.category_id.category_id,
-            'category_nm': ad_obj.category_id.category_name,
-        }
-        advert_list.append(advert_data)
+    if city_id == 'all':
+        supplier_obj = Supplier.objects.all()
+    else:
+        supplier_obj = Supplier.objects.filter(city_place_id=city_id)
 
-    supplier_obj = Supplier.objects.filter(city_place_id=city_id)
     supplier_list = []
     for supply in supplier_obj:
         supplier_data = {
@@ -2001,16 +2165,46 @@ def get_subscriber_list(request):
         supplier_list.append(supplier_data)
     data = {
         'success': 'true',
-        'supplier_list': supplier_list,
-        'advert_list': advert_list
-    }
+        'supplier_list': supplier_list
+
+        }
     return HttpResponse(json.dumps(data), content_type='application/json')
 
+# @csrf_exempt
+# def get_subscriber_list2(request):
+#     city_id = request.GET.get('city_id')
+#     advert_obj = Category.objects.all()
+#     advert_list = []
+#     for ad_obj in advert_obj:
+#         advert_data = {
+#             'category_id': ad_obj.category_id,
+#             'category_nm': ad_obj.category_name,
+#         }
+#         advert_list.append(advert_data)
+
+#     supplier_obj = Supplier.objects.all()
+#     supplier_list = []
+#     for supply in supplier_obj:
+#         supplier_data = {
+#             'supplier_obj_name': supply.business_name,
+#             'supplier_obj_id': supply.supplier_id
+#         }
+#         supplier_list.append(supplier_data)
+#     data = {
+#         'success': 'true',
+#         'supplier_list': supplier_list,
+#         'advert_list': advert_list
+#     }
+#     return HttpResponse(json.dumps(data), content_type='application/json')
 
 @csrf_exempt
 def get_catlevel1_list(request):
     cat_id = request.GET.get('cat_id')
-    category_lst = CategoryLevel1.objects.filter(parent_category_id=cat_id)
+    print '###################################',cat_id
+    if cat_id == 'all':
+        category_lst = CategoryLevel1.objects.filter(category_status='1')
+    else:    
+        category_lst = CategoryLevel1.objects.filter(parent_category_id=cat_id)
     category1_list = []
     for cat_obj in category_lst:
         cat1_data = {
@@ -2033,8 +2227,14 @@ def get_catlevel1_list(request):
 
 @csrf_exempt
 def get_catlevel2_list(request):
+
     cat_id = request.GET.get('cat_id')
-    category_lst = CategoryLevel2.objects.filter(parent_category_id=cat_id)
+
+    if cat_id == 'all':
+        category_lst = CategoryLevel2.objects.filter(category_status='1')
+    else:    
+        category_lst = CategoryLevel2.objects.filter(parent_category_id=cat_id)
+
     category2_list = []
     for cat_obj in category_lst:
         cat2_data = {
@@ -2058,7 +2258,12 @@ def get_catlevel2_list(request):
 @csrf_exempt
 def get_catlevel3_list(request):
     cat_id = request.GET.get('cat_id')
-    category_lst = CategoryLevel3.objects.filter(parent_category_id=cat_id)
+
+    if cat_id == 'all':
+        category_lst = CategoryLevel3.objects.filter(category_status='1')
+    else:    
+        category_lst = CategoryLevel3.objects.filter(parent_category_id=cat_id)
+
     category3_list = []
     for cat_obj in category_lst:
         cat3_data = {
@@ -2082,7 +2287,12 @@ def get_catlevel3_list(request):
 @csrf_exempt
 def get_catlevel4_list(request):
     cat_id = request.GET.get('cat_id')
-    category_lst = CategoryLevel4.objects.filter(parent_category_id=cat_id)
+
+    if cat_id == 'all':
+        category_lst = CategoryLevel4.objects.filter(category_status='1')
+    else:    
+        category_lst = CategoryLevel4.objects.filter(parent_category_id=cat_id)
+
     category4_list = []
     for cat_obj in category_lst:
         cat4_data = {
@@ -2106,7 +2316,13 @@ def get_catlevel4_list(request):
 @csrf_exempt
 def get_catlevel5_list(request):
     cat_id = request.GET.get('cat_id')
-    category_lst = CategoryLevel5.objects.filter(parent_category_id=cat_id)
+
+    if cat_id == 'all':
+        category_lst = CategoryLevel5.objects.filter(category_status='1')
+    else:    
+        category_lst = CategoryLevel5.objects.filter(parent_category_id=cat_id)
+
+    
     category5_list = []
     for cat_obj in category_lst:
         cat5_data = {
@@ -2126,82 +2342,15 @@ def get_catlevel5_list(request):
         }
     return HttpResponse(json.dumps(data), content_type='application/json')
 
-
-@csrf_exempt
-def get_advert_list(request):
-    supplier_id = request.GET.get('supplier_id')
-    advert_obj = Advert.objects.filter(supplier_id=supplier_id)
-    advert_list = []
-    for advert in advert_obj:
-        advert_data = {
-            'advert_obj_name': advert.advert_name,
-            'advert_obj_id': advert.advert_id
-        }
-        advert_list.append(advert_data)
-    data = {
-        'success': 'true',
-        'advert_list': advert_list
-    }
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-
-def get_advert_table_data(request):
-    try:
-        data = {}
-        final_list = []
-        try:
-            from_date = request.GET.get('from_date')
-            to_date = request.GET.get('to_date')
-            from_date = datetime.strptime(from_date, "%d/%m/%Y")
-            to_date = datetime.strptime(to_date, "%d/%m/%Y")
-            from_date = from_date.strftime("%Y-%m-%d")
-            to_date = to_date.strftime("%Y-%m-%d")
-
-            advert_list = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),
-                                                category_id=request.GET.get('cat_id'),
-                                                creation_date__range=[from_date, to_date])
-            for adve_obj in advert_list:
-                coupon_objs = CouponCode.objects.filter(advert_id=str(adve_obj.advert_id))
-                advert_fav_objs = AdvertFavourite.objects.filter(advert_id=str(adve_obj.advert_id))
-                advert_like_objs = AdvertLike.objects.filter(advert_id=str(adve_obj.advert_id))
-                advert_view_objs = AdvertView.objects.filter(advert_id=str(adve_obj.advert_id))
-
-                advert_data = {
-                    'advert_id': adve_obj.advert_id,
-                    'advert_title': adve_obj.advert_name,
-                    'advert_views': advert_view_objs.count(),
-                    'advert_likes': advert_like_objs.count(),
-                    'advert_favourites': advert_fav_objs.count(),
-                    'advert_calls': '0',
-                    'advert_call_backs': '0',
-                    'advert_emails': '0',
-                    'advert_coupons': coupon_objs.count(),
-                    'advert_reviews': '0',
-                    'advert_sms': '0',
-                    'advert_whatsapp': '0',
-                    'advert_facebook': '0',
-                    'advert_twitter': '0',
-                }
-                final_list.append(advert_data)
-
-            data = {'success': 'true', 'data': final_list}
-        except IntegrityError as e:
-            print e
-            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
-    except MySQLdb.OperationalError, e:
-        print e
-    except Exception, e:
-        print 'Exception ', e
-    print final_list
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-
 @csrf_exempt
 def get_advert_list1(request):
-    supplier_id = request.GET.get('supplier_id')
     cat_id = request.GET.get('cat_id')
 
-    advert_obj = Advert.objects.filter(supplier_id=supplier_id, category_id=cat_id)
+    if cat_id == 'all':
+        advert_obj = Advert.objects.filter(status='1')
+    else:    
+        advert_obj = Advert.objects.filter(category_id=cat_id)
+
     advert_list = []
     for advert in advert_obj:
         advert_data = {
@@ -2213,59 +2362,19 @@ def get_advert_list1(request):
         'success': 'true',
         'advert_list': advert_list
     }
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-
-def get_advert_table_data1(request):
-    try:
-        data = {}
-        final_list = []
-        try:
-            advert_list = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),
-                                                category_id=request.GET.get('cat_id'),
-                                                category_level_1=request.GET.get('cat1_id'))
-            for adve_obj in advert_list:
-                coupon_objs = CouponCode.objects.filter(advert_id=str(adve_obj.advert_id))
-                advert_fav_objs = AdvertFavourite.objects.filter(advert_id=str(adve_obj.advert_id))
-                advert_like_objs = AdvertLike.objects.filter(advert_id=str(adve_obj.advert_id))
-                advert_view_objs = AdvertView.objects.filter(advert_id=str(adve_obj.advert_id))
-
-                advert_data = {
-                    'advert_id': adve_obj.advert_id,
-                    'advert_title': adve_obj.advert_name,
-                    'advert_views': advert_view_objs.count(),
-                    'advert_likes': advert_like_objs.count(),
-                    'advert_favourites': advert_fav_objs.count(),
-                    'advert_calls': '0',
-                    'advert_call_backs': '0',
-                    'advert_emails': '0',
-                    'advert_coupons': coupon_objs.count(),
-                    'advert_reviews': '0',
-                    'advert_sms': '0',
-                    'advert_whatsapp': '0',
-                    'advert_facebook': '0',
-                    'advert_twitter': '0'
-                }
-                final_list.append(advert_data)
-
-            data = {'success': 'true', 'data': final_list}
-        except IntegrityError as e:
-            print e
-            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
-    except MySQLdb.OperationalError, e:
-        print e
-    except Exception, e:
-        print 'Exception ', e
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 @csrf_exempt
 def get_advert_list2(request):
-    supplier_id = request.GET.get('supplier_id')
     cat_id = request.GET.get('cat_id')
     cat1_id = request.GET.get('cat1_id')
 
-    advert_obj = Advert.objects.filter(supplier_id=supplier_id, category_id=cat_id, category_level_1=cat1_id)
+    if cat1_id == 'all':
+        advert_obj = Advert.objects.filter(status='1')
+    else:    
+        advert_obj = Advert.objects.filter(category_level_1=cat1_id)
+
     advert_list = []
     for advert in advert_obj:
         advert_data = {
@@ -2277,61 +2386,21 @@ def get_advert_list2(request):
         'success': 'true',
         'advert_list': advert_list
     }
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-
-def get_advert_table_data2(request):
-    try:
-        data = {}
-        final_list = []
-        try:
-            advert_list = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),
-                                                category_id=request.GET.get('cat_id'),
-                                                category_level_1=request.GET.get('cat1_id'),
-                                                category_level_2=request.GET.get('cat2_id'))
-            for adve_obj in advert_list:
-                coupon_objs = CouponCode.objects.filter(advert_id=str(adve_obj.advert_id))
-                advert_fav_objs = AdvertFavourite.objects.filter(advert_id=str(adve_obj.advert_id))
-                advert_like_objs = AdvertLike.objects.filter(advert_id=str(adve_obj.advert_id))
-                advert_view_objs = AdvertView.objects.filter(advert_id=str(adve_obj.advert_id))
-
-                advert_data = {
-                    'advert_id': adve_obj.advert_id,
-                    'advert_title': adve_obj.advert_name,
-                    'advert_views': advert_view_objs.count(),
-                    'advert_likes': advert_like_objs.count(),
-                    'advert_favourites': advert_fav_objs.count(),
-                    'advert_calls': '0',
-                    'advert_call_backs': '0',
-                    'advert_emails': '0',
-                    'advert_coupons': coupon_objs.count(),
-                    'advert_reviews': '0',
-                    'advert_sms': '0',
-                    'advert_whatsapp': '0',
-                    'advert_facebook': '0',
-                    'advert_twitter': '0'
-                }
-                final_list.append(advert_data)
-
-            data = {'success': 'true', 'data': final_list}
-        except IntegrityError as e:
-            print e
-            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
-    except MySQLdb.OperationalError, e:
-        print e
-    except Exception, e:
-        print 'Exception ', e
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 @csrf_exempt
 def get_advert_list3(request):
-    supplier_id = request.GET.get('supplier_id')
     cat_id = request.GET.get('cat_id')
     cat1_id = request.GET.get('cat1_id')
     cat2_id = request.GET.get('cat2_id')
-    advert_obj = Advert.objects.filter(supplier_id=supplier_id, category_id=cat_id, category_level_1=cat1_id,
-                                       category_level_2=cat2_id)
+
+    if cat2_id == 'all':
+        advert_obj = Advert.objects.filter(status='1')
+    else:    
+        advert_obj = Advert.objects.filter(category_level_2=cat2_id)
+
+    
     advert_list = []
     for advert in advert_obj:
         advert_data = {
@@ -2343,63 +2412,21 @@ def get_advert_list3(request):
         'success': 'true',
         'advert_list': advert_list
     }
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-
-def get_advert_table_data3(request):
-    try:
-        data = {}
-        final_list = []
-        try:
-            advert_list = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),
-                                                category_id=request.GET.get('cat_id'),
-                                                category_level_1=request.GET.get('cat1_id'),
-                                                category_level_2=request.GET.get('cat2_id'),
-                                                category_level_3=request.GET.get('cat3_id'))
-            for adve_obj in advert_list:
-                coupon_objs = CouponCode.objects.filter(advert_id=str(adve_obj.advert_id))
-                advert_fav_objs = AdvertFavourite.objects.filter(advert_id=str(adve_obj.advert_id))
-                advert_like_objs = AdvertLike.objects.filter(advert_id=str(adve_obj.advert_id))
-                advert_view_objs = AdvertView.objects.filter(advert_id=str(adve_obj.advert_id))
-
-                advert_data = {
-                    'advert_id': adve_obj.advert_id,
-                    'advert_title': adve_obj.advert_name,
-                    'advert_views': advert_view_objs.count(),
-                    'advert_likes': advert_like_objs.count(),
-                    'advert_favourites': advert_fav_objs.count(),
-                    'advert_calls': '0',
-                    'advert_call_backs': '0',
-                    'advert_emails': '0',
-                    'advert_coupons': coupon_objs.count(),
-                    'advert_reviews': '0',
-                    'advert_sms': '0',
-                    'advert_whatsapp': '0',
-                    'advert_facebook': '0',
-                    'advert_twitter': '0'
-                }
-                final_list.append(advert_data)
-
-            data = {'success': 'true', 'data': final_list}
-        except IntegrityError as e:
-            print e
-            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
-    except MySQLdb.OperationalError, e:
-        print e
-    except Exception, e:
-        print 'Exception ', e
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 @csrf_exempt
 def get_advert_list4(request):
-    supplier_id = request.GET.get('supplier_id')
     cat_id = request.GET.get('cat_id')
     cat1_id = request.GET.get('cat1_id')
     cat2_id = request.GET.get('cat2_id')
     cat3_id = request.GET.get('cat3_id')
-    advert_obj = Advert.objects.filter(supplier_id=supplier_id, category_id=cat_id, category_level_1=cat1_id,
-                                       category_level_2=cat2_id, category_level_3=cat3_id)
+
+    if cat3_id == 'all':
+        advert_obj = Advert.objects.filter(status='1')
+    else:    
+        advert_obj = Advert.objects.filter(category_level_3=cat3_id)
+
     advert_list = []
     for advert in advert_obj:
         advert_data = {
@@ -2411,65 +2438,22 @@ def get_advert_list4(request):
         'success': 'true',
         'advert_list': advert_list
     }
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-
-def get_advert_table_data4(request):
-    try:
-        data = {}
-        final_list = []
-        try:
-            advert_list = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),
-                                                category_id=request.GET.get('cat_id'),
-                                                category_level_1=request.GET.get('cat1_id'),
-                                                category_level_2=request.GET.get('cat2_id'),
-                                                category_level_3=request.GET.get('cat3_id'),
-                                                category_level_4=request.GET.get('cat4_id'))
-            for adve_obj in advert_list:
-                coupon_objs = CouponCode.objects.filter(advert_id=str(adve_obj.advert_id))
-                advert_fav_objs = AdvertFavourite.objects.filter(advert_id=str(adve_obj.advert_id))
-                advert_like_objs = AdvertLike.objects.filter(advert_id=str(adve_obj.advert_id))
-                advert_view_objs = AdvertView.objects.filter(advert_id=str(adve_obj.advert_id))
-
-                advert_data = {
-                    'advert_id': adve_obj.advert_id,
-                    'advert_title': adve_obj.advert_name,
-                    'advert_views': advert_view_objs.count(),
-                    'advert_likes': advert_like_objs.count(),
-                    'advert_favourites': advert_fav_objs.count(),
-                    'advert_calls': '0',
-                    'advert_call_backs': '0',
-                    'advert_emails': '0',
-                    'advert_coupons': coupon_objs.count(),
-                    'advert_reviews': '0',
-                    'advert_sms': '0',
-                    'advert_whatsapp': '0',
-                    'advert_facebook': '0',
-                    'advert_twitter': '0'
-                }
-                final_list.append(advert_data)
-
-            data = {'success': 'true', 'data': final_list}
-        except IntegrityError as e:
-            print e
-            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
-    except MySQLdb.OperationalError, e:
-        print e
-    except Exception, e:
-        print 'Exception ', e
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 @csrf_exempt
 def get_advert_list5(request):
-    supplier_id = request.GET.get('supplier_id')
     cat_id = request.GET.get('cat_id')
     cat1_id = request.GET.get('cat1_id')
     cat2_id = request.GET.get('cat2_id')
     cat3_id = request.GET.get('cat3_id')
     cat4_id = request.GET.get('cat4_id')
-    advert_obj = Advert.objects.filter(supplier_id=supplier_id, category_id=cat_id, category_level_1=cat1_id,
-                                       category_level_2=cat2_id, category_level_3=cat3_id, category_level_4=cat4_id)
+
+    if cat4_id == 'all':
+        advert_obj = Advert.objects.filter(status='1')
+    else:    
+        advert_obj = Advert.objects.filter(category_level_4=cat4_id)
+
     advert_list = []
     for advert in advert_obj:
         advert_data = {
@@ -2484,65 +2468,20 @@ def get_advert_list5(request):
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
-def get_advert_table_data5(request):
-    try:
-        data = {}
-        final_list = []
-        try:
-            advert_list = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),
-                                                category_id=request.GET.get('cat_id'),
-                                                category_level_1=request.GET.get('cat1_id'),
-                                                category_level_2=request.GET.get('cat2_id'),
-                                                category_level_3=request.GET.get('cat3_id'),
-                                                category_level_4=request.GET.get('cat4_id'),
-                                                category_level_5=request.GET.get('cat5_id'))
-            for adve_obj in advert_list:
-                coupon_objs = CouponCode.objects.filter(advert_id=str(adve_obj.advert_id))
-                advert_fav_objs = AdvertFavourite.objects.filter(advert_id=str(adve_obj.advert_id))
-                advert_like_objs = AdvertLike.objects.filter(advert_id=str(adve_obj.advert_id))
-                advert_view_objs = AdvertView.objects.filter(advert_id=str(adve_obj.advert_id))
-
-                advert_data = {
-                    'advert_id': adve_obj.advert_id,
-                    'advert_title': adve_obj.advert_name,
-                    'advert_views': advert_view_objs.count(),
-                    'advert_likes': advert_like_objs.count(),
-                    'advert_favourites': advert_fav_objs.count(),
-                    'advert_calls': '0',
-                    'advert_call_backs': '0',
-                    'advert_emails': '0',
-                    'advert_coupons': coupon_objs.count(),
-                    'advert_reviews': '0',
-                    'advert_sms': '0',
-                    'advert_whatsapp': '0',
-                    'advert_facebook': '0',
-                    'advert_twitter': '0'
-                }
-                final_list.append(advert_data)
-
-            data = {'success': 'true', 'data': final_list}
-        except IntegrityError as e:
-            print e
-            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
-    except MySQLdb.OperationalError, e:
-        print e
-    except Exception, e:
-        print 'Exception ', e
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-
 @csrf_exempt
 def get_advert_list6(request):
-    supplier_id = request.GET.get('supplier_id')
     cat_id = request.GET.get('cat_id')
     cat1_id = request.GET.get('cat1_id')
     cat2_id = request.GET.get('cat2_id')
     cat3_id = request.GET.get('cat3_id')
     cat4_id = request.GET.get('cat4_id')
     cat5_id = request.GET.get('cat5_id')
-    advert_obj = Advert.objects.filter(supplier_id=supplier_id, category_id=cat_id, category_level_1=cat1_id,
-                                       category_level_2=cat2_id, category_level_3=cat3_id, category_level_4=cat4_id,
-                                       category_level_5=cat5_id)
+
+    if cat4_id == 'all':
+        advert_obj = Advert.objects.filter(status='1')
+    else:    
+        advert_obj = Advert.objects.filter(category_level_5=cat5_id)
+
     advert_list = []
     for advert in advert_obj:
         advert_data = {
@@ -2583,555 +2522,6 @@ def sub_city_list(request):
         'advert_list': advert_list
     }
     print data
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-
-def get_subtable_data1(request):
-    try:
-        data = {}
-        final_list = []
-        try:
-            advert_obj = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),
-                                               category_id=request.GET.get('cat_id'))
-            for advert in advert_obj:
-                advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=str(advert.advert_id))
-                start_date = advert_sub_obj.business_id.start_date
-                end_date = advert_sub_obj.business_id.end_date
-
-                pre_ser_obj_list = PremiumService.objects.filter(business_id=str(advert_sub_obj.business_id))
-                premium_service, advert_slider, top_advert = 'N/A', 'No', 'No'
-                premium_start_date, slider_start_date, top_advert_start_date = 'N/A', 'N/A', 'N/A'
-                premium_end_date, slider_end_date, top_advert_end_date = 'N/A', 'N/A', 'N/A'
-
-                for pre_ser_obj in pre_ser_obj_list:
-                    if pre_ser_obj.premium_service_name != "Advert Slider" and pre_ser_obj.premium_service_name != "Top Advert":
-                        premium_service = pre_ser_obj.premium_service_name
-                        premium_start_date = pre_ser_obj.start_date
-                        premium_end_date = pre_ser_obj.end_date
-                    if pre_ser_obj.premium_service_name == "Advert Slider":
-                        advert_slider = 'Yes'
-                        slider_start_date = pre_ser_obj.start_date
-                        slider_end_date = pre_ser_obj.end_date
-                    if pre_ser_obj.premium_service_name == "Top Advert":
-                        top_advert = 'No'
-                        top_advert_start_date = pre_ser_obj.start_date
-                        top_advert_end_date = pre_ser_obj.end_date
-                try:
-                    payment_obj = PaymentDetail.objects.get(business_id=str(advert_sub_obj.business_id))
-                    if payment_obj.total_amount:
-                        total_amount = payment_obj.payable_amount
-                    else:
-                        total_amount = 0
-                    if payment_obj.paid_amount:
-                        paid_amount = payment_obj.paid_amount
-                    else:
-                        paid_amount = 0
-                except Exception as e:
-                    total_amount = 0
-                    paid_amount = 0
-                video_count = Advert_Video.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
-                image_count = AdvertImage.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
-
-                advert_data = {
-                    'advert_id': str(advert_sub_obj.advert_id),
-                    'advert_title': advert_sub_obj.advert_id.advert_name,
-                    'category': advert_sub_obj.advert_id.category_id.category_name,
-                    'start_date': start_date,
-                    'end_date': end_date,
-                    'premium_service': premium_service,
-                    'premium_start_date': premium_start_date,
-                    'premium_end_date': premium_end_date,
-                    'advert_slider': advert_slider,
-                    'slider_start_date': slider_start_date,
-                    'slider_end_date': slider_end_date,
-                    'top_advert': top_advert,
-                    'top_advert_start_date': top_advert_start_date,
-                    'top_advert_end_date': top_advert_end_date,
-                    'uploaded_pictures': image_count,
-                    'uploaded_videos': video_count,
-                    'memory_usages': advert_sub_obj.advert_id.image_video_space_used+' MB',
-                    'total_service_cost': total_amount,
-                    'total_amount_paid': paid_amount,
-                    'saleman_name': advert_sub_obj.advert_id.supplier_id.sales_person_name.user_first_name +' '+ advert_sub_obj.advert_id.supplier_id.sales_person_name.user_last_name,
-                    'saleman_number': advert_sub_obj.advert_id.supplier_id.sales_person_name.user_contact_no
-                }
-                final_list.append(advert_data)
-            data = {'success': 'true', 'data': final_list}
-
-        except IntegrityError as e:
-            print e
-            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
-    except MySQLdb.OperationalError, e:
-        print e
-    except Exception, e:
-        print 'Exception ', e
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-
-def get_subtable_data2(request):
-    try:
-        data = {}
-        final_list = []
-        try:
-            advert_obj = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),
-                                               category_id=request.GET.get('cat_id'),
-                                               category_level_1=request.GET.get('cat_id1'))
-            for advert in advert_obj:
-                advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=str(advert.advert_id))
-                start_date = advert_sub_obj.business_id.start_date
-                end_date = advert_sub_obj.business_id.end_date
-
-                pre_ser_obj_list = PremiumService.objects.filter(business_id=str(advert_sub_obj.business_id))
-                premium_service, advert_slider, top_advert = 'N/A', 'No', 'No'
-                premium_start_date, slider_start_date, top_advert_start_date = 'N/A', 'N/A', 'N/A'
-                premium_end_date, slider_end_date, top_advert_end_date = 'N/A', 'N/A', 'N/A'
-
-                for pre_ser_obj in pre_ser_obj_list:
-                    if pre_ser_obj.premium_service_name != "Advert Slider" and pre_ser_obj.premium_service_name != "Top Advert":
-                        premium_service = pre_ser_obj.premium_service_name
-                        premium_start_date = pre_ser_obj.start_date
-                        premium_end_date = pre_ser_obj.end_date
-                    if pre_ser_obj.premium_service_name == "Advert Slider":
-                        advert_slider = 'Yes'
-                        slider_start_date = pre_ser_obj.start_date
-                        slider_end_date = pre_ser_obj.end_date
-                    if pre_ser_obj.premium_service_name == "Top Advert":
-                        top_advert = 'No'
-                        top_advert_start_date = pre_ser_obj.start_date
-                        top_advert_end_date = pre_ser_obj.end_date
-                try:
-                    payment_obj = PaymentDetail.objects.get(business_id=str(advert_sub_obj.business_id))
-                    if payment_obj.total_amount:
-                        total_amount = payment_obj.payable_amount
-                    else:
-                        total_amount = 0
-                    if payment_obj.paid_amount:
-                        paid_amount = payment_obj.paid_amount
-                    else:
-                        paid_amount = 0
-                except Exception as e:
-                    total_amount = 0
-                    paid_amount = 0
-                video_count = Advert_Video.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
-                image_count = AdvertImage.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
-
-                advert_data = {
-                    'advert_id': str(advert_sub_obj.advert_id),
-                    'advert_title': advert_sub_obj.advert_id.advert_name,
-                    'category': advert_sub_obj.advert_id.category_id.category_name,
-                    'start_date': start_date,
-                    'end_date': end_date,
-                    'premium_service': premium_service,
-                    'premium_start_date': premium_start_date,
-                    'premium_end_date': premium_end_date,
-                    'advert_slider': advert_slider,
-                    'slider_start_date': slider_start_date,
-                    'slider_end_date': slider_end_date,
-                    'top_advert': top_advert,
-                    'top_advert_start_date': top_advert_start_date,
-                    'top_advert_end_date': top_advert_end_date,
-                    'uploaded_pictures': image_count,
-                    'uploaded_videos': video_count,
-                    'memory_usages': advert_sub_obj.advert_id.image_video_space_used+' MB',
-                    'total_service_cost': total_amount,
-                    'total_amount_paid': paid_amount,
-                    'saleman_name': advert_sub_obj.advert_id.supplier_id.sales_person_name.user_first_name +' '+ advert_sub_obj.advert_id.supplier_id.sales_person_name.user_last_name,
-                    'saleman_number': advert_sub_obj.advert_id.supplier_id.sales_person_name.user_contact_no
-                }
-                final_list.append(advert_data)
-            data = {'success': 'true', 'data': final_list}
-
-        except IntegrityError as e:
-            print e
-            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
-    except MySQLdb.OperationalError, e:
-        print e
-    except Exception, e:
-        print 'Exception ', e
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-
-def get_subtable_data3(request):
-    try:
-        data = {}
-        final_list = []
-        try:
-            advert_obj = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),
-                                               category_id=request.GET.get('cat_id'),
-                                               category_level_1=request.GET.get('cat_id1'),
-                                               category_level_2=request.GET.get('cat_id2'))
-            for advert in advert_obj:
-                advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=str(advert.advert_id))
-                start_date = advert_sub_obj.business_id.start_date
-                end_date = advert_sub_obj.business_id.end_date
-
-                pre_ser_obj_list = PremiumService.objects.filter(business_id=str(advert_sub_obj.business_id))
-                premium_service, advert_slider, top_advert = 'N/A', 'No', 'No'
-                premium_start_date, slider_start_date, top_advert_start_date = 'N/A', 'N/A', 'N/A'
-                premium_end_date, slider_end_date, top_advert_end_date = 'N/A', 'N/A', 'N/A'
-
-                for pre_ser_obj in pre_ser_obj_list:
-                    if pre_ser_obj.premium_service_name != "Advert Slider" and pre_ser_obj.premium_service_name != "Top Advert":
-                        premium_service = pre_ser_obj.premium_service_name
-                        premium_start_date = pre_ser_obj.start_date
-                        premium_end_date = pre_ser_obj.end_date
-                    if pre_ser_obj.premium_service_name == "Advert Slider":
-                        advert_slider = 'Yes'
-                        slider_start_date = pre_ser_obj.start_date
-                        slider_end_date = pre_ser_obj.end_date
-                    if pre_ser_obj.premium_service_name == "Top Advert":
-                        top_advert = 'No'
-                        top_advert_start_date = pre_ser_obj.start_date
-                        top_advert_end_date = pre_ser_obj.end_date
-                try:
-                    payment_obj = PaymentDetail.objects.get(business_id=str(advert_sub_obj.business_id))
-                    if payment_obj.total_amount:
-                        total_amount = payment_obj.payable_amount
-                    else:
-                        total_amount = 0
-                    if payment_obj.paid_amount:
-                        paid_amount = payment_obj.paid_amount
-                    else:
-                        paid_amount = 0
-                except Exception as e:
-                    total_amount = 0
-                    paid_amount = 0
-                video_count = Advert_Video.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
-                image_count = AdvertImage.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
-
-                advert_data = {
-                    'advert_id': str(advert_sub_obj.advert_id),
-                    'advert_title': advert_sub_obj.advert_id.advert_name,
-                    'category': advert_sub_obj.advert_id.category_id.category_name,
-                    'start_date': start_date,
-                    'end_date': end_date,
-                    'premium_service': premium_service,
-                    'premium_start_date': premium_start_date,
-                    'premium_end_date': premium_end_date,
-                    'advert_slider': advert_slider,
-                    'slider_start_date': slider_start_date,
-                    'slider_end_date': slider_end_date,
-                    'top_advert': top_advert,
-                    'top_advert_start_date': top_advert_start_date,
-                    'top_advert_end_date': top_advert_end_date,
-                    'uploaded_pictures': image_count,
-                    'uploaded_videos': video_count,
-                    'memory_usages': advert_sub_obj.advert_id.image_video_space_used+' MB',
-                    'total_service_cost': total_amount,
-                    'total_amount_paid': paid_amount,
-                    'saleman_name': advert_sub_obj.advert_id.supplier_id.sales_person_name.user_first_name +' '+ advert_sub_obj.advert_id.supplier_id.sales_person_name.user_last_name,
-                    'saleman_number': advert_sub_obj.advert_id.supplier_id.sales_person_name.user_contact_no
-                }
-                final_list.append(advert_data)
-            data = {'success': 'true', 'data': final_list}
-
-        except IntegrityError as e:
-            print e
-            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
-    except MySQLdb.OperationalError, e:
-        print e
-    except Exception, e:
-        print 'Exception ', e
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-
-def get_subtable_data4(request):
-    try:
-        data = {}
-        final_list = []
-        try:
-            advert_obj = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),
-                                               category_id=request.GET.get('cat_id'),
-                                               category_level_1=request.GET.get('cat_id1'),
-                                               category_level_3=request.GET.get('cat_id3'),
-                                               category_level_4=request.GET.get('cat_id4'))
-            for advert in advert_obj:
-                advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=str(advert.advert_id))
-                start_date = advert_sub_obj.business_id.start_date
-                end_date = advert_sub_obj.business_id.end_date
-
-                pre_ser_obj_list = PremiumService.objects.filter(business_id=str(advert_sub_obj.business_id))
-                premium_service, advert_slider, top_advert = 'N/A', 'No', 'No'
-                premium_start_date, slider_start_date, top_advert_start_date = 'N/A', 'N/A', 'N/A'
-                premium_end_date, slider_end_date, top_advert_end_date = 'N/A', 'N/A', 'N/A'
-
-                for pre_ser_obj in pre_ser_obj_list:
-                    if pre_ser_obj.premium_service_name != "Advert Slider" and pre_ser_obj.premium_service_name != "Top Advert":
-                        premium_service = pre_ser_obj.premium_service_name
-                        premium_start_date = pre_ser_obj.start_date
-                        premium_end_date = pre_ser_obj.end_date
-                    if pre_ser_obj.premium_service_name == "Advert Slider":
-                        advert_slider = 'Yes'
-                        slider_start_date = pre_ser_obj.start_date
-                        slider_end_date = pre_ser_obj.end_date
-                    if pre_ser_obj.premium_service_name == "Top Advert":
-                        top_advert = 'No'
-                        top_advert_start_date = pre_ser_obj.start_date
-                        top_advert_end_date = pre_ser_obj.end_date
-                try:
-                    payment_obj = PaymentDetail.objects.get(business_id=str(advert_sub_obj.business_id))
-                    if payment_obj.total_amount:
-                        total_amount = payment_obj.payable_amount
-                    else:
-                        total_amount = 0
-                    if payment_obj.paid_amount:
-                        paid_amount = payment_obj.paid_amount
-                    else:
-                        paid_amount = 0
-                except Exception as e:
-                    total_amount = 0
-                    paid_amount = 0
-                video_count = Advert_Video.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
-                image_count = AdvertImage.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
-
-                advert_data = {
-                    'advert_id': str(advert_sub_obj.advert_id),
-                    'advert_title': advert_sub_obj.advert_id.advert_name,
-                    'category': advert_sub_obj.advert_id.category_id.category_name,
-                    'start_date': start_date,
-                    'end_date': end_date,
-                    'premium_service': premium_service,
-                    'premium_start_date': premium_start_date,
-                    'premium_end_date': premium_end_date,
-                    'advert_slider': advert_slider,
-                    'slider_start_date': slider_start_date,
-                    'slider_end_date': slider_end_date,
-                    'top_advert': top_advert,
-                    'top_advert_start_date': top_advert_start_date,
-                    'top_advert_end_date': top_advert_end_date,
-                    'uploaded_pictures': image_count,
-                    'uploaded_videos': video_count,
-                    'memory_usages': advert_sub_obj.advert_id.image_video_space_used+' MB',
-                    'total_service_cost': total_amount,
-                    'total_amount_paid': paid_amount,
-                    'saleman_name': advert_sub_obj.advert_id.supplier_id.sales_person_name.user_first_name +' '+ advert_sub_obj.advert_id.supplier_id.sales_person_name.user_last_name,
-                    'saleman_number': advert_sub_obj.advert_id.supplier_id.sales_person_name.user_contact_no
-                }
-                final_list.append(advert_data)
-            data = {'success': 'true', 'data': final_list}
-
-        except IntegrityError as e:
-            print e
-            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
-    except MySQLdb.OperationalError, e:
-        print e
-    except Exception, e:
-        print 'Exception ', e
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-
-def get_subtable_data5(request):
-    try:
-        data = {}
-        final_list = []
-        try:
-            advert_obj = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),
-                                               category_id=request.GET.get('cat_id'),
-                                               category_level_1=request.GET.get('cat_id1'),
-                                               category_level_3=request.GET.get('cat_id3'),
-                                               category_level_4=request.GET.get('cat_id4'),
-                                               category_level_5=request.GET.get('cat_id5'))
-            for advert in advert_obj:
-                advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=str(advert.advert_id))
-                start_date = advert_sub_obj.business_id.start_date
-                end_date = advert_sub_obj.business_id.end_date
-
-                pre_ser_obj_list = PremiumService.objects.filter(business_id=str(advert_sub_obj.business_id))
-                premium_service, advert_slider, top_advert = 'N/A', 'No', 'No'
-                premium_start_date, slider_start_date, top_advert_start_date = 'N/A', 'N/A', 'N/A'
-                premium_end_date, slider_end_date, top_advert_end_date = 'N/A', 'N/A', 'N/A'
-
-                for pre_ser_obj in pre_ser_obj_list:
-                    if pre_ser_obj.premium_service_name != "Advert Slider" and pre_ser_obj.premium_service_name != "Top Advert":
-                        premium_service = pre_ser_obj.premium_service_name
-                        premium_start_date = pre_ser_obj.start_date
-                        premium_end_date = pre_ser_obj.end_date
-                    if pre_ser_obj.premium_service_name == "Advert Slider":
-                        advert_slider = 'Yes'
-                        slider_start_date = pre_ser_obj.start_date
-                        slider_end_date = pre_ser_obj.end_date
-                    if pre_ser_obj.premium_service_name == "Top Advert":
-                        top_advert = 'No'
-                        top_advert_start_date = pre_ser_obj.start_date
-                        top_advert_end_date = pre_ser_obj.end_date
-                try:
-                    payment_obj = PaymentDetail.objects.get(business_id=str(advert_sub_obj.business_id))
-                    if payment_obj.total_amount:
-                        total_amount = payment_obj.payable_amount
-                    else:
-                        total_amount = 0
-                    if payment_obj.paid_amount:
-                        paid_amount = payment_obj.paid_amount
-                    else:
-                        paid_amount = 0
-                except Exception as e:
-                    total_amount = 0
-                    paid_amount = 0
-                video_count = Advert_Video.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
-                image_count = AdvertImage.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
-
-                advert_data = {
-                    'advert_id': str(advert_sub_obj.advert_id),
-                    'advert_title': advert_sub_obj.advert_id.advert_name,
-                    'category': advert_sub_obj.advert_id.category_id.category_name,
-                    'start_date': start_date,
-                    'end_date': end_date,
-                    'premium_service': premium_service,
-                    'premium_start_date': premium_start_date,
-                    'premium_end_date': premium_end_date,
-                    'advert_slider': advert_slider,
-                    'slider_start_date': slider_start_date,
-                    'slider_end_date': slider_end_date,
-                    'top_advert': top_advert,
-                    'top_advert_start_date': top_advert_start_date,
-                    'top_advert_end_date': top_advert_end_date,
-                    'uploaded_pictures': image_count,
-                    'uploaded_videos': video_count,
-                    'memory_usages': advert_sub_obj.advert_id.image_video_space_used+' MB',
-                    'total_service_cost': total_amount,
-                    'total_amount_paid': paid_amount,
-                    'saleman_name': advert_sub_obj.advert_id.supplier_id.sales_person_name.user_first_name +' '+ advert_sub_obj.advert_id.supplier_id.sales_person_name.user_last_name,
-                    'saleman_number': advert_sub_obj.advert_id.supplier_id.sales_person_name.user_contact_no
-                }
-                final_list.append(advert_data)
-            data = {'success': 'true', 'data': final_list}
-
-        except IntegrityError as e:
-            print e
-            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
-    except MySQLdb.OperationalError, e:
-        print e
-    except Exception, e:
-        print 'Exception ', e
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-
-def get_advert_health_citybase(request):
-    try:
-        data = {}
-        final_list = []
-        try:
-            from_date = request.GET.get('from_date')
-            to_date = request.GET.get('to_date')
-            from_date = datetime.strptime(from_date, "%d/%m/%Y")
-            to_date = datetime.strptime(to_date, "%d/%m/%Y")
-            from_date = from_date.strftime("%Y-%m-%d")
-            to_date = to_date.strftime("%Y-%m-%d")
-            advert_list = Advert.objects.filter(city_place_id=request.GET.get('city_id'),
-                                                creation_date__range=[from_date, to_date])
-            for adv_obj in advert_list:
-                coupon_objs = CouponCode.objects.filter(advert_id=str(adv_obj.advert_id))
-                advert_fav_objs = AdvertFavourite.objects.filter(advert_id=str(adv_obj.advert_id))
-                advert_like_objs = AdvertLike.objects.filter(advert_id=str(adv_obj.advert_id))
-                advert_view_objs = AdvertView.objects.filter(advert_id=str(adv_obj.advert_id))
-
-                advert_data = {
-                    'advert_id': adv_obj.advert_id,
-                    'advert_title': adv_obj.advert_name,
-                    'advert_views': advert_view_objs.count(),
-                    'advert_likes': advert_like_objs.count(),
-                    'advert_favourites': advert_fav_objs.count(),
-                    'advert_calls': '0',
-                    'advert_call_backs': '0',
-                    'advert_emails': '0',
-                    'advert_coupons': coupon_objs.count(),
-                    'advert_reviews': '0',
-                    'advert_sms': '0',
-                    'advert_whatsapp': '0',
-                    'advert_facebook': '0',
-                    'advert_twitter': '0'
-                }
-                final_list.append(advert_data)
-
-            data = {'success': 'true', 'data': final_list}
-        except IntegrityError as e:
-            print e
-            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
-    except MySQLdb.OperationalError, e:
-        print e
-    except Exception, e:
-        print 'Exception ', e
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-
-def get_subscription_plan_citybase(request):
-    try:
-        data = {}
-        final_list = []
-        try:
-            advert_obj = Advert.objects.filter(city_place_id=request.GET.get('city_id'))
-            for advert in advert_obj:
-                advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=str(advert.advert_id))
-                start_date = advert_sub_obj.business_id.start_date
-                end_date = advert_sub_obj.business_id.end_date
-
-                pre_ser_obj_list = PremiumService.objects.filter(business_id=str(advert_sub_obj.business_id))
-                premium_service, advert_slider, top_advert = 'N/A', 'No', 'No'
-                premium_start_date, slider_start_date, top_advert_start_date = 'N/A', 'N/A', 'N/A'
-                premium_end_date, slider_end_date, top_advert_end_date = 'N/A', 'N/A', 'N/A'
-
-                for pre_ser_obj in pre_ser_obj_list:
-                    if pre_ser_obj.premium_service_name != "Advert Slider" and pre_ser_obj.premium_service_name != "Top Advert":
-                        premium_service = pre_ser_obj.premium_service_name
-                        premium_start_date = pre_ser_obj.start_date
-                        premium_end_date = pre_ser_obj.end_date
-                    if pre_ser_obj.premium_service_name == "Advert Slider":
-                        advert_slider = 'Yes'
-                        slider_start_date = pre_ser_obj.start_date
-                        slider_end_date = pre_ser_obj.end_date
-                    if pre_ser_obj.premium_service_name == "Top Advert":
-                        top_advert = 'No'
-                        top_advert_start_date = pre_ser_obj.start_date
-                        top_advert_end_date = pre_ser_obj.end_date
-                try:
-                    payment_obj = PaymentDetail.objects.get(business_id=str(advert_sub_obj.business_id))
-                    if payment_obj.total_amount:
-                        total_amount = payment_obj.payable_amount
-                    else:
-                        total_amount = 0
-                    if payment_obj.paid_amount:
-                        paid_amount = payment_obj.paid_amount
-                    else:
-                        paid_amount = 0
-                except Exception as e:
-                    total_amount = 0
-                    paid_amount = 0
-                video_count = Advert_Video.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
-                image_count = AdvertImage.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
-
-                advert_data = {
-                    'advert_id': str(advert_sub_obj.advert_id),
-                    'advert_title': advert_sub_obj.advert_id.advert_name,
-                    'category': advert_sub_obj.advert_id.category_id.category_name,
-                    'start_date': start_date,
-                    'end_date': end_date,
-                    'premium_service': premium_service,
-                    'premium_start_date': premium_start_date,
-                    'premium_end_date': premium_end_date,
-                    'advert_slider': advert_slider,
-                    'slider_start_date': slider_start_date,
-                    'slider_end_date': slider_end_date,
-                    'top_advert': top_advert,
-                    'top_advert_start_date': top_advert_start_date,
-                    'top_advert_end_date': top_advert_end_date,
-                    'uploaded_pictures': image_count,
-                    'uploaded_videos': video_count,
-                    'memory_usages': advert_sub_obj.advert_id.image_video_space_used+' MB',
-                    'total_service_cost': total_amount,
-                    'total_amount_paid': paid_amount,
-                    'saleman_name': advert_sub_obj.advert_id.supplier_id.sales_person_name.user_first_name +' '+ advert_sub_obj.advert_id.supplier_id.sales_person_name.user_last_name,
-                    'saleman_number': advert_sub_obj.advert_id.supplier_id.sales_person_name.user_contact_no
-                }
-                final_list.append(advert_data)
-
-            data = {'success': 'true', 'data': final_list}
-        except IntegrityError as e:
-            print e
-            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
-    except MySQLdb.OperationalError, e:
-        print e
-    except Exception, e:
-        print 'Exception ', e
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
@@ -3180,136 +2570,6 @@ def get_advert_health_datebase(request):
     except Exception, e:
         print 'Exception ', e
     print data
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-
-def get_advert_health_supplierbase(request):
-    try:
-        data = {}
-        final_list = []
-        try:
-            from_date = request.GET.get('from_date')
-            to_date = request.GET.get('to_date')
-            from_date = datetime.strptime(from_date, "%d/%m/%Y")
-            to_date = datetime.strptime(to_date, "%d/%m/%Y")
-            from_date = from_date.strftime("%Y-%m-%d")
-            to_date = to_date.strftime("%Y-%m-%d")
-            advert = Advert.objects.filter(supplier_id=request.GET.get('sub_id'),
-                                           creation_date__range=[from_date, to_date])
-            for ad_ob in advert:
-                coupon_objs = CouponCode.objects.filter(advert_id=str(ad_ob.advert_id))
-                advert_fav_objs = AdvertFavourite.objects.filter(advert_id=str(ad_ob.advert_id))
-                advert_like_objs = AdvertLike.objects.filter(advert_id=str(ad_ob.advert_id))
-                advert_view_objs = AdvertView.objects.filter(advert_id=str(ad_ob.advert_id))
-
-                advert_data = {
-                    'advert_id': ad_ob.advert_id,
-                    'advert_title': ad_ob.advert_name,
-                    'advert_views': advert_view_objs.count(),
-                    'advert_likes': advert_like_objs.count(),
-                    'advert_favourites': advert_fav_objs.count(),
-                    'advert_calls': '0',
-                    'advert_call_backs': '0',
-                    'advert_emails': '0',
-                    'advert_coupons': coupon_objs.count(),
-                    'advert_reviews': '0',
-                    'advert_sms': '0',
-                    'advert_whatsapp': '0',
-                    'advert_facebook': '0',
-                    'advert_twitter': '0'
-                }
-                final_list.append(advert_data)
-                print final_list
-
-            data = {'success': 'true', 'data': final_list}
-        except IntegrityError as e:
-            print e
-            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
-    except MySQLdb.OperationalError, e:
-        print e
-    except Exception, e:
-        print 'Exception ', e
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-
-def get_subscription_plan_supplier(request):
-    try:
-        data = {}
-        final_list = []
-        try:
-            business_obj = Business.objects.filter(supplier=request.GET.get('sub_id'))
-            for business in business_obj:
-                advert_sub_obj = AdvertSubscriptionMap.objects.get(business_id=str(business.business_id))
-                start_date = advert_sub_obj.business_id.start_date
-                end_date = advert_sub_obj.business_id.end_date
-
-                pre_ser_obj_list = PremiumService.objects.filter(business_id=str(advert_sub_obj.business_id))
-                premium_service, advert_slider, top_advert = 'N/A', 'No', 'No'
-                premium_start_date, slider_start_date, top_advert_start_date = 'N/A', 'N/A', 'N/A'
-                premium_end_date, slider_end_date, top_advert_end_date = 'N/A', 'N/A', 'N/A'
-
-                for pre_ser_obj in pre_ser_obj_list:
-                    if pre_ser_obj.premium_service_name != "Advert Slider" and pre_ser_obj.premium_service_name != "Top Advert":
-                        premium_service = pre_ser_obj.premium_service_name
-                        premium_start_date = pre_ser_obj.start_date
-                        premium_end_date = pre_ser_obj.end_date
-                    if pre_ser_obj.premium_service_name == "Advert Slider":
-                        advert_slider = 'Yes'
-                        slider_start_date = pre_ser_obj.start_date
-                        slider_end_date = pre_ser_obj.end_date
-                    if pre_ser_obj.premium_service_name == "Top Advert":
-                        top_advert = 'No'
-                        top_advert_start_date = pre_ser_obj.start_date
-                        top_advert_end_date = pre_ser_obj.end_date
-                try:
-                    payment_obj = PaymentDetail.objects.get(business_id=str(advert_sub_obj.business_id))
-                    if payment_obj.total_amount:
-                        total_amount = payment_obj.payable_amount
-                    else:
-                        total_amount = 0
-                    if payment_obj.paid_amount:
-                        paid_amount = payment_obj.paid_amount
-                    else:
-                        paid_amount = 0
-                except Exception as e:
-                    total_amount = 0
-                    paid_amount = 0
-                video_count = Advert_Video.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
-                image_count = AdvertImage.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
-
-                advert_data = {
-                    'advert_id': str(advert_sub_obj.advert_id),
-                    'advert_title': advert_sub_obj.advert_id.advert_name,
-                    'category': advert_sub_obj.advert_id.category_id.category_name,
-                    'start_date': start_date,
-                    'end_date': end_date,
-                    'premium_service': premium_service,
-                    'premium_start_date': premium_start_date,
-                    'premium_end_date': premium_end_date,
-                    'advert_slider': advert_slider,
-                    'slider_start_date': slider_start_date,
-                    'slider_end_date': slider_end_date,
-                    'top_advert': top_advert,
-                    'top_advert_start_date': top_advert_start_date,
-                    'top_advert_end_date': top_advert_end_date,
-                    'uploaded_pictures': image_count,
-                    'uploaded_videos': video_count,
-                    'memory_usages': advert_sub_obj.advert_id.image_video_space_used+' MB',
-                    'total_service_cost': total_amount,
-                    'total_amount_paid': paid_amount,
-                    'saleman_name': advert_sub_obj.advert_id.supplier_id.sales_person_name.user_first_name +' '+ advert_sub_obj.advert_id.supplier_id.sales_person_name.user_last_name,
-                    'saleman_number': advert_sub_obj.advert_id.supplier_id.sales_person_name.user_contact_no
-                }
-                final_list.append(advert_data)
-
-            data = {'success': 'true', 'data': final_list}
-        except IntegrityError as e:
-            print e
-            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
-    except MySQLdb.OperationalError, e:
-        print e
-    except Exception, e:
-        print 'Exception ', e
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
@@ -3408,19 +2668,22 @@ def get_sales(request):
                     for bus_obj in business_list:
                         business_id = bus_obj.business_id
                         business_created_date = (bus_obj.business_created_date).strftime("%d/%m/%Y")
-                        payment_obj = PaymentDetail.objects.get(business_id=business_id)
-                        payment_date = payment_obj.payment_created_date
-                        payment_date = payment_date.strftime("%d/%m/%Y")
+                        try:
+                            payment_obj = PaymentDetail.objects.get(business_id=business_id)
+                            payment_date = payment_obj.payment_created_date
+                            payment_date = payment_date.strftime("%d/%m/%Y")
 
-                        if payment_obj.total_amount:
-                            total_ser_cost = payment_obj.total_amount
-                        else:
+                            if payment_obj.total_amount:
+                                total_ser_cost = payment_obj.total_amount
+                            else:
+                                total_ser_cost = 0
+                            if payment_obj.paid_amount:
+                                total_pay_amt = payment_obj.paid_amount
+                            else:
+                                total_pay_amt = 0
+                        except:
                             total_ser_cost = 0
-                        if payment_obj.paid_amount:
-                            total_pay_amt = payment_obj.paid_amount
-                        else:
                             total_pay_amt = 0
-
                         try:
                             advert_obj = AdvertSubscriptionMap.objects.get(business_id=business_id)
                             
@@ -4223,209 +3486,505 @@ def get_analytical_data(request):
 
     ####################.......city_dashboard..........%%%%%%%%%%##########
 
-    # @csrf_exempt
-    # def city_dashboard(request):
-    #     try:
-    #         data = {}
-    #         final_list = []
-    #         final_list1 = []
-    #         try:
-    #             #to find out logo of supplier
-    #             # Supplier_obj = Supplier.objects.get(supplier_id=request.session['supplier_id'])
-    #             # print "..................Supplier_obj.........",Supplier_obj
-    #             # supplier_id = Supplier_obj.supplier_id
-
-    #             # logo= SERVER_URL + Supplier_obj.logo.url
-
-    #             #########.............Dashboard Stats.........................#####
-    #             total_payment_count = 0
-    #             total_new_subscriber = 0
-    #             total_new_booking = 0
-    #             total_advert_expiring = 0
 
 
-    #             current_date = datetime.now()
-    #             first = calendar.day_name[current_date.weekday()]
+@csrf_exempt
+def get_filter_data(request):
+    try:
+        data = {}
+        final_list = []
 
-    #             last_date = (datetime.now() - timedelta(days=7))
-    #             last_date2 = calendar.day_name[last_date.weekday()]
-    #             #Payment Received
-    #             paymentdetail_list = PaymentDetail.objects.filter(payment_created_date__range=[last_date,current_date])
+        from_date = request.GET.get('from_date')
+        to_date = request.GET.get('to_date')
+        from_date = datetime.strptime(from_date, "%d/%m/%Y")
+        to_date = datetime.strptime(to_date, "%d/%m/%Y")
+        from_date = from_date.strftime("%Y-%m-%d")
+        to_date = to_date.strftime("%Y-%m-%d")
+        city_id = request.GET.get('city_list')
+        supplier_id = request.GET.get('subscriber_list')
+        cat_id  = request.GET.get('cat_list')
+        cat_id1 = request.GET.get('cat_list1')
+        cat_id2 = request.GET.get('cat_list2')
+        advert_id = request.GET.get('advert_id')
+        
+        if city_id == "all":
+            advert_obj = Advert.objects.all()
+        elif city_id != "all":
+            advert_obj = Advert.objects.filter(city_place_id = city_id)
 
-    #             for pay_obj in paymentdetail_list:
-    #                 if pay_obj.paid_amount:
-    #                     paid_amount = pay_obj.paid_amount
-    #                     total_payment_count = float(total_payment_count) + float(paid_amount)
+        if supplier_id != "all" and supplier_id != "":
+            print "===========1==========="
+            advert_obj = advert_obj.filter(supplier_id = supplier_id) 
 
-    #             #New Subscribers
-    #             total_new_subscriber = Business.objects.filter(business_created_date__range=[last_date,current_date]).count()
+        if cat_id != "all" and cat_id != "":
+            print "===========2==========="
+            advert_obj = advert_obj.filter(category_id = cat_id) 
 
-    #             #New Bookings
-    #             total_new_booking = CouponCode.objects.filter(creation_date__range=[last_date,current_date]).count()
-    #             # Adverts Expiring
-    #             current_date = datetime.now().strftime("%m/%d/%Y")
-    #             last_date = (datetime.now() + timedelta(days=7)).strftime("%m/%d/%Y")
-    #             total_advert_expiring = Business.objects.filter(end_date__range=[current_date,last_date]).count()
-    #             print "..#########......total_advert_expiring.........",total_advert_expiring
+        if cat_id1 != "all" and cat_id1 != "":
+            print "===============3==============="
+            advert_obj = advert_obj.filter(category_level_1 = cat_id1) 
 
+        if cat_id2 != "all" and cat_id2 != "":
+            print "===============4==============="
+            advert_obj = advert_obj.filter(category_level_2 = cat_id2) 
 
-    #             #######.............Total subscription  Graph......(1)....########
+        if advert_id != "all" and advert_id != "":
+            print "===============5==============="
+            advert_obj = advert_obj.filter(advert_id = advert_id) 
 
-    #             FY_MONTH_LIST = [1,2,3,4,5,6,7,8,9,10,11,12]
-    #             today = date.today()
-    #             start_date = date(today.year,01,01)
-    #             end_date = date(today.year,12,31)
-    #             monthly_count = []
-    #             # jan,feb,mar,apr,may,jun,jul,aug,sep,octo,nov,dec
+        if from_date and to_date:
+            print "===============date==============="
+            advert_obj = advert_obj.filter(creation_date__range = [from_date, to_date])
 
+        for adve_obj in advert_obj:
+            coupon_objs = CouponCode.objects.filter(advert_id=str(adve_obj.advert_id))
+            advert_fav_objs = AdvertFavourite.objects.filter(advert_id=str(adve_obj.advert_id))
+            advert_like_objs = AdvertLike.objects.filter(advert_id=str(adve_obj.advert_id))
+            advert_view_objs = AdvertView.objects.filter(advert_id=str(adve_obj.advert_id))
 
-    #             subscriptions = Business.objects.filter(business_created_date__range=[start_date,end_date]).extra(select={'month': "EXTRACT(month FROM business_created_date)"}).values('month').annotate(count=Count('business_id'))
-    #             list={}
+            advert_data = {
+                'advert_id': adve_obj.advert_id,
+                'advert_title': adve_obj.advert_name,
+                'advert_views': advert_view_objs.count(),
+                'advert_likes': advert_like_objs.count(),
+                'advert_favourites': advert_fav_objs.count(),
+                'advert_calls': '0',
+                'advert_call_backs': '0',
+                'advert_emails': '0',
+                'advert_coupons': coupon_objs.count(),
+                'advert_reviews': '0',
+                'advert_sms': '0',
+                'advert_whatsapp': '0',
+                'advert_facebook': '0',
+                'advert_twitter': '0'
+            }
+            final_list.append(advert_data)
 
-
-    #             for sub in subscriptions:
-    #                 if sub.get('month'):
-    #                     list[sub.get('month')]=sub.get('count') or '0.00'
-
-
-    #             for m in FY_MONTH_LIST:
-    #                 try:
-    #                     monthly_count.append(list[m])
-    #                 except:
-    #                     monthly_count.append(0)
-
-    #             jan=monthly_count[0]
-    #             feb=monthly_count[1]
-    #             mar=monthly_count[2]
-    #             apr=monthly_count[3]
-    #             may=monthly_count[4]
-    #             jun=monthly_count[5]
-    #             jul=monthly_count[6]
-    #             aug=monthly_count[7]
-    #             sep=monthly_count[8]
-    #             octo=monthly_count[9]
-    #             nov=monthly_count[10]
-    #             dec=monthly_count[11]
-
-    #             ##########..................Today's Payment received.....(2)................############
-
-    #             current_date = datetime.now()
-    #             first = calendar.day_name[current_date.weekday()]
-
-    #             last_date = (datetime.now() - timedelta(days=7))
-    #             last_date2 = calendar.day_name[last_date.weekday()]
-
-    #             list = []
-    #             consumer_list = PaymentDetail.objects.filter(payment_created_date__range=[last_date,current_date])
-    #             mon=tue=wen=thus=fri=sat=sun=0
-    #             if consumer_list:
-    #                 for view_obj in consumer_list:
-    #                     payment_created_date=view_obj.payment_created_date
-    #                     consumer_day = calendar.day_name[payment_created_date.weekday()]
-    #                     if consumer_day== 'Monday' :
-    #                         if view_obj.paid_amount:
-    #                             mon = mon+float(view_obj.paid_amount)
-    #                     elif consumer_day== 'Tuesday' :
-    #                         if view_obj.paid_amount:
-    #                             tue = tue+float(view_obj.paid_amount)
-    #                     elif consumer_day== 'Wednesday' :
-    #                         if view_obj.paid_amount:
-    #                             wen = wen+float(view_obj.paid_amount)
-    #                     elif consumer_day== 'Thursday' :
-    #                         if view_obj.paid_amount:
-    #                             thus = thus+float(view_obj.paid_amount)
-    #                     elif consumer_day== 'Friday' :
-    #                         if view_obj.paid_amount:
-    #                             fri = fri+float(view_obj.paid_amount)
-    #                     elif consumer_day== 'Saturday' :
-    #                         if view_obj.paid_amount:
-    #                             sat = sat+float(view_obj.paid_amount)
-    #                     elif consumer_day== 'Sunday' :
-    #                         if view_obj.paid_amount:
-    #                             sun = sun+float(view_obj.paid_amount)
-    #                     else :
-    #                         pass
+        data = {'success': 'true', 'data': final_list}
+    
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 
-    #             ############################...Todays Login.....(3)....###############################
-    #             count_zero = 0
-    #             count_first = 0
-    #             count_second = 0
-    #             count_third = 0
+def get_filter_data1(request):
+    try:
+        data = {}
+        final_list = []
+        try:
 
-    #             consumer_list0= ConsumerProfile.objects.filter(last_time_login__regex = ' 0:').count()
-    #             count_zero = count_zero + consumer_list0
+            city_id = request.GET.get('city_list')
+            supplier_id = request.GET.get('subscriber_list')
+            cat_id  = request.GET.get('cat_list')
+            cat_id1 = request.GET.get('cat_list1')
+            cat_id2 = request.GET.get('cat_list2')
 
-    #             for hour in range(0,9):
-    #                 hour = ' 0'+ str(hour) + ':'
-    #                 consumer_list= ConsumerProfile.objects.filter(last_time_login__regex = hour).count()
-    #                 count_first = count_first + consumer_list
-    #             count_1 = str(count_first)
+            if city_id == "all":
+                advert_obj = Advert.objects.all()
+            elif city_id != "all":
+                advert_obj = Advert.objects.filter(city_place_id = city_id)
 
-    #             for hour in range(9,17):
-    #                 if hour == 9:
-    #                     hour = ' 0'+ str(hour) + ':'
-    #                 else:
-    #                     hour = ' '+ str(hour) + ':'
-    #                 consumer_list1= ConsumerProfile.objects.filter(last_time_login__regex = hour).count()
-    #                 count_second = count_second + consumer_list1
-    #             count_2 = str(count_second)
+            if supplier_id != "all" and supplier_id != "":
+                print "===========11==========="
+                advert_obj = advert_obj.filter(supplier_id = supplier_id) 
 
-    #             for hour in range(17,24):
-    #                 hour = ' '+ str(hour) + ':'
-    #                 consumer_list2= ConsumerProfile.objects.filter(last_time_login__regex = hour).count()
-    #                 count_third = count_third + consumer_list2
-    #             count_3 = str(count_third)
+            if cat_id != "all" and cat_id != "":
+                print "===========22==========="
+                advert_obj = advert_obj.filter(category_id = cat_id) 
 
-    #             print '..........count_zero..........',count_zero
-    #             print '..........count_1..........',count_1
-    #             print '..........count_2..........',count_2
-    #             print '..........count_3..........',count_3
+            if cat_id1 != "all" and cat_id1 != "":
+                print "===============33==============="
+                advert_obj = advert_obj.filter(category_level_1 = cat_id1) 
+
+            if cat_id2 != "all" and cat_id2 != "":
+                print "===============44==============="
+                advert_obj = advert_obj.filter(category_level_2 = cat_id2) 
+
+            for advert in advert_obj:
+                advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=str(advert.advert_id))
+                start_date = advert_sub_obj.business_id.start_date
+                end_date = advert_sub_obj.business_id.end_date
+
+                pre_ser_obj_list = PremiumService.objects.filter(business_id=str(advert_sub_obj.business_id))
+                premium_service, advert_slider, top_advert = 'N/A', 'No', 'No'
+                premium_start_date, slider_start_date, top_advert_start_date = 'N/A', 'N/A', 'N/A'
+                premium_end_date, slider_end_date, top_advert_end_date = 'N/A', 'N/A', 'N/A'
+
+                for pre_ser_obj in pre_ser_obj_list:
+                    if pre_ser_obj.premium_service_name != "Advert Slider" and pre_ser_obj.premium_service_name != "Top Advert":
+                        premium_service = pre_ser_obj.premium_service_name
+                        premium_start_date = pre_ser_obj.start_date
+                        premium_end_date = pre_ser_obj.end_date
+                    if pre_ser_obj.premium_service_name == "Advert Slider":
+                        advert_slider = 'Yes'
+                        slider_start_date = pre_ser_obj.start_date
+                        slider_end_date = pre_ser_obj.end_date
+                    if pre_ser_obj.premium_service_name == "Top Advert":
+                        top_advert = 'No'
+                        top_advert_start_date = pre_ser_obj.start_date
+                        top_advert_end_date = pre_ser_obj.end_date
+                try:
+                    payment_obj = PaymentDetail.objects.get(business_id=str(advert_sub_obj.business_id))
+                    if payment_obj.total_amount:
+                        total_amount = payment_obj.payable_amount
+                    else:
+                        total_amount = 0
+                    if payment_obj.paid_amount:
+                        paid_amount = payment_obj.paid_amount
+                    else:
+                        paid_amount = 0
+                except Exception as e:
+                    total_amount = 0
+                    paid_amount = 0
+                video_count = Advert_Video.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
+                image_count = AdvertImage.objects.filter(advert_id=str(advert_sub_obj.advert_id)).count()
+
+                advert_data = {
+                    'advert_id': str(advert_sub_obj.advert_id),
+                    'advert_title': advert_sub_obj.advert_id.advert_name,
+                    'category': advert_sub_obj.advert_id.category_id.category_name,
+                    'start_date': start_date,
+                    'end_date': end_date,
+                    'premium_service': premium_service,
+                    'premium_start_date': premium_start_date,
+                    'premium_end_date': premium_end_date,
+                    'advert_slider': advert_slider,
+                    'slider_start_date': slider_start_date,
+                    'slider_end_date': slider_end_date,
+                    'top_advert': top_advert,
+                    'top_advert_start_date': top_advert_start_date,
+                    'top_advert_end_date': top_advert_end_date,
+                    'uploaded_pictures': image_count,
+                    'uploaded_videos': video_count,
+                    'memory_usages': advert_sub_obj.advert_id.image_video_space_used+' MB',
+                    'total_service_cost': total_amount,
+                    'total_amount_paid': paid_amount,
+                    'saleman_name': advert_sub_obj.advert_id.supplier_id.sales_person_name.user_first_name +' '+ advert_sub_obj.advert_id.supplier_id.sales_person_name.user_last_name,
+                    'saleman_number': advert_sub_obj.advert_id.supplier_id.sales_person_name.user_contact_no
+                }
+                final_list.append(advert_data)
+
+            data = {'success': 'true', 'data': final_list}
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 
-    #             ###########################....... New subscription view...(4).....######################
-    #             current_date = datetime.now()
-    #             first = calendar.day_name[current_date.weekday()]
+@csrf_exempt
+def get_login_graph_data(request):
+    try:
+        data = {}
+        final_list = []
+        final_list1 = []
+        count_zero1 = 0
+        count_11 = 0
+        count_22 = 0
+        count_33 = 0
+        count_zero_guest = 0
+        count_first_guest = 0
+        count_second_guest = 0
+        count_third_guest = 0
+        try:
+            city_front = request.GET.get('citys_var')
+            print '//.....Login data .....city_front......//', city_front
+            
+            ############################...Todays Login...REGISTERED USER..(3)....###############################
+            count_zero1 = 0
+            count_first = 0
+            count_second = 0
+            count_third = 0
 
-    #             last_date = (datetime.now() - timedelta(days=7))
-    #             last_date2 = calendar.day_name[last_date.weekday()]
+            current_date = datetime.now()
+            year = current_date.year
+            month = current_date.month
+            day = current_date.day
 
-    #             list = []
-    #             consumer_obj_list = Business.objects.filter(business_created_date__range=[last_date,current_date])
-    #             mon1=tue1=wen1=thus1=fri1=sat1=sun1=0
-    #             if consumer_obj_list:
-    #                 for consumer_obj in consumer_obj_list:
-    #                     business_created_date=consumer_obj.business_created_date
-    #                     consumer_day = calendar.day_name[business_created_date.weekday()]
-    #                     if consumer_day== 'Monday' :
-    #                         mon1 = mon1+1
-    #                     elif consumer_day== 'Tuesday' :
-    #                         tue1 = tue1+1
-    #                     elif consumer_day== 'Wednesday' :
-    #                         wen1 = wen1+1
-    #                     elif consumer_day== 'Thursday' :
-    #                         thus1 = thus1+1
-    #                     elif consumer_day== 'Friday' :
-    #                         fri1 = fri1+1
-    #                     elif consumer_day== 'Saturday' :
-    #                         sat1 = sat1+1
-    #                     elif consumer_day== 'Sunday' :
-    #                         sun1 = sun1+1
-    #                     else :
-    #                         pass
+            past_date = datetime(year,month,day)
+            present_date = datetime.now()
+            list = []
 
-    #             data = {'success':'true','count_zero':count_zero,'count_1':count_1,'count_2':count_2,'count_3':count_3,'total_payment_count':total_payment_count,'total_new_subscriber':total_new_subscriber,
-    #                 'total_new_booking':total_new_booking,'total_advert_expiring':total_advert_expiring,'jan':jan,'feb':feb,'mar':mar,'apr':apr,'may':may,'jun':jun,'jul':jul,
-    #                'aug':aug,'sep':sep,'oct':octo,'nov':nov,'dec':dec,'mon':mon,'tue':tue,'wen':wen,'thus':thus,'fri':fri,'sat':sat,'sun':sun,'mon1':mon1,'tue1':tue1,'wen1':wen1,'thus1':thus1,'fri1':fri1,'sat1':sat1,'sun1':sun1,'city_places_list':get_city_places(request),
-    #                'count_zero':count_zero,'count_1':count_1,'count_2':count_2,'count_3':count_3}
+            if city_front == 'all':
+                consumer_lst = ConsumerProfile.objects.filter(last_time_login__gt=past_date,last_time_login__lt=present_date)
+            else:
+                consumer_lst = ConsumerProfile.objects.filter(last_time_login__gt=past_date,
+                                                                   city_place_id=city_front,last_time_login__lt=present_date)
 
-    #         except IntegrityError as e:
-    #             print e
-    #             data = {'success':'false','message':'Error in  loading page. Please try after some time','username':request.session['login_user']}
-    #     except MySQLdb.OperationalError, e:
-    #         print e
-    #     except Exception,e:
-    #         print 'Exception ',e
+            print '..........consumer_lst.........',consumer_lst
+            for obj in consumer_lst:
+                consumer_id = obj.consumer_id
 
-    #     print data
-    #     return render(request,'Admin/life-dashboard.html',data)
+                consumer_list0 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=' 00:',consumer_type='register').count()
+                count_zero1 = count_zero1 + consumer_list0
+
+                for hour in range(0, 9):
+                    hour = ' 0' + str(hour) + ':'
+                    consumer_list = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='register').count()
+                    count_first = count_first + consumer_list
+                count_first = int(count_first)
+
+                for hour in range(9, 17):
+                    if hour == 9:
+                        hour = ' 0' + str(hour) + ':'
+                    else:
+                        hour = ' ' + str(hour) + ':'
+                    consumer_list1 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='register').count()
+                    count_second = count_second + consumer_list1
+                count_second = int(count_second)
+
+                for hour in range(17, 24):
+                    hour = ' ' + str(hour) + ':'
+                    consumer_list2 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='register').count()
+                    count_third = count_third + consumer_list2
+                count_third = int(count_third)
+
+                print '..........count_zero...REGISTERD.......', count_zero1
+                print '..........count_1.....REGISTERD.....', count_first
+                print '..........count_2......REGISTERD....', count_second
+                print '..........count_3......REGISTERD....', count_third
+
+
+            ############################...Todays Login....GUEST USER.(3)....###############################
+
+            current_date = datetime.now()
+            year = current_date.year
+            month = current_date.month
+            day = current_date.day
+
+            past_date = datetime(year,month,day)
+            present_date = datetime.now()
+            list = []
+
+            if city_front == 'all':
+                consumer_lst = ConsumerProfile.objects.filter(last_time_login__gt=past_date,last_time_login__lt=present_date)
+            else:
+                consumer_lst = ConsumerProfile.objects.filter(last_time_login__gt=past_date,
+                                                                   city_place_id=city_front,last_time_login__lt=present_date)
+
+            for obj in consumer_lst:
+                consumer_id = obj.consumer_id
+
+                consumer_list0 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=' 0:',consumer_type='guest').count()
+                count_zero_guest = count_zero_guest + consumer_list0
+
+                for hour in range(0, 9):
+                    hour = ' 0' + str(hour) + ':'
+                    consumer_list = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='guest').count()
+                    count_first_guest = count_first_guest + consumer_list
+                count_first_guest = int(count_first_guest)
+
+                for hour in range(9, 17):
+                    if hour == 9:
+                        hour = ' 0' + str(hour) + ':'
+                    else:
+                        hour = ' ' + str(hour) + ':'
+                    consumer_list1 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='guest').count()
+                    count_second_guest = count_second_guest + consumer_list1
+                count_second_guest = int(count_second_guest)
+
+                for hour in range(17, 24):
+                    hour = ' ' + str(hour) + ':'
+                    consumer_list2 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='guest').count()
+                    count_third_guest = count_third_guest + consumer_list2
+                count_third_guest = int(count_third_guest)
+
+                print '..........count_zero_guest..........', count_zero_guest
+                print '..........count_first_guest..........', count_first_guest
+                print '..........count_second_guest..........', count_second_guest
+                print '..........count_third_guest..........', count_third_guest
+
+
+            data = {'success': 'true', 'city_places_list': get_city_places(request),
+                    'count_zero1': count_zero1, 'count_first': count_first, 'count_second': count_second, 'count_third': count_third,
+                    'count_zero_guest': count_zero_guest, 'count_first_guest': count_first_guest, 'count_second_guest': count_second_guest, 'count_third_guest': count_third_guest}
+
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time',
+                    'username': request.session['login_user']}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+@csrf_exempt
+def get_subscription_graph(request):
+    try:
+        data = {}
+        final_list = []
+        category_id_list = []
+
+        try:
+            city_front = request.GET.get('citys_var')
+
+            cat_list = []
+            cat_city_obj = CategoryCityMap.objects.filter(city_place_id=city_front)
+            for cat in cat_city_obj:
+                category_obj = Category.objects.get(category_id = cat.category_id.category_id)
+                if category_obj.category_status == '1':
+                    cat_list.append(category_obj)
+            for cat in cat_list:
+                business_data = {
+                    'day' : cat.category_name,
+                    'visits' : Business.objects.filter(category = cat.category_id).count()
+                }
+                final_list.append(business_data)
+
+            data = {'success': 'true','final_list':final_list}
+
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time',
+                    'username': request.session['login_user']}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+@csrf_exempt
+def get_subscription_graph1(request):
+    try:
+        print '..................................in graph3..................'
+        data = {}
+        final_list = []
+        category_id_list = []
+
+        try:
+            city_front = request.GET.get('citys_var')
+
+            cat_list = []
+
+            current_date = datetime.now()
+            last_date = (datetime.now() - timedelta(days=7))
+
+            
+            cat_city_obj = CategoryCityMap.objects.filter(city_place_id=city_front)
+            for cat in cat_city_obj:
+                category_obj = Category.objects.get(category_id = cat.category_id.category_id)
+                if category_obj.category_status == '1':
+                    cat_list.append(category_obj)
+            for cat in cat_list:
+                business_data = {
+                    'day' : cat.category_name,
+                    'visits' : Business.objects.filter(category = cat.category_id,business_created_date__range=[last_date, current_date]).count()
+                }
+                final_list.append(business_data)
+
+            data = {'success': 'true','final_list':final_list}
+
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time',
+                    'username': request.session['login_user']}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+@csrf_exempt
+def get_payment_graph(request):
+    try:
+        print '..........in graph 4.............................'
+        data = {}
+        final_list = []
+        category_id_list = []
+
+        try:
+            city_front = request.GET.get('citys_var')
+
+            cat_list = []
+
+            current_date = datetime.now()
+            year = current_date.year
+            month = current_date.month
+            day = current_date.day
+
+            past_date = datetime(year,month,day)
+            present_date = datetime.now()
+            list = []
+
+            cat_city_obj = CategoryCityMap.objects.filter(city_place_id=city_front)
+            for cat in cat_city_obj:
+                category_obj = Category.objects.get(category_id = cat.category_id.category_id)
+                if category_obj.category_status == '1':
+                    cat_list.append(category_obj)
+            for cat in cat_list:
+                business_obj = Business.objects.filter(category = cat.category_id)
+                paid_amount = 0
+                for obj in business_obj:
+                    try:
+                        payment_obj = PaymentDetail.objects.get(business_id = obj.business_id,payment_created_date__range=[past_date,present_date])
+                        if payment_obj.paid_amount:
+                            paid_amount = paid_amount + float(payment_obj.paid_amount)
+                    except:
+                        pass
+                business_data = {
+                    'day' : cat.category_name,
+                    'visits' : paid_amount
+                }
+                final_list.append(business_data)
+
+            data = {'success': 'true','final_list':final_list}
+
+        except IntegrityError as e:
+            print e
+            data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time',
+                    'username': request.session['login_user']}
+    except MySQLdb.OperationalError, e:
+        print e
+    except Exception, e:
+        print 'Exception ', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+@csrf_exempt
+def get_category1_list(request):
+    subscriber_id = request.GET.get('subscriber_id')
+    if subscriber_id == 'all':
+        business_obj = Business.objects.all()
+    else :
+        business_obj = Business.objects.filter(supplier = subscriber_id)
+
+    category_list = []
+    category_id_list = []
+
+    for busi_obj in business_obj:
+        category_id = busi_obj.category.category_id
+        category_id_list.append(category_id)
+
+    category_lst1 = set(category_id_list)
+
+    for category_obj in category_lst1:
+        cate_obj = Category.objects.get(category_id = category_obj)
+
+        category_id = cate_obj.category_id
+        category_name = cate_obj.category_name
+
+        category_data = {
+            'category_id': category_id,
+            'category_nm': category_name,
+        }
+        category_list.append(category_data)
+
+
+    data = {
+        'success': 'true',
+        'category_list': category_list
+    }
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+

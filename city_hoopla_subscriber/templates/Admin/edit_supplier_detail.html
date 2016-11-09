@@ -71,14 +71,14 @@ License: You must have a valid license purchased only from themeforest(the above
 <style type="text/css">
 
 .has-success .control-label{
-	color : #333;
+    color : #333;
 }
 
 .has-success .form-control {
-	border: 1px solid #C2CAD8;
+    border: 1px solid #C2CAD8;
 }
 
-		div.dataTables_wrapper div.dataTables_info {
+        div.dataTables_wrapper div.dataTables_info {
     padding-top: 8px;
     white-space: nowrap;
     display: none;
@@ -680,19 +680,19 @@ hr {
                                                                             </div>
                                                                             <div class="user-image">
                                                                                 <div class="user-image-buttons">
-						                                                                        <span class="btn btn-azure btn-file btn-sm"
+                                                                                                <span class="btn btn-azure btn-file btn-sm"
                                                                                                       style="display:none;float:right; padding: 0px; padding-left: 5px; padding-right: 5px;"><span
                                                                                                         class="fileinput-new"><i
                                                                                                         class="fa fa-pencil"></i></span><span
                                                                                                         class="fileinput-exists"><i
                                                                                                         class="fa fa-pencil"></i></span>
-						                                                                            <input type="file"
+                                                                                                    <input type="file"
                                                                                                            class="form-control"
                                                                                                            name="display_image"
                                                                                                            accept="image/*"
                                                                                                            id="display_image"
                                                                                                            name="logo">
-						                                                                        </span>
+                                                                                                </span>
                                                                                     <a href="#"
                                                                                        class="btn fileinput-exists btn-red btn-sm"
                                                                                        data-dismiss="fileinput">
@@ -780,7 +780,7 @@ hr {
                                                                                     <label class="control-label "
                                                                                            style="font-size:15px; ">Mobile
                                                                                         Number
-                                                                                        <span class="required"> * </span>
+                                                                                        
                                                                                     </label>
                                                                                     <input type="text"
                                                                                            name="phone_no"
@@ -817,9 +817,8 @@ hr {
                                                                             <div class="col-lg-6 col-md-6">
                                                                                 <div class="form-group">
                                                                                     <label class="control-label "
-                                                                                           style="font-size:15px; ">Primary
+                                                                                           style="font-size:15px; ">
                                                                                         Email
-                                                                                        <span class="required"> * </span>
                                                                                     </label>
                                                                                     <input type="text"
                                                                                            value="{{supplier_email}}"
@@ -831,21 +830,6 @@ hr {
                                                                                 </div>
                                                                             </div>
 
-                                                                            <div class="col-lg-6 col-md-6">
-                                                                                <div class="form-group">
-                                                                                    <label class="control-label "
-                                                                                           style="font-size:15px; ">Seconadary
-                                                                                        Email
-                                                                                    </label>
-                                                                                    <input type="text"
-                                                                                           value="{{secondary_email}}"
-                                                                                           name="sec_email"
-                                                                                           id="sec_email"
-                                                                                           class="form-control "/></input>
-                                                                                    <label class="error"
-                                                                                           style="color:red; display:none;"></label>
-                                                                                </div>
-                                                                            </div>
                                                                         </div>
 
                                                                         <div class="row div-border-bottom div-color">
@@ -1016,71 +1000,110 @@ hr {
                                                                                         Contact Details </label>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-md-3"
-                                                                                 style="padding-right: 0px;">
-                                                                                <label class="control-label "
-                                                                                       style="font-size:15px; ">
-                                                                                    Title
-
-                                                                                </label>
-                                                                                <select name="title" id="title"
-                                                                                        class="form-control sel2 select2-hidden-accessible">
-                                                                                    {% if title == 'Mr' %}
-                                                                                    <option value=""> Select Title
-                                                                                    </option>
-                                                                                    <option selected value="Mr"> Mr.
-                                                                                    </option>
-                                                                                    <option value="Mrs"> Mrs.</option>
-                                                                                    <option value="Ms"> Ms.</option>
-                                                                                    <option value="Dr"> Dr.</option>
-                                                                                    <option value="Mas"> Mas.</option>
-                                                                                    {% elif title == 'Mrs' %}
-                                                                                    <option value=""> Select Title
-                                                                                    </option>
-                                                                                    <option value="Mr"> Mr.</option>
-                                                                                    <option selected value="Mrs"> Mrs.
-                                                                                    </option>
-                                                                                    <option value="Ms"> Ms.</option>
-                                                                                    <option value="Dr"> Dr.</option>
-                                                                                    <option value="Mas"> Mas.</option>
-                                                                                    {% elif title == 'Ms' %}
-                                                                                    <option value=""> Select Title
-                                                                                    </option>
-                                                                                    <option value="Mr"> Mr.</option>
-                                                                                    <option value="Mrs"> Mrs.</option>
-                                                                                    <option selected value="Ms"> Ms.
-                                                                                    </option>
-                                                                                    <option value="Dr"> Dr.</option>
-                                                                                    <option value="Mas"> Mas.</option>
-                                                                                    {% elif title == 'Dr' %}
-                                                                                    <option value=""> Select Title
-                                                                                    </option>
-                                                                                    <option value="Mr"> Mr.</option>
-                                                                                    <option value="Mrs"> Mrs.</option>
-                                                                                    <option value="Ms"> Ms.</option>
-                                                                                    <option selected value="Dr"> Dr.
-                                                                                    </option>
-                                                                                    <option value="Mas"> Mas.</option>
-                                                                                    {% elif title == 'Mas' %}
-                                                                                    <option value=""> Select Title
-                                                                                    </option>
-                                                                                    <option value="Mr"> Mr.</option>
-                                                                                    <option value="Mrs"> Mrs.</option>
-                                                                                    <option value="Ms"> Ms.</option>
-                                                                                    <option value="Dr"> Dr.</option>
-                                                                                    <option selected value="Mas"> Mas.
-                                                                                    </option>
-                                                                                    {% else %}
-                                                                                    <option value=""> Select Title
-                                                                                    </option>
-                                                                                    <option value="Mr"> Mr.</option>
-                                                                                    <option value="Mrs"> Mrs.</option>
-                                                                                    <option value="Ms"> Ms.</option>
-                                                                                    <option value="Dr"> Dr.</option>
-                                                                                    <option value="Mas"> Mas.</option>
-                                                                                    {% endif %}
-                                                                                </select>
-                                                                            </div>
+                                                                            
+                                                                            
+                                                                            <div class="col-md-3" style="padding-right: 0px;">
+                           
+                                                                                                       <label class="control-label " style="font-size:15px;">
+                                                                                                           Title 
+                                                                                                       </label>
+                                                                                                       <select  name="title" id="title" class="form-control sel2" >
+                                                                                                         
+                                                                                                         {% if title == 'Mr.' %}
+                                                                                                         <option value=""> Select Title</option>
+                                                                                                                 <option selected value="Mr."> Mr.</option>
+                                                                                                                   <option value="Mrs."> Mrs.</option>
+                                                                                                                   <option value="Ms."> Ms.</option>
+                                                                                                                   <option value="Dr."> Dr.</option>
+                                                                                                                   <option value="Mas."> Mas.</option>
+                                                                                                                   <option value="Prof."> Prof.</option>
+                                                                                                                   <option value="Smt."> Smt.</option>
+                                                                                                                   <option value="Miss."> Miss.</option>
+                                                                                                               {% elif title == 'Mrs.' %}
+                                                                                                               <option value=""> Select Title</option>
+                                                                                                                         <option  value="Mr."> Mr.</option>                                      
+                                                                                                                 <option selected value="Mrs."> Mrs.</option>                                                                                                                         
+                                                                                                                   <option value="Ms."> Ms.</option>
+                                                                                                                   <option value="Dr."> Dr.</option>
+                                                                                                                   <option value="Mas."> Mas.</option>
+                                                                                                                   <option value="Prof."> Prof.</option>
+                                                                                                                   <option value="Smt."> Smt.</option>
+                                                                                                                   <option value="Miss."> Miss.</option>
+                                                                                                               {% elif title == 'Ms.' %}
+                                                                                                                <option value=""> Select Title</option>
+                                                                                                                <option  value="Mr."> Mr.</option>                                       
+                                                                                                                 <option  value="Mrs."> Mrs.</option>                                                                                                                         
+                                                                                                                   <option selected value="Ms."> Ms.</option>
+                                                                                                                   <option value="Dr."> Dr.</option>
+                                                                                                                   <option value="Mas."> Mas.</option>
+                                                                                                                   <option value="Prof."> Prof.</option>
+                                                                                                                   <option value="Smt."> Smt.</option>
+                                                                                                                   <option value="Miss."> Miss.</option>
+                                                                                                               {% elif title == 'Dr.' %}
+                                                                                                                <option value=""> Select Title</option>
+                                                                                                                <option  value="Mr."> Mr.</option>                                       
+                                                                                                                 <option  value="Mrs."> Mrs.</option>                                                                                                                         
+                                                                                                                   <option  value="Ms."> Ms.</option>
+                                                                                                                   <option selected value="Dr."> Dr.</option>
+                                                                                                                   <option value="Mas."> Mas.</option>
+                                                                                                                   <option value="Prof."> Prof.</option>
+                                                                                                                   <option value="Smt."> Smt.</option>
+                                                                                                                   <option value="Miss."> Miss.</option>
+                                                                                                               {% elif title == 'Mas.' %}
+                                                                                                                <option value=""> Select Title</option>
+                                                                                                                        <option  value="Mr."> Mr.</option>                                       
+                                                                                                                 <option  value="Mrs."> Mrs.</option>                                                                                                                         
+                                                                                                                   <option  value="Ms."> Ms.</option>
+                                                                                                                   <option  value="Dr."> Dr.</option>
+                                                                                                                   <option selected value="Mas."> Mas.</option>
+                                                                                                                   <option value="Prof."> Prof.</option>
+                                                                                                                   <option value="Smt."> Smt.</option>
+                                                                                                                   <option value="Miss."> Miss.</option>
+                                                                                                                {% elif title == 'Prof.' %}
+                                                                                                                <option value=""> Select Title</option>
+                                                                                                                        <option  value="Mr."> Mr.</option>                                       
+                                                                                                                 <option  value="Mrs."> Mrs.</option>                                                                                                                         
+                                                                                                                   <option  value="Ms."> Ms.</option>
+                                                                                                                   <option  value="Dr."> Dr.</option>
+                                                                                                                   <option  value="Mas."> Mas.</option>
+                                                                                                                   <option selected value="Prof."> Prof.</option>
+                                                                                                                   <option value="Smt."> Smt.</option>
+                                                                                                                   <option value="Miss."> Miss.</option>
+                                                                                                                     {% elif title == 'Smt.' %}
+                                                                                                                <option value=""> Select Title</option>
+                                                                                                                        <option  value="Mr."> Mr.</option>                                       
+                                                                                                                 <option  value="Mrs."> Mrs.</option>                                                                                                                         
+                                                                                                                   <option  value="Ms."> Ms.</option>
+                                                                                                                   <option  value="Dr."> Dr.</option>
+                                                                                                                   <option  value="Mas."> Mas.</option>
+                                                                                                                   <option value="Prof."> Prof.</option>
+                                                                                                                   <option selected value="Smt."> Smt.</option>
+                                                                                                                   <option value="Miss."> Miss.</option>        
+                                                                                                                {% elif title == 'Miss.' %}
+                                                                                                                <option value=""> Select Title</option>
+                                                                                                                        <option  value="Mr."> Mr.</option>                                       
+                                                                                                                 <option  value="Mrs."> Mrs.</option>                                                                                                                         
+                                                                                                                   <option  value="Ms."> Ms.</option>
+                                                                                                                   <option  value="Dr."> Dr.</option>
+                                                                                                                   <option  value="Mas."> Mas.</option>
+                                                                                                                   <option value="Prof."> Prof.</option>
+                                                                                                                   <option  value="Smt."> Smt.</option>
+                                                                                                                   <option selected value="Miss."> Miss.</option>                                      
+                                                                                                               {% else %}
+                                                                                                                <option value=""> Select Title</option>
+                                                                                                                <option  value="Mr."> Mr.</option>                                       
+                                                                                                                 <option  value="Mrs."> Mrs.</option>                                                                                                                         
+                                                                                                                   <option  value="Ms."> Ms.</option>
+                                                                                                                   <option  value="Dr."> Dr.</option>
+                                                                                                                   <option  value="Mas."> Mas.</option>
+                                                                                                                   <option value="Prof."> Prof.</option>
+                                                                                                                   <option  value="Smt."> Smt.</option>
+                                                                                                                   <option value="Miss."> Miss.</option>    
+                                                                                                               {% endif %}
+                                                                                                           </select>   
+                                                                                                       <label class="error" style="color:red; display:none;"></label>
+                                                                                                   </div>
+                                                                            
                                                                             <div class="col-lg-9 col-md-9">
                                                                                 <div class="form-group">
                                                                                     <label class="control-label "
@@ -1099,7 +1122,7 @@ hr {
                                                                             <div class="col-lg-6 col-md-6">
                                                                                 <div class="form-group">
                                                                                     <label class="control-label "
-                                                                                           style="font-size:15px; ">Contact
+                                                                                           style="font-size:15px; ">Mobile
                                                                                         Number
                                                                                         <span class="required"> * </span>
                                                                                     </label>
@@ -1168,7 +1191,7 @@ hr {
                                                                                            style="color:red; display:none;"></label>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-lg-6 col-md-6">
+                                                                            <!-- <div class="col-lg-6 col-md-6">
                                                                                 <div class="form-group">
                                                                                     <label class="control-label "
                                                                                            style="font-size:15px; ">Contact
@@ -1191,7 +1214,7 @@ hr {
                                                                                     <label class="control-label "
                                                                                            style="font-size:15px; ">Email
                                                                                         <!--  <span class="required"> * </span> -->
-                                                                                    </label>
+                                                                                   <!--  </label>
                                                                                     <input type="text"
                                                                                            name="user_email"
                                                                                            value="{{ sales_person_email  }}"
@@ -1200,7 +1223,7 @@ hr {
                                                                                     <label class="error"
                                                                                            style="color:red; display:none;"></label>
                                                                                 </div>
-                                                                            </div>
+                                                                            </div> --> 
                                                                         </div>
 
                                                                         <br>
@@ -2159,7 +2182,7 @@ hr {
                                                                                     Amount Paid
                                                                                 </label>
                                                                                 <input type="text" id="paid_amount"
-                                                                                       onkeypress="return validateIntKeyPress(this,event);"
+                                                                                       onkeypress="return validateFloatKeyPress(this,event);"
                                                                                        class="form-control"
                                                                                        name="total_paid_amount"/>
                                                                                 <label class="error font-12 font-regular"
@@ -2255,7 +2278,7 @@ hr {
                                                                                 <label class="control-label font-15 font-regular">Note
                                                                                     <span class="required"> * </span>
                                                                                 </label>
-                                                                                    <textarea type="text" id="note"
+                                                                                    <textarea type="text" id="note" maxlength="5000"
                                                                                               class="form-control"
                                                                                               name="payment_note"></textarea>
                                                                                 <label class="error col-lg-12 font-12 font-regular "
@@ -2327,7 +2350,7 @@ hr {
 <!-- /.modal -->
 <!-- BEGIN FOOTER -->
 <div class="page-footer">
-    <div class="page-footer-inner"> 2016 &copy; DigiSpace.
+    <div class="page-footer-inner"> 2016 &copy; DigiSpace Software Private Limited
     </div>
     <div class="scroll-to-top">
         <i class="icon-arrow-up"></i>
@@ -2602,39 +2625,39 @@ hr {
     $('#state option[value='+ $('#selectedState').val() +']').attr("selected", "selected");
     $('#city option[value='+ $('#selectedCity').val() +']').attr("selected", "selected");
 
-  	/* Get State */
+    /* Get State */
 
     function getState() {
-		     country_id = $('#country :selected').val();
-		    if (country_id) {
-		        $.ajax({
-		            type: 'GET',
-		            url: '/get-state/',
-		            data: {'country_id': country_id},
-		            success: function (response) {
-		                    //alert('success');
-		                $('#state').html('');
-		                $.each(response.state_list, function (index, item) {
-		                    $('#state').append(item);
-		                });
-		                $('#state').val("");
-		            },
-		            error: function (response) {
-		                alert("Error!");
-		            },
-		
-		        });
-		    }
-		    else {
-		        $('#city').val("");
-    		}
-	}
-	
-	/* End */
-	
-		/* Get City */
-		
-		function getCity() {
+             country_id = $('#country :selected').val();
+            if (country_id) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/get-state/',
+                    data: {'country_id': country_id},
+                    success: function (response) {
+                            //alert('success');
+                        $('#state').html('');
+                        $.each(response.state_list, function (index, item) {
+                            $('#state').append(item);
+                        });
+                        $('#state').val("");
+                    },
+                    error: function (response) {
+                        alert("Error!");
+                    },
+        
+                });
+            }
+            else {
+                $('#city').val("");
+            }
+    }
+    
+    /* End */
+    
+        /* Get City */
+        
+        function getCity() {
         state_id = $('#state :selected').val();
         if (state_id) {
             $.ajax({
@@ -2642,7 +2665,7 @@ hr {
                 url: '/get-city-place/',
                 data: {'state_id': state_id},
                 success: function (response) {
-                		//alert('success');
+                        //alert('success');
                     $('#city').html('');
                     $.each(response.city_list, function (index, item) {
                         $('#city').append(item);
@@ -2658,79 +2681,79 @@ hr {
         else {
             $('#city').val("");
         }
-	}
-		
-		/* End */
-		
-		/* Get Pincode */
-		
-		 function getPincode(){
-			        city_id = $('#city :selected').val();
-			        if (city_id) {
-			            $.ajax({
-			                type: 'GET',
-			                url: '/get-pincode-place/',
-			                data: {'city_id': city_id},
-			                 success: function (response) {
-			                    $('#pincode').html('');
-			                    $.each(response.pincode_list, function (index, item) {
-			                        $('#pincode').append(item);
-			                    });
-			                    $('#pincode').val("");
-			                },
-			                error: function (response) {
-			                    alert("Error!");
-			                },
+    }
+        
+        /* End */
+        
+        /* Get Pincode */
+        
+         function getPincode(){
+                    city_id = $('#city :selected').val();
+                    if (city_id) {
+                        $.ajax({
+                            type: 'GET',
+                            url: '/get-pincode-place/',
+                            data: {'city_id': city_id},
+                             success: function (response) {
+                                $('#pincode').html('');
+                                $.each(response.pincode_list, function (index, item) {
+                                    $('#pincode').append(item);
+                                });
+                                $('#pincode').val("");
+                            },
+                            error: function (response) {
+                                alert("Error!");
+                            },
 
-			            });
-			        }
-			        else {
-			            $('#city').val("");
-			        }
-			    }
-		
-		/* End */
-		
-		
-		/*  Textarea Length Count */
-		
-		$("#business").keyup(function(){
+                        });
+                    }
+                    else {
+                        $('#city').val("");
+                    }
+                }
+        
+        /* End */
+        
+        
+        /*  Textarea Length Count */
+        
+        $("#business").keyup(function(){
         text_length = $("#business").val().trim().length;
         text_count = text_length + "/5000 Characters";
         $("#business").parent().children('.dis_count').text(text_count);
     });
-		
-		/* End */
-		
-		/*  Enter Number Only */
-		
-		function validateIntKeyPress(el, evt) {
+        
+        /* End */
+        
+        /*  Enter Number Only */
+        
+        function validateIntKeyPress(el, evt) {
             var charCode = (evt.which) ? evt.which : event.keyCode;
             if (charCode > 31 && (charCode < 48 || charCode > 57)) {
                 return false;
             }
             return true;
         }
-		
-		/* End */
-		
-		/* Validation for Business Details  */
-		
-		function checkBusinessName(business_name){
-			businessName = $(business_name).val()   
-		  
-		   if(businessName!=''){
-		 	$(business_name).parent().children('.error').css("display", "none");
-		   return true;
-		   }else{
-		    $(business_name).parent().children('.error').css("display", "block");
-		    $(business_name).parent().children('.error').text("Please enter Business Name");
-		   return false; 
-		   }
-	}
-	
-	function checkBusiness(business){
-	if($(business).val()!='')
+        
+        /* End */
+        
+        /* Validation for Business Details  */
+        
+        function checkBusinessName(business_name){
+            businessName = $(business_name).val()   
+          
+           if(businessName!=''){
+            $(business_name).parent().children('.error').css("display", "none");
+           return true;
+           }else{
+            $(business_name).parent().children('.error').css("display", "block");
+            $(business_name).parent().children('.error').text("Please enter Business Name");
+           return false; 
+           }
+    }
+    
+    function checkBusiness(business){
+    if($(business).val()!='')
    {
     $( business).parent().children('.error').css("display", "none");
    return true;
@@ -2741,11 +2764,15 @@ hr {
    }
 }
 
-	function checkNumber(phone_no){
-	phoneno = $(phone_no).val()     
-   var phoneNumberPattern = /^[789]\d{9}$/;  
-   if(phoneNumberPattern.test(phoneno)){
- 	$(phone_no).parent().children('.error').css("display", "none");
+    function checkNumber(phone_no){
+    phoneno = $(phone_no).val()     
+   var phoneNumberPattern = /^[789]\d{9}$/; 
+      if(phoneno=='')
+    {
+    return true;    
+    }
+   else if(phoneNumberPattern.test(phoneno)){
+    $(phone_no).parent().children('.error').css("display", "none");
    return true;
    }else{
     $(phone_no).parent().children('.error').css("display", "block");
@@ -2755,14 +2782,14 @@ hr {
 }
 
 function checkSecNumber(sec_phone_no){
-	phoneno = $(sec_phone_no).val()     
+    phoneno = $(sec_phone_no).val()     
    var phoneNumberPattern = /^[789]\d{9}$/; 
   if(phoneno=='')
-	{
-	return true;	
-	} 
+    {
+    return true;    
+    } 
    else if(phoneNumberPattern.test(phoneno)){
- 	$(sec_phone_no).parent().children('.error').css("display", "none");
+    $(sec_phone_no).parent().children('.error').css("display", "none");
    return true;
    }else{
     $(sec_phone_no).parent().children('.error').css("display", "block");
@@ -2772,32 +2799,18 @@ function checkSecNumber(sec_phone_no){
 }
 
 function checkEmail(pri_email){
-	Email = $(pri_email).val()
+    Email = $(pri_email).val()
    var namePattern = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;  
- 
-   if(namePattern.test(Email)){
+     if(Email=='')
+    {
+    return true;    
+    } 
+   else if(namePattern.test(Email)){
       $(pri_email).parent().children('.error').css("display", "none");
    return true;
    }else{
- 	$(pri_email).parent().children('.error').css("display", "block");
+    $(pri_email).parent().children('.error').css("display", "block");
    $(pri_email).parent().children('.error').text("Please enter valid Email");
-   return false; 
-   }
-}
-	
-function checkSecEmail(sec_email){
-	Email = $(sec_email).val()
-   var namePattern = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;  
- 	 if(Email=='')
-	{
-	return true;	
-	} 
-   else if(namePattern.test(Email)){
-      $(sec_email).parent().children('.error').css("display", "none");
-   return true;
-   }else{
- 	$(sec_email).parent().children('.error').css("display", "block");
-   $(sec_email).parent().children('.error').text("Please enter valid Email");
    return false; 
    }
 }
@@ -2810,28 +2823,28 @@ resume = $(logo).val()
 if(resume=='')
 {
    $(logo).parent().children('.error').css("display", "none");
-	return true;
-}	
+    return true;
+}   
 else 
 {
 var val = $(logo).val().toLowerCase();
 var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(.png|.jpeg|.jpg)$");
 if(!(regex.test(val))) {
- 	$(logo).parent().children('.error').css("display", "block");
+    $(logo).parent().children('.error').css("display", "block");
    $(logo).parent().children('.error').text("Please upload an Image");
      return false; 
 }
 else {
       $(logo).parent().children('.error').css("display", "none");
-	     return true;
-	}
+         return true;
+    }
 }   
 }
 
 
 function checkaddress(address1){
 
-	if($(address1).val()!='')
+    if($(address1).val()!='')
    {
     $(address1).parent().children('.error').css("display", "none");
    return true;
@@ -2843,12 +2856,12 @@ function checkaddress(address1){
 }
 
 
-		function checkcountry(country){
+        function checkcountry(country){
 
   if($(country).val()!='' && $(country).val()!= null)
    {
 
-   	
+    
     $(country).parent().children('.error').css("display", "none");
    return true;
    }else{
@@ -2902,16 +2915,16 @@ function checkPincode(pincode){
 }
 
 function checkUserName(user_name){
- 	var namePattern = /^[a-zA-Z\s]+$/;  
-	first_name = $(user_name).val()  
-   if(namePattern.test(first_name)){
+    var namePattern = /^[a-zA-Z\s]+$/;  
+    first_name = $(user_name).val()  
+   if(first_name != ""){
 
- 	$(user_name).parent().children('.error').css("display", "none");
+    $(user_name).parent().children('.error').css("display", "none");
    return true;
    }else{
 
     $(user_name).parent().children('.error').css("display", "block");
-    $(user_name).parent().children('.error').text("Please enter valid Name");
+    $(user_name).parent().children('.error').text("Please enter Name");
    return false; 
    }
 }
@@ -2920,27 +2933,27 @@ function checkUserName(user_name){
 function checkUserContactNo(user_contact_no){
 
    var namePattern = /^[789]\d{9}$/;  
-	contactno = $(user_contact_no).val()  
+    contactno = $(user_contact_no).val()  
    if(namePattern.test(contactno)){
 
- 	$(user_contact_no).parent().children('.error').css("display", "none");
+    $(user_contact_no).parent().children('.error').css("display", "none");
    return true;
    }else{
 
     $(user_contact_no).parent().children('.error').css("display", "block");
-    $(user_contact_no).parent().children('.error').text("Please enter valid Contact No");
+    $(user_contact_no).parent().children('.error').text("Please enter valid Mobile Number");
    return false; 
    }
 }
 
 function checkUserEmail(user_email){
-	Email = $(user_email).val()
+    Email = $(user_email).val()
    var namePattern = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;  
  if(namePattern.test(Email)){
       $(user_email).parent().children('.error').css("display", "none");
    return true;
    }else{
- 	$(user_email).parent().children('.error').css("display", "block");
+    $(user_email).parent().children('.error').css("display", "block");
    $(user_email).parent().children('.error').text("Please enter valid Email");
    return false; 
    }
@@ -2962,13 +2975,13 @@ function checkSaleName(user_name){
 }
 
 
-function checkSaleContactNo(user_contact_no){
+/*function checkSaleContactNo(user_contact_no){
 
    var namePattern = /^[789]\d{9}$/;  
-	contactno = $(user_contact_no).val()  
+    contactno = $(user_contact_no).val()  
    if(namePattern.test(contactno)){
 
- 	$(user_contact_no).parent().children('.error').css("display", "none");
+    $(user_contact_no).parent().children('.error').css("display", "none");
    return true;
    }else{
 
@@ -2994,24 +3007,24 @@ function checkSaleEmail(user_email){
    $(user_email).parent().children('.error').css("display", "none");
    return true;
    }
-}
+}*/
 
 function validateData(){
 
-	if(checkBusinessName("#business_name")&checkBusiness('#business')&checkNumber("#phone_no")&checkSecNumber("#sec_phone_no")&checkEmail("#pri_email")&checkSecEmail("#sec_email")&checkLogo("#display_image")&checkaddress("#address1")&checkcountry("#country")  &checkState("#state")&checkCity("#city")&checkPincode("#pincode")&checkUserName('#user_name')&checkUserEmail('#user_email')
-	&checkUserContactNo('#user_contact_no') &checkSaleName('#sale_person_name') &checkSaleContactNo('#sale_person_contact_no') &checkSaleEmail('#sale_person_email')){
-		return true;	
-	}
-	return false;
+    if(checkBusinessName("#business_name")&checkBusiness('#business')&checkNumber("#phone_no")&checkSecNumber("#sec_phone_no")&checkEmail("#pri_email")&checkLogo("#display_image")&checkaddress("#address1")&checkcountry("#country")  &checkState("#state")&checkCity("#city")&checkPincode("#pincode")&checkUserName('#user_name')&checkUserEmail('#user_email')
+    &checkUserContactNo('#user_contact_no') &checkSaleName('#sale_person_name')){
+        return true;    
+    }
+    return false;
 }
-		
-		/*  End */
-		
-		
-			/*  Save Business Details on Save-Quit Button */
-		
-	$("#save-quit").click(function(event)  {
-	    event.preventDefault();
+        
+        /*  End */
+        
+        
+            /*  Save Business Details on Save-Quit Button */
+        
+    $("#save-quit").click(function(event)  {
+        event.preventDefault();
         if(validateData()){
             var input = document.getElementById("display_image");
             file = input.files[0];
@@ -3040,7 +3053,7 @@ function validateData(){
 
             $.ajax({
 
-                type	: "POST",
+                type    : "POST",
                 url : '/update-subscriber/',
                 data : formData,
                 cache: false,
@@ -3064,19 +3077,19 @@ function validateData(){
                     alert("_Error");
                 }
             });
-	    }
-	});
-	
-	/*  End  */
-	
-	/*--------------------Save Business Details on Save and Continue Button*/
-	
-	$("#save-continue").click(function(event)  {
+        }
+    });
+    
+    /*  End  */
+    
+    /*--------------------Save Business Details on Save and Continue Button*/
+    
+    $("#save-continue").click(function(event)  {
         event.preventDefault();
-	    if(validateData()){
-		    var input = document.getElementById("display_image");
-		    file = input.files[0];
-	        var formData= new FormData();
+        if(validateData()){
+            var input = document.getElementById("display_image");
+            file = input.files[0];
+            var formData= new FormData();
             formData.append("logo",file);
             formData.append("supplier_id",$('#supplier_id').val());
             formData.append("business_name",$('#business_name').val());
@@ -3099,16 +3112,16 @@ function validateData(){
             formData.append("sale_person_email",$('#sale_person_email').val());
             formData.append("title",$('#title').val());
 
-  			$.ajax({
-			    type	: "POST",
-				url : '/update-subscriber/',
- 				data : formData,
-				cache: false,
-		        processData: false,
-		    	contentType: false,
-		    	success: function (response) {
-				    if(response.success=='true'){
-	           	  	    $("#tab_1").removeClass("active");
+            $.ajax({
+                type    : "POST",
+                url : '/update-subscriber/',
+                data : formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if(response.success=='true'){
+                        $("#tab_1").removeClass("active");
                         $("#number_1").text("");
                         $("#number_1").addClass("fa fa-check");
                         $("#number_1").addClass("done");
@@ -3119,10 +3132,10 @@ function validateData(){
                         $("#tab_2").addClass("active");
                         $("#tab1").removeClass("active");
                         $("#tab2").addClass("active");
-	              	}
-	      			if (response.success == "false") {
+                    }
+                    if (response.success == "false") {
                         $("#error-modal").modal('show');
-	       			}
+                    }
                 },
                 beforeSend: function () {
                     $("#processing").css('display','block');
@@ -3132,14 +3145,14 @@ function validateData(){
                 },
                 error : function(response){
                     alert("_Error");
-            	}
+                }
            });
-	    }
-	});
-	
-	/*  End  */
-	
-			/* Subscription Plans  */
+        }
+    });
+    
+    /*  End  */
+    
+            /* Subscription Plans  */
 
 
 
@@ -3152,16 +3165,28 @@ function validateData(){
 
     var cat_lvl = '';
     var cat_id = '';
+    var has_platinum = ''
+    var has_diamond = ''
+    var has_gold = ''
+    var has_silver = ''
+    var has_bronze = ''
+    var has_value = ''
 
     function check_cat(lvl,this_val){
+
         supplier_id=$("#supplier_id_hidden").val();
         if($(this_val).attr('data-level')=="0"){
-        clear_subcat();
+            clear_subcat();
+        }
+        if($(this_val).val() == ""){
+            $('#lvl'+lvl+'_row').hide();
+            $("#subscription_div").css("display","none");
+            return false;
         }
         $.ajax({
             type    : "POST",
             url : '/check-category-supplier/',
-            data : {'category_id':$(this_val).val(),'cat_level':lvl,'supplier_id':supplier_id},
+            data : {'category_id':$(this_val).val(),'cat_level':lvl,'supplier_id':supplier_id,'city_place_id':$("#city").val()},
             success: function (response) {
                 if(response.success!='false'){
                     $('#lvl'+lvl).html('');
@@ -3189,6 +3214,7 @@ function validateData(){
                         cat_id = '';
                         $("#subscription_div").css("display","none");
                     }
+
                 }
             },
             error : function(response){
@@ -3236,14 +3262,102 @@ function validateData(){
         } else {
             alert("Invalid Date");
         }
+        $("#mismatch-days").css("display", "none");
+        $('.premium_checkbox').prop("disabled", true);
+        $('.telephone_radio').prop("disabled", true);
+        $('.checker').addClass("disabled");
+        $('.checker').addClass("focus");
+        $('.checker').children("span").removeClass("checked");
+        $('.radio').addClass("disabled");
+        $('.radio').addClass("focus");
+        $('.radio').children("span").removeClass("checked");
+        $('.days').empty();
+        $('.days').prop("disabled", true);
+        $('.days').html('').select2({data: {id:null, text: null}});
+        $('.pre_start_date').prop("disabled", true);
+        $('.pre_start_date').val('');
+        $('.pre_end_date').val('');
+
         $(".premium_checkbox").prop("disabled", false);
         $('.telephone_radio').prop("disabled", false);
         $(".checker").removeClass("disabled");
         $(".radio").removeClass("disabled");
+        $(".pre_start_date").val("");
+        $(".pre_end_date").val("");
+
+        amount_1 = 0;
+        amount_2 = 0;
+        amount_3 = 0;
+        amount_4 = 0;
+        amount_5 = 0;
+        tel_amount_1 = 0;
+        tel_amount_2 = 0;
+        tel_amount_3 = 0;
+        tel_amount_4 = 0;
+        tel_amount_5 = 0;
+        tel_amount_6 = 0;
+        total_amount = amount;
+        $("#amount").val(parseFloat(total_amount).toFixed(2));
+
+        $.ajax({
+            type : "POST",
+            url : '/get-telephone-service-slots/',
+            data : {
+                'cat_id':cat_id,
+                'cat_lvl':cat_lvl,
+                'city_place_id':$("#city").val(),
+                'start_date':$("#dt50").val(),
+                'end_date':$("#dt2").val(),
+            },
+            success: function (response) {
+                if(response.success=='true'){
+                    has_platinum = response.has_platinum;
+                    has_diamond = response.has_diamond;
+                    has_gold = response.has_gold;
+                    has_silver = response.has_silver;
+                    has_bronze = response.has_bronze;
+                    has_value = response.has_value;
+                }
+                if (response.success == "false") {
+                    $("#error-modal1").modal('show');
+                    $("#error-message1").text(response.message);
+                }
+            },
+            beforeSend: function () {
+                $("#processing").css('display','block');
+            },
+            complete: function () {
+                $("#processing").css('display','none');
+                if(has_platinum == "true"){
+                    $('#tel_check_1').prop("disabled", true);
+                    $("#uniform-tel_check_1").addClass("disabled");
+                }
+                if(has_diamond == "true"){
+                    $('#tel_check_2').prop("disabled", true);
+                    $("#uniform-tel_check_2").addClass("disabled");
+                }
+                if(has_gold == "true"){
+                    $('#tel_check_3').prop("disabled", true);
+                    $("#uniform-tel_check_3").addClass("disabled");
+                }
+                if(has_silver == "true"){
+                    $('#tel_check_4').prop("disabled", true);
+                    $("#uniform-tel_check_4").addClass("disabled");
+                }
+                if(has_bronze == "true"){
+                    $('#tel_check_5').prop("disabled", true);
+                    $("#uniform-tel_check_5").addClass("disabled");
+                }
+                if(has_value == "true"){
+                    $('#tel_check_6').prop("disabled", true);
+                    $("#uniform-tel_check_6").addClass("disabled");
+                }
+            },
+            error : function(response){
+                    alert("_Error");
+            }
+        });
     }
-
-
-
 
     //-----------------Change event on duration list for basic subscription
     $("#duration_list").change(function(){
@@ -3305,6 +3419,12 @@ function validateData(){
         }
     })
 
+    var no1_ranges = '';
+    var no2_ranges = '';
+    var no3_ranges = '';
+    var no4_ranges = '';
+    var no5_ranges = '';
+
     //-----------------events on premium list selection
     function check_advert(id)
     {
@@ -3329,8 +3449,8 @@ function validateData(){
                 $("#amount").val(parseFloat(total_amount).toFixed(2));
             }
             if (service_name.trim() == 'Advert Slider'){
-                total_amount = parseInt(total_amount) - parseInt(amount_5);
-                amount_5 = 0;
+                total_amount = parseInt(total_amount) - parseInt(amount_4);
+                amount_4 = 0;
                 $("#amount").val(parseFloat(total_amount).toFixed(2));
             }
             if (service_name.trim() == 'Top Advert'){
@@ -3338,6 +3458,51 @@ function validateData(){
                 amount_5 = 0;
                 $("#amount").val(parseFloat(total_amount).toFixed(2));
             }
+            $.ajax({
+                type : "POST",
+                url : '/get-booked-slots/',
+                data : {
+                    'cat_id':cat_id,
+                    'cat_lvl':cat_lvl,
+                    'service_name':service_name.trim(),
+                    'city_place_id':$("#city").val(),
+                    'start_date':$("#dt50").val(),
+                    'end_date':$("#dt2").val(),
+                    },
+                success: function (response) {
+                    if(response.success=='true'){
+                        if(id == 1){
+                            no1_ranges = response.date_list;
+                        }
+                        if(id == 2){
+                            no2_ranges = response.date_list;
+                        }
+                        if(id == 3){
+                            no3_ranges = response.date_list;
+                        }
+                        if(id == 4){
+                            no4_ranges = response.booked_date_list;
+                        }
+                        if(id == 5){
+                            no5_ranges = response.date_list;
+                        }
+                    }
+                    if (response.success == "false") {
+                        $("#error-modal1").modal('show');
+                        $("#error-message1").text(response.message);
+                    }
+                },
+                beforeSend: function () {
+                    $("#processing").css('display','block');
+                },
+                complete: function () {
+                    $("#processing").css('display','none');
+                },
+                error : function(response){
+                        alert("_Error");
+                }
+            });
+
         } else {
             $('#day_'+id).prop("disabled", true);
             $('#start_'+id).prop("disabled", true);
@@ -3371,7 +3536,7 @@ function validateData(){
             }
 
         }
-        service_name = $('#check_'+id).val();
+        service_name = $('#lebel_'+id).text();
         var list = referanceDay[duration];
         list = list.split(",");
         $('.service-duration').val('');
@@ -3447,11 +3612,11 @@ function validateData(){
         }
         $("#tel_start_"+id).val($("#dt50").val());
         $("#tel_end_"+id).val(newdate);
-
+        supplier_id=$("#supplier_id_hidden").val();
         $.ajax({
             type : "POST",
             url : '/get-telephone-subscription-amount/',
-            data : {'duration':duration,'service_name':service_name.trim(),'city_place_id':$("#city").val()},
+            data : {'duration':duration,'service_name':service_name.trim(),'supplier_id':supplier_id},
             success: function (response) {
                 if(response.success=='true'){
                     if (service_name.trim() == 'Platinum'){
@@ -3523,35 +3688,6 @@ function validateData(){
         });
     }
 
-    $("#clear_selection").click(function(){
-        $('.radio').addClass("focus");
-        $('.radio').children("span").removeClass("checked");
-        $('.radio').children("span").find("input").prop('checked', false);
-        $(".tel_start_date").each(function() {
-            $(this).val('');
-        });
-        $(".tel_end_date").each(function() {
-            $(this).val('');
-        });
-        $(".tel_dur").each(function() {
-            $('.tel_dur').html('').select2({data: {id:null, text: null}});
-            $('.tel_dur').prop("disabled", true);
-        });
-        total_amount = parseInt(total_amount) - parseInt(tel_amount_1);
-        total_amount = parseInt(total_amount) - parseInt(tel_amount_2);
-        total_amount = parseInt(total_amount) - parseInt(tel_amount_3);
-        total_amount = parseInt(total_amount) - parseInt(tel_amount_4);
-        total_amount = parseInt(total_amount) - parseInt(tel_amount_5);
-        total_amount = parseInt(total_amount) - parseInt(tel_amount_6);
-        $("#amount").val(parseFloat(total_amount).toFixed(2));
-        tel_amount_1 = 0;
-        tel_amount_2 = 0;
-        tel_amount_3 = 0;
-        tel_amount_4 = 0;
-        tel_amount_5 = 0;
-        tel_amount_6 = 0;
-    });
-
     //-----------------Change event on duration list for premium service
     function premium_duration(id){
         var from = $("#dt50").val().split("/");
@@ -3561,16 +3697,114 @@ function validateData(){
         $( "#start_"+id ).val('');
         $( "#end_"+id ).val('');
         $( "#start_"+id ).prop("disabled", false);
-        $( "#start_"+id ).datepicker({
-            minDate: "",
-            maxDate: "",
-        });
         $( "#start_"+id ).datepicker( "destroy" );
-        $( ".pre_start_date" ).datepicker({
-            minDate: new Date(startDate),
-            maxDate: new Date(endDate),
-            dateFormat: 'dd/mm/yy'
-        });
+        ranges = '';
+        if(id == 1){
+            ranges1 = no1_ranges;
+            $( "#start_"+id ).datepicker({
+                numberOfMonths: 1,
+                minDate: new Date(startDate),
+                maxDate: new Date(endDate),
+                beforeShowDay: function(date) {
+                    for(var i=0; i<ranges1.length; i++) {
+                        if(date >= new Date(ranges1[i].start_date) && date <= new Date(ranges1[i].end_date)) return [false, ''];
+                    }
+                    if($( "#start_2" ).val() && $( "#end_2" ).val()){
+                        var from = $('#start_2').val().split("/");
+                        var from2 = $('#end_2').val().split("/");
+                        if(date >= new Date(from[2], from[1] - 1, from[0]) && date <= new Date(from2[2], from2[1] - 1, from2[0])) return [false, ''];
+                    }
+                    if($( "#start_3" ).val() && $( "#end_3" ).val()){
+                        var from = $('#start_3').val().split("/");
+                        var from2 = $('#end_3').val().split("/");
+                        if(date >= new Date(from[2], from[1] - 1, from[0]) && date <= new Date(from2[2], from2[1] - 1, from2[0])) return [false, ''];
+                    }
+                    return [true, ''];
+                },
+                dateFormat: 'dd/mm/yy'
+            });
+        }
+        if(id == 2){
+            ranges2 = no2_ranges;
+            $( "#start_"+id ).datepicker({
+                numberOfMonths: 1,
+                minDate: new Date(startDate),
+                maxDate: new Date(endDate),
+                beforeShowDay: function(date) {
+                    for(var i=0; i<ranges2.length; i++) {
+                        if(date >= new Date(ranges2[i].start_date) && date <= new Date(ranges2[i].end_date)) return [false, ''];
+                    }
+                    if($( "#start_1" ).val() && $( "#end_1" ).val()){
+                        var from = $('#start_1').val().split("/");
+                        var from2 = $('#end_1').val().split("/");
+                        if(date >= new Date(from[2], from[1] - 1, from[0]) && date <= new Date(from2[2], from2[1] - 1, from2[0])) return [false, ''];
+                    }
+                    if($( "#start_3" ).val() && $( "#end_3" ).val()){
+                        var from = $('#start_3').val().split("/");
+                        var from2 = $('#end_3').val().split("/");
+                        if(date >= new Date(from[2], from[1] - 1, from[0]) && date <= new Date(from2[2], from2[1] - 1, from2[0])) return [false, ''];
+                    }
+                    return [true, ''];
+                },
+                dateFormat: 'dd/mm/yy'
+            });
+        }
+        if(id == 3){
+            ranges3 = no3_ranges;
+            $( "#start_"+id ).datepicker({
+                numberOfMonths: 1,
+                beforeShowDay: function(date) {
+                    for(var i=0; i<ranges3.length; i++) {
+                        if(date >= new Date(ranges3[i].start_date) && date <= new Date(ranges3[i].end_date)) return [false, ''];
+                    }
+                    if($( "#start_1" ).val() && $( "#end_1" ).val()){
+                        var from = $('#start_1').val().split("/");
+                        var from2 = $('#end_1').val().split("/");
+                        if(date >= new Date(from[2], from[1] - 1, from[0]) && date <= new Date(from2[2], from2[1] - 1, from2[0])) return [false, ''];
+                    }
+                    if($( "#start_2" ).val() && $( "#end_2" ).val()){
+                        var from = $('#start_2').val().split("/");
+                        var from2 = $('#end_2').val().split("/");
+                        if(date >= new Date(from[2], from[1] - 1, from[0]) && date <= new Date(from2[2], from2[1] - 1, from2[0])) return [false, ''];
+                    }
+                    return [true, ''];
+                },
+                minDate: new Date(startDate),
+                maxDate: new Date(endDate),
+                dateFormat: 'dd/mm/yy'
+            });
+        }
+        if(id == 4){
+            ranges4 = no4_ranges;
+            $( "#start_"+id ).datepicker({
+                numberOfMonths: 1,
+                beforeShowDay: function(date) {
+                    for(var i=0; i<ranges4.length; i++) {
+                        if(date >= new Date(ranges4[i]) && date <= new Date(ranges4[i])) return [false, ''];
+                    }
+                    return [true, ''];
+                },
+                minDate: new Date(startDate),
+                maxDate: new Date(endDate),
+                dateFormat: 'dd/mm/yy'
+            });
+        }
+        if(id == 5){
+            ranges5 = no5_ranges;
+            $( "#start_"+id ).datepicker({
+                numberOfMonths: 1,
+                beforeShowDay: function(date) {
+                    for(var i=0; i<ranges5.length; i++) {
+                        if(date >= new Date(ranges5[i].start_date) && date <= new Date(ranges5[i].end_date)) return [false, ''];
+                    }
+                    return [true, ''];
+                },
+                minDate: new Date(startDate),
+                maxDate: new Date(endDate),
+                dateFormat: 'dd/mm/yy'
+            });
+        }
+
 
         duration = $('#day_'+id).val();
         service_name = $('#check_'+id).val();
@@ -3624,9 +3858,40 @@ function validateData(){
         });
     }
 
+    $("#clear_selection").click(function(){
+        $('.radio').addClass("focus");
+        $('.radio').children("span").removeClass("checked");
+        $('.radio').children("span").find("input").prop('checked', false);
+        $(".tel_start_date").each(function() {
+            $(this).val('');
+        });
+        $(".tel_end_date").each(function() {
+            $(this).val('');
+        });
+        $(".tel_dur").each(function() {
+            $('.tel_dur').html('').select2({data: {id:null, text: null}});
+            $('.tel_dur').prop("disabled", true);
+        });
+        total_amount = parseInt(total_amount) - parseInt(tel_amount_1);
+        total_amount = parseInt(total_amount) - parseInt(tel_amount_2);
+        total_amount = parseInt(total_amount) - parseInt(tel_amount_3);
+        total_amount = parseInt(total_amount) - parseInt(tel_amount_4);
+        total_amount = parseInt(total_amount) - parseInt(tel_amount_5);
+        total_amount = parseInt(total_amount) - parseInt(tel_amount_6);
+        $("#amount").val(parseFloat(total_amount).toFixed(2));
+        tel_amount_1 = 0;
+        tel_amount_2 = 0;
+        tel_amount_3 = 0;
+        tel_amount_4 = 0;
+        tel_amount_5 = 0;
+        tel_amount_6 = 0;
+    });
+
     function premium_startdate(id){
         var from = $('#start_'+id).val().split("/");
+        $('#end_'+id).val('');
         var date = new Date(from[2], from[1] - 1, from[0]);
+        var startDate = new Date(from[2], from[1] - 1, from[0]);
         days = parseInt($('#day_'+id).val(), 10) - 1;
         if(!isNaN(date.getTime())){
             date.setDate(date.getDate() + days);
@@ -3635,15 +3900,64 @@ function validateData(){
             var dd  = date.getDate().toString();
             newdate = (dd[1]?dd:"0"+dd[0]) + "/" + (mm[1]?mm:"0"+mm[0]) + "/"+ yyyy  ; // padding
             new_date = (mm[1]?mm:"0"+mm[0]) + "/" + (dd[1]?dd:"0"+dd[0]) + "/"+ yyyy  ; // padding
-            $("#end_"+id).val(newdate);
+
+            ranges = '';
+            if(id == '1'){
+                ranges = no1_ranges;
+            }
+            if(id == '2'){
+                ranges = no2_ranges;
+            }
+            if(id == '3'){
+                ranges = no3_ranges;
+            }
+            if(id == '4'){
+                ranges = no4_ranges;
+            }
+            if(id == '5'){
+                ranges = no5_ranges;
+            }
+            var date_flag = '0';
+            date_array = getDates(startDate, new Date(new_date));
+            if(id != '4'){
+                $.each(date_array, function (index, items) {
+                    $.each(ranges, function (index, item) {
+                        var from = new Date(item.start_date);
+                        var to   = new Date(item.end_date);
+                        var check = items;
+                        if(check > from && check < to){
+                            date_flag = '1';
+                        }
+                    });
+                });
+            }
+            else{
+                $.each(date_array, function (index, items) {
+                    $.each(ranges, function (index, item) {
+                        var from = new Date(item);
+                        var check = items;
+                        if(check.toDateString() === from.toDateString()){
+                            date_flag = '1';
+                        }
+                    });
+                });
+            }
+
+            if(date_flag == '1'){
+                $('#mismatch-days').css("display", "block");
+                $('#mismatch-days').text("Premium Service is not available for selected Date and Duration");
+                return false;
+            }
 
             var from = $('#dt2').val().split("/");
+
             if(new Date(from[2], from[1] - 1, from[0]) < new Date(new_date))
             {
                 $('#mismatch-days').css("display", "block");
                 $('#mismatch-days').text("Premium Service end date should be less than or equal to Duration end date ");
             }
             else{
+                $("#end_"+id).val(newdate);
                 var from = newdate.split("/");
                 var newdate = new Date(from[2], from[1] - 1, from[0]);
                 var from = $('#start_'+id).val().split("/");
@@ -3651,13 +3965,26 @@ function validateData(){
                 $('#mismatch-days').css("display", "none");
                 $('#mismatch-days').text("");
             }
+
         } else {
             alert("Invalid Date");
         }
     }
+
+    function getDates(startDate, stopDate) {
+        var dateArray = new Array();
+        var date = startDate;
+        var currentDate = startDate;
+        while (currentDate <= stopDate) {
+
+            //currentDate = currentDate.addDays(1);
+            currentDate = date.setDate(date.getDate() + 1);
+            dateArray.push( new Date (currentDate) );
+        }
+        return dateArray;
+    }
     
-            $("#save-service-detail ").click(function(e){
-        //e.preventDefault();
+    $("#save-service-detail ").click(function(e){
 
         valid_cat = validate_subscription("#sub_category","#sub_category_lebel","Please select Category");
         if(valid_cat == false){
@@ -3756,7 +4083,7 @@ function validateData(){
             }
             else if($("#end_"+id[1]).val() == ""){
                 $("#mismatch-days").css("display", "block");
-                msg = "Please add Start Date for "+$(this).val();
+                msg = $(this).val()+" is not available for selected Date and Duration";
                 $("#mismatch-days").text(msg);
                 flag = 1;
                 return false;
@@ -3905,7 +4232,7 @@ function validateData(){
 
             success: function (response) {
                 if(response.success=='true'){
-                	  
+                      
                     $("#subscriber-error-message").text(response.message);
                     $("#generated_amount").val($("#amount").val());
                     $("#sub_success").text(response.message);
@@ -3943,7 +4270,7 @@ function validateData(){
     });
     
 
-	 var final_q;
+     var final_q;
     function changeprice_edit()
     {
         var price=$("#generated_amount").val();
@@ -4103,37 +4430,37 @@ function validateData(){
         $('#save_payment_detail').click(function(event){
         event.preventDefault();
         if(check_data()){
-        	var formData= new FormData();
-        	
-        		   if($("#tax_type").val()==15)
-					{
-					selected_tax_type = 'Service Tax 15%' 	
-					}
-					else
-					{
-					selected_tax_type = 'VAT 4%' 		
-					}
+            var formData= new FormData();
+            
+                   if($("#tax_type").val()==15)
+                    {
+                    selected_tax_type = 'Service Tax 15%'   
+                    }
+                    else
+                    {
+                    selected_tax_type = 'VAT 4%'        
+                    }
         
-     				payment_mode = $("input[name='payment_mode']:checked").val()
-					formData.append("payment_mode",payment_mode);
+                    payment_mode = $("input[name='payment_mode']:checked").val()
+                    formData.append("payment_mode",payment_mode);
 
-					formData.append("generated_amount",$('#generated_amount').val());
-					formData.append("payable_amount",$('#payable_amount').val());
-			        formData.append("cheque_number",$('#cheque_number').val());
-			        formData.append("bank_branch_name",$('#bank_branch_name').val());
-			        formData.append("bank_name",$('#bank_name').val());
-					formData.append("paid_amount",$('#paid_amount').val());
-					formData.append("note",$('#note').val());
-					formData.append("selected_tax_type",selected_tax_type);
-        			formData.append("business_id",$("#business_id1").val());
+                    formData.append("generated_amount",$('#generated_amount').val());
+                    formData.append("payable_amount",$('#payable_amount').val());
+                    formData.append("cheque_number",$('#cheque_number').val());
+                    formData.append("bank_branch_name",$('#bank_branch_name').val());
+                    formData.append("bank_name",$('#bank_name').val());
+                    formData.append("paid_amount",$('#paid_amount').val());
+                    formData.append("note",$('#note').val());
+                    formData.append("selected_tax_type",selected_tax_type);
+                    formData.append("business_id",$("#business_id1").val());
         
             $.ajax({
                 type    : "POST",
                 url : '/register-supplier/',
-           		data : formData,
-					cache: false,
-		       	processData: false,
-		    		contentType: false,  
+                data : formData,
+                    cache: false,
+                processData: false,
+                    contentType: false,  
 
                 success: function (response) {
                     if(response.success=='true'){
@@ -4160,13 +4487,49 @@ function validateData(){
         }
     });
 
+                //------------------------------validation for float field -------------------//
+
+    function validateFloatKeyPress(el, evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        var number = el.value.split('.');
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+
+        if (number.length > 1 && charCode == 46) {
+            return false;
+        }
+
+        var caratPos = getSelectionStart(el);
+        var dotPos = el.value.indexOf(".");
+        if (caratPos > dotPos && dotPos > -1 && (number[1].length > 1)) {
+            if (charCode == 8)
+                return true;
+            else
+                return false;
+        }
+        return true;
+    }
+
+    //thanks: http://javascript.nwbox.com/cursor_position/
+    function getSelectionStart(o) {
+        if (o.createTextRange) {
+            var r = document.selection.createRange().duplicate()
+            r.moveEnd('character', o.value.length)
+            if (r.text == '') return o.value.length
+            return o.value.lastIndexOf(r.text)
+        } else return o.selectionStart
+    }
+
+    //-----------------------------------end-------------------------//
+
     
     /* End  */
     
     /* Save And Continue Payment */
 
 
-		
+        
 
 
 </script>

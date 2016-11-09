@@ -53,4 +53,3 @@ subscriber_urlpattern = patterns('',
      # url(r'^subscriber-dashboard/', 'subscriberapp.views.subscriber_dashboard',name='subscriber_dashboard'),
 
      ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

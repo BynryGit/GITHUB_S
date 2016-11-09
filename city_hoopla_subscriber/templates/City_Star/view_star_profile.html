@@ -6,7 +6,7 @@
 {% load staticfiles %}
 <head>
         <meta charset="utf-8" />
-        <title>City Hoopla | City Star </title>
+        <title>City Hoopla | City Star Profile </title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <meta content="" name="description" />
@@ -645,12 +645,12 @@ hr {
 <!-- BEGIN CONTAINER -->
 <!--<div class="page-container" style="background-color: #666;">-->
 <div class="page-container">
-
-	    <div class="page-sidebar-wrapper">
+<div class="page-sidebar-wrapper">
                 <div class="page-sidebar navbar-collapse collapse">
                     {% include 'Admin/side-panel.html' %}
                 </div>
             </div>
+
     <div class="page-content-wrapper">
         <div class="page-content">
             <div class="row">
@@ -695,6 +695,33 @@ hr {
 								 <i class="fa fa-share" aria-hidden="true"></i> {{shares}}	
 							</div> 			      	
 						</div>
+						<hr style="margin-right: 13px;margin-bottom: 3px;">
+						<div class="row" >
+							<div class="col-md-12">
+								{% if status == 'current' %}
+								<div class="col-md-12" style="color:green;font-size: 20px;">
+									<i class="fa fa-circle" aria-hidden="true"></i> <label style="color:black;font-size: 16px;">  Current</label>
+								</div>
+								{% elif status == 'default' %}
+								<div class="col-md-12" style="color:#009DFF;font-size: 20px;">
+									<i class="fa fa-circle" aria-hidden="true"></i> <label style="color:black;font-size: 16px;">  Default</label>
+								</div>
+								{% elif status == 'active' %}
+								<div class="col-md-12" style="color:yellow;font-size: 20px;">
+									<i class="fa fa-circle" aria-hidden="true"></i> <label style="color:black;font-size: 16px;">  Active</label>
+								</div>
+								{% elif status == 'deactivated' %}
+								<div class="col-md-12" style="color:red;font-size: 20px;">
+									<i class="fa fa-circle" aria-hidden="true"></i> <label style="color:black;font-size: 16px;">  Deactivated</label>
+								</div>
+								{% elif status == 'expired' %}
+								<div class="col-md-12" style="color:grey;font-size: 20px;">
+									<i class="fa fa-circle" aria-hidden="true"></i> <label style="color:black;font-size: 16px;">  Expired</label>
+								</div>	
+								{% endif %}									
+							</div>										
+						</div>
+						<hr style="margin-right: 13px;margin-top: 3px;">			
 				</div>
                <div class="col-lg-8 col-md-8" style="padding-left: 26px;padding-right: 10px;">
                    <div class="row div-border-top div-color">
@@ -702,23 +729,36 @@ hr {
                            <div class="form-group">
                                <label class="control-label " style="font-size:20px; ">
                                 <b>{{title}} {{name}}</b></label><br>
-                               <label>{{city}}{{country}}</label>
+                               <label>{{city_name}}</label>
                            </div>
                        </div>
 
                        <div class="col-md-12">
                            <div class="form-group">
+                           <label  style="font-size:15px;color:#8D8D8D; "> Summary </label><br>
                            <label class="control-label" style="font-size:15px;">{{summary}} </label>
                            </div>
                        </div>
 
                        <div class="col-lg-12 col-md-12">
                            <div class="form-group">
+                           	 <label  style="font-size:15px;color:#8D8D8D; "> About City Star </label><br>
                                <label class="control-label " style="font-size:15px; ">{{description}}</label>                             
                            </div>
                        </div>
                    </div>
+                 
+						{% if status == 'default' %}
 						<div class="row div-border-bottom1 div-color">
+                       <div class="col-lg-6 col-md-6">
+                           
+                       </div>
+                       <div class="col-lg-6 col-md-6">
+                           
+                       </div>
+                   </div>
+                   {% else %}
+                   <div class="row div-border-bottom1 div-color">
                        <div class="col-lg-6 col-md-6">
                            <div class="form-group">
                                <label  style="font-size:15px;color:#8D8D8D; "> Activation Date </label><br>
@@ -733,7 +773,7 @@ hr {
                            </div>
                        </div>
                    </div>
-                   
+                   {% endif %}
                    <div class="row div-border-bottom1 div-color">
                        <div class="col-lg-12 col-md-12">
                            <div class="form-group">
@@ -839,7 +879,7 @@ hr {
 <!-- /.modal -->
 <!-- BEGIN FOOTER -->
 <div class="page-footer">
-    <div class="page-footer-inner"> 2016 &copy; DigiSpace.
+    <div class="page-footer-inner"> 2016 &copy; DigiSpace Software Private Limited
     </div>
     <div class="scroll-to-top">
         <i class="icon-arrow-up"></i>

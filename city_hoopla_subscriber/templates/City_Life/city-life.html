@@ -8,7 +8,7 @@
     <head>
     <head>
     <meta charset="utf-8"/>
-    <title>City Hoopla | City Life </title>
+    <title>City Hoopla | Dashboard </title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
     <meta content="" name="description"/>
@@ -29,9 +29,9 @@
     <!-- END GLOBAL MANDATORY STYLES -->
     <!-- BEGIN PAGE LEVEL PLUGINS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.css" rel="stylesheet" type="text/css"/>
-	  <link href="{% static 'assets/global/plugins/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css"/>
-	  <link href="{% static 'assets/global/plugins/select2/css/select2-bootstrap.min.css' %}" rel="stylesheet"
-	        type="text/css"/>
+    <link href="{% static 'assets/global/plugins/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/global/plugins/select2/css/select2-bootstrap.min.css' %}" rel="stylesheet"
+          type="text/css"/>
     <!-- <link href="{% static 'assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css' %}" rel="stylesheet" type="text/css" /> -->
     <link href="{% static 'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.css' %}" rel="stylesheet"
           type="text/css"/>
@@ -327,7 +327,9 @@ hr {
     color: rgb(16, 245, 182) !important;
 }
 
-
+.sel2{
+    width: 100%;
+}
 
 .div-border-top{
     border: 1px solid #cccccc;
@@ -535,6 +537,9 @@ hr {
     width: 309px!important;
 }
 
+.sel2{
+    width: 100%;
+}
 </style>
 
     <!-- END HEAD -->
@@ -649,7 +654,7 @@ hr {
 						  		  </div>
 						       <div class="col-lg-3" id="citys" style="font-size: 12px;">
 										                       
-                                 <select   id="sel2" class="form-control"  onchange="change_data();" >
+                                 <select   class="form-control sel2"  onchange="change_data();" >
                                  
 													 <option   value="all" > Select Country</option>													 
 													 {% for country in country_list %}
@@ -774,17 +779,16 @@ hr {
   	    	 
   </div>                                  
 <!-- END CONTAINER -->
-<!-- BEGIN FOOTER -->
-    <div class="page-footer">
-        <div class="page-footer-inner"> 2016 © DigiSpace Software Private Limited
-            
-        </div>
-        <div class="scroll-to-top">
-            <i class="icon-arrow-up"></i>
-        </div>
-    </div>
-</div>
-<!-- END FOOTER -->
+  <!-- BEGIN FOOTER -->
+  <div class="page-footer">
+      <div class="page-footer-inner"> 2016 &copy; DigiSpace.
+          <a href="http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes" title="Purchase Metronic just for 27$ and get lifetime updates for free" target="_blank"></a>
+      </div>
+      <div class="scroll-to-top">
+          <i class="icon-arrow-up"></i>
+      </div>
+  </div>
+  <!-- END FOOTER -->
 
         <!-- BEGIN CORE PLUGINS -->
         <script src="{% static 'assets/global/plugins/jquery.min.js'%}" type="text/javascript"></script>
@@ -847,7 +851,6 @@ hr {
         <script src="{% static 'assets/global/plugins/highcharts/js/highcharts.js'%}" type="text/javascript"></script>
         <script src="{% static 'assets/global/plugins/highcharts/js/highcharts-3d.js'%}" type="text/javascript"></script>
         <script src="{% static 'assets/global/plugins/highcharts/js/highcharts-more.js'%}" type="text/javascript"></script>
-        <script src="{% static 'assets/pages/scripts/components-select2.min.js' %}" type="text/javascript"></script>
         <script src="{% static 'assets/global/plugins/select2/js/select2.full.min.js' %}" type="text/javascript"></script>
         <!-- END THEME LAYOUT SCRIPTS -->
         
@@ -857,9 +860,10 @@ $("#dashboard_anchor").addClass("tab-active");
 $("#dashboard_icon").addClass("icon-active");
 $("#dashboard_active").css("display","block");
 	
- $("#sel2").select2({
-     width: '100%'
- });
+$(".sel2").select2({
+            width: '100%'
+        })
+        
 	     		    
 function change_data(){
 

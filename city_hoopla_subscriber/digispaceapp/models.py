@@ -55,10 +55,19 @@ app_user = (
     ('guest', 'guest'),
 )
 
+city_star_status = (
+    ('current', 'current'),
+    ('default', 'default'),
+    ('expired', 'expired'),
+    ('active', 'active'),
+    ('deactivated', 'deactivated'),
+)
+
 USER_IMAGES_PATH ='images/user_images/' 
 COMPANY_LOGO_PATH ='images/user_images/' 
 CATEGORY_PATH ='images/user_images/'
 STAR_IMAGES_PATH ='images/user_images/'
+ADVERT_IMAGES_PATH ='images/advert_images/'
 
 class Operator(User):
     operator_id                        =       models.AutoField(primary_key=True, editable=False)
@@ -127,13 +136,12 @@ class City(models.Model):
     
 
 class City_Place(models.Model):
-    city_place_id         =       models.AutoField(primary_key=True, editable=False)
+    city_place_id   =       models.AutoField(primary_key=True, editable=False)
     city_id         =       models.ForeignKey(City,blank=True)
-    #city_name       =       models.CharField(max_length=100,null=True,blank=True)
-    country_id       =models.ForeignKey(Country,blank=True,null=True)
+    country_id      =       models.ForeignKey(Country,blank=True,null=True)
     state_id        =       models.ForeignKey(State,blank=True)
     currency        =       models.CharField(max_length=500,null=True,blank=True)
-    about_city      =       models.CharField(max_length=5000,null=True,blank=True)
+    about_city      =       models.CharField(max_length=50000,null=True,blank=True)
     city_image      =       models.FileField(upload_to=USER_IMAGES_PATH, max_length=500, null=True, blank=True)
     climate         =       models.CharField(max_length=500,null=True,blank=True)
     language        =       models.CharField(max_length=100,null=True,blank=True)
@@ -194,7 +202,7 @@ class Consumer_Feedback(models.Model):
 
 class Places(models.Model):
     place_id                    =           models.AutoField(primary_key=True)
-    place_name                  =           models.CharField(max_length=5000,default=None,blank=True,null=True)
+    place_name                  =           models.CharField(max_length=50000,default=None,blank=True,null=True)
     place_image                 =           models.FileField(upload_to=USER_IMAGES_PATH, max_length=500, null=True, blank=True)
     city_place_id               =           models.ForeignKey(City_Place,blank=True,null=True)
     place_type                  =           models.CharField(max_length=30,default=None,blank=True,null=True)
@@ -221,9 +229,9 @@ class Pincode(models.Model):
         return unicode(self.pincode)
 
 class UserRole(models.Model):
-    role_id             	=       models.AutoField(primary_key=True, editable=False)
-    role_name           	=       models.CharField(max_length=25)
-    role_status           	=       models.CharField(max_length=15,null=True,blank=True,default="1",choices=status)
+    role_id                 =       models.AutoField(primary_key=True, editable=False)
+    role_name               =       models.CharField(max_length=25)
+    role_status             =       models.CharField(max_length=15,null=True,blank=True,default="1",choices=status)
     role_created_date       =       models.DateTimeField(null=True,blank=True)
     role_created_by         =       models.CharField(max_length=30,null=True,blank=True)
     role_updated_by         =       models.CharField(max_length=30,null=True,blank= True)
@@ -345,8 +353,8 @@ class CategoryLevel5(models.Model):
     
 class PhoneCategory(models.Model):
     phone_category_id                 =       models.AutoField(primary_key=True, editable=False)
-    phone_category_name           	  =       models.CharField(max_length=15)
-    phone_category_status             =       models.CharField(max_length=15,null=True,blank=True,default="1",choices=status)
+    phone_category_name               =       models.CharField(max_length=15)
+    # phone_category_status             =       models.CharField(max_length=15,null=True,blank=True,default="1",choices=status)
     phone_category_created_date       =       models.DateTimeField(null=True,blank=True)
     phone_category_created_by         =       models.CharField(max_length=30,null=True,blank=True)
     phone_category_updated_by         =       models.CharField(max_length=30,null=True,blank= True)
@@ -418,6 +426,8 @@ class Advert(models.Model):
     currency                    = models.CharField(max_length=50,blank=True,null=True)
     # product_price               = models.CharField(max_length=50,blank=True,null=True)
     display_image               = models.FileField(upload_to=USER_IMAGES_PATH, max_length=500, null=True, blank=True)
+    advert_image               = models.FileField(upload_to=ADVERT_IMAGES_PATH, max_length=500, null=True, blank=True)
+    advert_slider_image         = models.FileField(upload_to=ADVERT_IMAGES_PATH, max_length=500, null=True, blank=True)
     address_line_1              = models.CharField(max_length=50,blank=True,null=True)
     address_line_2              = models.CharField(max_length=50,blank=True,null=True)
     state_id                    = models.ForeignKey(State,blank=True,null=True)
@@ -446,6 +456,8 @@ class Advert(models.Model):
     updation_date               = models.DateTimeField(null=True,blank=True)
     advert_views                = models.CharField(max_length=10,null=True,blank=True)
     keywords                    = models.CharField(max_length=1000, blank=True, null=True)
+    other_amenity                    = models.CharField(max_length=500,blank=True,null=True)
+    title                       =       models.CharField(blank=True,null=True,max_length=50,default=None)
     
     def __unicode__(self):
         return unicode(self.advert_id)
@@ -518,29 +530,19 @@ class Advert_Video(models.Model):
         return unicode(self.advert_video_id)
     
 
-class Amenities(models.Model):
-    amenity_id                 = models.AutoField(primary_key=True, editable=False)
-    advert_id                  = models.ForeignKey(Advert,blank=True,null=True)
-    amenity                    = models.CharField(max_length=50,blank=True,null=True) 
-    creation_date               = models.DateTimeField(null=True,blank=True)
-    created_by                  = models.CharField(max_length=500,null=True,blank=True)
-    updated_by                  = models.CharField(max_length=500,null=True,blank= True)
-    updation_date               = models.DateTimeField(null=True,blank=True)
-    
-    def __unicode__(self):
-        return unicode(self.amenity_id)
 
-class AdditionalAmenities(models.Model):
-    extra_amenity_id                 = models.AutoField(primary_key=True, editable=False)
-    advert_id                  = models.ForeignKey(Advert,related_name='add_ame',blank=True,null=True)
-    extra_amenity                    = models.CharField(max_length=50,blank=True,null=True) 
-    creation_date               = models.DateTimeField(null=True,blank=True)
-    created_by                  = models.CharField(max_length=500,null=True,blank=True)
-    updated_by                  = models.CharField(max_length=500,null=True,blank= True)
-    updation_date               = models.DateTimeField(null=True,blank=True)
+
+# class AdditionalAmenities(models.Model):
+#     extra_amenity_id                 = models.AutoField(primary_key=True, editable=False)
+#     advert_id                  = models.ForeignKey(Advert,related_name='add_ame',blank=True,null=True)
+#     extra_amenity                    = models.CharField(max_length=50,blank=True,null=True) 
+#     creation_date               = models.DateTimeField(null=True,blank=True)
+#     created_by                  = models.CharField(max_length=500,null=True,blank=True)
+#     updated_by                  = models.CharField(max_length=500,null=True,blank= True)
+#     updation_date               = models.DateTimeField(null=True,blank=True)
     
-    def __unicode__(self):
-        return unicode(self.extra_amenity_id)
+#     def __unicode__(self):
+#         return unicode(self.extra_amenity_id)
     
     
 class NearByAttraction(models.Model):
@@ -715,6 +717,37 @@ class Business(models.Model):
     def __unicode__(self):
         return unicode(self.business_id)
 
+class CategorywiseAmenity(models.Model):
+    categorywise_amenity_id = models.AutoField(primary_key=True, editable=False)
+    amenity    = models.CharField(max_length=50, blank=True, null=True)
+    category = models.ForeignKey(Category, blank=True, null=True)
+    category_level_1 = models.ForeignKey(CategoryLevel1, blank=True, null=True)
+    category_level_2 = models.ForeignKey(CategoryLevel2, blank=True, null=True)
+    category_level_3 = models.ForeignKey(CategoryLevel3, blank=True, null=True)
+    category_level_4 = models.ForeignKey(CategoryLevel4, blank=True, null=True)
+    category_level_5 = models.ForeignKey(CategoryLevel5, blank=True, null=True)
+    status                      = models.CharField(max_length=150, null=True, default="1", choices=status)
+    creation_date               = models.DateTimeField(null=True,blank=True)
+    created_by                  = models.CharField(max_length=500,null=True,blank=True)
+    updated_by                  = models.CharField(max_length=500,null=True,blank= True)
+    updation_date               = models.DateTimeField(null=True,blank=True)
+
+    def __unicode__(self):
+        return unicode(self.categorywise_amenity_id)
+
+
+class Amenities(models.Model):
+    amenity_id                 = models.AutoField(primary_key=True, editable=False)
+    advert_id                  = models.ForeignKey(Advert,blank=True,null=True)
+    categorywise_amenity_id    = models.ForeignKey(CategorywiseAmenity,blank=True,null=True)
+    creation_date               = models.DateTimeField(null=True,blank=True)
+    created_by                  = models.CharField(max_length=500,null=True,blank=True)
+    updated_by                  = models.CharField(max_length=500,null=True,blank= True)
+    updation_date               = models.DateTimeField(null=True,blank=True)
+    
+    def __unicode__(self):
+        return unicode(self.amenity_id)
+
 class PremiumService(models.Model):
     premium_service_id = models.AutoField(primary_key=True, editable=False)
     premium_service_name = models.CharField(max_length=30)
@@ -772,7 +805,7 @@ class PaymentDetail(models.Model):
     payable_amount         =       models.CharField(max_length=30,null=True,blank=True)
     total_amount         =       models.CharField(max_length=30,null=True,blank=True)
     tax_type             =       models.ForeignKey(Tax,null=True,blank=True)    
-    payment_created_date       =       models.DateTimeField(null=True,blank=True)
+    payment_created_date       =  models.DateTimeField(null=True,blank=True,default=django.utils.timezone.now)
     payment_created_by         =       models.CharField(max_length=30,null=True,blank=True)
     payment_updated_by         =       models.CharField(max_length=30,null=True,blank= True)
     payment_updated_date       =       models.DateTimeField(null=True,blank=True)
@@ -961,6 +994,7 @@ class CallerDetails(models.Model):
     first_name                      =       models.CharField(max_length=100,default=None,blank=True,null=True)
     last_name                      =       models.CharField(max_length=100,default=None,blank=True,null=True)
     IncomingTelNo                =       models.CharField(blank=True,null=True,max_length=200,default=None)
+    TelNo                =       models.CharField(blank=True,null=True,max_length=200,default=None)
     email                =       models.CharField(blank=True,null=True,max_length=200,default=None)
     CallerArea                  =       models.CharField(blank=True,null=True,max_length=100,default=None)
     CallerPincode                      =       models.ForeignKey(Pincode,blank=True,null=True)
@@ -1015,48 +1049,64 @@ class CallInfo(models.Model):
 #---------------------city star---------------
 
 class CityStarDetails(models.Model):
-    citystarID                        =       models.AutoField(primary_key=True, editable=False)
-    title                      =       models.CharField(max_length=10,default=None,blank=True,null=True)
-    name                      =       models.CharField(max_length=100,default=None,blank=True,null=True)
-    address1                =       models.CharField(blank=True,null=True,max_length=400,default=None)
-    address2                =       models.CharField(blank=True,null=True,max_length=400,default=None)    
-    phone                  =       models.CharField(blank=True,null=True,max_length=100,default=None)
-    email                  =       models.CharField(blank=True,null=True,max_length=100,default=None)
-    education                  =       models.CharField(blank=True,null=True,max_length=100,default=None)
-    age                  =       models.CharField(blank=True,null=True,max_length=100,default=None)
-    experience                  =       models.CharField(blank=True,null=True,max_length=100,default=None)
-    summary                  =       models.CharField(blank=True,null=True,max_length=1000,default=None)
-    occupation                  =       models.CharField(blank=True,null=True,max_length=200,default=None)
-    description                  =       models.CharField(blank=True,null=True,max_length=5000,default=None)
-    achievements                  =       models.CharField(blank=True,null=True,max_length=500,default=None)
+    citystarID = models.AutoField(primary_key=True, editable=False)
+    title = models.CharField(max_length=10, default=None, blank=True, null=True)
+    name = models.CharField(max_length=100, default=None, blank=True, null=True)
+    address1 = models.CharField(blank=True, null=True, max_length=400, default=None)
+    address2 = models.CharField(blank=True, null=True, max_length=400, default=None)
+    phone = models.CharField(blank=True, null=True, max_length=100, default=None)
+    email = models.CharField(blank=True, null=True, max_length=100, default=None)
+    education = models.CharField(blank=True, null=True, max_length=100, default=None)
+    age = models.CharField(blank=True, null=True, max_length=100, default=None)
+    experience = models.CharField(blank=True, null=True, max_length=100, default=None)
+    summary = models.CharField(blank=True, null=True, max_length=1000, default=None)
+    occupation = models.CharField(blank=True, null=True, max_length=200, default=None)
+    description = models.CharField(blank=True, null=True, max_length=5000, default=None)
+    achievements = models.CharField(blank=True, null=True, max_length=500, default=None)
     image = models.FileField(upload_to=STAR_IMAGES_PATH, max_length=500, null=True, blank=True)
-    achievements                  =       models.CharField(blank=True,null=True,max_length=500,default=None)
-    phone                  =       models.CharField(blank=True,null=True,max_length=100,default=None)                
-    city                      =       models.ForeignKey(City_Place,blank=True,null=True)
-    start_date              =       models.DateTimeField(null=True,blank=True)
-    end_date                =       models.DateTimeField(null=True,blank=True)
-    status                =       models.CharField(default="1",max_length=100,null=True,blank= True,choices=status)
-    likes                =       models.CharField(max_length=100,null=True,blank= True)
-    views                =       models.CharField(max_length=100,null=True,blank= True)
-    favourites                =       models.CharField(max_length=100,null=True,blank= True)
-    shares                =       models.CharField(max_length=100,null=True,blank= True)
-    favourites                =       models.CharField(max_length=100,null=True,blank= True)  
-    creation_date              =       models.DateTimeField(null=True,blank=True)
-    creation_by              =       models.CharField(max_length=100,null=True,blank= True)
+    city = models.ForeignKey(City_Place, blank=True, null=True)
+    start_date = models.DateTimeField(null=True, blank=True)
+    end_date = models.DateTimeField(null=True, blank=True)
+    status = models.CharField(default="active", max_length=100, null=True, blank=True, choices=city_star_status)
+    likes = models.CharField(max_length=100, null=True, blank=True)
+    views = models.CharField(max_length=100, null=True, blank=True)
+    shares = models.CharField(max_length=100, null=True, blank=True)
+    creation_date = models.DateTimeField(null=True, blank=True)
+    creation_by = models.CharField(max_length=100, null=True, blank=True)
+    updation_date = models.DateTimeField(null=True, blank=True)
+    updation_by = models.CharField(max_length=100, null=True, blank=True)
 
     def __unicode__(self):
         return unicode(self.citystarID)
 
+class CityStar_Like(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    user_id = models.ForeignKey(ConsumerProfile, blank=True, null=True)
+    citystarID = models.ForeignKey(CityStarDetails, blank=True, null=True)
+    creation_date = models.DateTimeField(null=True, blank=True)
+
+    def __unicode__(self):
+        return unicode(self.id)
+
+class CityStar_View(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    user_id = models.ForeignKey(ConsumerProfile, blank=True, null=True)
+    citystarID = models.ForeignKey(CityStarDetails, blank=True, null=True)
+    creation_date = models.DateTimeField(null=True, blank=True)
+
+    def __unicode__(self):
+        return unicode(self.id)
+
 
 class StarImage(models.Model):
-    star_image_id             = models.AutoField(primary_key=True, editable=False)
-    star_id                   = models.ForeignKey(CityStarDetails,blank=True,null=True)
-    star_image                = models.FileField(upload_to=STAR_IMAGES_PATH, max_length=500, null=True, blank=True)
-    creation_date               = models.DateTimeField(null=True,blank=True)
-    created_by                  = models.CharField(max_length=500,null=True,blank=True)
-    updated_by                  = models.CharField(max_length=500,null=True,blank= True)
-    updation_date               = models.DateTimeField(null=True,blank=True)
-    
+    star_image_id = models.AutoField(primary_key=True, editable=False)
+    star_id = models.ForeignKey(CityStarDetails, blank=True, null=True)
+    star_image = models.FileField(upload_to=STAR_IMAGES_PATH, max_length=500, null=True, blank=True)
+    creation_date = models.DateTimeField(null=True, blank=True)
+    created_by = models.CharField(max_length=500, null=True, blank=True)
+    updated_by = models.CharField(max_length=500, null=True, blank=True)
+    updation_date = models.DateTimeField(null=True, blank=True)
+
     def __unicode__(self):
         return unicode(self.star_image_id)
 

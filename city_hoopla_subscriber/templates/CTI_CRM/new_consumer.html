@@ -228,29 +228,40 @@ div.dataTables_filter label {
 																	<div class="row">
 																		<div class="col-sm-12">
 																			<div class="col-sm-3">
-																				<label class="control-label">First Name<span style="color:red;">*</span>	</label>
+																				<label class="control-label" style="font-size: 12px;">First Name<span style="color:red;">*</span>	</label>
 																				<input required placeholder ="First Name" name="fname" id="fname" type="text" pattern="[A-Za-z\s]+" class="form-control" />
 																			</div>
 																			<div class="col-sm-3">
-																				<label class="control-label">Last Name<span style="color:red;">*</span>	</label>
+																				<label class="control-label" style="font-size: 12px;">Last Name<span style="color:red;">*</span>	</label>
 																				<input required placeholder ="Last Name" name="lname" id="lname" type="text" pattern="[A-Za-z\s]+" class="form-control" />
 																			</div>
 																			<div class="col-sm-3">
-																				<label class="control-label">Phone Number<span style="color:red;">*</span></label>
-																				<input required placeholder ="Phone Number" value="{{number}}" id="mobile" type="text" class="form-control" name="mobile"/>
+																				<label class="control-label" style="font-size: 12px;">Called From Number<span style="color:red;">*</span></label>
+																				<input required placeholder ="Phone Number" value="{{number}}" id="mobile1" type="text" class="form-control" name="mobile"/>
 																			</div>
-																			<div class="col-sm-3">
+																			<div class="col-sm-3">																				
+																				<label class="control-label" style="font-size: 12px;">SMS To Number<span style="color:red;">*</span></label><br>																				
+																				<input required placeholder ="Phone Number"  id="mobile" type="text" class="form-control" name="mobile"/>
+																				<input type="checkbox" onclick="handleClick(this);" name="dstar" class="dstar" id="dstar" >
+																				<label class="control-label" style="font-size: 9px;">Use same as called number</label><br>	
+																			</div>
+																			<!-- <div class="col-sm-3">
 																				<label class="control-label">Email</label>
 																				<input placeholder ="Email" type="email" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"  name="email" id="email"/>
-																			</div>
+																			</div> -->
 																		</div>
 																	</div>
 																</div> 
+																<br>
 																<div class="form-group">
 																	<div class="row">
 																		<div class="col-sm-12">
 																			<div class="col-sm-3">
-																				<label class="control-label">City<span style="color:red;">*</span></label>	                                                            
+																				<label class="control-label" style="font-size: 12px;">Email</label>
+																				<input placeholder ="Email" type="email" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"  name="email" id="email"/>
+																			</div>
+																			<div class="col-sm-3">
+																				<label class="control-label" style="font-size: 12px;">City<span style="color:red;">*</span></label>	                                                            
 																				<select name="city" id="city" class="form-control sel2" required="">
 																					<option value="">Select City</option>
 																					{% for city in city_list %}	
@@ -259,9 +270,9 @@ div.dataTables_filter label {
 																				</select>
 																			</div>  	   				
 																			<div class="col-sm-3">
-																				<label class="control-label">Pincode<span style="color:red;">*</span></label>
+																				<label class="control-label" style="font-size: 12px;">Pincode</label>
 																				<input type="hidden" value="{{pincode}}" id="selectedPincode"/>
-																				<select name="pincode" id="pincode" class="form-control sel2" required="">
+																				<select name="pincode" id="pincode" class="form-control sel2" >
 																					<option value="">Select Pincode</option>
 																					{% for pincode in pincode_list %}	
 																					<option value="{{pincode.pincode_id}}"> {{pincode}}</option>		                  	                        
@@ -269,8 +280,8 @@ div.dataTables_filter label {
 																				</select>
 																			</div>	
 																			<div class="col-sm-3">
-																				<label class="control-label">Area<span style="color:red;">*</span></label>
-																				<input required id="area" type="text" placeholder="Area" class="form-control" name="area" />
+																				<label class="control-label" style="font-size: 12px;">Area</label>
+																				<input id="area" type="text" placeholder="Area" class="form-control" name="area" />
 																			</div>  		
 																		</div>  		
 																	</div>
@@ -301,7 +312,7 @@ div.dataTables_filter label {
 
   <!-- BEGIN FOOTER -->
   <div class="page-footer">
-      <div class="page-footer-inner"> 2016 &copy; DigiSpace.
+      <div class="page-footer-inner"> 2016 &copy; DigiSpace Software Private Limited
       </div>
       <div class="scroll-to-top">
           <i class="icon-arrow-up"></i>
@@ -326,6 +337,24 @@ div.dataTables_filter label {
 		</div>
 	</div>
  </div>      
+ 
+ <div style="overflow-y:hidden;" id="exists-modal" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+			</div>
+			<div class="modal-body">
+				<div class="form-body">
+					<h4 class="text-center"><span id="error-msg1"></span></h4>
+				</div>
+				<div style="text-align:center !important;" class="modal-footer">
+					<a  href="/CTI-CRM/crm_details/?number={{number}}" class="btn btn-primary" id="btn-loading-demo"> OK </a>	<!-- <input data-dismiss="modal" type="submit" value="OK" class="btn btn-primary" id="btn-loading-demo"> -->
+				</div>   
+			</div>          
+		</div>
+	</div>
+ </div> 
         
   <script src="{% static 'assets/global/plugins/jquery.min.js' %}" type="text/javascript"></script>
   <script src="{% static 'assets/global/plugins/bootstrap/js/bootstrap.min.js' %}" type="text/javascript"></script>
@@ -359,6 +388,21 @@ $("#city").change(function () {
 					getPincode();
 				});
 
+function handleClick(cb) {
+
+	if ($("#dstar").prop('checked') == true) {
+
+		mobile = $('#mobile1').val();
+		$('#mobile').val(mobile);
+		$('#mobile').attr("disabled", "disabled");
+	}
+	else {
+		$('#mobile').val('');
+		$('#mobile').removeAttr("disabled");
+	}
+}
+
+
 function getPincode(){
      city_id = $('#city :selected').val();
      if (city_id) {
@@ -387,13 +431,14 @@ function getPincode(){
 
 $("#save_btn").click(function(event)  {
 		event.preventDefault();  			
-		if ($('#fname').val() && $('#lname').val() && $('#mobile').val() && $('#city').val() && $('#pincode').val() && $('#area').val()) {
+		if ($('#fname').val() && $('#lname').val() && $('#mobile').val() && $('#mobile1').val() && $('#city').val() ) {
 			
 		   var formData= new FormData();
 			
 			formData.append("fname",$('#fname').val());
 			formData.append("lname",$('#lname').val());    
 			formData.append("mobile",$('#mobile').val());    
+			formData.append("mobile1",$('#mobile1').val());    
 			formData.append("email",$('#email').val());    
 			formData.append("city",$('#city').val());    
 			formData.append("pincode",$('#pincode').val());
@@ -407,8 +452,11 @@ $("#save_btn").click(function(event)  {
 			      processData: false,
 			    	contentType: false,                       
 	            success: function (response) {
-	            	 if(response.success=='exists'){	            	 
-			          	location.href="/CTI-CRM/crm_details/?number="+response.number			         
+	            	 if(response.success=='exists'){	    
+	            	 	$('#error-msg1').html('');
+							$('#error-msg1').append('Number already exists!');
+	            	 	$("#exists-modal").modal('show');         	 
+			          	//location.href="/CTI-CRM/crm_details/?number="+response.number			         
 			         }
 			         if(response.success=='true'){
 			         	location.href="/CTI-CRM/crm_details/?number1="+response.number1

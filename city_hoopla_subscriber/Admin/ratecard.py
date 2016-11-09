@@ -39,7 +39,7 @@ import urllib2
 
 # SERVER_URL = "http://192.168.0.180:9888"   
 
-SERVER_URL = "http://52.40.205.128"
+SERVER_URL = "http://52.66.169.65"
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -66,8 +66,9 @@ def edit_rate_card(request):
         cat_city_obj = CategoryCityMap.objects.filter(city_place_id=city_id)
         for objs in cat_city_obj:
             cat_obj = Category.objects.get(category_id=str(objs.category_id))
-            cat_data = {'cat_id': str(cat_obj.category_id), 'cat_name': cat_obj.category_name}
-            cat_list.append(cat_data)
+            if cat_obj.category_name != 'Ticket Resell':
+                cat_data = {'cat_id': str(cat_obj.category_id), 'cat_name': cat_obj.category_name}
+                cat_list.append(cat_data)
         rate_card_obj = RateCard.objects.filter(city_place_id=city_id, rate_card_status='1')
         if rate_card_obj:
             for rate_card in rate_card_obj:
@@ -279,8 +280,9 @@ def get_city_category_list(request):
         cat_city_obj = CategoryCityMap.objects.filter(city_place_id=request.GET.get('city_id'))
         for objs in cat_city_obj:
             cat_obj = Category.objects.get(category_id=str(objs.category_id))
-            cat_data = {'cat_id': str(cat_obj.category_id), 'cat_name': cat_obj.category_name}
-            cat_list.append(cat_data)
+            if cat_obj.category_name != 'Ticket Resell':
+                cat_data = {'cat_id': str(cat_obj.category_id), 'cat_name': cat_obj.category_name}
+                cat_list.append(cat_data)
         data = {
             'success': 'true',
             'message': "Service already exist",
@@ -347,8 +349,9 @@ def get_city_ratecard(request):
         cat_city_obj = CategoryCityMap.objects.filter(city_place_id=request.GET.get('city_id'))
         for objs in cat_city_obj:
             cat_obj = Category.objects.get(category_id=str(objs.category_id))
-            cat_data = {'cat_id': str(cat_obj.category_id), 'cat_name': cat_obj.category_name}
-            cat_list.append(cat_data)
+            if cat_obj.category_name != 'Ticket Resell':
+                cat_data = {'cat_id': str(cat_obj.category_id), 'cat_name': cat_obj.category_name}
+                cat_list.append(cat_data)
 
         if rate_card_obj:
             for rate_card in rate_card_obj:
@@ -988,7 +991,7 @@ def add_service_sms(card_obj):
 
     mobiles = "+919403884595"
     message = "Hi Admin,\n Service Rate Card has been added successfully"
-    sender = "DGSPCE"
+    sender = "CTHPLA"
     route = "4"
     country = "91"
     values = {
@@ -1072,7 +1075,7 @@ def delete_service_sms(card_obj):
 
     mobiles = "+919403884595"
     message = "Hi Admin,\n Service Rate Card has been deactivated successfully"
-    sender = "DGSPCE"
+    sender = "CTHPLA"
     route = "4"
     country = "91"
     values = {
@@ -1113,7 +1116,7 @@ def active_service(request):
 def rate_card_activate_mail(rate_card_obj):
     gmail_user = "cityhoopla2016"
     gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     try:
         TEXT = "Hi Admin,\nService Rate Card " + str(
@@ -1133,7 +1136,7 @@ def rate_card_activate_mail(rate_card_obj):
 def rate_card_add_mail(rate_card_obj):
     gmail_user = "cityhoopla2016"
     gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     try:
         TEXT = "Hi Admin,\nService Rate Card " + str(
@@ -1153,7 +1156,7 @@ def rate_card_add_mail(rate_card_obj):
 def rate_card_delete_mail(rate_card_obj):
     gmail_user = "cityhoopla2016"
     gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     # pdb.set_trace()
     try:
@@ -1215,7 +1218,7 @@ def add_premium_service_sms(card_obj):
 
     mobiles = "+919403884595"
     message = "Hi Admin,\n Premium Service Rate Card has been added successfully"
-    sender = "DGSPCE"
+    sender = "CTHPLA"
     route = "4"
     country = "91"
     values = {
@@ -1297,7 +1300,7 @@ def delete_premium_service_sms(card_obj):
 
     mobiles = "+919403884595"
     message = "Hi Admin,\n Premium Service Rate Card has been deactivated successfully"
-    sender = "DGSPCE"
+    sender = "CTHPLA"
     route = "4"
     country = "91"
     values = {
@@ -1321,7 +1324,7 @@ def delete_premium_service_sms(card_obj):
 def premium_rate_card_add_mail(rate_card_obj):
     gmail_user = "cityhoopla2016"
     gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     try:
         TEXT = "Hi Admin,\nPremium Service Rate Card " + str(
@@ -1341,7 +1344,7 @@ def premium_rate_card_add_mail(rate_card_obj):
 def premium_rate_card_delete_mail(rate_card_obj):
     gmail_user = "cityhoopla2016"
     gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     # pdb.set_trace()
     try:
@@ -1382,7 +1385,7 @@ def active_premium_service(request):
 def advert_rate_card_activate_mail(rate_card_obj):
     gmail_user = "cityhoopla2016"
     gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     try:
         TEXT = "Hi Admin,\nAdvert Rate Card " + str(
@@ -1512,7 +1515,7 @@ def update_service_sms(card_obj):
 
     mobiles = "+919403884595"
     message = "Hi Admin,\n Service Rate Card has been updated successfully"
-    sender = "DGSPCE"
+    sender = "CTHPLA"
     route = "4"
     country = "91"
     values = {
@@ -1536,7 +1539,7 @@ def update_service_sms(card_obj):
 def update_service_rate_card(rate_card_obj):
     gmail_user = "cityhoopla2016"
     gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     # pdb.set_trace()
     try:
@@ -1623,7 +1626,7 @@ def update_premium_service_sms(card_obj):
 
     mobiles = "+919403884595"
     message = "Hi Admin,\n Premium Service Rate Card has been updated successfully"
-    sender = "DGSPCE"
+    sender = "CTHPLA"
     route = "4"
     country = "91"
     values = {
@@ -1647,7 +1650,7 @@ def update_premium_service_sms(card_obj):
 def update_advert_rate_card(rate_card_obj):
     gmail_user = "cityhoopla2016"
     gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     # pdb.set_trace()
     try:

@@ -249,10 +249,20 @@ width: 100% !important;
     vertical-align: middle;
 }
 
-.done_btn1 {
+.done_btn {
     color: #FFF;
     border-radius: 20px !important;
-    background: transparent -moz-linear-gradient(left center , #0D67E6, #11CA9A) repeat scroll 0% 0% !important;
+    /*background: transparent -moz-linear-gradient(left center , #0D67E6, #11CA9A) repeat scroll 0% 0% !important;*/
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+    background: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    background: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    background: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    background: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
 }
 
 .grey_color{
@@ -811,7 +821,7 @@ width: 100% !important;
 </div>
 
 <div class="page-footer">
-    <div class="page-footer-inner"> 2016 &copy; DigiSpace.
+    <div class="page-footer-inner"> 2016 &copy; DigiSpace Software Private Limited
     </div>
     <div class="scroll-to-top">
         <i class="icon-arrow-up"></i>

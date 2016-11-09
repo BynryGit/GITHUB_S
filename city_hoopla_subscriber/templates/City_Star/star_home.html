@@ -49,11 +49,11 @@ License: You must have a valid license purchased only from themeforest(the above
 <style type="text/css">
 
 .has-success .control-label{
-	color : #333;
+  color : #333;
 }
 
 .has-success .form-control {
-	border: 1px solid #C2CAD8;
+  border: 1px solid #C2CAD8;
 }
 
 
@@ -75,19 +75,19 @@ License: You must have a valid license purchased only from themeforest(the above
 }
 
 #loading{
-	width: 36%;
-	height: 22px;
-	position: absolute;
-	top: 26%;
-	left: 32%;
-	margin: -28px 0px 0px -25px;
-	text-align: center;
-	font-size: 13px;
-	font-weight: 500;
-	color: #000;
+  width: 36%;
+  height: 22px;
+  position: absolute;
+  top: 26%;
+  left: 32%;
+  margin: -28px 0px 0px -25px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: #000;
 }
 
-		div.dataTables_wrapper div.dataTables_info {
+    div.dataTables_wrapper div.dataTables_info {
     padding-top: 8px;
     white-space: nowrap;
     display: none;
@@ -107,22 +107,22 @@ div.dataTables_filter label {
 }
 
 .custom-box{
-	width: 240px;
-	border-width: 0px 0px 0px;
-	border-style: solid;
-	border-color: #FFF;
-	-moz-border-top-colors: none;
-	-moz-border-right-colors: none;
-	-moz-border-bottom-colors: none;
-	-moz-border-left-colors: none;
-	border-image: none;
-	margin: 16px 13px 13px;
-	background-color: #FFF;
-	margin-left: 25px; 
-	margin-right: 0px; 
-	padding-left: 0px; 
-	padding-right: 0px;
-	height: 220px;
+  width: 240px;
+  border-width: 0px 0px 0px;
+  border-style: solid;
+  border-color: #FFF;
+  -moz-border-top-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  border-image: none;
+  margin: 16px 13px 13px;
+  background-color: #FFF;
+  margin-left: 25px; 
+  margin-right: 0px; 
+  padding-left: 0px; 
+  padding-right: 0px;
+  height: 220px;
 }
 
 .border_s{
@@ -132,7 +132,7 @@ div.dataTables_filter label {
 }
 
 .input-large{
-	width: 100% !important;
+  width: 100% !important;
 }
 .page-header.navbar .page-logo .logo-default {
     margin: 2px 0 0;
@@ -185,16 +185,16 @@ div.dataTables_filter label {
 }
 }
 
-	</style>
+  </style>
 
      <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
         <!-- BEGIN HEADER -->
                  <div id="processing" style="display:none;">
-				<div id="loading">
-					<img  src="{% static 'assets/loading-bars.gif' %}" style="height : 100px;">
-					
-				</div>	
-  			</div>
+        <div id="loading">
+          <img  src="{% static 'assets/loading-bars.gif' %}" style="height : 100px;">
+          
+        </div>  
+        </div>
         <div class="page-header navbar navbar-fixed-top">
             <div class="page-header-inner ">
                 <div class="page-logo">
@@ -242,106 +242,106 @@ div.dataTables_filter label {
             </div>
             <div class="page-content-wrapper">
                 <div class="page-content">
-                		<h3 class="page-title">City Star</h3>
+                    <h3 class="page-title">City Star</h3>
                    <div class="page-bar">
                         <ul class="page-breadcrumb">
-                        	<li>
-                           	Configure <i class="fa fa-angle-right"></i>  City Star                               
+                          <li>
+                            Configure <i class="fa fa-angle-right"></i>  City Star                               
                            </li>
                             <div class="col-md-offset-10" style="margin-top: -22px;">
-					 					<a style="padding: 2px 41px;" href="#" type="button" class="btn btn-outline green" >Add City Star</a>						 															
-			 						 </div>	
+                    <a style="padding: 2px 41px;" href="#" type="button" class="btn btn-outline green" >Add City Star</a>                                         
+                   </div> 
                         </ul>
                     </div>
 
 <div class="portlet-body form">
-	<div class="row">
-		<div class="col-lg-12">
-			<div class="portlet-body">
-				<div class="portlet light " id="form_wizard_1">
-					<div class="portlet-body form">
-						<form class="form-vertical" id="submit_form" enctype="multipart/form-data" method="POST">
-						{% csrf_token %}                                        
-							<div class="form-wizard">
-								<div class="form-body">                                                                                                
-									<div class="tab-content">
- 										<div class="tab-pane active" id="tab1">
- 											<div class="row">
-						                  <div class="col-md-1">                                               
-						                  	<b>City</b>                          
-						                 	</div>
-						         			<div class="col-md-3" style="margin-top: -7px;">                                                                 	                                       
-						                  	<input type="text" name="search1" id="search1" class="form-control" />
-						                  	<label id="error-demo" class="error" style="color:red;"></label>                   
-						             		</div>
-						             		<div class="col-md-1">                                                                 	                                       
-						                  	Filter By            
-						             		</div>
-						             		<div class="col-md-4" style="margin-top: -5px;">
-													<select name="city" id="city" class="form-control sel2" required="">
-						                  	<option value="">Select City</option>
-						                  		{% for city in city_list %}	
-						  			                   <option value="{{ city.city_id }}"> {{ city.city_name }}</option>
-								                  {% endfor %}
-						                  	</select>           		
-					             			</div>  						 	
-											</div>
-											<hr style="border-color: #DDD"> 																																												
-										
-										
-										</div>    
-									</div>
-  								</div>                                            
- 							</div>
-						</form>
-  					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="portlet-body">
+        <div class="portlet light " id="form_wizard_1">
+          <div class="portlet-body form">
+            <form class="form-vertical" id="submit_form" enctype="multipart/form-data" method="POST">
+            {% csrf_token %}                                        
+              <div class="form-wizard">
+                <div class="form-body">                                                                                                
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab1">
+                      <div class="row">
+                              <div class="col-md-1">                                               
+                                <b>City</b>                          
+                              </div>
+                          <div class="col-md-3" style="margin-top: -7px;">                                                                                                         
+                                <input type="text" name="search1" id="search1" class="form-control" />
+                                <label id="error-demo" class="error" style="color:red;"></label>                   
+                            </div>
+                            <div class="col-md-1">                                                                                                         
+                                Filter By            
+                            </div>
+                            <div class="col-md-4" style="margin-top: -5px;">
+                          <select name="city" id="city" class="form-control sel2" required="">
+                                <option value="">Select City</option>
+                                  {% for city in city_list %} 
+                                       <option value="{{ city.city_id }}"> {{ city.city_name }}</option>
+                                  {% endfor %}
+                                </select>               
+                            </div>                
+                      </div>
+                      <hr style="border-color: #DDD">                                                                                         
+                    
+                    
+                    </div>    
+                  </div>
+                  </div>                                            
+              </div>
+            </form>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
   <div class="col-md-4 custom-box">
-		<div class="row">
-			<div class="col-md-5">
-				<img src="{% static 'assets/layouts/layout2/img/City_Hoopla_Logo.png' %}" style="width:87px;height:65px;" alt="logo" class="logo-default"/>
-			</div> 		
-			<div class="col-md-5" style="padding-top: 9px; padding-left: 5px;">   
-	   		<label><b>Pune</b><br>				       									
-				India</label> 
-			</div>   
-			<div class="col-md-2" style="margin-left: -24px;margin-top: -2px;font-size: 30px;">   
-	   		<a><i class="fa fa-plus" aria-hidden="true"></i></a>
-			</div>      		
-		</div>		
-		<div class="row">
-			<div class="col-md-offset-1 col-md-8">
-				<b>Current City Star</b>
-			</div> 		
-			<div class="col-md-3" style="font-size: 23px; margin-top: -10px;">
-				<a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-			</div> 
-		</div>	
-		<div class="row">
-			<div class="col-md-3">
-				<img src="{% static 'assets/layouts/layout2/img/City_Hoopla_Logo.png' %}" style="width:55px;height:54px;" alt="logo" class="logo-default"/>
-			</div> 		
-			<div class="col-md-9" style="padding-top: 9px; padding-left: 5px;">   
-	   		<label>Dr. Sunil Joshi<br>				       									
-				He is th pionner of ayurvedic medicines for cancer patinets</label> 				
-			</div>   	
-		</div>	
-		<div class="row">
-			<div class="col-md-offset-2 col-md-3">
-				<i class="fa fa-eye" aria-hidden="true"></i> 50
-			</div> 
-			<div class="col-md-3">
-				 <i class="fa fa-thumbs-up" aria-hidden="true"></i> 65 
-			</div> 
-			<div class="col-md-3">
-				 <i class="fa fa-share" aria-hidden="true"></i> 31	
-			</div> 			      	
-		</div>
-	</div>
+    <div class="row">
+      <div class="col-md-5">
+        <img src="{% static 'assets/layouts/layout2/img/City_Hoopla_Logo.png' %}" style="width:87px;height:65px;" alt="logo" class="logo-default"/>
+      </div>    
+      <div class="col-md-5" style="padding-top: 9px; padding-left: 5px;">   
+        <label><b>Pune</b><br>                                
+        India</label> 
+      </div>   
+      <div class="col-md-2" style="margin-left: -24px;margin-top: -2px;font-size: 30px;">   
+        <a><i class="fa fa-plus" aria-hidden="true"></i></a>
+      </div>          
+    </div>    
+    <div class="row">
+      <div class="col-md-offset-1 col-md-8">
+        <b>Current City Star</b>
+      </div>    
+      <div class="col-md-3" style="font-size: 23px; margin-top: -10px;">
+        <a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
+      </div> 
+    </div>  
+    <div class="row">
+      <div class="col-md-3">
+        <img src="{% static 'assets/layouts/layout2/img/City_Hoopla_Logo.png' %}" style="width:55px;height:54px;" alt="logo" class="logo-default"/>
+      </div>    
+      <div class="col-md-9" style="padding-top: 9px; padding-left: 5px;">   
+        <label>Dr. Sunil Joshi<br>                                
+        He is th pionner of ayurvedic medicines for cancer patinets</label>         
+      </div>    
+    </div>  
+    <div class="row">
+      <div class="col-md-offset-2 col-md-3">
+        <i class="fa fa-eye" aria-hidden="true"></i> 50
+      </div> 
+      <div class="col-md-3">
+         <i class="fa fa-thumbs-up" aria-hidden="true"></i> 65 
+      </div> 
+      <div class="col-md-3">
+         <i class="fa fa-share" aria-hidden="true"></i> 31  
+      </div>              
+    </div>
+  </div>
  
 
             </div>
@@ -350,7 +350,7 @@ div.dataTables_filter label {
        </div> 
 
             
-      	<!-- /.modal -->
+        <!-- /.modal -->
         <!-- BEGIN FOOTER -->
         <div class="page-footer">
             <div class="page-footer-inner"> 2016 &copy; DigiSpace.
@@ -363,21 +363,21 @@ div.dataTables_filter label {
 
           
 <div style="overflow-y:hidden;" id="error-modal1" class="modal fade" role="dialog">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-	     		<img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+          <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
          </div>
          <div class="modal-body">
-	         <div class="form-body">
-   	         <h4 class="text-center"><span id="error-message1"></span></h4>
+           <div class="form-body">
+             <h4 class="text-center"><span id="error-message1"></span></h4>
             </div>
             <div style="text-align:center !important;" class="modal-footer">
-				   <input data-dismiss="modal" type="submit" value="OK" class="btn btn-primary" id="btn-loading-demo">
+           <input data-dismiss="modal" type="submit" value="OK" class="btn btn-primary" id="btn-loading-demo">
             </div>   
          </div>          
-		</div>
-	</div>
+    </div>
+  </div>
 </div>      
         <!-- END FOOTER -->
 
@@ -410,16 +410,16 @@ div.dataTables_filter label {
 $('.sel2').select2();
 
 
-	function get_enquiry_detail(id){
-		alert(id);
-		$.ajax({
-	      type : 'POST',
-	      url : '/CTI-CRM/get-enquiry-details/',
-	      data : {'keyword':text_value},
-	      success: function (response) {  
-		 			},
-		});
-	}
+  function get_enquiry_detail(id){
+    alert(id);
+    $.ajax({
+        type : 'POST',
+        url : '/CTI-CRM/get-enquiry-details/',
+        data : {'keyword':text_value},
+        success: function (response) {  
+          },
+    });
+  }
 </script>
 </body>
 </html>

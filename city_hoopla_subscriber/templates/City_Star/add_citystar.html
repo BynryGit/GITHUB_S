@@ -21,7 +21,7 @@ License: You must have a valid license purchased only from themeforest(the above
 {% load staticfiles %}
 <head>
         <meta charset="utf-8" />
-        <title>City Hoopla | Add Advert </title>
+        <title>City Hoopla | Add City Star </title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <meta content="" name="description" />
@@ -657,7 +657,7 @@ hr {
 </div>
 <div class="clearfix"></div>
 <div class="page-container">
-	 <div class="page-sidebar-wrapper">
+<div class="page-sidebar-wrapper">
                 <div class="page-sidebar navbar-collapse collapse">
                     {% include 'Admin/side-panel.html' %}
                 </div>
@@ -672,7 +672,8 @@ hr {
                                 <div class="col-lg-12">
                                 <div class="col-md-6" style="margin-top: 3px;">
 							                	<br>
-												<a href="/city-star/citystar_home/" class="brad-crum-1">City Star</a>  <i class="fa fa-angle-right"></i>  <span class="brad-crum-2">Add City Star</span>  </h4>			
+												<a href="/city-star/citystar_home/" class="brad-crum-1">City Star</a> <i class="fa fa-angle-right"></i> 
+													 <a href="/city-star/starhome/?city_id={{city_id}}" class="brad-crum-2">{{city_name}}</a>  <i class="fa fa-angle-right"></i>  <span style="font-size:16px;">Add City Star </span>  </h4>			
 											</div>    
                                     <!-- <a href="/city-star/starhome/" class="brad-crum-1">City Star</a>
                                     <i class="fa fa-angle-right"></i>
@@ -702,14 +703,17 @@ hr {
                                                     <div class="form-wizard">
                                                         <div class="form-body">
                <div class="col-lg-6 col-md-6" style="padding-left: 26px;padding-right: 10px;">
+						{% if default_obj == '0' %}
                    <div class="row">
                        <div class="col-lg-12 col-md-12">
                            <div class="form-group">
                            	<input type="hidden" id="c_id" value="{{city_id}}">
-                              <input type="checkbox" name="dstar" class="dstar" id="dstar" value="status_1"> Make this as default City star<br>
+                              <input type="checkbox" onclick="handleClick(this);" name="dstar" class="dstar" id="dstar" value="default"> Make this as default City Star<br>
                            </div>
                        </div>
                    </div>
+						{% endif %}                   
+                   
 
                    <div class="row div-border-top div-color">
                        <div class="col-md-12">
@@ -771,7 +775,7 @@ hr {
 						
                        <div class="col-lg-5 col-md-5" style="width: 44.667%;">
                             <label  style="font-size:15px; "> Activation Date<span style="color:red;"> * </span> </label>
-                            <input type="text" id="activate_date" name="activate_date" class="form-control date-picker"/></input>                                                              
+                            <input type="text" id="activate_date" name="activate_date" onchange="premium_startdate(this)" class="inputDisabled form-control date-picker"/></input>                                                              
 									 <label class="error12" style="color:red; display:none;"></label>	                           
                        </div>
                        <div class="col-lg-1 col-md-1" style="margin-top: 26px;font-size: 23px;margin-left: -22px;">
@@ -779,14 +783,20 @@ hr {
                        </div>
                        <div class="col-lg-5 col-md-5" style="width: 44.667%;">
                                <label  style="font-size:15px; "> Deactivation Date<span style="color:red;"> * </span> </label>
-                               <input type="text" id="deactivate_date" name="deactivate_date" class="form-control date-picker"/> </input>
+                               <input type="text" readonly="" id="deactivate_date" name="deactivate_date" class="form-control date-picker1"/> </input>
                                <label class="error11" style="color:red; display:none;"></label>
                        </div>
                        <div class="col-lg-1 col-md-1" style="margin-top: 26px;font-size: 23px;margin-left: -22px;">
                             <i class="fa fa-calendar" aria-hidden="true"></i>                                                              
                        </div>
-                       	                         
-                   </div>
+                       <div class="row">
+                       	<div class="col-md-12">
+                       		<div class="col-md-12">
+                       		<label class="error51" style="color:red; display:none;"></label>	 	                         
+                   		</div>
+                   		</div>
+                   		</div>
+                   	</div>
                    
                    <div class="row div-border-bottom1 div-color">
                        <div class="col-lg-12 col-md-12">
@@ -918,12 +928,22 @@ hr {
                         </div>
                     </div>
                 </div>
-                
+                <div class="row">
+                    <div class="col-lg-12 col-md-12" style="font-size:15px; font-weight:300;">
+                        Memory Usage
+                    </div>
+                    <div class="col-lg-7 col-md-7" style="padding-top: 5px; padding-right: 0px;">
+                        <progress style="background:lightgray" id="progress_bar" class="progress progress-striped progress-success" value="0" max="20"></progress>
+                    </div>
+                    <div class="col-lg-5 col-md-5 progress_count" style="font-size:15px; font-weight:300; padding-left: 0px;">
+                        0.00/20.00 MB
+                    </div>
+                </div>
                 <div class="row">
                     <div class="form-group col-lg-12 col-md-12">
                         <div class="dropzone"
                              style=" min-height: 70px; border-color: #e4e5e7 !important; "
-                             id="my-awesome-dropzone-3"><span class="txt_dropzone3" style="text-align: center; float: left;">Click or drag and drop to upload images</span></div>
+                             id="my-awesome-dropzone-3"><span class="txt_dropzone3" style="text-align: center; float: left;">Click or drag and drop to upload images and videos</span></div>
                         <input type="hidden"
                                class="form-control"
                                id="attachment"
@@ -962,7 +982,7 @@ hr {
 </div>
 
 <div class="page-footer">
-    <div class="page-footer-inner"> 2016 &copy; DigiSpace.
+    <div class="page-footer-inner"> 2016 &copy; DigiSpace Software Private Limited
     </div>
     <div class="scroll-to-top">
         <i class="icon-arrow-up"></i>
@@ -998,14 +1018,10 @@ hr {
 
 <div style="overflow-y:hidden;" id="error-modal" class="modal fade" role="dialog">
     <div class="modal-dialog">
-
-        <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-
                 <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;"
                      src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
-
             </div>
             <div class="modal-body">
                 <div class="form-body">
@@ -1014,14 +1030,31 @@ hr {
                 <div style="text-align:center !important;" class="modal-footer">
                     <a href="/advert-management/?subscriber_id={{supplier_id}}"
                            class="btn btn-primary" id="btn-loading-demo">OK</a>
-
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 
+<div style="overflow-y:hidden;" id="default-error" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;"
+                     src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+            </div>
+            <div class="modal-body">
+                <div class="form-body">
+                    <h4 class="text-center">Please uncheck the default city star checkbox ,there is already one default city star available.</h4>
+                </div>
+                <div style="text-align:center !important;" class="modal-footer">
+                    <input data-dismiss="modal" type="submit" value="OK"
+                           class="btn btn-primary" id="btn-loading-demo">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -1064,20 +1097,137 @@ hr {
         <script src="{% static 'assets/bootstrap-tagsinput.js' %}" type="text/javascript"></script>
         <script src="{% static 'assets/global/plugins/ion.rangeslider/js/ion.rangeSlider.min.js' %}" ></script>
 <script type="text/javascript">
-
+var sdate = $( ".date-picker" ).val(); 
 	 $( ".date-picker" ).datepicker({ 
  				minDate: 0,
  				dateFormat: 'dd/mm/yy'
  				
   	 });
-  	 
-  	 
+
+ /* 	 	 $( ".date-picker1" ).datepicker({ 
+  	 	 	
+ 			
+ 				minDate : 7,
+ 				dateFormat: 'dd/mm/yy'
+ 				
+  	 });
+*/
+var ranges;
+$( document ).ready(function() {
+		//c= $('#c_id').val();
+		//alert($('#c_id').val());
+        $.ajax({
+            type : "GET",
+            url : '/city-star/get_star_dates/',
+            data : {'city_id':"{{city_id}}"},
+            success: function (response) {
+                if(response.success=='true'){
+                    $( "#activate_date" ).datepicker( "destroy" );                
+                    ranges5 = response.date_list;
+                    //alert(range5);
+                    ranges = ranges5;
+                    $( "#activate_date" ).datepicker({
+                        numberOfMonths: 1,
+                        beforeShowDay: function(date) {
+                            for(var i=0; i<ranges5.length; i++) {
+                            if(date >= new Date(ranges5[i].start_date) && date <= new Date(ranges5[i].end_date)) 
+										//$( "#activate_date" ).datepicker( "destroy" );                            	
+                            	return [false, ''];
+                            }
+                            return [true, ''];
+                        },
+                        minDate: 0,
+                        dateFormat: 'dd/mm/yy'
+                    });
+                }
+            },
+            beforeSend: function () {
+                $("#processing").css('display','block');
+            },
+            complete: function () {
+                $("#processing").css('display','none');
+            },
+            error : function(response){
+                    alert("_Error");
+            }
+        });
+    });
+
+
+function premium_startdate(id){
+		  //	alert('in startdate');
+        var from = $('#activate_date').val().split("/");
+        var date = new Date(from[2], from[1] - 1, from[0]);
+        var startDate = new Date(from[2], from[1] - 1, from[0]);
+        days = 6;
+        if(!isNaN(date.getTime())){
+            date.setDate(date.getDate() + days);
+            var yyyy = date.getFullYear().toString();
+            var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+            var dd  = date.getDate().toString();
+            newdate = (dd[1]?dd:"0"+dd[0]) + "/" + (mm[1]?mm:"0"+mm[0]) + "/"+ yyyy  ; // padding
+            new_date = (mm[1]?mm:"0"+mm[0]) + "/" + (dd[1]?dd:"0"+dd[0]) + "/"+ yyyy  ; // padding
+            $("#deactivate_date").val(newdate);
+
+				//var startDate = $("#activate_date").val();
+				var date_flag = '0';
+            date_array = getDates(startDate, new Date(new_date));
+                $.each(date_array, function (index, items) {
+                    $.each(ranges, function (index, item) {
+                        var from = new Date(item.start_date);
+                        var to   = new Date(item.end_date);
+                        var check = items;
+                        if(check > from && check < to){
+                            date_flag = '1';
+                        }
+                        
+                        	//$('.error51').css("display", "none");
+                        
+                    });
+                });
+            
+
+            if(date_flag == '1'){
+                $('.error51').css("display", "block");
+                $('.error51').text("Date range already reserved for another City Star. Please select another date.");
+					 $('#deactivate_date').val('');	                
+                return false;
+            }
+				if(date_flag == '0'){
+                $('.error51').css("display", "none");
+            }
+            
+         
+        } else {
+            alert("Invalid Date");
+        }
+    }
+    
+
+function getDates(startDate, stopDate) {
+		//alert('in getdates');
+        var dateArray = new Array();
+        var date = startDate;
+        //alert('dates'+date);
+        var currentDate = startDate;
+        while (currentDate <= stopDate) {
+
+            //currentDate = currentDate.addDays(1);
+            currentDate = date.setDate(date.getDate() + 1);
+            dateArray.push( new Date (currentDate) );
+        }
+        return dateArray;
+    }
+
+
+
 
 	function myFunction(val) {
    var len = val.value.length;
 
    $('#length_cal').html('');
    $('#length_cal').append(len);
+
    }
 
 	function myFunction1(val) {
@@ -1085,9 +1235,12 @@ hr {
 
    $('#length_cal1').html('');
    $('#length_cal1').append(len);
+
    }
 
   //---------------------------------------------------------------
+	var uploaded_file_mb = 0;
+        var uploaded_file1_mb = 0;  	
   	Dropzone.options.myAwesomeDropzone3 = {
             autoProcessQueue: true,
             uploadMultiple: true,
@@ -1097,11 +1250,11 @@ hr {
             method: 'post',
             parallelUploads: 1,
             url: '/city-star/upload-star-image/',
-            dictDefaultMessage: "Drop or Browse up to 10 images (1MB or higher in size)",
+            dictDefaultMessage: "Drop or Browse up to 20 MB (1MB or higher in size)",
             addRemoveLinks: true,
-            acceptedFiles: ".jpeg,.jpg,.png,.gif,.JPEG,.JPG,.PNG,.GIF",
+            acceptedFiles: ".jpeg,.jpg,.png,.gif,.JPEG,.JPG,.PNG,.GIF,.avi,.webm,.flv,.mkv,.wmv,.mp4,.mp2,.3gp,.mpeg",
             dictInvalidFileType: 'This file type is not supported.',
-            dictMaxFilesExceeded: "You can not upload more than 10 images.",
+            dictMaxFilesExceeded: "You can not upload more than 20 MB.",
 
             init: function () {
                 var myDropzone = this;
@@ -1111,15 +1264,16 @@ hr {
                     return false;
                 });
 
-
+				
 
              /*   this.on("totaluploadprogress", function (file,progress,bytesSent) {
                     var alreadyUploadedTotalSize = getTotalPreviousUploadedFilesSize(bytesSent);
                 });*/
-
-	             this.on("totaluploadprogress", function (file,progress,bytesSent) {
+                                                                                                                                                                              
+	            
+                this.on("totaluploadprogress", function (file,progress,bytesSent) {
                     uploaded_file1_mb = parseInt(bytesSent)/(1024*1024);
-                    uploaded_file_mb = parseFloat(uploaded_file1_mb) + parseFloat(uploaded_file2_mb);
+                    uploaded_file_mb = parseFloat(uploaded_file1_mb) ;
                     $("#progress_bar").val(parseFloat(uploaded_file_mb));
                     if(uploaded_file_mb > 20){
                         $("#error-modal1").modal('show');
@@ -1129,6 +1283,7 @@ hr {
                     $(".progress_count").text(progrss_count);
                     var alreadyUploadedTotalSize = getTotalPreviousUploadedFilesSize(bytesSent);
                 });
+
 
 
                 this.on("addedfile", function(file, response){
@@ -1142,9 +1297,7 @@ hr {
                             }
                         }
                     }
-                    if (myDropzone.files.length > 10){
-                        this.removeFile(file);
-                    }
+                    
                     temp_image_files.push(file);
                 });
 
@@ -1190,7 +1343,7 @@ hr {
                     });
                     $('#attachments').val(reordered_array);
                     if (myDropzone.files.length == 0){
-                        $(".txt_dropzone3").text("Click or drag and drop to upload images");
+                        $(".txt_dropzone3").text("Click or drag and drop to upload images and videos");
                     }
                 });
 
@@ -1216,13 +1369,26 @@ hr {
         $("#short_discription").parent().children('.dis_count').text(text_count);
     });
    
-    $('html').bind('keypress', function(e)
+ /*   $('html').bind('keypress', function(e)
     {
        if(e.keyCode == 13)
        {
           return false;
        }
-    });
+    });*/
+
+function handleClick(cb) {
+		//alert('hi');
+	if ($("#dstar").prop('checked') == true) {
+		$('#activate_date').val('');
+		$('#deactivate_date').val('');
+		$('.inputDisabled').attr("disabled", "disabled");
+	}
+	else {
+		$('.inputDisabled').removeAttr("disabled");
+	}
+}
+
 
 	function validateData(){
 			//alert('in validation');
@@ -1238,10 +1404,11 @@ hr {
     }
 
     $("#save_advert").click(function(){
-    	var abc;
+			var city_id = {{city_id}};		
+    		var abc;
 			if($("#dstar").prop('checked') == true){
 			    //alert('hi checked');
-			    var abc = $("#dstar").val();
+			    var abc = $("#dstar").val();			   
 			    //alert(abc);
 			}
 			else {
@@ -1253,6 +1420,19 @@ hr {
 		 		//var dstar = document.getElementById("dstar").checked = true;
 		 		
 		 		//alert(dstar);
+		 		if($("#dstar").prop('checked') == true){
+		 			//alert('in alert');
+    				$('.error51').css("display", "none");
+			    	//return true;		   
+				}
+				progress_count = $(".progress_count").text();
+            progress_count = progress_count.split("/");
+            if(parseFloat(progress_count[0].trim()) > 20){
+                $("#error-modal1").modal('show');
+                $("#error-message1").text("Uploaded file size exceeds limit of 20 MB");
+                return false;
+            }		 		
+		 		
 	    		var formData= new FormData();
 				var check_image = 0;
 
@@ -1282,7 +1462,7 @@ hr {
 			formData.append("address2",$('#address2').val());
 			formData.append("phone",$('#phone').val());
 			formData.append("email",$('#email').val());
-			formData.append("city",$('#c_id').val());
+			formData.append("city",city_id);
 			formData.append("status",abc);
 			
 			
@@ -1296,10 +1476,21 @@ hr {
                 processData: false,
                 contentType: false,
                 success: function (response) {
+                	if(response.success=='default-false'){
+		        			$("#default-error").modal('show');
+		        		}
+		        		if(response.success=='true'){
+		        			location.href="/city-star/starhome/?city_id="+response.city_obj;
+		        		}
                     //alert(response.city_obj);
-                    location.href="/city-star/starhome/?city_id="+response.city_obj;
+                    //location.href="/city-star/starhome/?city_id="+response.city_obj;
                 },
-                
+                beforeSend: function () {
+                    $("#processing").css('display','block');
+                },
+                complete: function () {
+                $("#processing").css('display','none');
+                },
                 error : function(response){
                 alert("_Error");
                 }
@@ -1351,6 +1542,7 @@ hr {
 	        if(namePattern.test(Email)){
 	            return true;
 	        }else if(Email==""){
+	        		 $('.error14').css("display", "none");
 	            return true;
 	        }
 	        else {
@@ -1361,12 +1553,13 @@ hr {
 	    }
 
     function checkPhone(phone){
-        var phoneNumberPattern = /^[789]\d{9}$/;
+        var phoneNumberPattern = /(7|8|9)\d{9}/;
         contact_number = $(phone).val()
         if (contact_number == ""){
             return true;
         }
         else if(phoneNumberPattern.test(contact_number)){
+        		 $('.error15').css("display", "none");
             return true;
         }else{
            $('.error15').css("display", "block");
@@ -1376,7 +1569,10 @@ hr {
     }
 
 	    function checkActdate(activate_date){
-        
+        if($("#dstar").prop('checked') == true){
+        	//$('.error12').css("display", "none");  
+			    return true;		   
+			}
         activate_date = $(activate_date).val()
         if(activate_date != ""){
             $('.error12').css("display", "none");  
@@ -1384,7 +1580,7 @@ hr {
         }
        else{
             $('.error12').css("display", "block");
-            $('.error12').text("Please Select Activate Date");
+            $('.error12').text("Please Select Activation Date");
             return false;
         }
         
@@ -1392,19 +1588,34 @@ hr {
     }
     
     function checkDactDate(deactivate_date){
+    	if($("#dstar").prop('checked') == true){
+    			//$('.error11').css("display", "none");
+			    return true;		   
+			}
+        activate_date = $(activate_date).val();
+        deactivate_date = $(deactivate_date).val();
         
-        deactivate_date = $(deactivate_date).val()
+        if(activate_date != "" && deactivate_date == ""){
+            $('.error11').css("display", "none");
+            //$('.error11').text("Please Select Deactivation Date");
+            return false;
+        }
+        
+       /* if(deactivate_date == ""){
+            $('.error11').css("display", "block");
+            $('.error11').text("Please Select Deactivation Date");
+            return false;
+        }*/
+        
         if(deactivate_date != ""){
             $('.error11').css("display", "none");  
                 return true;           
         }
         else{
             $('.error11').css("display", "block");
-            $('.error11').text("Please Select Deactivate Date");
+            //$('.error11').text("Please Select Deactivate Date");
             return false;
-        }
-        
-        return true;
+        }        
     }
 	
 	function checkImage(display_image){
@@ -1425,20 +1636,24 @@ hr {
 	
 	
     function checkName(contact_name){
-        var namePattern = /^[a-zA-Z\s]+$/;
+        //var namePattern = /^[a-zA-Z\s]+$/;
         first_name = $(contact_name).val()
         if (first_name == ""){
             $(contact_name).parent().children('.error').css("display", "block");
             $(contact_name).parent().children('.error').text("Please Enter Name");
             return false;
         }
-        else if(namePattern.test(first_name)){
+        /*else if(namePattern.test(first_name)){
             $(contact_name).parent().children('.error').css("display", "none");
             return true;
-        }else{
+        }
+        else{
             $(contact_name).parent().children('.error').css("display", "block");
             $(contact_name).parent().children('.error').text("Please Enter Valid Name");
             return false;
+        }*/
+        else{
+            return true;
         }
     }
 

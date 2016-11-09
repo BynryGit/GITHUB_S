@@ -923,12 +923,12 @@ hr {
                                                     <div class="row" >
                                   								<div class="col-xs-6" style="font-size:16px;" >
                                                          <p> 
-                                                         <span> <b> Mobile Number</b> <br>{{phone_no}}  </span>
+                                                         <span> <b> Mobile Number</b> <br>{{phone_no1}}  </span>
                                                          </p> 
                                                      </div>
                                                      <div class="col-xs-6" style="font-size:16px;" >
                                                          <p> 
-                                                         <span>   <b>  Secondary Number </b> <br>{{secondary_phone_no}} </span>
+                                                         <span>   <b>  Landline Number </b> <br>{{secondary_phone_no1}} </span>
                                                          </p> 
                                                      </div> 
                                                      </div>
@@ -943,18 +943,11 @@ hr {
                                                       <div class="row" >
                                   								<div class="col-xs-12" style="font-size:16px;" >
                                                          <p> 
-                                                         <span>  <b>Primary Email</b>  <br> {{supplier_email}} </span>
+                                                         <span>  <b>Email</b>  <br> {{supplier_email1}} </span>
                                                          </p> 
                                                         </div> 
                                                      </div>
                                                      
-                                                      <div class="row" >
-                                                        <div class="col-xs-12" style="font-size:16px;" >
-                                                         <p> 
-                                                         <span>  <b>Secondary Email</b>  <br> {{secondary_email}} </span>
-                                                         </p> 
-                                                        </div> 
-                                                     </div>
                                                      
                                                     
                                                     {% if address2 != ''  %}
@@ -1206,35 +1199,27 @@ hr {
                                                   <div class="row">
                                                     	<div class="col-xs-6">
                                                          <label style="font-size: 16px;" class="control-label"> <br>Mobile Number
-                                                             <span class="required"> * </span>
                                                          </label>
                                                           <input style="" value="{{phone_no}}" id="phone_no" maxlength="10" class="form-control" onkeypress="return validateIntKeyPress(this,event);"  />
                                                     		<label class="error" style="color:red; display:none;"></label>                                                          	
                                                     	</div>
                                                  	
                                                     	<div class="col-xs-6">
-                                                         <label style="  font-style: normal; font-size: 16px;" class="control-label"> <br>Secondary Number
+                                                         <label style="  font-style: normal; font-size: 16px;" class="control-label"> <br>Landline Number
                                                          </label>
-                                                          <input style="" value="{{secondary_phone_no}}" id="sec_phone_no" maxlength="10" class="form-control" onkeypress="return validateIntKeyPress(this,event);"  />
+                                                          <input style="" value="{{secondary_phone_no}}" id="sec_phone_no" maxlength="11" class="form-control" onkeypress="return validateIntKeyPress(this,event);"  />
                                                     		<label class="error" style="color:red; display:none;"></label>                                                          	
                                                     	</div>
                                                   </div>
                                                     
                                                   <div class="row">	
                                                       <div class="col-xs-6">
-                                                      <label style="  font-size: 16px;" class="control-label"> <br>Primary Email 
-                                                          <span class="required"> * </span>
+                                                      <label style="  font-size: 16px;" class="control-label"> <br>Email 
                                                       </label>
                                                           <input style="" value="{{supplier_email}}" type="text" id="pri_email" class="form-control"  />  
                                                     		<label class="error" style="color:red; display:none;"></label>                                                          	                                                            
                                                       </div>
-                                                    
-                                                       <div class="col-xs-6" style="margin-top: 21px ! important;">
-                                                      <label style="  font-style: normal; font-size: 16px;" class="control-label"> Secondary Email 
-                                                      </label>
-                                                          <input style="	" value="{{secondary_email}}" type="text" id="sec_email" class="form-control" />  
-                                                    		<label class="error" style="color:red; display:none;"></label>                                                          	                                                            
-                                                      </div>
+                                                   
                                                   </div>
                                                     
                                                   <div class="row"> 
@@ -1352,7 +1337,7 @@ hr {
  																				
  																<div class="row">
  																				 <div class="col-xs-6" >
- 																				 		<label style="font-size: 16px;" class="control-label"><br>Contact No
+ 																				 		<label style="font-size: 16px;" class="control-label"><br>Mobile Number
                                                           <span class="required"> * </span>
                                                       </label>
                                                           <input style="" value="{{contact_no}}" type="text" maxlength="10" id="user_contact_no" class="form-control" onkeypress="return validateIntKeyPress(this,event);" name="contact_no" />
@@ -1367,8 +1352,43 @@ hr {
  																		 <label class="error" style="color:red; display:none;"></label>                                                                                                                 				 
  																	</div>
  																</div>
- 																		
-                                                </div> 	
+ 																
+ 																<div class="row">
+ 																	<div class="col-xs-12">
+ 																	 <label style="font-size: 16px;" class="control-label"> <br> <b>CityHoopla Sales Partner </b></label>
+ 																	</div>
+ 																</div>
+ 																
+ 															<div class="row">	
+ 																<div class="col-xs-12">
+                                                   <div class="form-group">
+                                                       <label class="control-label " style="font-size:15px; ">Name
+                                                           <span class="required"> * </span>
+                                                       </label>
+                                                          <select class="form-control sel2 select2-hidden-accessible"
+                                                              disabled
+                                                               id="sale_person_name"
+                                                               name="user_name">
+
+                               											{% for sale in sales_person_list %}
+                                                               {% if sale.sales_person_id == sales_person_name %}
+                                                                       <option value="{{ sale.sales_person_id  }}" selected>
+                                                                               {{sale.sales_person_name  }}
+                                                                       </option>
+                                                                       {% else %}
+                                                                       <option value="{{ sale.sales_person_id  }}" >
+                                                                               {{sale.sales_person_name  }}
+                                                                       </option>
+                                                                       {% endif %}
+                                                                 {% endfor %}
+
+                                                       </select>
+                                                       <label class="error"
+                                                              style="color:red; display:none;"></label>
+                                                   </div>
+                                               </div>
+                                               </div>
+                                               </div> 	
                                              </div>  
                                              <hr style="width: 643px; margin-left: -226px;">
                                              <div class="row">
@@ -1674,7 +1694,7 @@ $(document).ready(function(){
 
 function validateData(){
 
-	if(checkLogo("#logo")&checkBusinessName("#business_name")&checkNumber("#phone_no")&checkSecNumber("#sec_phone_no")&checkEmail("#pri_email")&checkSecEmail("#sec_email")&checkaddress("#address1")&checkcountry("#country")&checkState("#state")&checkCity("#city")&checkPincode("#pincode")&checkBusiness('#business')&checkUserName('#user_name')&checkUserEmail('#user_email')&checkUserContactNo('#user_contact_no')){
+	if(checkLogo("#logo")&checkBusinessName("#business_name")&checkNumber("#phone_no")&checkSecNumber("#sec_phone_no")&checkEmail("#pri_email")&checkaddress("#address1")&checkcountry("#country")&checkState("#state")&checkCity("#city")&checkPincode("#pincode")&checkBusiness('#business')&checkUserName('#user_name')&checkUserEmail('#user_email')&checkUserContactNo('#user_contact_no')){
 		return true;	
 	}
 	return false;
@@ -1733,7 +1753,10 @@ $("#save-continue").click(function(event)  {
 	              	}
 	      			if (response.success == "false") {
 							$("#error-modal").modal('show');                    
-	       			}							                        		                      		                       		
+	       			}				
+	       			if (response.success == "Expired") {
+							location.href = '/subscriber-portal/'
+	       			}				                        		                      		                       		
                },
                	beforeSend: function () {
             $("#processing").css('display','block');
@@ -1751,6 +1774,10 @@ $("#save-continue").click(function(event)  {
 
 function getState() {
 			
+
+    	  //$("#state").select2('destroy'); 
+    	 // $('#state').select2('data', null);
+
         country_id = $('#country :selected').val();
         //alert(country_id);
         if (country_id) {
@@ -1860,64 +1887,54 @@ function checkBusinessName(business_name){
    }
 }
 
-function checkNumber(phone_no){
-	phoneno = $(phone_no).val()     
-   var phoneNumberPattern = /^[789]\d{9}$/;  
-   if(phoneNumberPattern.test(phoneno)){
- 	$(phone_no).parent().children('.error').css("display", "none");
+    function checkNumber(phone_no){
+    phoneno = $(phone_no).val()     
+   var phoneNumberPattern = /^[789]\d{9}$/; 
+      if(phoneno == ""){
+       $(phone_no).parent().children('.error').css("display", "none");
+   return true;
+   } 
+   else if(phoneNumberPattern.test(phoneno)){
+    $(phone_no).parent().children('.error').css("display", "none");
    return true;
    }else{
     $(phone_no).parent().children('.error').css("display", "block");
-    $(phone_no).parent().children('.error').text("Please enter valid Phone No");
+    $(phone_no).parent().children('.error').text("Please enter valid Mobile Number");
    return false; 
    }
 }
 
 function checkSecNumber(sec_phone_no){
-	phoneno = $(sec_phone_no).val()     
-   var phoneNumberPattern = /^[789]\d{9}$/; 
+    phoneno = $(sec_phone_no).val()     
+   var phoneNumberPattern = /^[0]\d{10,11}$/; 
   if(phoneno=='')
-	{
-	return true;	
-	} 
+    {
+    return true;    
+    } 
    else if(phoneNumberPattern.test(phoneno)){
- 	$(sec_phone_no).parent().children('.error').css("display", "none");
+    $(sec_phone_no).parent().children('.error').css("display", "none");
    return true;
    }else{
     $(sec_phone_no).parent().children('.error').css("display", "block");
-    $(sec_phone_no).parent().children('.error').text("Please enter valid Phone No");
+    $(sec_phone_no).parent().children('.error').text("Please enter valid Landline Number");
    return false; 
    }
 }
 
+
 function checkEmail(pri_email){
-	Email = $(pri_email).val()
+    Email = $(pri_email).val()
    var namePattern = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;  
- 
-   if(namePattern.test(Email)){
-   
-      $(pri_email).parent().children('.error').css("display", "none");
-      return true;
-   }else{
- 	$(pri_email).parent().children('.error').css("display", "block");
-   $(pri_email).parent().children('.error').text("Please enter valid Email");
-   return false; 
-   }
-}
-	
-function checkSecEmail(sec_email){
-	Email = $(sec_email).val()
-   var namePattern = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;  
- 	 if(Email=='')
-	{
-	return true;	
-	} 
+     if(Email=='')
+    {
+    return true;    
+    } 
    else if(namePattern.test(Email)){
-      $(sec_email).parent().children('.error').css("display", "none");
+      $(pri_email).parent().children('.error').css("display", "none");
    return true;
    }else{
- 	$(sec_email).parent().children('.error').css("display", "block");
-   $(sec_email).parent().children('.error').text("Please enter valid Email");
+    $(pri_email).parent().children('.error').css("display", "block");
+   $(pri_email).parent().children('.error').text("Please enter valid Email");
    return false; 
    }
 }
@@ -2061,7 +2078,7 @@ function checkUserContactNo(user_contact_no){
    }else{
 
     $(user_contact_no).parent().children('.error').css("display", "block");
-    $(user_contact_no).parent().children('.error').text("Please enter valid Contact No");
+    $(user_contact_no).parent().children('.error').text("Please enter valid Mobile Number");
    return false; 
    }
 }

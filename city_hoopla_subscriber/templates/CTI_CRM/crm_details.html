@@ -297,17 +297,23 @@ div.dataTables_filter label {
 																					<label class="control-label">Last Name	<br><b style="color:#5A5A5A;font-weight: 600;"> {{last_name}} </label>
 																		 		</div>
 																			 	<div class="col-sm-3">
-																 					<label class="control-label">Phone Number <br><b style="color: #5A5A5A;font-weight: 600;"> {{phone_number}}</label>						
+																 					<label class="control-label">Called From Number<br><b style="color: #5A5A5A;font-weight: 600;"> {{phone_number}}</label>						
 																				</div>
 																				<div class="col-sm-3">
+																 					<label class="control-label">SMS To Number<br><b style="color: #5A5A5A;font-weight: 600;"> {{telno}}</label>						
+																				</div>
+																				<!-- <div class="col-sm-3">
 																 					<label class="control-label">Email <br><b style="color: #5A5A5A;font-weight: 600;"> {{email}}</label>						
-																				</div>	
+																				</div> -->	
 																	  		</div>
 																  		</div>
 															 		</div> 
 															 		<div class="form-group">
 															  			<div class="row">
-																  			<div class="col-sm-12">  			
+																  			<div class="col-sm-12">
+																  				<div class="col-sm-3">
+																 					<label class="control-label">Email <br><b style="color: #5A5A5A;font-weight: 600;"> {{email}}</label>						
+																				</div>  			
 																  				<div class="col-sm-3">
 																 					<label class="control-label">Area <br><b style="color: #5A5A5A;font-weight: 600;"> {{area}}</label>	                                                            
 																			 	</div>	
@@ -369,21 +375,21 @@ div.dataTables_filter label {
 																			</div>	
 																		</div>
 																		<div class="row">
-																          <div class="col-sm-3">
+																          <div class="col-sm-4">
 																              <div class="form-group">                                                       
 																                  <label class="control-label ">Searching For<span style="color:red;">*</span></label>                                                
 																                  <input type="text" required name="search1" id="search1" class="form-control csf"/>
 																                  <label id="error-demo" class="error" style="color:red;"></label>                   
 																              </div>
 																          </div>
-																          <div class="col-sm-3">
+																          <div class="col-sm-4">
 																              <div class="form-group" >                                                       
 																                  <label class="control-label ">Area<span style="color:red;">*</span></label>                                                
 																                  <input type="text" required name="area" id="area" class="adb form-control asf" />
 																                  <label id="error-demo" class="error1" style="color:red;"></label>                                                 
 																              </div>
 																          </div>
-																          <div class="col-sm-3">
+																          <div class="col-sm-4">
 																              <div class="form-group" >                                                       
 																                  <label class="control-label ">City<span style="color:red;">*</span></label> <br>                                             
 																                  <select name="city" id="city" style="width:90%" class="csf sel2" required="">
@@ -396,7 +402,7 @@ div.dataTables_filter label {
 																                  <label id="error-demo" class="error2" style="color:red;"></label>                                                    
 																              </div>
 																          </div>
-																          <div class="col-sm-3">
+																          <!-- <div class="col-sm-3">
 																              <div class="form-group" >                                                       
 																                  <label class="control-label ">Category<span style="color:red;">*</span></label>  <br>                                             
 																                  <select name="cat" id="cat" style="width:100%" class="csf sel2" required="">
@@ -408,7 +414,50 @@ div.dataTables_filter label {
 																                  </select>
 																                  <label id="error-demo" class="error3" style="color:red;"></label>                                                     
 																              </div>
-																          </div>																	         
+																          </div> -->		
+																          	
+																          												         
+																	   </div>
+																	   <div class="row">
+																          <div class="col-sm-4">
+																              <div class="form-group" >                                                       
+																                  <label class="control-label ">Category<span style="color:red;">*</span></label>  <br>                                             
+																                  <select name="cat" id="cat" style="width:100%" class="csf sel2" required="">
+																                  	<option value="">Select Category</option>
+																                  	<option value="all"> All</option>
+																                  		{% for cat in category_list %}	
+																  			                   <option value="{{ cat.category_id }}"> {{ cat.category_name }}</option>
+																		                  {% endfor %}
+																                  </select>
+																                  <label id="error-demo" class="error3" style="color:red;"></label>                                                     
+																              </div>
+																          </div>		
+																          <div class="col-sm-4" id="catl1" hidden="">
+																              <div class="form-group" >                                                       
+																                  <label class="control-label ">Category Level 1{{category_list1}}</label>  <br>                                             
+																                  <select name="cat_lvl1" id="cat_lvl1" style="width:100%" class="csf sel2" >
+																                  	<option value="">Select Category Level 1</option>
+																                  	<option value="all"> All</option>																                  		
+																								{% for cat1 in category_list1 %}	
+																									cat1		                  	                        
+																								{% endfor %}
+																                  </select>
+																                  <label id="error-demo" class="error3" style="color:red;"></label>                                                     
+																              </div>
+																          </div>			
+																          <div class="col-sm-4">
+																              <div class="form-group" id="catl2" hidden="">                                                       
+																                  <label class="control-label ">Category Level 2</label>  <br>                                             
+																                  <select name="cat_lvl2" id="cat_lvl2" style="width:90%" class="csf sel2" >
+																                  	<option value="">Select Category Level 2</option>
+																                  	<option value="all"> All</option>
+																                  		{% for cat2 in category_list2 %}	
+																  			                   cat2
+																		                  {% endfor %}
+																                  </select>
+																                  <label id="error-demo" class="error3" style="color:red;"></label>                                                     
+																              </div>
+																          </div>														         
 																	   </div>
 																   	<input type="hidden" id="alist" class="form-control "/>
 																   	<input type="hidden" id="es_name_list" class="form-control "/>
@@ -424,9 +473,13 @@ div.dataTables_filter label {
 																	        			<div class="col-sm-12 hidedata3" style="margin-top: 25px;" hidden>
 																							<label class="control-label" style="font-size: 18px;">Caller Preference</label><br>
 																							<label>Send options by</label><br>
+																							{% if email %}
 																			  				<input class="checkbox1" type="checkbox" id="sms" name="sms" value="sms" onclick="handleClick(this);"> SMS <br>
-																						  	<input class="checkbox2" type="checkbox" id="email" name="email" value="email" onclick="handleClick(this);"> Email <br> 
-																						  	<input class="checkbox3" type="checkbox" id="callback" name="callback" value="callback" onclick="handleClick(this);"> Call Back <br> <br>
+																						  	<input class="checkbox2" type="checkbox" id="email" name="email" value="email" onclick="handleClick(this);"> Email <br> <br>
+																						  	{% else %}
+																						  	<input class="checkbox1" type="checkbox" id="sms" name="sms" value="sms" onclick="handleClick(this);"> SMS <br> <br>																						  
+																							{% endif %}																						  	
+																						  	<!-- <input class="checkbox3" type="checkbox" id="callback" name="callback" value="callback" onclick="handleClick(this);"> Call Back <br> <br> -->
 																		 					<button onclick="send_msg()" style="border-radius: 10px !important;" type="button" id="send" class="btn btn-outline green inputDisabled" disabled>Send</button>						
 																		         	</div>
 																	        		</div>    
@@ -462,7 +515,7 @@ div.dataTables_filter label {
 			   				<label id="cstatus">  Caller Verified </label>
 			       	</div>
 			       	<div class="col-sm-offset-5 col-sm-3">
-			       		<a href="/CTI-CRM/new_consumer/?number={{number1}}"> New Caller </a>
+			       		<!-- <a href="/CTI-CRM/new_consumer/?number={{number1}}"> New Caller </a> -->
 			       	</div>          
 			     	</div>   	
    			</div>
@@ -490,17 +543,23 @@ div.dataTables_filter label {
 																					<label class="control-label">Last Name	<br><b style="color:#5A5A5A;font-weight: 600;"> {{last_name}} </label>
 																		 		</div>
 																			 	<div class="col-sm-3">
-																 					<label class="control-label">Phone Number <br><b style="color: #5A5A5A;font-weight: 600;"> {{phone_number}}</label>						
+																 					<label class="control-label">Called Form Number<br><b style="color: #5A5A5A;font-weight: 600;"> {{phone_number}}</label>						
 																				</div>
 																				<div class="col-sm-3">
+																 					<label class="control-label">SMS To Number<br><b style="color: #5A5A5A;font-weight: 600;"> {{telno}}</label>						
+																				</div>
+																				<!-- <div class="col-sm-3">
 																 					<label class="control-label">Email <br><b style="color: #5A5A5A;font-weight: 600;"> {{email}}</label>						
-																				</div>	
+																				</div>	 -->
 																	  		</div>
 																  		</div>
 															 		</div> 
 															 		<div class="form-group">
 															  			<div class="row">
-																  			<div class="col-sm-12">  			
+																  			<div class="col-sm-12">  
+																  				<div class="col-sm-3">
+																 					<label class="control-label">Email <br><b style="color: #5A5A5A;font-weight: 600;"> {{email}}</label>						
+																				</div>			
 																  				<div class="col-sm-3">
 																 					<label class="control-label">Area <br><b style="color: #5A5A5A;font-weight: 600;"> {{area}}</label>	                                                            
 																			 	</div>	
@@ -552,21 +611,21 @@ div.dataTables_filter label {
 																			</div>	
 																		</div>
 																		<div class="row">
-																          <div class="col-sm-3">
+																          <div class="col-sm-4">
 																              <div class="form-group">                                                       
 																                  <label class="control-label ">Searching For<span style="color:red;">*</span></label>                                                
 																                  <input type="text" required name="search1" id="search1" class="form-control csf"/>
 																                  <label id="error-demo" class="error" style="color:red;"></label>                   
 																              </div>
 																          </div>
-																          <div class="col-sm-3">
+																          <div class="col-sm-4">
 																              <div class="form-group" >                                                       
 																                  <label class="control-label ">Area<span style="color:red;">*</span></label>                                                
 																                  <input type="text" required name="area" id="area" class="adb form-control asf" />
 																                  <label id="error-demo" class="error1" style="color:red;"></label>                                                 
 																              </div>
 																          </div>
-																          <div class="col-sm-3">
+																          <div class="col-sm-4">
 																              <div class="form-group" >                                                       
 																                  <label class="control-label ">City<span style="color:red;">*</span></label> <br>                                             
 																                  <select name="city" id="city" style="width:90%" class="csf sel2" required="">
@@ -579,7 +638,7 @@ div.dataTables_filter label {
 																                  <label id="error-demo" class="error2" style="color:red;"></label>                                                    
 																              </div>
 																          </div>
-																          <div class="col-sm-3">
+																          <!-- <div class="col-sm-3">
 																              <div class="form-group" >                                                       
 																                  <label class="control-label ">Category<span style="color:red;">*</span></label>  <br>                                             
 																                  <select name="cat" id="cat" style="width:100%" class="csf sel2" required="">
@@ -591,7 +650,47 @@ div.dataTables_filter label {
 																                  </select>
 																                  <label id="error-demo" class="error3" style="color:red;"></label>                                                     
 																              </div>
-																          </div>																	         
+																          </div>	 -->																         
+																	   </div>
+																	   <div class="row">
+																          <div class="col-sm-4">
+																              <div class="form-group" >                                                       
+																                  <label class="control-label ">Category<span style="color:red;">*</span></label>  <br>                                             
+																                  <select name="cat" id="cat" style="width:100%" class="csf sel2" required="">
+																                  	<option value="">Select Category</option>
+																                  	<option value="all"> All</option>
+																                  		{% for cat in category_list %}	
+																  			                   <option value="{{ cat.category_id }}"> {{ cat.category_name }}</option>
+																		                  {% endfor %}
+																                  </select>
+																                  <label id="error-demo" class="error3" style="color:red;"></label>                                                     
+																              </div>
+																          </div>		
+																          <div class="col-sm-4">
+																              <div class="form-group" id="catl1" hidden="">                                                       
+																                  <label class="control-label ">Category Level 1{{category_list1}}</label>  <br>                                             
+																                  <select name="cat_lvl1" id="cat_lvl1" style="width:100%" class="csf sel2" >
+																                  	<option value="">Select Category Level 1</option>
+																								{% for cat1 in category_list1 %}	
+																									cat1		                  	                        
+																								{% endfor %}
+																                  </select>
+																                  <label id="error-demo" class="error3" style="color:red;"></label>                                                     
+																              </div>
+																          </div>			
+																          <div class="col-sm-4" id="catl2" hidden="">
+																              <div class="form-group" >                                                       
+																                  <label class="control-label ">Category Level 2</label>  <br>                                             
+																                  <select name="cat_lvl2" id="cat_lvl2" style="width:90%" class="csf sel2" >
+																                  	<option value="">Select Category Level 2</option>
+																                  		{% for cat2 in category_list2 %}	
+																  			                   <!-- <option value="{{ cat.category_id }}"> {{ cat.category_name }}</option> -->
+																  			                   cat2
+																		                  {% endfor %}
+																                  </select>
+																                  <label id="error-demo" class="error3" style="color:red;"></label>                                                     
+																              </div>
+																          </div>														         
 																	   </div>
 																   	<input type="hidden" id="alist" class="form-control "/>
 																   	<input type="hidden" id="es_name_list" class="form-control "/>
@@ -607,9 +706,13 @@ div.dataTables_filter label {
 																	        			<div class="col-sm-12 hidedata3" style="margin-top: 25px;" hidden>
 																							<label class="control-label" style="font-size: 18px;">Caller Preference</label><br>
 																							<label>Send options by</label><br>
-																			  				<input class="checkbox1" type="checkbox" id="sms" name="sms" value="sms" onclick="handleClick(this);"> SMS <br>
-																						  	<input class="checkbox2" type="checkbox" id="email" name="email" value="email" onclick="handleClick(this);"> Email <br> 
-																						  	<input class="checkbox3" type="checkbox" id="callback" name="callback" value="callback" onclick="handleClick(this);"> Call Back <br> <br>
+																							{% if email %}
+																			  				<input class="checkbox1" type="checkbox" id="sms" name="sms" value="sms" onclick="handleClick(this);"> SMS <br>																			  				
+																						  	<input class="checkbox2" type="checkbox" id="email" name="email" value="email" onclick="handleClick(this);"> Email <br> <br>
+																						  	{% else %}
+																						  	<input class="checkbox1" type="checkbox" id="sms" name="sms" value="sms" onclick="handleClick(this);"> SMS <br> <br>
+																						  	{% endif %}
+																						  	<!-- <input class="checkbox3" type="checkbox" id="callback" name="callback" value="callback" onclick="handleClick(this);"> Call Back <br> <br> -->
 																		 					<button onclick="send_msg()" style="border-radius: 10px !important;" type="button" id="send" class="btn btn-outline green inputDisabled" disabled>Send</button>						
 																		         	</div>
 																	        		</div>    
@@ -637,7 +740,7 @@ div.dataTables_filter label {
       
   <!-- BEGIN FOOTER -->
   <div class="page-footer">
-      <div class="page-footer-inner"> 2016 &copy; DigiSpace.
+      <div class="page-footer-inner"> 2016 &copy; DigiSpace Software Private Limited
       </div>
       <div class="scroll-to-top">
           <i class="icon-arrow-up"></i>
@@ -697,6 +800,89 @@ div.dataTables_filter label {
 <script type="text/javascript">
 
 $('.sel2').select2();
+
+$("#cat").change(function () {
+	getCategoryL1();
+});
+
+$("#cat_lvl1").change(function () {
+	getCategoryL2();
+});
+
+function getCategoryL1(){
+     cat_id = $('#cat :selected').val();
+        
+     $('#catl1').attr("hidden", "hidden");    
+     $('#catl2').attr("hidden", "hidden"); 
+     if (cat_id) {
+         $.ajax({
+             type: 'GET',
+             url: '/CTI-CRM/get-category-l1/',
+             data: {'category': cat_id},
+              success: function (response) {
+              	//alert('in response'+response.success);
+              	if (response.success=='false') {
+              		$('#catl1').attr("hidden", "hidden"); 
+              		$('#catl2').attr("hidden", "hidden");    
+              	}	   
+              	 
+              	else {
+					  $('#catl1').removeAttr("hidden"); 
+	              $('#cat_lvl1').html('');
+                 $('#cat_lvl2').html('');
+                 $("#cat_lvl1").select2("val", "");
+                 $("#cat_lvl2").select2("val", "");
+                 $('#cat_lvl1').append('<option value="">Select Category Level 1</option>');
+                 $.each(response.category_list1, function (index, item) {
+                     $('#cat_lvl1').append(item);
+                 });
+                 $('#cat_lvl1').val("");
+                } 
+             },
+             error: function (response) {
+                 alert("Error!");
+             },
+         });
+     }
+     else {
+         $('#cat').val("");
+     }
+ }
+
+function getCategoryL2(){
+     cat_id = $('#cat_lvl1 :selected').val();
+     $('#catl2').attr("hidden", "hidden");    
+     $("#cat_lvl2").select2("val", "");
+     if (cat_id) {
+         $.ajax({
+             type: 'GET',
+             url: '/CTI-CRM/get-category-l2/',
+             data: {'category': cat_id},
+              success: function (response) {
+              if (response.success=='false') {
+              		//$('#catl1').attr("hidden", "hidden"); 
+              		$('#catl2').attr("hidden", "hidden");    
+              	}	
+              	else {
+              	  $('#catl2').removeAttr("hidden"); 
+                 $('#cat_lvl2').html('');
+                 $("#cat_lvl2").select2("val", "");
+                 $('#cat_lvl2').append('<option value="">Select Category Level 2</option>');
+                 $.each(response.category_list2, function (index, item) {
+                     $('#cat_lvl2').append(item);
+                 });
+                 $('#cat_lvl2').val("");
+                } 
+             },
+             error: function (response) {
+                 alert("Error!");
+             },
+         });
+     }
+     else {
+         $('#cat_lvl1').val("");
+     }
+ }
 
 
 function get_details() {
@@ -847,7 +1033,6 @@ function send_advert() {
              error: function (response) {
                  alert("Error!");
              },
-
          });
 }
 
@@ -862,7 +1047,13 @@ function verify_caller() {
 function clear_data() {
 	$('.csf').val('');   
 	$('.asf').val(''); 	
+	//$('#city').change('');
+	$("#city").select2("val", "");
+	$("#cat").select2("val", "");
+	$("#cat_lvl1").select2("val", "");
+	$("#cat_lvl2").select2("val", "");
 	$('#result_data').load(document.URL +  ' #result_data');
+	//$("#result_data").html("");
 }
 
 function get_enquiry_detail(id){
@@ -884,6 +1075,8 @@ $('.error').html('');
 	area = $("#area" ).val();
 	city = $("#city" ).val();
 	category = $("#cat" ).val();
+	category_level_1 = $("#cat_lvl1" ).val();
+	category_level_2 = $("#cat_lvl2" ).val();
 	
 	word = $.trim(text_value);
 	if (word.length<3) {
@@ -915,8 +1108,8 @@ $('.error').html('');
 			$("#advert_data").html('');
 			$.ajax({
 		      type : 'POST',
-		      url : '/CTI-CRM/search_details/',
-		      data : {'keyword':text_value,'area':area,'city':city,'category':category},
+		      url : '/CTI-CRM/searching_advert/',
+		      data : {'keyword':text_value,'area':area,'city':city,'category':category,'category_level_1':category_level_1,'category_level_2':category_level_2},
 		      success: function (response) {  
 		      if (response.success=='true') {
 		      		$('.hidedata2').attr("hidden", "hidden");    
@@ -925,8 +1118,11 @@ $('.error').html('');
 				      var a = [];
 				      var es = [];
 				      var i = 0;			    
-		      		$.each(response.result_list, function (index,item) {		
-		      			a.push(item.supplier_id+'-'+item.enquiry_service_name);
+		      		$.each(response.result_list, function (index,item) {
+		      			//if (item.premium_service=='yes') {
+		      			//	a.push(item.supplier_id+'-'+item.enquiry_service_name);
+		      			//}		
+		      			a.push(item.supplier_id+'-'+item.enquiry_service_name+'-'+item.premium_service);
 		      			es.push(item.enquiry_service_name);
 		      			i=i+1;
 		 					$("#advert_data").append(
@@ -936,9 +1132,11 @@ $('.error').html('');
 										'<label style="color: #474141;;font-size: 20px;padding-left: 4px;color: #474141;margin-top: 4px;"><b>'+i+'</b></label>'+   
 									'</div>'+ 		
 									'<div class="col-sm-10" style="padding-top: 9px; padding-left: 5px;">'+   
-			         				'<label style="color:#474141;"><b>'+item.business_name + '</b></label><br>'+
+			         				'<label style="color:#474141;margin-bottom: 0px;"><b>'+item.business_name + '</b></label><br>'+
+			         					'<label style="font-size: 12px;margin-bottom: 0px;">'+ item.enquiry_service_name +'</label><br>'+
 			         					'<label>'+ item.category +'</label><br>'+
-			         					'<label style="margin-top: 8px;">'+item.address + '</label><br>'+		
+			         					'<label style="font-size: 12px;margin-top: 8px;">'+item.address + '</label><br>'+		
+			         					'<label style="margin-top: 8px;">'+item.contact_no + '</label><br>'+		
 			         						       																				 
 									'</div>'+      		
 								'</div>'+	 					
@@ -953,6 +1151,12 @@ $('.error').html('');
 					
 		      }                                		      
 			 },
+			 beforeSend: function () {
+                $("#processing").css('display','block');
+            },
+            complete: function () {
+                $("#processing").css('display','none');
+            },
 		});
 	}	 			
 }

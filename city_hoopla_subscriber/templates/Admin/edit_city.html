@@ -31,7 +31,7 @@ License: You must have a valid license purchased only from themeforest(the above
           type="text/css"/>
     <link href="{% static 'assets/global/plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet"
           type="text/css"/>
-          <link href="{% static 'vendor/bootstrap-fileinput/jasny-bootstrap.min.css' %}" rel="stylesheet" media="screen">
+    <link href="{% static 'vendor/bootstrap-fileinput/jasny-bootstrap.min.css' %}" rel="stylesheet" media="screen">
     <link href="{% static 'assets/global/plugins/simple-line-icons/simple-line-icons.min.css' %}" rel="stylesheet"
           type="text/css"/>
     <link href="{% static 'assets/global/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"/>
@@ -251,16 +251,16 @@ hr {
 }
 
 #loading{
-	width: 36%;
-	height: 22px;
-	position: absolute;
-	top: 26%;
-	left: 32%;
-	margin: -28px 0px 0px -25px;
-	text-align: center;
-	font-size: 13px;
-	font-weight: 500;
-	color: #000;
+    width: 36%;
+    height: 22px;
+    position: absolute;
+    top: 26%;
+    left: 32%;
+    margin: -28px 0px 0px -25px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: #000;
 }
 
 #processing{
@@ -289,17 +289,23 @@ hr {
 }
 
 canvas{
-    height: 140px !important;
+    height: 120px !important;
     width: 100% !important;
 }
 
 .canvas_holder{
-    height: 140px !important;
-    width: 100% !important;
+    height: 120px !important;
+    width: 80% !important;
     border: 1px solid #ddd;
     margin: 0 auto;
-    margin-top:2%;
-    margin-bottom:2%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.image_holder{
+    background: white;
+    height: 168px;
+    text-align: right;
 }
 
 input[type="file"]{
@@ -340,6 +346,7 @@ input[type="file"]{
     border: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
 
 }
+
 </style>
 
 <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
@@ -375,7 +382,7 @@ input[type="file"]{
                 <ul class="nav navbar-nav pull-right">
                     <!-- BEGIN NOTIFICATION DROPDOWN -->
                     <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                    
+
                     <!-- END NOTIFICATION DROPDOWN -->
                     <!-- BEGIN USER LOGIN DROPDOWN -->
                     <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
@@ -435,7 +442,7 @@ input[type="file"]{
     <div class="page-content-wrapper">
         <!-- BEGIN CONTENT BODY -->
         <div class="page-content">
-            
+
 
             <!-- END PAGE HEADER-->
             <div class="row">
@@ -445,484 +452,558 @@ input[type="file"]{
                             <!-- BEGIN FORM-->
                             <div class="row">
                                 <div class="col-lg-12">
-                                		<a class="brad-crum-1" href="/reference-data/">City</a>
+                                    <a class="brad-crum-1" href="/reference-data/">City</a>
+                                    <i class="fa fa-angle-right"></i>
+                                    <span class="brad-crum-2">{{city.city_place_name}}</span>
                                     <i class="fa fa-angle-right"></i>
                                     <span class="brad-crum-2">Edit City</span>
-                                    
-                                    <div class="portlet-body">
-                                    	<br>
-                                    	
-                                    <div class="row">
-                                        <div class="col-lg-12 col-md-12 text-right">
 
-                                            <a type="button"
+                                    <div class="portlet-body">
+                                        <br>
+
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12 text-right">
+
+                                                <a type="button"
                                                    href="/reference-data/"
                                                    class="btn btn-outline grey_color"> Cancel </a>
-                                   
-                                            <button type="submit" 
-                                                    id="save_city"
-                                                    class="btn btn-outline done_btn">Update</button>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-md-3 div-border-top div-color" style="width: 20% !important;margin-top: 10px !important;">
-                                    	<div class="row">
-													   <div class="col-lg-12 col-md-12 ">
-														  <label class="control-label " style="font-size:15px; ">
-	                                            Display Image
-	                                         </label> 
-													  		 <div class = "canvas_holder">
-	                                              <canvas class="canvas_block" style="cursor:pointer;"  onclick="javascript:$('#city_image').click();" id="city_canvas"></canvas>
-	                                               <img hidden="" id="city_image_holder" src="{{ city.cityimage }}" height="200" width="200"> 
-	                                             </div> 
-	                                         <div class="form-group">
-                                  				
-                                             <input type="file" style="display:none;"  accept="image/*" name="email"
-                                                    id="city_image" class="form-control"
-                                                    placeholder="Upload Logo">
 
-                                             <label class="error"
-                                                    style="color:red; display:none;"></label>
-                                              </div>    
-                                          </div> 
-                                       </div>
-                                       
-                                       <div class="row">
-                                        <div class="col-lg-12 col-md-12 ">
-                                         <div class="form-group">
-                                             <label class="control-label " style="font-size:15px;">Country
-
-                                                 <span class="required"> * </span>
-                                             </label>
-                                             <select id="country" name="country"
-                                                                                class="form-control">
-                                              <option value="">Select Country</option>
-                                              {% for countr in country_list %}
-                                              <option value="{{ countr.country_id }}">
-                                                  {{countr.country_name }}
-                                              </option>
-                                              {% endfor %}
-                                          </select>
-                                             <label class="error" id="state_error"
-                                                    style="color:red; display:none;"></label>
-                                         </div>
-                                       </div>  
-                                     </div>
-                                     
-                                    <div class="row"> 
-                                     <div class="col-lg-12">
-                                         <div class="form-group">
-                                             <label class="control-label " style="font-size:15px;">State
-
-                                                 <span class="required"> * </span>
-                                             </label>
-                                             <select id="state" name="state"
-                                                                                class="form-control">
-	                                              <option value="">Select State</option>
-	                                              {% for state in state_list %}
-	                                              <option value="{{ state.state_id }}"> {{ state.state }}
-	                                              </option>
-	                                              {% endfor %}
-	                                          </select>
-                                             <label class="error" id="state_error"
-                                                    style="color:red; display:none;"></label>
-                                         </div>
-                                  		</div>
-                                  	</div>
-                                  	
-                                  	  <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="form-group">
-                                                <label class="control-label" style="font-size:15px;">City
-
-                                                    <span class="required"> * </span>
-                                                </label>
-                                               <select id="city_name" name="city_name"
-                                                                                class="form-control">
-                                                    <option value="">Select City</option>
-                                                    {% for citys in city_list %}
-                                                        <option value="{{ citys.city_id }}"> {{ citys.city_name }} </option>
-                                                    {% endfor %}
-                                                </select>
-                                                <label class="error" id="city_error"
-                                                       style="color:red; display:none;"></label>
+                                                <button type="submit"
+                                                        id="save_city"
+                                                        class="btn btn-outline done_btn">Update
+                                                </button>
                                             </div>
                                         </div>
-                                      </div>
-                                      
-                                      <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="form-group">
-                                                <label class="control-label" style="font-size:15px;">About City (Max
-                                                    5000 characters)
 
-                                                </label>
+                                        <div class="col-md-3 div-border-top div-color"
+                                             style="width: 20% !important;margin-top: 10px !important;">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 ">
+                                                    <label class="control-label " style="font-size:15px; ">
+                                                        Display Image
+                                                    </label>
+                                                    <div class="canvas_holder" style="background : white;width: 100% !important;height: 140px !important;">
+                                                        <canvas class="canvas_block" style="cursor:pointer;"
+                                                                onclick="javascript:$('#city_image').click();"
+                                                                id="city_canvas"></canvas>
+                                                        <img hidden="" id="city_image_holder" src="{{ city.cityimage }}"
+                                                             height="200" width="200">
+                                                    </div>
+                                                    <div class="form-group">
+
+                                                        <input type="file" style="display:none;" accept="image/*"
+                                                               name="email"
+                                                               id="city_image" class="form-control"
+                                                               placeholder="Upload Logo">
+
+                                                        <label class="error"
+                                                               style="color:red; display:none;"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 ">
+                                                    <div class="form-group">
+                                                        <label class="control-label " style="font-size:15px;">Country:
+                                                        </label>
+                                                        <label style="font-weight:700;">{{city.country_name}}</label>
+                                                        <input id="country" name="country" value="{{city.country_id}}"
+                                                               hidden/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label class="control-label " style="font-size:15px;">State:
+                                                        </label>
+                                                        <label style="font-weight:700;">{{city.state_name}}</label>
+                                                        <input id="state" name="state" value="{{city.state_id}}"
+                                                               hidden/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label class="control-label" style="font-size:15px;">City:
+                                                        </label>
+                                                        <label style="font-weight:700;">{{city.city_place_name}}</label>
+                                                        <input id="city_name" name="city_name"
+                                                               value="{{city.city_name}}" hidden/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label class="control-label" style="font-size:15px;">About City
+                                                            (Max
+                                                            5000 characters)
+
+                                                        </label>
                                              <textarea type="text" name="name"
-                                              maxlength="5000" id="about_city"
-                                              class="form-control">{{ city.about_city }}</textarea>
-                                                <label class="error"
-                                                       style="color:red; display:none;"></label>
+                                                       maxlength="5000" id="about_city"
+                                                       class="form-control">{{ city.about_city }}</textarea>
+                                                        <label class="error"
+                                                               style="color:red; display:none;"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label class="control-label " style="font-size:15px;">Currency
+
+                                                        </label>
+                                                        <input class="form-control" type="text"
+                                                               value="{{ city.currency }}" disabled id="currency"
+                                                        ></input>
+
+                                                        <label class="error" id="city_error"
+                                                               style="color:red; display:none;"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="form-group col-lg-12">
+                                                    <label class="control-label"
+                                                           style="font-size:15px;">Language </label>
+
+
+                                                    <input type="text" name="name"
+                                                           value="{{ city.language }}" id="language"
+                                                           class="form-control"/>
+
+                                                    <label class="error"
+                                                           style="color:red; display:none;"></label>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label class="control-label " style="font-size:15px;">Climate
+
+                                                        </label>
+                                                        <input type="text" name="name"
+                                                               value="{{ city.climate}}" id="climate"
+                                                               class="form-control"/>
+                                                        <label class="error"
+                                                               style="color:red; display:none;"></label>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                      </div>
-                                      
-                                       <div class="row">
-                                       	<div class="col-lg-12">
-                                               <div class="form-group">
-                                                   <label class="control-label " style="font-size:15px;">Currency
 
-                                                   </label>
-               													<input class="form-control" type="text" value="{{ city.currency }}" disabled id="currency"
-                                    													></input>
+                                        <div class="col-md-9 "
+                                             style="border-left:2px solid #CCC !important;margin-left: 11px !important;width: 77%;margin-top: 10px !important; ">
+                                            <div class="row div-border-top div-color">
+                                                <div class="row" style="margin-left: 18px !important;">
+                                                    <div class="row">
+                                                        <div class="form-group col-lg-12">
+                                                            <label class="control-label " style="font-size:15px;">City
+                                                                Attractions
+                                                            </label>
+                                                            <a class="fa fa-plus-circle fa-lg add_point_of_interest"
+                                                               style="margin-top: 2.7%;margin-left: 2%;"></a>
+                                                        </div>
+                                                    </div>
 
-                                                   <label class="error" id="city_error"
-                                                          style="color:red; display:none;"></label>
-                                               </div>
-                                           </div>
-                                       </div>
-                                       
-                                       <div class="row">
-                                           <div class="form-group col-lg-12">
-                                               <label class="control-label" style="font-size:15px;">Language </label>
-
-
-                                           <input type="text" name="name"
-                                                                  value="{{ city.language }}" id="language"
-                                                                  class="form-control"/>
-
-                                               <label class="error"
-                                                      style="color:red; display:none;"></label>
-                                           </div> 
-                                        </div>
-                                        
-											<div class="row">	                                        
-                                        <div class="col-lg-12">
-                                            <div class="form-group">
-                                                <label class="control-label " style="font-size:15px;">Climate
-
-                                                </label>
-                                                       <input type="text" name="name"
-                                                                               value="{{ city.climate}}" id="climate"
-                                                                               class="form-control"/>
-                                                <label class="error"
-                                                       style="color:red; display:none;"></label>
-                                            </div>
-                                    		</div>
-                                    	</div>	      	                                		
-                                    </div>
-                                    
-                                    <div class="col-md-9 " style="border-left:2px solid #CCC !important;margin-left: 11px !important;width: 77%;margin-top: 10px !important; ">
-                                      <div class="row div-border-top div-color">
-                                      	 <div class="row" style="margin-left: 18px !important;">	
-		                                 		 <div class="row">
-			                                          <div class="form-group col-lg-12">
-			                                          <label class="control-label " style="font-size:15px;">City Attractions
-		                                                </label>
-			                                          <a class="fa fa-plus-circle fa-lg add_point_of_interest" style="margin-top: 2.7%;margin-left: 2%;"></a>
-			                                          </div>
-			                                      </div>
-			                                      
-	                                      										<div class="row " id="point_of_interest">
-	                                      										
-	                                      										
-	                                      										
-                                                                        {% if not interest %}                                                                            
-												                                          <div class="col-lg-4" style="width: 31.333%; !important">
-												                                            
-												                                               <div class="canvas_holder">
-												                                                   <canvas class="canvas_block" style="cursor:pointer;" onclick="javascript:$('#poi0').click();" id="canvas_poi0"></canvas>
-												                                               </div>      
-												                                               <input type="file" style="display:none;" accept="image/*" id="poi0"
-												                                                     name="point_of_interest_image[]"
-												                                                     class="form-control"
-												                                                     placeholder="Upload image" onchange="change_poi_img(this,event)"> 
-												                                               <textarea style="margin-top:2%;margin-bottom: 2%;"  name="point_of_interest_name"
-											                                                          id="about_city" maxlength="5000"
-											                                                          class="form-control interest_name"></textarea> 
-												                                                <input name="new_poi" hidden value="new_poi" class="poi_status"></input>
-												                                                <input type="hidden" class="interest_place_id" value="0"> </input>
-                                                                                          
-												                                              <label class="error"
-												                                                     style="color:red; display:none;"></label>    
-												                                            </div>                                              
-                                                                        {% else %}
-                                                                        
-                                                                        
-                                                                        {% for int in interest %}
-                                                                        	
-                                                                            <div class="col-lg-4"  style="width: 31.333%; !important;">
-                                                                                
+                                                    <div class="row " id="point_of_interest">
+                                                        {% if not interest %}
+                                                        <div id="poi_div_1" class="col-lg-4" style="width: 31.333%; !important">
+                                                            <div class="image_holder">
+                                                                <a onclick='remove_modal("1","1")'><i
+                                                                        class="fa fa-times fa-lg"></i></a>
+                                                                <br>
                                                                 <div class="canvas_holder">
-                                                                <img alt="image preview" hidden="" src="{{int.place_image}}"> 
-                                                                <canvas class="canvas_block canvas_filled" style="cursor:pointer;" onclick="callChangeImage({{int.image_id}});" id="canvas_poi{{int.image_id}}"></canvas>
-																						    
-																						    <script>
-																						      var canvas{{int.place_id}} = document.getElementById('canvas_poi{{int.image_id}}');
-																						      var context{{int.place_id}} = canvas{{int.place_id}}.getContext('2d');
-																						      var imageObj{{int.place_id}} = new Image();
-																						
-																						      imageObj{{int.place_id}}.onload = function() {
-																						        canvas{{int.place_id}}.width = imageObj{{int.place_id}}.width;
-																						        canvas{{int.place_id}}.height = imageObj{{int.place_id}}.height;
-																						        context{{int.place_id}}.drawImage(imageObj{{int.place_id}}, 0, 0);
-																						      };
-																						      imageObj{{int.place_id}}.src = '{{int.place_image}}';
-																						      
-																						    </script>																						    
-																						    
-																						    
-                                                                    </div>            
-                                                                                <input id="poi{{int.image_id}}" style="display:none;"
-                                                                                       type="file" accept="image/*"
-                                                                                       name="point_of_interest_image[]"
-                                                                                       class="poi_img form-control"
-                                                                                       placeholder="Upload image" onchange="change_poi_img(this,event)">  
-                                                                                       
-                                                                                  <input id="old_poi{{ int.image_id }}" hidden name="old_poi{{ int.image_id }}" value="false" class="poi_status"></input>
-                                                                                <textarea style="margin-top:2%;margin-bottom: 2%;"  name="point_of_interest_name"
-											                                                          id="about_city" maxlength="5000"
-											                                                          class="form-control interest_name">{{ int.place_name }}</textarea>      
-                                                                                <label class="error"
-                                                                                       style="color:red; display:none;"></label>
-                                                                                       <input type="hidden" id="cp_id"
-                                                                                   class="interest_place_id"
-                                                                                   value="{{int.place_id}}"> </input>
-                                                                            </div>
-                                                                            
-                                                                       
-                                                                        {% endfor %}
-                                                                        {% endif %}
-                                                         </div>
+                                                                    <canvas class="canvas_block" style="cursor:pointer;"
+                                                                            onclick="javascript:$('#poi0').click();"
+                                                                            id="canvas_poi0"></canvas>
+                                                                </div>
+                                                            </div>
+                                                            <input type="file" style="display:none;" accept="image/*"
+                                                                   id="poi0"
+                                                                   name="point_of_interest_image[]"
+                                                                   class="form-control"
+                                                                   placeholder="Upload image"
+                                                                   onchange="change_poi_img(this,event)">
+                                                            <textarea
+                                                                   style="margin-top:2%;margin-bottom: 2%;"
+                                                                   name="point_of_interest_name"
+                                                                   id="about_poi_1"
+                                                                   maxlength="5000"
+                                                                   class="form-control interest_name"></textarea>
+                                                            <input name="new_poi" hidden value="new_poi"
+                                                                   class="poi_status"></input>
+                                                            <input type="hidden" class="interest_place_id"
+                                                                   value="0"> </input>
 
-	                                      <div class="row">
-                                             <div class="form-group col-lg-12">
-                                                 <label class="control-label " style="font-size:15px;">Shopping
-                                                </label>
-                                                 <a class="fa fa-plus-circle fa-lg add_shop" style="margin-top: 2.7%;margin-left: 2%;"></a>
-                                             </div>
-                                         </div>
-                                        
-                                             <div class="row " id="shop">
-                                              {% if not shops %}
-                                               
-	                                              <div class="col-lg-4" style="width: 31.333%; !important">
-	                                              <input type="hidden" class="shop_id" value="0"> </input>
-	                                               
-	                                              <div class="canvas_holder">
-	                                       			<canvas class="canvas_block" style="cursor:pointer;" onclick="javascript:$('#shop0').click();" id="canvas_shop0"></canvas>
-	                                   				</div>           
-	                                              <input type="file" style="display:none;" name="shop_image[]"
-	                                                         id="shop0" accept="image/*"
-	                                                         class="form-control"
-	                                                         placeholder="Upload image" onchange="change_shop_img(this,event)">
-	                                               <textarea  name="shopname" id="shopname" style="margin-top:2%;margin-bottom: 2%;"
-	                          									class="form-control where_to_shop">  </textarea>
-	                                                  <label class="error"
-	                                                         style="color:red; display:none;"></label>
-	                                              </div>
-	                                           
-                                                               {% else %}
-                                                                {% for shop in shops %}
-                                                                     
-                                                                            <div class="col-lg-4" style="width: 31.333%; !important">
-                                                                                <input type="hidden" class="shop_id"
-                                                                                       value="{{shop.place_id}}"> </input>
-                                                                                <div class="canvas_holder">
-                                                                <img alt="image preview" hidden="" src="{{shop.place_image}}"> 
-                                                                <canvas class="canvas_block canvas_filled" style="cursor:pointer;" onclick="javascript:$('#shop{{shop.image_id}}').click();"  id="canvas_shop{{shop.image_id}}"></canvas>
-    <script>
-      var canvas{{shop.place_id}} = document.getElementById('canvas_shop{{shop.image_id}}');
-      var context{{shop.place_id}} = canvas{{shop.place_id}}.getContext('2d');
-      var imageObj{{shop.place_id}} = new Image();
-
-      imageObj{{shop.place_id}}.onload = function() {
-        canvas{{shop.place_id}}.width = imageObj{{shop.place_id}}.width;
-        canvas{{shop.place_id}}.height = imageObj{{shop.place_id}}.height;
-        context{{shop.place_id}}.drawImage(imageObj{{shop.place_id}}, 0, 0);
-      };
-      imageObj{{shop.place_id}}.src = '{{shop.place_image}}';
-    </script>
-                                                                    </div>       
-                                                                                <input type="file" style="display:none"
-                                                                                       id="shop{{shop.image_id}}"
-                                                                                       name="shop_image[]"
-                                                                                       accept="image/*"
-                                                                                       class="form-control"
-                                                                                       placeholder="Upload image" onchange="change_shop_img(this,event)">  
-                                                                                       <textarea  name="shopname" 
-                          									class="form-control where_to_shop">{{ shop.place_name }} </textarea>     
-                                                                                <label class="error"
-                                                                                       style="color:red; display:none;"></label>
-                                                                            </div>
-                                                                            
-                                                                        {% endfor %}
-                                                                        {% endif %}
+                                                            <label class="error"
+                                                                   style="color:red; display:none;"></label>
                                                         </div>
-                                         
-                                         
-                                         <div class="row">
-                                             <div class="col-lg-12">
-                                                 <div class="form-group">
-                                                 	<label class="control-label " style="font-size:15px;">Hospitals
-                                                </label>
-                                                     <a class="fa fa-plus-circle fa-lg add_hospital" style="margin-top: 2.7%;margin-left: 2%;"></a>
-                                                 </div>
-                                             </div>
-                                         </div>
-                                       
-                                             
-                                             								<div class="row " id="hospital">
-                                                                        {% if not hospitals %}
-                                                                            <div class="col-lg-4" style="width: 31.333%; !important">
-                                                                            <input type="hidden" class="hospital_id" value="0"> </input>
-                                                                               
-                                                                             <div class="canvas_holder">
-                                                                     				<canvas class="canvas_block" style="cursor:pointer;" onclick="javascript:$('#hospital0').click();" id="canvas_hospital0"></canvas>
-                                                                 				</div>          
-                                                                                <input type="file" style="display:none;"
-                                                                                       name="hospital_image[]"
-                                                                                       accept="image/*" id="hospital0"
-                                                                                       class="form-control"
-                                                                                       placeholder="Upload image" onchange="change_hospital_img(this,event)">
-                                                                             <textarea  name="hospitalname" id="hospitalname"
-                                                    								 class="form-control reputed_hospitals"></textarea>          
-                                                                                <label class="error"
-                                                                                       style="color:red; display:none;"></label>
-                                                                            </div>
-                                                                        {% else %}
-                                                                        {% for hos in hospitals %}
-                                                                            <div class="col-lg-4" style="width: 31.333%; !important">
-                                                                                <input type="hidden" class="hospital_id"
-                                                                                       value="{{hos.place_id}}"> </input>
-                                                             
-                                                                                <div class="canvas_holder">
-                                                                <img alt="image preview" hidden="" src="{{hos.place_image}}"> 
-                                                                <canvas class="canvas_block canvas_filled" style="cursor:pointer;" onclick="javascript:$('#hospital{{hos.image_id}}').click();" id="canvas_hospital{{hos.image_id}}"></canvas>
-    <script>
-      var canvas{{hos.place_id}} = document.getElementById('canvas_hospital{{hos.image_id}}');
-      var context{{hos.place_id}} = canvas{{hos.place_id}}.getContext('2d');
-      var imageObj{{hos.place_id}} = new Image();
+                                                        {% else %}
 
-      imageObj{{hos.place_id}}.onload = function() {
-        canvas{{hos.place_id}}.width = imageObj{{hos.place_id}}.width;
-        canvas{{hos.place_id}}.height = imageObj{{hos.place_id}}.height;
-        context{{hos.place_id}}.drawImage(imageObj{{hos.place_id}}, 0, 0);
-      };
-      imageObj{{hos.place_id}}.src = '{{hos.place_image}}';
-    </script>
-                                                                    </div>    
-                                                                    <input type="file"
-                                                                                       id="hospital{{hos.image_id}}" style="display:none;"
-                                                                                       name="hospital_image[]"
-                                                                                       accept="image/*"
-                                                                                       class="form-control"
-                                                                                       placeholder="Upload image" onchange="change_hospital_img(this,event)">   
-                                                                       <textarea  name="hospitalname" id="hospitalname"
-                                                    								 class="form-control reputed_hospitals">{{ hos.place_name }}</textarea>  
-                                                                                <label class="error"
-                                                                                       style="color:red; display:none;"></label>
-                                                                            </div>
 
-                                                                        {% endfor %}
-                                                                        {% endif %}                                                          
+                                                        {% for int in interest %}
+
+                                                        <div id="poi_div_{{forloop.counter}}" class="col-lg-4" style="width: 31.333%; !important;">
+                                                            <div  class="image_holder">
+                                                                <a onclick='remove_modal("1",{{forloop.counter}})'><i
+                                                                        class="fa fa-times fa-lg"></i></a>
+                                                                <br>
+                                                                <div class="canvas_holder">
+                                                                    <img alt="image preview" hidden=""
+                                                                         src="{{int.place_image}}">
+                                                                    <canvas class="canvas_block canvas_filled"
+                                                                            style="cursor:pointer;"
+                                                                            onclick="callChangeImage({{int.image_id}});"
+                                                                            id="canvas_poi{{int.image_id}}"></canvas>
+
+                                                                    <script>
+                                                                          var canvas{{int.place_id}} = document.getElementById('canvas_poi{{int.image_id}}');
+                                                                          var context{{int.place_id}} = canvas{{int.place_id}}.getContext('2d');
+                                                                          var imageObj{{int.place_id}} = new Image();
+
+                                                                          imageObj{{int.place_id}}.onload = function() {
+                                                                            canvas{{int.place_id}}.width = imageObj{{int.place_id}}.width;
+                                                                            canvas{{int.place_id}}.height = imageObj{{int.place_id}}.height;
+                                                                            context{{int.place_id}}.drawImage(imageObj{{int.place_id}}, 0, 0);
+                                                                          };
+                                                                          imageObj{{int.place_id}}.src = '{{int.place_image}}';
+                                                                    </script>
+                                                                </div>
+                                                            </div>
+                                                            <input id="poi{{int.image_id}}" style="display:none;"
+                                                                   type="file" accept="image/*"
+                                                                   name="point_of_interest_image[]"
+                                                                   class="poi_img form-control"
+                                                                   placeholder="Upload image"
+                                                                   onchange="change_poi_img(this,event)">
+
+                                                            <input id="old_poi{{ int.image_id }}" hidden
+                                                                   name="old_poi{{ int.image_id }}" value="false"
+                                                                   class="poi_status"></input>
+                                                            <textarea
+                                                                    style="margin-top:2%;margin-bottom: 2%;"
+                                                                    name="point_of_interest_name"
+                                                                    id="about_poi_{{forloop.counter}}" maxlength="5000"
+                                                                    class="form-control interest_name">{{ int.place_name }}</textarea>
+                                                            <label class="error"
+                                                                   style="color:red; display:none;"></label>
+                                                            <input type="hidden" id="cp_id_{{forloop.counter}}"
+                                                                   class="interest_place_id"
+                                                                   value="{{int.place_id}}"> </input>
                                                         </div>
 
 
-                                         
-                                         <div class="row">
-                                             <div class="col-lg-12">
-                                                 <div class="form-group">
-                                                 	<label class="control-label " style="font-size:15px;">Education
-                                                </label>
-                                                   <a class="fa fa-plus-circle fa-lg add_college" style="margin-top: 2.7%;margin-left: 2%;"></a>
-                                                 </div>
-                                             </div>
-                                         </div>
-                                     		<div class="row" id="college">
-                                                              {% if not colleges %}
-                                                                        <input type="hidden" class="college_id" value="0"> </input>
-                                                                            <div class="col-lg-4" style="width: 31.333%; !important">
-                                                                                
-                                                                                <div class="canvas_holder">
-                                                                     				<canvas class="canvas_block" style="cursor:pointer;" onclick="javascript:$('#college0').click();" id="canvas_college0"></canvas>
-                                                                 					 </div>       
-                                                                                <input type="file" style="display:none;"
-                                                                                       name="college_image[]"
-                                                                                       id="college0" accept="image/*"
-                                                                                       class="form-control"
-                                                                                       placeholder="Upload image" onchange="change_college_img(this,event)">
-                                                                                 <textarea name="collegename" id="collegename"
-                                                        										class="form-control college_and_universities"></textarea>        
-                                                                                <label class="error"
-                                                                                       style="color:red; display:none;"></label>
-                                                                            </div>
-                                                                        {% else %}
-                                                                        {% for clg in colleges %}
-                                                                            <input type="hidden" class="college_id"
-                                                                                   value="{{clg.place_id}}"> </input>
-                                                                            <div class="col-lg-4" style="width: 31.333%; !important">
-                                                                                
-                                                                        <div class="canvas_holder">
-                                                                			<img alt="image preview" hidden="" src="{{clg.place_image}}"> 
-                                                                <canvas class="canvas_block canvas_filled" style="cursor:pointer;" onclick="javascript:$('#college{{clg.image_id}}').click();" id="canvas_college{{clg.image_id}}"></canvas>
-																							    <script>
-																							      var canvas{{clg.place_id}} = document.getElementById('canvas_college{{clg.image_id}}');
-																							      var context{{clg.place_id}} = canvas{{clg.place_id}}.getContext('2d');
-																							      var imageObj{{clg.place_id}} = new Image();
-																							
-																							      imageObj{{clg.place_id}}.onload = function() {
-																							        canvas{{clg.place_id}}.width = imageObj{{clg.place_id}}.width;
-																							        canvas{{clg.place_id}}.height = imageObj{{clg.place_id}}.height;
-																							        context{{clg.place_id}}.drawImage(imageObj{{clg.place_id}}, 0, 0);
-																							      };
-																							      imageObj{{clg.place_id}}.src = '{{clg.place_image}}';
-																							    </script>
-                                                                    </div>
-                                                                                <input type="file" style="display:none;"
-                                                                                       id="college{{clg.image_id}}"
-                                                                                       name="college_image[]"
-                                                                                       accept="image/*"
-                                                                                       class="form-control"
-                                                                                       placeholder="Upload image" onchange="change_college_img(this,event)"> 
-                                                                               <textarea name="collegename" id="collegename"
-                                                        										class="form-control college_and_universities">{{ clg.place_name }}</textarea>       
-                                                                                <label class="error"
-                                                                                       style="color:red; display:none;"></label>
-                                                                            </div> 
-                                                                                  {% endfor %}
-                                                                        {% endif %} 
-                                                                            
-                                         </div>
-                                         </div>
-                        					<br>
-                                       
-                                         </div>
-                                         
-                                    </div>
+                                                        {% endfor %}
+                                                        {% endif %}
+                                                    </div>
 
+                                                    <div class="row">
+                                                        <div class="form-group col-lg-12">
+                                                            <label class="control-label " style="font-size:15px;">Shopping
+                                                            </label>
+                                                            <a class="fa fa-plus-circle fa-lg add_shop"
+                                                               style="margin-top: 2.7%;margin-left: 2%;"></a>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row " id="shop">
+                                                        {% if not shops %}
+
+                                                        <div id="shop_div_1" class="col-lg-4" style="width: 31.333%; !important">
+                                                            <input type="hidden" class="shop_id" value="0"> </input>
+                                                            <div class="image_holder">
+                                                                <a onclick='remove_modal("2","1")'><i
+                                                                        class="fa fa-times fa-lg"></i></a>
+                                                                <br>
+                                                                <div class="canvas_holder">
+                                                                    <canvas class="canvas_block" style="cursor:pointer;"
+                                                                            onclick="javascript:$('#shop0').click();"
+                                                                            id="canvas_shop0"></canvas>
+                                                                </div>
+                                                            </div>
+                                                            <input type="file" style="display:none;" name="shop_image[]"
+                                                                   id="shop0" accept="image/*"
+                                                                   class="form-control"
+                                                                   placeholder="Upload image"
+                                                                   onchange="change_shop_img(this,event)">
+                                                               <textarea name="shopname" id="about_shop_1"
+                                                                         style="margin-top:2%;margin-bottom: 2%;" maxlength='5000'
+                                                                         class="form-control where_to_shop">  </textarea>
+                                                            <label class="error"
+                                                                   style="color:red; display:none;"></label>
+                                                        </div>
+
+                                                        {% else %}
+                                                        {% for shop in shops %}
+
+                                                        <div id="shop_div_{{forloop.counter}}" class="col-lg-4" style="width: 31.333%; !important">
+                                                            <input type="hidden" class="shop_id"
+                                                                   value="{{shop.place_id}}"> </input>
+                                                            <div class="image_holder">
+                                                                <a onclick='remove_modal("2",{{forloop.counter}})'><i
+                                                                        class="fa fa-times fa-lg"></i></a>
+                                                                <br>
+                                                                <div class="canvas_holder">
+                                                                    <img alt="image preview" hidden=""
+                                                                         src="{{shop.place_image}}">
+                                                                    <canvas class="canvas_block canvas_filled"
+                                                                            style="cursor:pointer;"
+                                                                            onclick="javascript:$('#shop{{shop.image_id}}').click();"
+                                                                            id="canvas_shop{{shop.image_id}}"></canvas>
+                                                                    <script>
+                                                                      var canvas{{shop.place_id}} = document.getElementById('canvas_shop{{shop.image_id}}');
+                                                                      var context{{shop.place_id}} = canvas{{shop.place_id}}.getContext('2d');
+                                                                      var imageObj{{shop.place_id}} = new Image();
+
+                                                                      imageObj{{shop.place_id}}.onload = function() {
+                                                                        canvas{{shop.place_id}}.width = imageObj{{shop.place_id}}.width;
+                                                                        canvas{{shop.place_id}}.height = imageObj{{shop.place_id}}.height;
+                                                                        context{{shop.place_id}}.drawImage(imageObj{{shop.place_id}}, 0, 0);
+                                                                      };
+                                                                      imageObj{{shop.place_id}}.src = '{{shop.place_image}}';
+
+                                                                    </script>
+                                                                </div>
+                                                            </div>
+                                                            <input type="file" style="display:none"
+                                                                   id="shop{{shop.image_id}}"
+                                                                   name="shop_image[]"
+                                                                   accept="image/*"
+                                                                   class="form-control"
+                                                                   placeholder="Upload image"
+                                                                   onchange="change_shop_img(this,event)">
+                                                                   <textarea name="shopname" id="about_shop_{{forloop.counter}}" maxlength='5000'
+                                                                             style="margin-top:2%;margin-bottom: 2%;"
+                                                                             class="form-control where_to_shop">{{ shop.place_name }} </textarea>
+                                                            <label class="error"
+                                                                   style="color:red; display:none;"></label>
+                                                            <input type="hidden" id="sp_id_{{forloop.counter}}"
+                                                                   value="{{shop.place_id}}"> </input>
+                                                        </div>
+
+                                                        {% endfor %}
+                                                        {% endif %}
+                                                    </div>
+
+
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group">
+                                                                <label class="control-label " style="font-size:15px;">Hospitals
+                                                                </label>
+                                                                <a class="fa fa-plus-circle fa-lg add_hospital"
+                                                                   style="margin-top: 2.7%;margin-left: 2%;"></a>
                                                             </div>
                                                         </div>
-
-
-                                                      
                                                     </div>
-                                                </div><!-- End Of tab content -->
+
+
+                                                    <div class="row " id="hospital">
+                                                        {% if not hospitals %}
+                                                        <div id="hospital_div_1" class="col-lg-4" style="width: 31.333%; !important">
+                                                            <input type="hidden" class="hospital_id" value="0"> </input>
+                                                            <div class="image_holder">
+                                                                <a onclick='remove_modal("3","1")'><i
+                                                                        class="fa fa-times fa-lg"></i></a>
+                                                                <br>
+                                                                <div class="canvas_holder">
+                                                                    <canvas class="canvas_block" style="cursor:pointer;"
+                                                                            onclick="javascript:$('#hospital0').click();"
+                                                                            id="canvas_hospital0"></canvas>
+                                                                </div>
+                                                            </div>
+                                                            <input type="file" style="display:none;"
+                                                                   name="hospital_image[]"
+                                                                   accept="image/*" id="hospital0"
+                                                                   class="form-control"
+                                                                   placeholder="Upload image"
+                                                                   onchange="change_hospital_img(this,event)">
+                                                                             <textarea name="hospitalname" style="margin-top:2%;margin-bottom: 2%;"
+                                                                                       id="about_hos_1" maxlength='5000'
+                                                                                       class="form-control reputed_hospitals"></textarea>
+                                                            <label class="error"
+                                                                   style="color:red; display:none;"></label>
+                                                        </div>
+                                                        {% else %}
+                                                        {% for hos in hospitals %}
+                                                        <div id="hospital_div_{{forloop.counter}}" class="col-lg-4" style="width: 31.333%; !important">
+                                                            <input type="hidden" class="hospital_id"
+                                                                   value="{{hos.place_id}}"> </input>
+                                                            <div class="image_holder">
+                                                                <a onclick='remove_modal("3",{{forloop.counter}})'><i
+                                                                        class="fa fa-times fa-lg"></i></a>
+                                                                <br>
+                                                            <div class="canvas_holder">
+                                                                <img alt="image preview" hidden=""
+                                                                     src="{{hos.place_image}}">
+                                                                <canvas class="canvas_block canvas_filled"
+                                                                        style="cursor:pointer;"
+                                                                        onclick="javascript:$('#hospital{{hos.image_id}}').click();"
+                                                                        id="canvas_hospital{{hos.image_id}}"></canvas>
+                                                                <script>
+                                                                    var canvas{{hos.place_id}} = document.getElementById('canvas_hospital{{hos.image_id}}');
+                                                                    var context{{hos.place_id}} = canvas{{hos.place_id}}.getContext('2d');
+                                                                    var imageObj{{hos.place_id}} = new Image();
+
+                                                                    imageObj{{hos.place_id}}.onload = function() {
+                                                                    canvas{{hos.place_id}}.width = imageObj{{hos.place_id}}.width;
+                                                                    canvas{{hos.place_id}}.height = imageObj{{hos.place_id}}.height;
+                                                                    context{{hos.place_id}}.drawImage(imageObj{{hos.place_id}}, 0, 0);
+                                                                    };
+                                                                    imageObj{{hos.place_id}}.src = '{{hos.place_image}}';
+
+                                                                </script>
+                                                            </div>
+                                                            </div>
+                                                            <input type="file"
+                                                                   id="hospital{{hos.image_id}}" style="display:none;"
+                                                                   name="hospital_image[]"
+                                                                   accept="image/*"
+                                                                   class="form-control"
+                                                                   placeholder="Upload image"
+                                                                   onchange="change_hospital_img(this,event)">
+                                                                       <textarea name="hospitalname" id="about_hos_{{forloop.counter}}"
+                                                                                 style="margin-top:2%;margin-bottom: 2%;" maxlength='5000'
+                                                                                 class="form-control reputed_hospitals">{{ hos.place_name }}</textarea>
+                                                            <label class="error"
+                                                                   style="color:red; display:none;"></label>
+                                                            <input type="hidden" id="hos_id_{{forloop.counter}}"
+                                                                   value="{{hos.place_id}}"> </input>
+                                                        </div>
+
+                                                        {% endfor %}
+                                                        {% endif %}
+                                                    </div>
+
+
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group">
+                                                                <label class="control-label " style="font-size:15px;">Education
+                                                                </label>
+                                                                <a class="fa fa-plus-circle fa-lg add_college"
+                                                                   style="margin-top: 2.7%;margin-left: 2%;"></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" id="college">
+                                                        {% if not colleges %}
+                                                        <input id="college_div_1" type="hidden" class="college_id" value="0"> </input>
+                                                        <div class="col-lg-4" style="width: 31.333%; !important">
+                                                            <div class="image_holder">
+                                                                <a onclick='remove_modal("4","1")'><i
+                                                                        class="fa fa-times fa-lg"></i></a>
+                                                                <br>
+                                                                <div class="canvas_holder">
+                                                                    <canvas class="canvas_block" style="cursor:pointer;"
+                                                                            onclick="javascript:$('#college0').click();"
+                                                                            id="canvas_college0"></canvas>
+                                                                </div>
+                                                            </div>
+                                                            <input type="file" style="display:none;"
+                                                                   name="college_image[]"
+                                                                   id="college0" accept="image/*"
+                                                                   class="form-control"
+                                                                   placeholder="Upload image"
+                                                                   onchange="change_college_img(this,event)">
+                                                                                 <textarea name="collegename"
+                                                                                           id="about_clg_1" maxlength='5000'
+                                                                                           style="margin-top:2%;margin-bottom: 2%;"
+                                                                                           class="form-control college_and_universities"></textarea>
+                                                            <label class="error"
+                                                                   style="color:red; display:none;"></label>
+                                                        </div>
+                                                        {% else %}
+                                                        {% for clg in colleges %}
+                                                        <input type="hidden" class="college_id"
+                                                               value="{{clg.place_id}}"> </input>
+                                                        <div id="college_div_{{forloop.counter}}" class="col-lg-4" style="width: 31.333%; !important">
+                                                            <div class="image_holder">
+                                                                <a onclick='remove_modal("4",{{forloop.counter}})'><i
+                                                                        class="fa fa-times fa-lg"></i></a>
+                                                                <br>
+                                                                <div class="canvas_holder">
+                                                                    <img alt="image preview" hidden=""
+                                                                         src="{{clg.place_image}}">
+                                                                    <canvas class="canvas_block canvas_filled"
+                                                                            style="cursor:pointer;"
+                                                                            onclick="javascript:$('#college{{clg.image_id}}').click();"
+                                                                            id="canvas_college{{clg.image_id}}"></canvas>
+                                                                    <script>
+                                                                          var canvas{{clg.place_id}} = document.getElementById('canvas_college{{clg.image_id}}');
+                                                                          var context{{clg.place_id}} = canvas{{clg.place_id}}.getContext('2d');
+                                                                          var imageObj{{clg.place_id}} = new Image();
+
+                                                                          imageObj{{clg.place_id}}.onload = function() {
+                                                                            canvas{{clg.place_id}}.width = imageObj{{clg.place_id}}.width;
+                                                                            canvas{{clg.place_id}}.height = imageObj{{clg.place_id}}.height;
+                                                                            context{{clg.place_id}}.drawImage(imageObj{{clg.place_id}}, 0, 0);
+                                                                          };
+                                                                          imageObj{{clg.place_id}}.src = '{{clg.place_image}}';
+
+                                                                    </script>
+                                                                </div>
+                                                            </div>
+                                                            <input type="file" style="display:none;"
+                                                                   id="college{{clg.image_id}}"
+                                                                   name="college_image[]"
+                                                                   accept="image/*"
+                                                                   class="form-control"
+                                                                   placeholder="Upload image"
+                                                                   onchange="change_college_img(this,event)">
+                                                                               <textarea name="collegename" maxlength='5000'
+                                                                                         id="about_clg_{{forloop.counter}}"
+                                                                                         style="margin-top:2%;margin-bottom: 2%;"
+                                                                                         class="form-control college_and_universities">{{ clg.place_name }}</textarea>
+                                                            <label class="error"
+                                                                   style="color:red; display:none;"></label>
+                                                            <input type="hidden" id="clg_id_{{forloop.counter}}"
+                                                                   value="{{clg.place_id}}"> </input>
+                                                        </div>
+                                                        {% endfor %}
+                                                        {% endif %}
+
+                                                    </div>
+                                                </div>
+                                                <br>
+
                                             </div>
+
                                         </div>
-                                    </div><!-- End of second tab -->
+
+                                    </div>
                                 </div>
-                                <!--</form>  -->
+
+
                             </div>
-                        </div>
-                        <!-- END FORM-->
+                        </div><!-- End Of tab content -->
                     </div>
                 </div>
-                <!-- END PORTLET-->
-
-            </div>
+            </div><!-- End of second tab -->
         </div>
+        <!--</form>  -->
     </div>
-    <!-- END CONTENT BODY -->
+</div>
+<!-- END FORM-->
+</div>
+</div>
+<!-- END PORTLET-->
+
+</div>
+</div>
+</div>
+<!-- END CONTENT BODY -->
 </div>
 <!-- END CONTENT -->
 </div>
@@ -1052,12 +1133,41 @@ input[type="file"]{
 <!-- /.modal -->
 <!-- BEGIN FOOTER -->
 <div class="page-footer">
-    <div class="page-footer-inner"> 2016 &copy; DigiSpace.
+    <div class="page-footer-inner"> 2016 &copy; DigiSpace Software Private Limited
     </div>
     <div class="scroll-to-top">
         <i class="icon-arrow-up"></i>
     </div>
 </div>
+
+<div class="modal fade draggable-modal" id="remove-modal" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;"
+                     src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+
+            </div>
+            <div class="modal-body">
+
+                <div class="form-body">
+                    <h4 class="text-center" id="remove_text"></h4>
+                    <input id="remove_div_id" hidden>
+                    <input id="remove_div_type" hidden>
+                </div>
+                <div style="text-align:center !important;" class="modal-footer">
+                    <button type="button" class="btn green" onclick="remove_div()" >Yes</button>
+                    <button type="button" class="btn green" data-dismiss="modal">No</button>
+
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
 <!-- END FOOTER -->
 <!--[if lt IE 9]>
 <script src="{% static 'assets/global/plugins/respond.min.js"></script>
@@ -1119,52 +1229,29 @@ input[type="file"]{
 
 
 function callChangeImage(id){
-	$('#poi'+id).click();
+    $('#poi'+id).click();
 }
 
-//function callChangeImageValue(id){
-//	$('#old_poi_'+id).val('true');
-//}
-
+var poi_index;
+var shop_index;
+var hospital_index;
+var college_index;
 $(document).ready(function(){
-$("#shopname").val('');
-
-poi_index = {{poi_index}} + 1;
-
-shop_index = {{shop_index}} + 1;
-hospital_index = {{hospital_index}} + 1;
-college_index = {{college_index}} + 1;
-city_id = {{city.city_place_id}}
-
-
-   $("#state").select2({
-});
-   $("#city_name").select2({
-});
-   $("#category").select2({  
-}); 
-   $("#country").select2({  
-}); 
-
-   $("#timezone").select2({  
+    $("#shopname").val('');
+    poi_index = {{poi_index}} + 1;
+    shop_index = {{shop_index}} + 1;
+    hospital_index = {{hospital_index}} + 1;
+    college_index = {{college_index}} + 1;
+    city_id = {{city.city_place_id}}
+    $("#category").select2({});
+    $("#timezone").select2({});
 });
 
 
-$("#country").val({{city.country}}).change();
-
-setTimeout(function(){
-    $("#state").val({{city.state}}).change();
-}, 1000);
-
-setTimeout(function(){
-    $("#city_name").val({{city.city_name}}).change();
-}, 2000);
-
-});     
       
 var imageLoader = document.getElementById('city_image');
-    imageLoader.addEventListener('change', handleImage, false);
-    var city_img_src = $('#city_image_holder').attr('src');
+imageLoader.addEventListener('change', handleImage, false);
+var city_img_src = $('#city_image_holder').attr('src');
 var canvas = document.getElementById('city_canvas');
 var ctx = canvas.getContext('2d');
 if(city_img_src){
@@ -1224,327 +1311,299 @@ var ctx_c = canvas_c.getContext('2d');
 ctx_c.font="20px Open Sans";
 ctx_c.fillText("Image Preview",90,80);
 }
+
+    function remove_modal(place_type,div_id){
+        id = parseInt(div_id) - 1;
+        remove_text = "Are you sure you would like to delete this "
+        if(place_type == "1"){
+            if(document.getElementById("poi"+id).files[0] == undefined && $("#about_poi_"+div_id).val().trim() == ''){
+                $("#poi_div_"+div_id).remove();
+            }
+            else{
+                remove_text = remove_text + "city attraction?"
+                $("#remove-modal").modal('show');
+            }
+
+        }
+        if(place_type == "2"){
+            if(document.getElementById("shop"+id).files[0] == undefined && $("#about_shop_"+div_id).val().trim() == ''){
+                $("#shop_div_"+div_id).remove();
+            }
+            else{
+                remove_text = remove_text + "shopping?"
+                $("#remove-modal").modal('show');
+            }
+        }
+        if(place_type == "3"){
+            if(document.getElementById("hospital"+id).files[0] == undefined && $("#about_hos_"+div_id).val().trim() == ''){
+                $("#hospital_div_"+div_id).remove();
+            }
+            else{
+                remove_text = remove_text + "hospital?"
+                $("#remove-modal").modal('show');
+            }
+        }
+        if(place_type == "4"){
+            if(document.getElementById("college"+id).files[0] == undefined && $("#about_clg_"+div_id).val().trim() == ''){
+                $("#college_div_"+div_id).remove();
+            }
+            else{
+                remove_text = remove_text + "education?"
+                $("#remove-modal").modal('show');
+            }
+        }
+        $("#remove_text").text(remove_text);
+        $("#remove_div_id").val(div_id);
+        $("#remove_div_type").val(place_type);
+    }
+
+    function remove_div(){
+        div_id = $("#remove_div_id").val();
+        place_type = $("#remove_div_type").val();
+        var delete_place_id = '';
+        if(place_type == "1"){
+            place_id = $("#cp_id_"+div_id).val();
+            if (place_id != undefined){
+                place_id = place_id.split("_");
+                delete_place_id = place_id[1]
+            }
+            $("#poi_div_"+div_id).remove();
+        }
+        if(place_type == "2"){
+            place_id = $("#sp_id_"+div_id).val();
+            if (place_id != undefined){
+                place_id = place_id.split("_");
+                delete_place_id = place_id[1]
+            }
+            $("#shop_div_"+div_id).remove();
+        }
+        if(place_type == "3"){
+            place_id = $("#hos_id_"+div_id).val();
+            if (place_id != undefined){
+                place_id = place_id.split("_");
+                delete_place_id = place_id[1]
+            }
+            $("#hospital_div_"+div_id).remove();
+        }
+        if(place_type == "4"){
+            place_id = $("#clg_id_"+div_id).val();
+            if (place_id != undefined){
+                place_id = place_id.split("_");
+                delete_place_id = place_id[1]
+            }
+            $("#college_div_"+div_id).remove();
+        }
+        $("#remove-modal").modal('hide');
+        if (delete_place_id != ""){
+            $.ajax({
+                type    : "POST",
+                url : '/delete-place-image/',
+                data : {'place_id':delete_place_id},
+                success: function (response) {
+                },
+                error : function(response){
+                    alert("_Error");
+                }
+            });
+        }
+    }
         
+    //var poi_div_index = poi_index;
+    $(".add_point_of_interest").click(function() {
+        poi_div_index = poi_index+1;
+        $('#point_of_interest').append(
+            "<div id='poi_div_"+poi_div_index+"' class='col-lg-4'style='width: 31.333%; !important' >"+
+            "<div class='image_holder'><a onclick='remove_modal(1,"+poi_div_index+");'><i class='fa fa-times fa-lg'></i></a><br>"+
+            "<div class='canvas_holder'>" +
+            "<canvas class='canvas_block' style='cursor:pointer;' onclick='javascript:$(poi" + poi_index + ").click();' id='canvas_poi" + poi_index + "'></canvas>" +
+            "</div>" +
+            "</div>" +
+            "<input type='file' style='display:none;' name='point_of_interest_image[]' id='poi" + poi_index + "' class='form-control' placeholder='Upload image' onchange='change_poi_img(this,event)'/>" +
+            "<textarea maxlength='5000' id='about_poi_"+poi_div_index+"' type='text' style='margin-top:2%;margin-bottom: 2%;' name='point_of_interestname'  class='form-control interest_name' ></textarea>" +
+            "<label class='error' style='color:red; display:none;'></label></div>" +
+            "<input type='hidden' class='interest_place_id' value=" + poi_index + "> </input>"
+        );
+        var canvas_new = document.getElementById('canvas_poi' + poi_index);
+        var ctx_n = canvas_new.getContext('2d');
+        ctx_n.font = "20px Open Sans";
+        ctx_n.fillText("Image Preview", 90, 80);
+        poi_index++;
+    });
 
-$(".add_point_of_interest").click(function() {
-    $('#point_of_interest').append(
-        "<div class='col-lg-4' style='width: 31.333%; !important'>" +
-        "<div class='canvas_holder'>" +
-        "<canvas class='canvas_block' style='cursor:pointer;' onclick='javascript:$(poi" + poi_index + ").click();' id='canvas_poi" + poi_index + "'></canvas>" +
-        "</div>" +
-        "<input type='file' style='display:none;' name='point_of_interest_image[]' id='poi" + poi_index + "' class='form-control' placeholder='Upload image' onchange='change_poi_img(this,event)'/>" +
-        "<textarea type='text' style='margin-top:2%;margin-bottom: 2%;' name='point_of_interestname'  class='form-control interest_name' ></textarea>" +
-        "<label class='error' style='color:red; display:none;'></label></div>" +
-        "<input type='hidden' class='interest_place_id' value=" + poi_index + "> </input>"
-    );
-    var canvas_new = document.getElementById('canvas_poi' + poi_index);
-    var ctx_n = canvas_new.getContext('2d');
-    ctx_n.font = "20px Open Sans";
-    ctx_n.fillText("Image Preview", 90, 80);
-    poi_index++;
-});
- 
+    $(".add_shop").click(function(){
+        var shop_div_index = shop_index + 1;
+        $('#shop').append(
+            "<div id='shop_div_"+shop_div_index+"' class='col-lg-4' style='width: 31.333%; !important'>"+
+            "<div class='image_holder'><a onclick='remove_modal(2,"+shop_div_index+");'><i class='fa fa-times fa-lg'></i></a><br>"+
+            "<div class='canvas_holder'>"+
+            "<canvas class='canvas_block' style='cursor:pointer;' onclick='javascript:$(shop"+shop_index+").click();' id='canvas_shop"+shop_index+"'></canvas>"+
+            "</div>"+
+            "</div>"+
+            "<input type='file' style='display:none;' id='shop"+shop_index+"' name='place_image[]' class='form-control' placeholder='Upload image' onchange='change_shop_img(this,event)'>"+
+            "<textarea maxlength='5000' id='about_shop_"+shop_div_index+"' style='margin-top:2%;margin-bottom: 2%;' name='shopname' class='form-control where_to_shop' ></textarea>"+
+            "<label class='error'  style='color:red; display:none;'></label></div>"+
+            "<input type='hidden' class='shop_id' value="+shop_index+"> </input>"
+        );
+        var canvas_shop_new = document.getElementById('canvas_shop'+shop_index);
+        var ctx_sn = canvas_shop_new.getContext('2d');
+        ctx_sn.font="20px Open Sans";
+        ctx_sn.fillText("Image Preview",90,80);
+        shop_index++;
+    });
 
-            $(".add_shop").click(function(){
-                    $('#shop').append(
-                        "<div class='col-lg-4' style='width: 31.333%; !important'>"+
-                        "<div class='canvas_holder'>"+
-        "<canvas class='canvas_block' style='cursor:pointer;' onclick='javascript:$(shop"+shop_index+").click();' id='canvas_shop"+shop_index+"'></canvas>"+
-        "</div>"+
-                        "<input type='file' style='display:none;' id='shop"+shop_index+"' name='place_image[]' class='form-control' placeholder='Upload image' onchange='change_shop_img(this,event)'>"+
-                        "<textarea  name='shopname' class='form-control where_to_shop' ></textarea>"+
-                        "<label class='error'  style='color:red; display:none;'></label></div>"+
-"<input type='hidden' class='shop_id' value="+shop_index+"> </input>"
-                    );
-                    var canvas_shop_new = document.getElementById('canvas_shop'+shop_index);
-                    var ctx_sn = canvas_shop_new.getContext('2d');
-                    ctx_sn.font="20px Open Sans";
-                    ctx_sn.fillText("Image Preview",90,80);
-                    shop_index++;           
-            });                     
-        
-
-            $(".add_hospital").click(function(){
-                    $('#hospital').append(
-                        "<div class='col-lg-4' style='width: 31.333%; !important'>"+
-                        "<div class='canvas_holder'>"+
-                        "<canvas class='canvas_block' style='cursor:pointer;' onclick='javascript:$(hospital"+hospital_index+").click();' id='canvas_hospital"+hospital_index+"'></canvas>"+
-                        "</div>"+
-                        "<input type='file' style='display:none;' id='hospital"+hospital_index+"' name='place_image[]' class='form-control' placeholder='Upload image' onchange='change_hospital_img(this,event)'>"+
-                        "<textarea  name='hospitalname'  class='form-control reputed_hospitals'></textarea>"+
-                        "<label class='error'  style='color:red; display:none;'></label></div>"+
-"<input type='hidden' class='hospital_id' value="+hospital_index+"> </input>"
-                    );      
-                    var canvas_hospital_new = document.getElementById('canvas_hospital'+hospital_index);
-                    var ctx_hn = canvas_hospital_new.getContext('2d');
-                    ctx_hn.font="20px Open Sans";
-                    ctx_hn.fillText("Image Preview",90,80); 
-                    hospital_index++;           
-            });        
+    $(".add_hospital").click(function(){
+        var hospital_div_index = hospital_index + 1;
+        $('#hospital').append(
+            "<div id='hospital_div_"+hospital_div_index+"' class='col-lg-4' style='width: 31.333%; !important'>"+
+            "<div class='image_holder'><a onclick='remove_modal(3,"+hospital_div_index+");'><i class='fa fa-times fa-lg'></i></a><br>"+
+            "<div class='canvas_holder'>"+
+            "<canvas class='canvas_block' style='cursor:pointer;' onclick='javascript:$(hospital"+hospital_index+").click();' id='canvas_hospital"+hospital_index+"'></canvas>"+
+            "</div>"+
+            "</div>"+
+            "<input type='file' style='display:none;' id='hospital"+hospital_index+"' name='place_image[]' class='form-control' placeholder='Upload image' onchange='change_hospital_img(this,event)'>"+
+            "<textarea maxlength='5000' id='about_hos_"+hospital_div_index+"' style='margin-top:2%;margin-bottom: 2%;' name='hospitalname'  class='form-control reputed_hospitals'></textarea>"+
+            "<label class='error'  style='color:red; display:none;'></label></div>"+
+            "<input type='hidden' class='hospital_id' value="+hospital_index+"> </input>"
+        );
+        var canvas_hospital_new = document.getElementById('canvas_hospital'+hospital_index);
+        var ctx_hn = canvas_hospital_new.getContext('2d');
+        ctx_hn.font="20px Open Sans";
+        ctx_hn.fillText("Image Preview",90,80);
+        hospital_index++;
+    });
     
 
-            $(".add_college").click(function(){
-                    $('#college').append(
-                        "<div class='col-lg-4' style='width: 31.333%; !important'>"+
-                        "<div class='canvas_holder'>"+
-                        "<canvas class='canvas_block' style='cursor:pointer;' onclick='javascript:$(college"+college_index+").click();' id='canvas_college"+college_index+"'></canvas>"+
-                        "</div>"+
-                        "<input id='college"+college_index+"' style='display:none;' type='file' name='place_image[]' class='form-control' placeholder='Upload image' onchange='change_college_img(this,event)'>"+
-                        "<textarea  name='collegename'  class='form-control college_and_universities'></textarea>"+
-                        "<label class='error'  style='color:red; display:none;'></label></div>"+
-"<input type='hidden' class='college_id' value="+college_index+"> </input>"
-                    );
-                    var canvas_college_new = document.getElementById('canvas_college'+college_index);
-                    var ctx_cn = canvas_college_new.getContext('2d');
-                    ctx_cn.font="20px Open Sans";
-                    ctx_cn.fillText("Image Preview",90,80);         
-                    college_index++;                    
-            });
+    $(".add_college").click(function(){
+        var college_div_index = college_index + 1;
+        $('#college').append(
+            "<div id='college_div_"+college_div_index+"' class='col-lg-4' style='width: 31.333%; !important'>"+
+            "<div class='image_holder'><a onclick='remove_modal(4,"+college_div_index+");'><i class='fa fa-times fa-lg'></i></a><br>"+
+            "<div class='canvas_holder'>"+
+            "<canvas class='canvas_block' style='cursor:pointer;' onclick='javascript:$(college"+college_index+").click();' id='canvas_college"+college_index+"'></canvas>"+
+            "</div>"+
+            "</div>"+
+            "<input id='college"+college_index+"' style='display:none;' type='file' name='place_image[]' class='form-control' placeholder='Upload image' onchange='change_college_img(this,event)'>"+
+            "<textarea maxlength='5000' id='about_clg_"+college_div_index+"' style='margin-top:2%;margin-bottom: 2%;' name='collegename'  class='form-control college_and_universities'></textarea>"+
+            "<label class='error'  style='color:red; display:none;'></label></div>"+
+            "<input type='hidden' class='college_id' value="+college_index+"> </input>"
+        );
+        var canvas_college_new = document.getElementById('canvas_college'+college_index);
+        var ctx_cn = canvas_college_new.getContext('2d');
+        ctx_cn.font="20px Open Sans";
+        ctx_cn.fillText("Image Preview",90,80);
+        college_index++;
+    });
 
-$("#state").change(function () {
-    getCity();
-});
-
-$("#country").change(function () {
-    getCurrency();
-    getState();
-});
-
-
-
-
-function getState() {
-     country_id = $('#country :selected').val();
-    if (country_id) {
-        $.ajax({
-            type: 'GET',
-            url: '/get-state/',
-            data: {'country_id': country_id},
-            success: function (response) {
-                    //alert('success');
-                $('#state').html('');
-                $.each(response.state_list, function (index, item) {
-                    $('#state').append(item);
-                });
-                $('#state').val("");
-            },
-            error: function (response) {
-                alert("Error!");
-            },
-
-        });
-    }
-    else {
-        $('#city').val("");
-    }
-}
-
-function getCity() {
-    state_id = $('#state :selected').val();
-    if (state_id) {
-        $.ajax({
-            type: 'GET',
-            url: '/get-city/',
-            data: {'state_id': state_id},
-            success: function (response) {
-                    //alert('success');
-                $('#city_name').html('');
-                $.each(response.city_list, function (index, item) {
-                    $('#city_name').append(item);
-                });
-                $('#city_name').val("");
-            },
-            error: function (response) {
-                alert("Error!");
-            },
-
-        });
-    }
-    else {
-        $('#city').val("");
-    }
-}
-
-function getCurrency() {
-    country_id = $('#country :selected').val();
-    if (country_id) {
-        $.ajax({
-            type: 'GET',
-            url: '/add-currency/',
-            data: {'country_id': country_id},
-            success: function (response) {
-                    //alert('success');
-                
-                $.each(response.currency_list, function (index, item) {
-                //$('#currency').select2("val", item.id );
-                    $('#currency').val(item.currency);
-                    $('#currency_id').val(item.id);
-                });
-               // $('#currency').val("");
-            },
-            error: function (response) {
-                alert("Error!");
-            },
-
-        });
-    }
-    else {
-        $('#city').val("");
-    }
-}
-
-function checkcountry(country){
-
-  if($(country).val()!='' && $(country).val()!= null)
-   {
-
-   	
-    $(country).parent().children('.error').css("display", "none");
-   return true;
-   }else{
-
-    $(country).parent().children('.error').css("display", "block");
-    $(country).parent().children('.error').text("Please select Country");
-   return false; 
-   }
-} 
-
-function checkcity(state){
-  if($(state).val()!='' && $(state).val()!=null)
-   {
-
-    $(state).parent().children('.error').css("display", "none");
-   return true;
-   }else{
-    $(state).parent().children('.error').css("display", "block");
-    $(state).parent().children('.error').text("Please select City");
-   return false;
-   }
-}
-
-function checkState(state){
-
-  if($(state).val()!='' && $(state).val()!=null)
-   {
-   
-    $(state).parent().children('.error').css("display", "none");
-   return true;
-   }else{
-    $(state).parent().children('.error').css("display", "block");
-    $(state).parent().children('.error').text("Please select State");
-   return false; 
-   }
-} 
 
 
 function checkClimate(climate){
-			
-			Climate = $(climate).val()
-		   var namePattern = /^[0-9]*$/;  
-		 	 if(Climate=='')
-			{
-			return true;	
-			} 
-		   else if(namePattern.test(Climate)){
-		   	
-		   	$(climate).parent().children('.error').css("display", "block");
-		  	 	$(climate).parent().children('.error').text("Please enter valid Climate");
-		      
-		   return false;
-		   }else{
-		 	$(climate).parent().children('.error').css("display", "none");
-		   return true; 
-		   }
-		} 
+            
+            Climate = $(climate).val()
+           var namePattern = /^[0-9]*$/;  
+             if(Climate=='')
+            {
+            return true;    
+            } 
+           else if(namePattern.test(Climate)){
+            
+            $(climate).parent().children('.error').css("display", "block");
+                $(climate).parent().children('.error').text("Please enter valid Climate");
+              
+           return false;
+           }else{
+            $(climate).parent().children('.error').css("display", "none");
+           return true; 
+           }
+        } 
 
 
 function checkLanguage(language){
 
- 	var namePattern = /^[0-9]*$/;  
-	lang = $(language).val()
-	
-	
-	if(lang==""){
- 	
- 		$(language).parent().children('.error').css("display", "none");
-   	return true;
+    var namePattern = /^[0-9]*$/;  
+    lang = $(language).val()
+    
+    
+    if(lang==""){
+    
+        $(language).parent().children('.error').css("display", "none");
+    return true;
    
-   	}
+    }
    else {
    if(namePattern.test(lang))
    { 
   
-  		    $(language).parent().children('.error').css("display", "block");
+            $(language).parent().children('.error').css("display", "block");
     $(language).parent().children('.error').text("Please enter valid Language");
-  	  
+      
    
- 		return false;  
+        return false;  
    }
-	 
+     
    else {
   
      $(language).parent().children('.error').css("display", "none");  
-		   return true; 
+           return true; 
    }
    }  
  }  
    
 function checkPopulation(population){
 
-	popu = $(population).val()
- 	var namePattern = /[0-9]/;  
-	
-	
-	 if(popu=='')
-	{
-			return true;	
-	} 
-	else
+    popu = $(population).val()
+    var namePattern = /[0-9]/;  
+    
+    
+     if(popu=='')
+    {
+            return true;    
+    } 
+    else
    { 
-		   	if(namePattern.test(popu)){
-		   	
-				$(population).parent().children('.error').css("display", "none");		   	
-		   	
-		   	
-		   return true;
-				}else{
-			
-		 		$(population).parent().children('.error').css("display", "block");
-		  	 	$(population).parent().children('.error').text("Please enter valid Population");
-		      
-		   	return false; 
-			   }
-		   
+            if(namePattern.test(popu)){
+            
+                $(population).parent().children('.error').css("display", "none");           
+            
+            
+           return true;
+                }else{
+            
+                $(population).parent().children('.error').css("display", "block");
+                $(population).parent().children('.error').text("Please enter valid Population");
+              
+            return false; 
+               }
+           
    }
 } 
 
 function checkLogo(city_image){
-	resume = $(city_image).val()
+    resume = $(city_image).val()
    
-	if(resume=='')
-	{
-  		$(city_image).parent().children('.error').css("display", "none");	
-		return true;
-	}	
-	else 
-	{
-		var val = $(city_image).val().toLowerCase();
-		var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(.png|.jpeg|.jpg)$");
-		if(!(regex.test(val))) {
- 			$(city_image).parent().children('.error').css("display", "block");
-  			$(city_image).parent().children('.error').text("Please upload an image");
-     		 return false; 
-			}
-		else {
+    if(resume=='')
+    {
+        $(city_image).parent().children('.error').css("display", "none");   
+        return true;
+    }   
+    else 
+    {
+        var val = $(city_image).val().toLowerCase();
+        var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(.png|.jpeg|.jpg)$");
+        if(!(regex.test(val))) {
+            $(city_image).parent().children('.error').css("display", "block");
+            $(city_image).parent().children('.error').text("Please upload an image");
+             return false; 
+            }
+        else {
 
-     		 $(city_image).parent().children('.error').css("display", "none");
-	    	 return true;
-				}
-}	 
-}	
+             $(city_image).parent().children('.error').css("display", "none");
+             return true;
+                }
+}    
+}   
 /*
     function showSelectsd(){
-		 var categ = [];
+         var categ = [];
         $.each($(".city_category option:selected"), function(){            
             categ.push($(this).val());
         });
@@ -1570,196 +1629,201 @@ function checkCategory(category){
 } 
 
  function checkPointOfInterest(interest_name){
-	  			var isValid = false;
-			
-			   $('.interest_name').each(function( index ) {
-				  if($(this).val()=='')
-			   {
-			    	
-					isValid = true;
+                var isValid = false;
+            
+               $('.interest_name').each(function( index ) {
+                  if($(this).val()=='')
+               {
+                    
+                    isValid = true;
 
-			   }
-			   else{
-			   
-			    $(this).parent().children('.error').css("display", "none");
-			   	isValid = true;
-			   }
-				});
-			   return isValid;
-			}
+               }
+               else{
+               
+                $(this).parent().children('.error').css("display", "none");
+                isValid = true;
+               }
+                });
+               return isValid;
+            }
 
 function checkShop(where_to_shop){
-	  			var isValid = false;
-				
-			   $('.where_to_shop').each(function( index ) {
-				  if($(this).val()=='')
-			   {
-			    	
-					isValid = true;
+                var isValid = false;                
+                
+               $('.where_to_shop').each(function( index ) {
+                  if($(this).val()=='')
+               {
+                    
+                    isValid = true;
 
-			   }
-			   else{
-			   
-			    $(this).parent().children('.error').css("display", "none");
-			   	isValid = true;
-			   }
-				});
-			   return isValid;
-			}
-			
+               }
+               else{
+               
+                $(this).parent().children('.error').css("display", "none");
+                isValid = true;
+               }
+                });
+               return isValid;
+            }
+            
 function checkHospital(reputed_hospitals){
-	  			var isValid = false;
-				
-			   $('.reputed_hospitals').each(function( index ) {
-				  if($(this).val()=='')
-			   {
-			    	
-					isValid = true;
+                var isValid = false;
+                
+               $('.reputed_hospitals').each(function( index ) {
+                  if($(this).val()=='')
+               {
+                    
+                    isValid = true;
 
-			   }
-			   else{
-			   
-			    $(this).parent().children('.error').css("display", "none");
-			   	isValid = true;
-			   }
-				});
-			   return isValid;
-			}
-			
+               }
+               else{
+               
+                $(this).parent().children('.error').css("display", "none");
+                isValid = true;
+               }
+                });
+               return isValid;
+            }
+            
 function checkCollege(college_and_universities){
-	  			var isValid = false;
-				
-			   $('.college_and_universities').each(function( index ) {
-				  if($(this).val()=='')
-			   {
-			    	
-					isValid = true;
+                var isValid = false;
+                
+               $('.college_and_universities').each(function( index ) {
+                  if($(this).val()=='')
+               {
+                    
+                    isValid = true;
 
-			   }
-			   else{
-			   
-			    $(this).parent().children('.error').css("display", "none");
-			   	isValid = true;
-			   }
-				});
-			   return isValid;
-			}			
-			
+               }
+               else{
+               
+                $(this).parent().children('.error').css("display", "none");
+                isValid = true;
+               }
+                });
+               return isValid;
+            }           
+            
 
- function validateCityData(){
-
-	if(checkcountry("#country")&checkcity("#city_name")&checkState("#state")&checkLanguage("#language")&checkClimate("#climate")&checkLogo("#city_image"))
-	{
-		return true;	
-	}
-	return false;
+function validateCityData(){
+    if(checkLanguage("#language")&checkClimate("#climate")&checkLogo("#city_image"))
+    {
+        return true;    
+    }
+    return false;
 }
  
- function validatePlaceData(){
-
-	if(checkPointOfInterest(".interest_name")&checkShop(".where_to_shop")&checkShop(".where_to_shop")&checkHospital(".reputed_hospitals")&checkCollege(".college_and_universities"))
-	{
-		return true;	
-	}
-	return false;
+function validatePlaceData(){
+    if(checkPointOfInterest(".interest_name")&checkShop(".where_to_shop")&checkShop(".where_to_shop")&checkHospital(".reputed_hospitals")&checkCollege(".college_and_universities"))
+    {
+        return true;    
+    }
+    return false;
 } 
  
  
-  $("#save_city").click(function(event) {
-     event.preventDefault();
+$("#save_city").click(function(event) {
+    event.preventDefault();
 
 
-     if (validateCityData()) {
-         var formData = new FormData();
-         formData.append("city_name", $('#city_name').val());
+    if (validateCityData()) {
+        var formData = new FormData();
+        formData.append("city_name", $('#city_name').val());
+        k = 0;
+        for(var i = 0; i < poi_index; i++) {
+            var point_of_interest_image =  document.getElementById("poi"+i);
+            if(point_of_interest_image != null){
+                file = point_of_interest_image.files[0];
+                console.log(point_of_interest_image.files[0]);
+                formData.append("point_of_interest_image"+k, file);
+                k = k + 1;
+            }
+        }
+        formData.append("poi_range",k);
 
+        k = 0;
+        for(var i = 0; i < shop_index; i++) {
+            var shop_image =  document.getElementById("shop"+i);
+            if(shop_image != null){
+                file = shop_image.files[0];
+                formData.append("shop_image"+k, file);
+                k = k + 1;
+            }
+        }
+        formData.append("shop_range",k);
 
+        k = 0;
+        for(var i = 0; i < hospital_index; i++) {
+            var hospital_image =  document.getElementById("hospital"+i);
+            if(hospital_image != null){
+                file = hospital_image.files[0];
+                formData.append("hospital_image"+k, file);
+                k = k + 1;
+            }
+        }
+        formData.append("hospital_range",k);
 
-			console.log('=======================>',poi_index);
+        k = 0;
+        for(var i = 0; i < college_index; i++) {
+            var college_image =  document.getElementById("college"+i);
+            if(college_image != null){
+                file = college_image.files[0];
+                formData.append("college_image"+k, file);
+                k = k + 1;
+            }
+        }
+        formData.append("college_range",k);
 
-         for (var i = 0; i < poi_index; i++) {             
-             test="poi" + i;
-             console.log(test)
-             var point_of_interest_image = document.getElementById("poi" + i);
-
-             file = point_of_interest_image.files[0];
-             console.log(file);
-             formData.append("point_of_interest_image" + i, file);
-         }
          
-         console.log('=======================>',poi_index);
-         
-         //return false;
+        var poi_list = []
+        poi_list = $('.poi_status').map(function() {
+            return $(this).val();
+        }).get();
 
-         formData.append("poi_range", poi_index);
+        var point_of_interest_list = []
+            point_of_interest_list = $('.interest_name').map(function() {
+            if ($(this).val()=='') {
+                return $(this).val()+'_POI_CH';
+            }
+            else {
+                return $(this).val()+'_POI_CH';
+            }
+        }).get();
 
-         //alert(shop_index);
-         for (var i = 0; i < shop_index; i++) {
-             var shop_image = document.getElementById("shop" + i);
-             file = shop_image.files[0];
-             formData.append("shop_image" + i, file);
-         }
-         formData.append("shop_range", shop_index);
+        var shop_list = []
+            shop_list = $('.where_to_shop').map(function() {
+            if ($(this).val()=='') {
+                return $(this).val()+'_SOP_CH';
+            }
+            else {
+                return $(this).val()+'_SOP_CH';
+            }
+        }).get();
 
-         for (var i = 0; i < hospital_index; i++) {
-             var hospital_image = document.getElementById("hospital" + i);
-             file = hospital_image.files[0];
-             formData.append("hospital_image" + i, file);
-         }
-         formData.append("hospital_range", hospital_index);
+        var hospital_list = []
+            hospital_list = $('.reputed_hospitals').map(function() {
+            if ($(this).val()=='') {
+                return $(this).val()+'_HOS_CH';
+            }
+            else {
+                return $(this).val()+'_HOS_CH';
+            }
+        }).get();
 
-         for (var i = 0; i < college_index; i++) {
-             var college_image = document.getElementById("college" + i);
-             file = college_image.files[0];
-             formData.append("college_image" + i, file);
-         }
+        var college_list = []
+            college_list = $('.college_and_universities').map(function() {
+            if ($(this).val()=='') {
+                return $(this).val()+'_EDU_CH';
+            }
+            else {
+                return $(this).val()+'_EDU_CH';
+            }
+        }).get();
 
-         formData.append("college_range", college_index);
-         
-         
-          var poi_list = []
-         poi_list = $('.poi_status').map(function() {
-
-             return $(this).val();
-         }).get();
-         
-         //alert(poi_list);
-         //return false;
- 
-
-         var point_of_interest_list = []
-         point_of_interest_list = $('.interest_name').map(function() {
-
-             return $(this).val();
-         }).get();
-         //alert(point_of_interest_list);
-         
-
-
-         var shop_list = []
-         shop_list = $('.where_to_shop').map(function() {
-
-             return $(this).val();
-         }).get();
-         //alert(shop_list);
-
-         var hospital_list = []
-         hospital_list = $('.reputed_hospitals').map(function() {
-
-             return $(this).val();
-         }).get();
-         //alert(hospital_list);
-
-         var college_list = []
-         college_list = $('.college_and_universities').map(function() {
-
-             return $(this).val();
-         }).get();
-
-         var point_of_interest_id_list = []
-         $(".interest_place_id").each(function() {
-             point_of_interest_id_list.push($(this).val()+'_N');
-         });
+        var point_of_interest_id_list = []
+        $(".interest_place_id").each(function() {
+            point_of_interest_id_list.push($(this).val()+'_N');
+        });
 
          var shop_id_list = []
          $(".shop_id").each(function() {
@@ -1789,7 +1853,7 @@ function checkCollege(college_and_universities){
              formData.append("city_image", city_image);
          }
 
-         //	formData.append("city_image",filep);
+         // formData.append("city_image",filep);
          formData.append("country", $('#country').val());
          formData.append("currency", $('#currency').val());
          formData.append("city_name", $('#city_name').val());
@@ -1802,7 +1866,6 @@ function checkCollege(college_and_universities){
          formData.append("timezone", $('#timezone').val());
          formData.append("category", $('#selCat').val());
          formData.append("check_image", check_image);
-         //alert(formData);
          formData.append("college_id_list", college_id_list);
          formData.append("hospital_id_list", hospital_id_list);
          formData.append("shop_id_list", shop_id_list);
@@ -1813,10 +1876,7 @@ function checkCollege(college_and_universities){
          formData.append("shop_list", shop_list);
          formData.append("hospital_list", hospital_list);
          formData.append("college_list", college_list);
-          formData.append("poi_status_list", poi_list);
-         
-
-
+         formData.append("poi_status_list", poi_list);
 
          $.ajax({
              type: 'POST',
@@ -1844,138 +1904,138 @@ function checkCollege(college_and_universities){
          });
      }
  });
-	
-	
-	
-	$("#save_place").click(function(event){
-	event.preventDefault();		
-	if(validatePlaceData()){	
-		var formData= new FormData();	
+    
+    
+    
+    $("#save_place").click(function(event){
+    event.preventDefault();     
+    if(validatePlaceData()){    
+        var formData= new FormData();   
        alert(poi_index);
-		for(var i = 0; i < poi_index; i++) {
- 		var point_of_interest_image =  document.getElementById("poi"+i);
+        for(var i = 0; i < poi_index; i++) {
+        var point_of_interest_image =  document.getElementById("poi"+i);
         //console.log(point_of_interest_image);
- 		file = point_of_interest_image.files[0];  
-        console.log(file);	
-		formData.append("point_of_interest_image"+i, file);	
-		}
+        file = point_of_interest_image.files[0];  
+        console.log(file);  
+        formData.append("point_of_interest_image"+i, file); 
+        }
         //alert($('input[name*=point_of_interest_image[]]').val());
-		formData.append("poi_range",poi_index);
+        formData.append("poi_range",poi_index);
         //alert(shop_index);
-		for(var i = 0; i < shop_index; i++) {
- 		var shop_image =  document.getElementById("shop"+i);
- 		file = shop_image.files[0];  	
-		formData.append("shop_image"+i, file);	
-		}
-		formData.append("shop_range",shop_index);
+        for(var i = 0; i < shop_index; i++) {
+        var shop_image =  document.getElementById("shop"+i);
+        file = shop_image.files[0];     
+        formData.append("shop_image"+i, file);  
+        }
+        formData.append("shop_range",shop_index);
 
-		for(var i = 0; i < hospital_index; i++) {
- 		var hospital_image =  document.getElementById("hospital"+i);
- 		file = hospital_image.files[0];  	
-		formData.append("hospital_image"+i, file);	
-		}
-		formData.append("hospital_range",hospital_index);
+        for(var i = 0; i < hospital_index; i++) {
+        var hospital_image =  document.getElementById("hospital"+i);
+        file = hospital_image.files[0];     
+        formData.append("hospital_image"+i, file);  
+        }
+        formData.append("hospital_range",hospital_index);
 
-		for(var i = 0; i < college_index; i++) {
- 		var college_image =  document.getElementById("college"+i);
- 		file = college_image.files[0];  	
-		formData.append("college_image"+i, file);	
-		}
-		formData.append("college_range",college_index);
+        for(var i = 0; i < college_index; i++) {
+        var college_image =  document.getElementById("college"+i);
+        file = college_image.files[0];      
+        formData.append("college_image"+i, file);   
+        }
+        formData.append("college_range",college_index);
 
-		var point_of_interest_list = []
-			point_of_interest_list = $('.interest_name').map(function() {
-			
-			    return $(this).val();
-			}).get();	
-//	alert(point_of_interest_list);
+        var point_of_interest_list = []
+            point_of_interest_list = $('.interest_name').map(function() {
+            
+                return $(this).val();
+            }).get();   
+    alert(point_of_interest_list);
 
-	
-	var shop_list = []
-			shop_list = $('.where_to_shop').map(function() {
-			
-			    return $(this).val();
-			}).get();	
-	//alert(shop_list);
-	
-	var hospital_list = []
-			hospital_list = $('.reputed_hospitals').map(function() {
-			
-			    return $(this).val();
-			}).get();	
-	//alert(hospital_list);
-	
-	var college_list = []
-			college_list = $('.college_and_universities').map(function() {
-			
-			    return $(this).val();
-			}).get();	
+    
+    var shop_list = []
+            shop_list = $('.where_to_shop').map(function() {
+            
+                return $(this).val();
+            }).get();   
+    //alert(shop_list);
+    
+    var hospital_list = []
+            hospital_list = $('.reputed_hospitals').map(function() {
+            
+                return $(this).val();
+            }).get();   
+    //alert(hospital_list);
+    
+    var college_list = []
+            college_list = $('.college_and_universities').map(function() {
+            
+                return $(this).val();
+            }).get();   
 
-		    	var point_of_interest_id_list = []
+                var point_of_interest_id_list = []
         $(".interest_place_id").each(function () {
             point_of_interest_id_list.push($(this).val());
-      	});
+        });
 
-		    	var shop_id_list = []
+                var shop_id_list = []
         $(".shop_id").each(function () {
         
             shop_id_list.push($(this).val());
-      	});
+        });
 
-		    	var hospital_id_list = []
+                var hospital_id_list = []
         $(".hospital_id").each(function () {
             hospital_id_list.push($(this).val());
-      	});
+        });
 
-		    	var college_id_list = []
+                var college_id_list = []
         $(".college_id").each(function () {
             college_id_list.push($(this).val());
-      	});
-		    
-    	//alert($('#college').val());
-		formData.append("city_place_id",city_id);
-		formData.append("college_id_list",college_id_list); 
-		formData.append("hospital_id_list",hospital_id_list); 
-		formData.append("shop_id_list",shop_id_list); 
+        });
+            
+        //alert($('#college').val());
+        formData.append("city_place_id",city_id);
+        formData.append("college_id_list",college_id_list); 
+        formData.append("hospital_id_list",hospital_id_list); 
+        formData.append("shop_id_list",shop_id_list); 
 
-		formData.append("point_of_interest_id_list",point_of_interest_id_list); 
-    	
-    	formData.append("point_of_interest_list",point_of_interest_list);
-		formData.append("shop_list",shop_list);
-		formData.append("hospital_list",hospital_list);
-		formData.append("college_list",college_list);
+        formData.append("point_of_interest_id_list",point_of_interest_id_list); 
+        
+        formData.append("point_of_interest_list",point_of_interest_list);
+        formData.append("shop_list",shop_list);
+        formData.append("hospital_list",hospital_list);
+        formData.append("college_list",college_list);
 
     
     $.ajax({
-		type : 'POST',
-		url  : '/update-city-data/',
-		data : formData,
-		cache:false,
-		processData:false,
-		contentType:false,
-		success: function(response) {
-			if(response.success=='true'){
-			//$("#form_wizard_1").bootstrapWizard('show',1);
+        type : 'POST',
+        url  : '/update-city-data/',
+        data : formData,
+        cache:false,
+        processData:false,
+        contentType:false,
+        success: function(response) {
+            if(response.success=='true'){
+            //$("#form_wizard_1").bootstrapWizard('show',1);
 
-				$("#affiliate-modal").modal('show');
-			}
-		else{		
-		$("#error-modal").modal('show');
-			}
-		},
-	beforeSend: function () {
+                $("#affiliate-modal").modal('show');
+            }
+        else{       
+        $("#error-modal").modal('show');
+            }
+        },
+    beforeSend: function () {
    $("#processing").css('display','block');
    },
    complete: function () {
        $("#processing").css('display','none');
    },
-		error: function(response){
-			alert('error');
-		}
-	});
-}			   
+        error: function(response){
+            alert('error');
+        }
+    });
+}              
 });
-	
+    
 
     //---------------------------------------validation for number----------------//
 
@@ -2098,10 +2158,10 @@ var ctx_college = canvas_college.getContext('2d');
         img.src = event.target.result;
     }
     reader.readAsDataURL(event.target.files[0]);     
-}	
+}   
+
 
 </script>
-
 
 
 </body>

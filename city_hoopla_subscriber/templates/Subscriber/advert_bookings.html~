@@ -705,7 +705,8 @@ hr {
             <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu "
                 data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
                 <li class="nav-item ">
-                    <a href="index.html" class="nav-link nav-toggle" style="background-color: rgb(13, 103, 230);">
+                    <a href="/subscriber-portal/subscriber-dashboard/?supplier_id={{request.session.supplier_id}}"
+                       class="nav-link nav-toggle" style="background-color: rgb(13, 103, 230);">
                         <i class="fa fa-home" style="display: inline-block; color: #ffffff !important;"
                            aria-hidden="true"></i>
                         <span class="title" style="display: inline-block;"> Dashboard </span>
@@ -800,8 +801,8 @@ hr {
                                                             <span style="font-weight: 500; font-size: 14px;" class="profile-text area">
                                                                 {{coupons.user_area}}</span>
                                                             <br>
-                                                            <span style="font-weight: 700; font-size: 14px;" class="profile-text">
-                                                                {{coupons.user_id}}</span>
+                                                      <!--       <span style="font-weight: 700; font-size: 14px;" class="profile-text">
+                                                                {{coupons.user_id}}</span> -->
                                                         </div>
                                                         {% if coupons.status == 'Active' %}
                                                             <div class="col-lg-1 col-md-1 col-sm-1" style="padding:0px;">
@@ -816,10 +817,10 @@ hr {
                                                         {% endif %}
                                                     </div>
                                                     <div class="row" style=" padding-left: 12px;">
-                                                       <span  style="font-weight: 500; font-size: 14px; ">
+                                                       <span class="mobile_no" style="font-weight: 500; font-size: 14px; ">
                                                             {{coupons.mobile_no}} </span> <br>
                                                        
-                                                      <span style="font-weight: 500; font-size: 14px; color:#336699;">
+                                                      <span class="email_address" style="font-weight: 500; font-size: 14px; color:#336699;">
                                                           {{coupons.user_email_id}}
                                                       </span>
                                                       
@@ -969,18 +970,38 @@ $(document).ready(function(){
 
 });
 
-document.getElementById("txtSearch").oninput=function(){
-    var matcher = new RegExp(document.getElementById("txtSearch").value, "gi");
-    for (var i=0;i<document.getElementsByClassName("connect-cat").length;i++) {
-        if (matcher.test(document.getElementsByClassName("name")[i].innerHTML) || matcher.test(document.getElementsByClassName("coupon_code")[i].innerHTML)
-        || matcher.test(document.getElementsByClassName("area")[i].innerHTML) || matcher.test(document.getElementsByClassName("avail_date")[i].innerHTML)
-        || matcher.test(document.getElementsByClassName("expire")[i].innerHTML)) {
-            document.getElementsByClassName("connect-cat")[i].style.display="inline-block";
+
+    $('#txtSearch').keyup(function(){
+        var valThis = $(this).val().toLowerCase();
+        if(valThis == ""){
+            $('.connect-cat').show();
         } else {
-            document.getElementsByClassName("connect-cat")[i].style.display="none";
-        }
-    }
-}
+            $('.connect-cat').each(function(){
+                var text = $(this).find(".name").text().toLowerCase();
+                (text.indexOf(valThis) >= 0) ? $(this).show() : $(this).hide();
+                if (text.indexOf(valThis) < 0){
+                    var text = $(this).find(".area").text().toLowerCase();
+                    (text.indexOf(valThis) >= 0) ? $(this).show() : $(this).hide();
+                    if (text.indexOf(valThis) < 0){
+                        var text = $(this).find(".mobile_no").text().toLowerCase();
+                        (text.indexOf(valThis) >= 0) ? $(this).show() : $(this).hide();
+                        if (text.indexOf(valThis) < 0){
+                            var text = $(this).find(".email_address").text().toLowerCase();
+                            (text.indexOf(valThis) >= 0) ? $(this).show() : $(this).hide();
+                            if (text.indexOf(valThis) < 0){
+                                var text = $(this).find(".coupon_code").text().toLowerCase();
+                                (text.indexOf(valThis) >= 0) ? $(this).show() : $(this).hide();
+                                if (text.indexOf(valThis) < 0){
+                                    var text = $(this).find(".expire").text().toLowerCase();
+                                    (text.indexOf(valThis) >= 0) ? $(this).show() : $(this).hide();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        };
+    });
 
 </script>
 

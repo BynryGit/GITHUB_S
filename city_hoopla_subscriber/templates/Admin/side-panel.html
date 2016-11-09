@@ -190,7 +190,7 @@
 
 <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu " data-keep-expanded="false"
     data-auto-scroll="true" data-slide-speed="200">
-    {% if request.session.privileges|check_list:'View Dashboard Details,View Advert Performance,View Financial Details,View Selected Subscriber Details,All' == 'true' %}
+    {% if request.session.privileges|check_list:'View Dashboard Details,All' == 'true' %}
         <li id="dashboard_nav" class="nav-item ">
             <a id="dashboard_anchor" href="/dashboard/" class="nav-link nav-toggle">
                 <i id="dashboard_icon" class="icon-home icon-color" style="display: inline-block !important;"></i>
@@ -201,7 +201,7 @@
             </a>
         </li>
     {% endif %}
-    {% if request.session.privileges|check_list:'Consumer Management,Subscription Management,All' == 'true' %}
+    {% if request.session.privileges|check_list:'Subscription Management,All' == 'true' %}
         <li id="supplier_nav" class="nav-item  ">
             <a id="supplier_anchor" href="/view-subscriber-list/" class="nav-link nav-toggle">
                 <i id="supplier_icon" class="icon-users icon-color" style="display: inline-block !important;"></i>
@@ -211,7 +211,7 @@
             </a>
         </li>
     {% endif %}
-    {% if request.session.privileges|check_list:'Consumer Management,Subscription Management,All' == 'true' %}
+    {% if request.session.privileges|check_list:'Consumer Management,All' == 'true' %}
         <li id="consumer_nav" class="nav-item  ">
             <a id="consumer_anchor" href="/consumer-list/" class="nav-link nav-toggle">
                 <i id="consumer_icon" class="icon-users icon-color" style="display: inline-block !important;"></i>
@@ -290,7 +290,7 @@
             </ul>
         </li>
     {% endif %}
-    {% if request.session.privileges|check_list:'All' == 'true' %}
+    {% if request.session.privileges|check_list:'View Selected Subscriber Details,View Advert Performance,View Financial Details,View List of TID with Details,Record Payment Module,All' == 'true' %}
         <li id="reports_nav" class="nav-item  ">
             <a id="reports_anchor" href="/admin-report/" class="nav-link nav-toggle">
                 <i id="reports_icon" class="icon-docs icon-color" style="display: inline-block !important;"></i>

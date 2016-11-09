@@ -42,7 +42,7 @@ from datetime import date
 import calendar
 import urllib2
 
-SERVER_URL = "http://52.40.205.128"   
+SERVER_URL = "http://52.66.169.65"   
 #SERVER_URL = "http://127.0.0.1:8000"
 
 
@@ -90,8 +90,9 @@ def rate_card(request):
         cat_city_obj = CategoryCityMap.objects.filter(city_place_id=str(first_city))
         for objs in cat_city_obj:
             cat_obj = Category.objects.get(category_id=str(objs.category_id))
-            cat_data = {'cat_id': str(cat_obj.category_id), 'cat_name': cat_obj.category_name}
-            cat_list.append(cat_data)
+            if cat_obj.category_name != 'Ticket Resell':
+                cat_data = {'cat_id': str(cat_obj.category_id), 'cat_name': cat_obj.category_name}
+                cat_list.append(cat_data)
         rate_card_list=[]
         rate_card_obj = RateCard.objects.filter(city_place_id=str(first_city),rate_card_status='1')
         if rate_card_obj:
@@ -579,10 +580,14 @@ def add_advert(request):
         print 'user_id',user_id
         supplier_id=request.GET.get('user_id')
         supplier_obj = Supplier.objects.get(supplier_id = user_id)
+        supplier_name = supplier_obj.business_name
         user_id=supplier_obj.contact_email
         business_id = request.GET.get('business_id')
+        city_place_id = str(supplier_obj.city_place_id.city_place_id)
         print 'business_id',business_id
         tax_list = Tax.objects.all()
+        temp_data = ''
+        cat_amenities = []
 
         service_list = ServiceRateCard.objects.filter(service_rate_card_status='1').values('service_name').distinct()
         advert_service_list, item_ids = [], []
@@ -593,26 +598,87 @@ def add_advert(request):
 
         advert_service_list = AdvertRateCard.objects.filter(advert_rate_card_id__in=advert_service_list)
 
-        data = {'tax_list': tax_list, 'advert_service_list': advert_service_list, 'service_list': service_list,
+        data = {'tax_list': tax_list,'supplier_name':supplier_name, 'advert_service_list': advert_service_list, 'service_list': service_list,
                 'username': request.session['login_user'],'supplier_id':supplier_id, 'user_id': user_id, 'category_list': get_category(request),
                 'country_list': get_country(request), 'phone_category': get_phone_category(request), 'business_id':business_id,
-                'state_list': get_states(request)}
+                'state_list': get_states(request),'city_place_id':city_place_id}
         if business_id:
             business_obj = Business.objects.get(business_id = business_id)
-            start_date = business_obj.start_date
-            end_date = business_obj.end_date
+            advert_flag = 'false'
+            premium_obj = PremiumService.objects.filter(business_id=business_id)
+            if premium_obj:
+                for premium in premium_obj:
+                    if premium.premium_service_name == "Top Advert":
+                        advert_flag = 'true'
+                    elif premium.premium_service_name == "Advert Slider":
+                        advert_flag = 'true'
+            category_level_1 = ''
+            category_level_2 = ''
+            category_level_3 = ''
+            category_level_4 = ''
+            category_level_5 = ''
+            business_obj = Business.objects.get(business_id=business_id)
+            if business_obj.category:
+                category_id = str(business_obj.category.category_id)
+            if business_obj.category_level_1:
+                category_level_1 = str(business_obj.category_level_1.category_id)
+            if business_obj.category_level_2:
+                category_level_2 = str(business_obj.category_level_2.category_id)
+            if business_obj.category_level_3:
+                category_level_3 = str(business_obj.category_level_3.category_id)
+            if business_obj.category_level_4:
+                category_level_4 = str(business_obj.category_level_4.category_id)
+            if business_obj.category_level_5:
+                category_level_5 = str(business_obj.category_level_5.category_id)
 
-            start_date = datetime.strptime(start_date, "%d/%m/%Y")
-            end_date = datetime.strptime(end_date, "%d/%m/%Y")
-            start_date = start_date.strftime("%d %b %y")
-            end_date = end_date.strftime("%d %b %y")
-            category_color = business_obj.category.category_color
-            data = {'tax_list': tax_list, 'advert_service_list': advert_service_list, 'service_list': service_list,
-                    'username': request.session['login_user'],'supplier_id':supplier_id, 'user_id': user_id,
+            cl1 = ''
+            if business_obj.category:
+                amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id)
+                for ck in amenity_list:
+                    cl1= ck.category_level_1
+
+                if cl1:
+                    if business_obj.category and business_obj.category_level_1: 
+                        amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id,category_level_1=category_level_1)
+
+                    if business_obj.category and business_obj.category_level_1 and business_obj.category_level_2:
+                        amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id,category_level_1=category_level_1,category_level_2=category_level_2)
+
+                    if business_obj.category and business_obj.category_level_1 and business_obj.category_level_2 and business_obj.category_level_3:
+                        amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id,category_level_1=category_level_1,category_level_3=category_level_3)
+
+                    if business_obj.category and business_obj.category_level_1 and business_obj.category_level_2 and business_obj.category_level_3 and business_obj.category_level_4:
+                        amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id,category_level_1=category_level_1,category_level_3=category_level_3,category_level_4=category_level_4)
+
+                    if business_obj.category and business_obj.category_level_1 and business_obj.category_level_2 and business_obj.category_level_3 and business_obj.category_level_4 and business_obj.category_level_5:
+                        amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id,category_level_1=category_level_1,category_level_3=category_level_3,category_level_4=category_level_4,category_level_5=category_level_5)
+
+                    for amnenity in amenity_list:
+
+                        temp_data ={
+                        'id':str(amnenity.categorywise_amenity_id),
+                        'amenity':str(amnenity.amenity)
+                        }
+                        cat_amenities.append(temp_data)
+
+                else:
+                    amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id)
+
+                    for amnenity in amenity_list:
+
+                        temp_data ={
+                        'id':str(amnenity.categorywise_amenity_id),
+                        'amenity':str(amnenity.amenity)
+                        }
+                        cat_amenities.append(temp_data)
+
+            data = {'supplier_name':supplier_name,'cat_amenities':cat_amenities,'tax_list': tax_list, 'advert_service_list': advert_service_list, 'service_list': service_list,
+                    'username': request.session['login_user'],'supplier_id':supplier_id, 'user_id': user_id,'advert_flag':advert_flag,
                     'category_list': get_category(request), 'category_id':str(business_obj.category.category_id),
                     'country_list': get_country(request), 'phone_category': get_phone_category(request),
-                    'business_id': business_id,
-                    'state_list': get_states(request),'start_date':start_date,'end_date':end_date,'category_color':category_color}
+                    'business_id': business_id,'category_level_1':category_level_1,'category_level_2':category_level_2,
+                    'category_level_3': category_level_3,'category_level_4': category_level_4,'category_level_5': category_level_5,
+                    'state_list': get_states(request),'city_place_id':city_place_id}
             return render(request, 'Admin/add_advert_form.html', data)
         else:
             return render(request, 'Admin/add_advert.html', data)
@@ -666,20 +732,24 @@ def signin(request):
                                         request.session['login_user'] = user_profile_obj.username
                                         request.session['first_name'] = user_profile_obj.user_first_name + '' + user_profile_obj.user_last_name
                                         login(request, user)
-                                        if 'All' in request.session['privileges']:
+                                        if 'All' in privilege_list:
                                             redirect_url = '/dashboard/'
-                                        elif 'View Dashboard Details' in request.session['privileges']:
+                                        elif 'View Dashboard Details' in privilege_list:
                                             redirect_url = '/dashboard/'
-                                        elif 'View Financial Details' in request.session['privileges']:
-                                            redirect_url = '/dashboard/'
-                                        elif 'View Advert Performance' in request.session['privileges']:
-                                            redirect_url = '/dashboard/'
-                                        elif 'View Selected Subscriber Details' in request.session['privileges']:
-                                            redirect_url = '/dashboard/'
-                                        elif 'Consumer Management' in request.session['privileges']:
-                                            redirect_url = '/consumer/'
-                                        elif 'Subscription Management' in request.session['privileges']:
-                                            redirect_url = '/subscriber/'
+                                        elif 'Consumer Management' in privilege_list:
+                                            redirect_url = '/consumer-list/'
+                                        elif 'Subscription Management' in privilege_list:
+                                            redirect_url = '/view-subscriber-list/'
+                                        elif 'View Financial Details' in privilege_list:
+                                            redirect_url = '/admin-report/'
+                                        elif 'View Advert Performance' in privilege_list:
+                                            redirect_url = '/admin-report/'
+                                        elif 'View Selected Subscriber Details' in privilege_list:
+                                            redirect_url = '/admin-report/'
+                                        elif 'View List of TID with Details' in privilege_list:
+                                            redirect_url = '/admin-report/'
+                                        elif 'Record Payment Module' in privilege_list:
+                                            redirect_url = '/admin-report/'
                                         print "=======================================",redirect_url
                                     except Exception as e:
                                         print e
@@ -696,11 +766,13 @@ def signin(request):
                                 data= { 'success' : 'Invalid Password', 'message' :'Invalid Password'}
                                 print "====USERNAME====",data
                                 return HttpResponse(json.dumps(data), content_type='application/json')
-                    except:
+                    except Exception as e:
+                        print e
                         data= { 'success' : 'false1', 'message' :'Invalid Username'}
                         return HttpResponse(json.dumps(data), content_type='application/json') 
 
-                except:
+                except Exception as e:
+                    print e
                     data= { 'success' : 'false', 'message' :'Invalid Username'}
                     return HttpResponse(json.dumps(data), content_type='application/json')            
             else:
@@ -716,6 +788,8 @@ def signin(request):
         print 'Exception ', e
         data= { 'success' : 'false', 'message':'Invalid Username or Password'}
     return HttpResponse(json.dumps(data), content_type='application/json')
+
+
 
 
 def signing_out(request):
@@ -885,7 +959,7 @@ def get_category(request):
     try:
         category = Category.objects.filter(category_status='1').order_by('category_name')
         for cat in category:
-            if cat.category_name !="Event Ticket Resale":
+            if cat.category_name !="Ticket Resell":
                 cat_list.append(
                     {'category_id': cat.category_id, 'category': cat.category_name})
 
@@ -1073,8 +1147,8 @@ def save_privilege(prv_list,user_role_obj):
             else:
                 privi="View Advert Performance"
             pvr_obj = Privileges(
-            role_id = user_role_obj,
-            privilage=privi
+                role_id = user_role_obj,
+                privilage=privi
             )
             pvr_obj.save()
             data = {'success': 'true'}
@@ -1087,7 +1161,7 @@ def save_privilege(prv_list,user_role_obj):
 def user_role_add(user_role_obj):
     gmail_user =  "cityhoopla2016"
     gmail_pwd =  "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     #pdb.set_trace()
     try:
@@ -1294,7 +1368,7 @@ def update_user_role(request):
 def user_role_edit(role_object):
     gmail_user =  "cityhoopla2016"
     gmail_pwd =  "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     #pdb.set_trace()
     try:
@@ -1383,7 +1457,7 @@ def add_new_role(request):
 def user_role_active(role_obj):
     gmail_user =  "cityhoopla2016"
     gmail_pwd =  "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     #pdb.set_trace()
     try:
@@ -1405,7 +1479,7 @@ def user_role_active(role_obj):
 def user_role_delete(role_obj):
     gmail_user =  "cityhoopla2016"
     gmail_pwd =  "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     #pdb.set_trace()
     try:
@@ -1426,138 +1500,142 @@ def user_role_delete(role_obj):
    
 @csrf_exempt
 def save_city(request):
-    print "IN SAVE CITY", request.POST
+    import sys
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+    # print "IN SAVE CITY", request.POST
     try:
         data = {}
-        print request.POST
-        print request.FILES
-        print '=====type========',type(request.FILES)
+        # print request.POST
+        # print request.FILES
+        print '=====type========', type(request.FILES)
         # pdb.set_trace()
         try:
-            city_obj=City_Place.objects.get(city_id=request.POST.get('city_name'))
-            data={'success':'false','messege':'City Already Exist'}   
-        except Exception,e:
-            city_obj=City_Place(
-         
-            city_id=City.objects.get(city_id=request.POST.get('city_name')),
-            state_id =State.objects.get(state_id=request.POST.get('state')), 
-            country_id=Country.objects.get(country_id=request.POST.get('country'))
+            print '-------------city name-------', request.POST.get('city_name')
+            city_obj = City_Place.objects.get(city_id=request.POST.get('city_name'))
+            print '-------------city- obj---------', city_obj
+            data = {'success': 'false', 'messege': 'City Already Exist'}
+        except Exception, e:
+            city_obj = City_Place(
+
+                city_id=City.objects.get(city_id=request.POST.get('city_name')),
+                state_id=State.objects.get(state_id=request.POST.get('state')),
+                country_id=Country.objects.get(country_id=request.POST.get('country'))
 
             )
             city_obj.save()
             if request.POST.get('about_city'):
-                city_obj.about_city=request.POST.get('about_city')
+                city_obj.about_city = request.POST.get('about_city')
 
             if request.POST.get('climate'):
-                city_obj.climate=request.POST.get('climate')
+                city_obj.climate = request.POST.get('climate')
 
             if request.POST.get('population'):
                 city_obj.population = request.POST.get('population')
 
             if request.POST.get('timezone'):
-                city_obj.time_zone=request.POST.get('timezone')
+                city_obj.time_zone = request.POST.get('timezone')
 
             if request.POST.get('language'):
-                city_obj.language=request.POST.get('language')
+                city_obj.language = request.POST.get('language')
 
             if request.POST.get('currency'):
-                city_obj.currency=request.POST.get('currency')
-          
+                city_obj.currency = request.POST.get('currency')
 
             city_obj.save();
             city_place_id = city_obj.city_place_id
-            print "city ID",city_place_id
-            print '------city_name------',city_place_id.city_id
-            city_name = city_place_id.city_id
-
+            print "city ID", city_place_id
+            city_name = city_obj.city_id.city_name
+            print '---------city name-----', city_name
             if request.POST['check_image'] == "1":
                 city_obj.city_image = request.FILES['city_image']
                 city_obj.save()
 
-            city_id=request.POST.get('city_name')
-
-            city_obj=City_Place.objects.get(city_id=city_id)
+            city_id = request.POST.get('city_name')
+            print '---------city_id -----', city_id
+            city_obj = City_Place.objects.get(city_id=city_id)
+            print '---------city_obj-----', city_obj
 
             poi_range = request.POST.get('poi_range')
             point_of_interest_list = request.POST.get('point_of_interest_list')
-            point_of_interest_list = str(point_of_interest_list).split(',')
+            point_of_interest_list = str(point_of_interest_list).split('_POI_CH')
             point_of_interest_image_list = []
-            
+
             for i in range(int(poi_range)):
                 image = "point_of_interest_image" + str(i)
                 try:
-                    point_of_interest_image_list.append(request.FILES[image])                 
+                    point_of_interest_image_list.append(request.FILES[image])
                 except:
                     point_of_interest_image_list.append('')
 
-            zipped_wk = zip(point_of_interest_list,point_of_interest_image_list)
+            zipped_wk = zip(point_of_interest_list, point_of_interest_image_list)
             place_type = 'point_of_interest'
-            if(zipped_wk!=[]):
-                save_places(zipped_wk,city_obj,place_type)
-           
+            if (zipped_wk != []):
+                save_places(zipped_wk, city_obj, place_type)
+
             shop_list = request.POST.get('shop_list')
-            shop_list = str(shop_list).split(',')
+            shop_list = str(shop_list).split('_SOP_CH')
             shop_range = request.POST.get('shop_range')
             shop_image_list = []
             for i in range(int(shop_range)):
                 image = "shop_image" + str(i)
                 try:
-                    shop_image_list.append(request.FILES[image])                 
-                except: 
+                    shop_image_list.append(request.FILES[image])
+                except:
                     shop_image_list.append('')
 
-            zipped_wk = zip(shop_list,shop_image_list)
+            zipped_wk = zip(shop_list, shop_image_list)
             place_type = 'where_to_shop'
 
-            save_places(zipped_wk,city_obj,place_type)
+            save_places(zipped_wk, city_obj, place_type)
 
             hospital_list = request.POST.get('hospital_list')
-            hospital_list = str(hospital_list).split(',')
+            hospital_list = str(hospital_list).split('_HOS_CH')
 
             hospital_range = request.POST.get('hospital_range')
             hospital_image_list = []
             for i in range(int(hospital_range)):
                 image = "hospital_image" + str(i)
                 try:
-                    hospital_image_list.append(request.FILES[image])                 
+                    hospital_image_list.append(request.FILES[image])
                 except:
                     hospital_image_list.append('')
-            zipped_wk = zip(hospital_list,hospital_image_list)
+            zipped_wk = zip(hospital_list, hospital_image_list)
             place_type = 'reputed_hospitals'
 
-            save_places(zipped_wk,city_obj,place_type)
+            save_places(zipped_wk, city_obj, place_type)
 
             college_list = request.POST.get('college_list')
-            college_list = str(college_list).split(',')
-
+            college_list = str(college_list).split('_EDU_CH')
 
             college_range = request.POST.get('college_range')
             college_image_list = []
             for i in range(int(college_range)):
                 image = "college_image" + str(i)
                 try:
-                    college_image_list.append(request.FILES[image])                 
+                    college_image_list.append(request.FILES[image])
                 except:
                     college_image_list.append('')
-            zipped_wk = zip(college_list,college_image_list)
+            zipped_wk = zip(college_list, college_image_list)
             place_type = 'college_and_universities'
-            save_places(zipped_wk,city_obj,place_type)
+            save_places(zipped_wk, city_obj, place_type)
             city_add(city_obj)
-   
-            data={
-                    'success':'true',
-                    'message':'City Added Successfully.',
-                    "city_place_id":  city_place_id,
-                    "city_name":city_name 
-                    }
+
+            data = {
+                'success': 'true',
+                'message': 'City Added Successfully.',
+                "city_place_id": city_place_id,
+                "city_name": city_name
+            }
 
 
     except Exception, e:
-        data={
-            'success':'false',
-            'message':str(e)
+        data = {
+            'success': 'false',
+            'message': str(e)
         }
-    return HttpResponse(json.dumps(data),content_type='application/json') 
+    return HttpResponse(json.dumps(data), content_type='application/json')
+ 
 
 
 
@@ -1663,87 +1741,104 @@ def save_city_data(request):
     return HttpResponse(json.dumps(data),content_type='application/json')    
 
 
-def update_places(zipped_wk,city_obj,place_type):
+def update_places(zipped_wk, city_obj, place_type):
     try:
         # pdb.set_trace()
         print "in update places"
-        for interest_id,interest_name,interest_img in zipped_wk:
+        i = 0
+        for interest_id, interest_name, interest_img in zipped_wk:
+            print "interest_name:",interest_name,"interest_img:",interest_img
+            if i == 0:
+                interest_name = interest_name.strip()
+            if i != 0:
+                interest_name = interest_name[1:].strip()
+            i = i + 1
             try:
-                print "update places try",interest_id    
+                print "update places try", interest_id
 
-                splitId=interest_id.split('_')
+                splitId = interest_id.split('_')
 
-                print 'splitId',splitId
+                print 'splitId', splitId
 
-                if splitId[0]=='old':
+                if splitId[0] == 'old':
                     place_obj = Places.objects.get(place_id=splitId[1])
-                    print "-----place_obj",place_obj
-                    place_obj.place_name = interest_name
-                    if interest_img != '':
-                        place_obj.place_image=interest_img
+                    if interest_name != "":
+                        print "-----place_obj", place_obj
+                        place_obj.place_name = interest_name
+                        if interest_img != '':
+                            place_obj.place_image = interest_img
+                        else:
+                            pass
+                        place_obj.updated_by = "Admin",
+                        place_obj.updated_date = datetime.now()
+                        place_obj.save()
                     else:
-                        pass
-                    place_obj.updated_by="Admin",
-                    place_obj.updated_date=datetime.now()
-                    place_obj.save()        
+                        place_obj.delete()
                 else:
-                    if interest_name != '':
+                    if interest_name != '' and interest_img !='':
                         interest_name_obj = Places(
-                        city_place_id=city_obj,
-                        place_name = interest_name,
-                        place_image=interest_img,
-                        place_type=place_type,
-                        created_date=datetime.now(),
-                        created_by="Admin",
-                        updated_by="Admin",
-                        updated_date=datetime.now()
+                            city_place_id=city_obj,
+                            place_name=interest_name,
+                            place_image=interest_img,
+                            place_type=place_type,
+                            created_date=datetime.now(),
+                            created_by="Admin",
+                            updated_by="Admin",
+                            updated_date=datetime.now()
                         )
                         interest_name_obj.save()
                     else:
                         pass
 
-            except Exception,e:
-                print 'Exception',e        
+            except Exception, e:
+                print 'Exception', e
 
             data = {'success': 'true'}
 
     except Exception, e:
-        print "====Exception",e
-        data={
-            'success':'false',
-            'message':str(e)
+        print "====Exception", e
+        data = {
+            'success': 'false',
+            'message': str(e)
         }
     return 1
 
 
-def save_places(zipped_wk,city_obj,place_type):
-    
-    try:
-        for interest_name,interest_img in zipped_wk:
 
-            if interest_name != '' and interest_img != '' :
-            
+def save_places(zipped_wk, city_obj, place_type):
+    try:
+        i = 0
+        for interest_name, interest_img in zipped_wk:
+            print "============================================================\n\n"
+            print interest_name
+            print "============================================================\n\n"
+            interest_name = interest_name.strip()
+            if i != 0:
+                interest_name = interest_name[1:]
+            i = i + 1
+            print "============================================================\n\n"
+            print interest_name
+            print "============================================================\n\n"
+            if interest_name != '' and interest_img != '':
                 interest_name_obj = Places(
-                city_place_id=city_obj,
-                place_name = interest_name,
-                place_image=interest_img,
-                place_type=place_type,
-                created_date=datetime.now(),
-                created_by="Admin",
-                updated_by="Admin",
-                updated_date=datetime.now()
-            )
+                    city_place_id=city_obj,
+                    place_name=str(interest_name),
+                    place_image=interest_img,
+                    place_type=place_type,
+                    created_date=datetime.now(),
+                    created_by="Admin",
+                    updated_by="Admin",
+                    updated_date=datetime.now()
+                )
                 interest_name_obj.save()
             data = {'success': 'true'}
 
     except Exception, e:
-        data={
-            'success':'false',
-            'message':str(e)
+        data = {
+            'success': 'false',
+            'message': str(e)
         }
     return 1 
-
-
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -1852,25 +1947,24 @@ def delete_city(request):
 
 
 def delete_city_sms(city_obj):
-    
     authkey = "118994AIG5vJOpg157989f23"
     # user_obj = Supplier.objects.get(supplier_id=su_id)
- #    contact_no = user_obj.contact_no
- #    print '---------contact_no------',contact_no
+    #    contact_no = user_obj.contact_no
+    #    print '---------contact_no------',contact_no
 
     mobiles = "+919403884595"
-    message = "Hi Admin, \n City \t"+ str(city_obj.city_id.city_name) +"\t has been deactivated successfully"
-    sender = "DGSPCE"
+    message = "Hi Admin, \n City \t" + str(city_obj.city_id.city_name) + "\t has been deactivated successfully"
+    sender = "CTHPLA"
     route = "4"
     country = "91"
     values = {
-              'authkey' : authkey,
-              'mobiles' : mobiles,
-              'message' : message,
-              'sender' : sender,
-              'route' : route,
-              'country' : country
-              }
+        'authkey': authkey,
+        'mobiles': mobiles,
+        'message': message,
+        'sender': sender,
+        'route': route,
+        'country': country
+    }
 
     url = "http://api.msg91.com/api/sendhttp.php"
     postdata = urllib.urlencode(values)
@@ -1901,7 +1995,7 @@ def active_city(request):
 def city_activate_mail(city_obj):
     gmail_user =  "cityhoopla2016"
     gmail_pwd =  "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     #pdb.set_trace()
     try:
@@ -1920,6 +2014,12 @@ def city_activate_mail(city_obj):
         print e
     return 1
  
+@csrf_exempt
+def delete_place_image(request):
+    place_obj = Places.objects.get(place_id=request.POST.get('place_id'))
+    place_obj.delete()
+    data = {"success":"true"}
+    return HttpResponse(json.dumps(data), content_type='application/json')
       
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_city(request):
@@ -1928,127 +2028,133 @@ def edit_city(request):
     else:
         try:
             city_obj = City_Place.objects.get(city_place_id=request.GET.get('city_place_id'))
-            
 
-                
             if city_obj.city_image:
                 city_image = SERVER_URL + city_obj.city_image.url
                 file_name = city_image[47:]
             else:
                 city_image = SERVER_URL + '/static/assets/layouts/layout2/img/City_Hoopla_Logo.png'
-                file_name  = ""
+                file_name = ""
 
             city_dict = {
                 'success': 'true',
-                'city_place_id':city_obj.city_place_id,
-                'city_name':city_obj.city_id.city_id,
-                'state':city_obj.state_id.state_id, 
+                'city_place_id': city_obj.city_place_id,
+                'city_name': city_obj.city_id.city_id,
+                'city_place_name': city_obj.city_id.city_name,
+                'state': city_obj.state_id.state_id,
+                'state_name': city_obj.state_id.state_name,
                 'climate': city_obj.climate or '',
                 'about_city': city_obj.about_city or '',
                 'language': city_obj.language or '',
                 'population': city_obj.population or '',
-                'timezone':city_obj.time_zone,
-                'cityimage':city_image,
+                'timezone': city_obj.time_zone,
+                'cityimage': city_image,
                 'filename': file_name,
-                'country':city_obj.country_id.country_id,
-                'currency':city_obj.currency
-
+                'country': city_obj.country_id.country_id,
+                'country_name': city_obj.country_id.country_name,
+                'currency': city_obj.currency
             }
 
-            city_list = City.objects.filter(state_id = city_obj.state_id.state_id)
 
-            intr_list = []      
-            point_of_intrest = Places.objects.filter(city_place_id = city_obj,place_type = 'point_of_interest')
+
+            city_list = City.objects.filter(state_id=city_obj.state_id.state_id)
+
+            intr_list = []
+            point_of_intrest = Places.objects.filter(city_place_id=city_obj, place_type='point_of_interest')
             poi_index = 0
 
             if point_of_intrest:
-                    print 'point_of_intrest====>',point_of_intrest
-                    poi_index = len(point_of_intrest)-1
-                    i = 0;
-                    for place in point_of_intrest:
-                        try:
-                            place_image = SERVER_URL + place.place_image.url
-                            file_name = place_image[47:]
-                        except:
-                            place_image = ''
-                            file_name = ''
-                        place_data = {
-                            'image_id':i,
-                            'place_id':'old_'+str(place.place_id),
-                            'place_name':place.place_name,
-                            'place_image':place_image,
-                            'filename':file_name
-                        }
+                print 'point_of_intrest====>', point_of_intrest
+                poi_index = len(point_of_intrest) - 1
+                i = 0;
+                for place in point_of_intrest:
+                    try:
+                        place_image = SERVER_URL + place.place_image.url
+                        file_name = place_image[47:]
+                    except:
+                        place_image = ''
+                        file_name = ''
+                    place_data = {
+                        'image_id': i,
+                        'place_id': 'old_' + str(place.place_id),
+                        'place_name': place.place_name,
+                        'place_image': place_image,
+                        'filename': file_name
+                    }
 
-                        intr_list.append(place_data)
-                        i = i+1 
-                    
-            shop_list = []      
-            shop_name = Places.objects.filter(city_place_id = city_obj,place_type = 'where_to_shop')
+                    intr_list.append(place_data)
+                    i = i + 1
+
+            shop_list = []
+            shop_name = Places.objects.filter(city_place_id=city_obj, place_type='where_to_shop')
             shop_index = 0
             if shop_name:
-                    shop_index = len(shop_name)-1
-                    i = 0;
-                    for shop in shop_name:
-                        place_image = SERVER_URL + shop.place_image.url
-                        file_name = place_image[47:]
-                        place_data = {
-                             'place_id':'old_'+str(shop.place_id),
-                             'image_id':i,
-                            'place_name':shop.place_name,
-                            'place_image':place_image,
-                            'filename':file_name
-                        }
-                        shop_list.append(place_data) 
-                        i = i+1
-            hosp_list = []      
-            hospital = Places.objects.filter(city_place_id = city_obj,place_type = 'reputed_hospitals')
+                shop_index = len(shop_name) - 1
+                i = 0;
+                for shop in shop_name:
+                    place_image = SERVER_URL + shop.place_image.url
+                    file_name = place_image[47:]
+                    place_data = {
+                        'place_id': 'old_' + str(shop.place_id),
+                        'image_id': i,
+                        'place_name': shop.place_name,
+                        'place_image': place_image,
+                        'filename': file_name
+                    }
+                    shop_list.append(place_data)
+                    i = i + 1
+            hosp_list = []
+            hospital = Places.objects.filter(city_place_id=city_obj, place_type='reputed_hospitals')
             hospital_index = 0
             if hospital:
-                    hospital_index = len(hospital)-1
-                    i = 0;
-                    for hosp in hospital:
-                        place_image = SERVER_URL + hosp.place_image.url
-                        file_name = place_image[47:]
-                        place_data = {
-                             'place_id':'old_'+str(hosp.place_id),
-                             'image_id':i,
-                            'place_name':hosp.place_name,
-                            'place_image':place_image,
-                            'filename':file_name
-                        }
-                        hosp_list.append(place_data) 
-                        i = i+1
-            clg_list = []      
-            college = Places.objects.filter(city_place_id = city_obj,place_type = 'college_and_universities')
+                hospital_index = len(hospital) - 1
+                i = 0;
+                for hosp in hospital:
+                    place_image = SERVER_URL + hosp.place_image.url
+                    file_name = place_image[47:]
+                    place_data = {
+                        'place_id': 'old_' + str(hosp.place_id),
+                        'image_id': i,
+                        'place_name': hosp.place_name,
+                        'place_image': place_image,
+                        'filename': file_name
+                    }
+                    hosp_list.append(place_data)
+                    i = i + 1
+            clg_list = []
+            college = Places.objects.filter(city_place_id=city_obj, place_type='college_and_universities')
             college_index = 0
             if college:
-                    college_index = len(hospital)-1
-                    i = 0;
-                    for clg in college:
-                        place_image = SERVER_URL + clg.place_image.url
-                        file_name = place_image[32:]
-                        place_data = {
-                            'image_id':i,
-                            'place_id':'old_'+str(clg.place_id),
-                            'place_name':clg.place_name,
-                            'place_image':place_image,
-                            'filename':file_name
-                        }
-                        clg_list.append(place_data) 
-                        i = i+1
-            data = {'country_list':get_country(request),'poi_index':poi_index,'shop_index':shop_index,'hospital_index':hospital_index,'college_index':college_index,'city':city_dict,'city_list':city_list,'interest':intr_list,'shops':shop_list,'hospitals':hosp_list,'colleges':clg_list,'username':request.session['login_user']}
-        except Exception,e:
-            print 'Exception:',e
-            data = {'data':e}    
-        print "Final Data",data
-        return render(request,'Admin/edit_city.html',data)  
+                college_index = len(college) - 1
+                i = 0;
+                for clg in college:
+                    place_image = SERVER_URL + clg.place_image.url
+                    file_name = place_image[32:]
+                    place_data = {
+                        'image_id': i,
+                        'place_id': 'old_' + str(clg.place_id),
+                        'place_name': clg.place_name,
+                        'place_image': place_image,
+                        'filename': file_name
+                    }
+                    clg_list.append(place_data)
+                    i = i + 1
+            data = {'poi_index': poi_index, 'shop_index': shop_index,
+                    'hospital_index': hospital_index, 'college_index': college_index, 'city': city_dict,
+                    'city_list': city_list, 'interest': intr_list, 'shops': shop_list, 'hospitals': hosp_list,
+                    'colleges': clg_list, 'username': request.session['login_user']}
+        except Exception, e:
+            print 'Exception:', e
+            data = {'data': e}
+        return render(request, 'Admin/edit_city.html', data)  
 
 @csrf_exempt
 def update_city(request):
     print 'in update city'
     # pdb.set_trace()
-
+    import sys
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
     try:
         if request.method == "POST":
             print "===Data===",request.POST
@@ -2056,10 +2162,6 @@ def update_city(request):
             
 
             city_obj = City_Place.objects.get(city_place_id=request.POST.get('city_place_id'))
-            city_obj.city_id= City.objects.get(city_id = request.POST.get('city_name'))
-            city_obj.state_id =State.objects.get(state_id=request.POST.get('state'))
-            city_obj.country_id =Country.objects.get(country_id=request.POST.get('country')) 
-            city_obj.save()
             
             if request.POST.get('about_city'):
                 city_obj.about_city=request.POST.get('about_city')
@@ -2095,7 +2197,7 @@ def update_city(request):
             point_of_interest_id_list = str(point_of_interest_id_list).split(',')
             
             point_of_interest_list = request.POST.get('point_of_interest_list')
-            point_of_interest_list = str(point_of_interest_list).split(',')
+            point_of_interest_list = str(point_of_interest_list).split('_POI_CH')
 
             point_of_interest_image_list = []
         
@@ -2117,7 +2219,7 @@ def update_city(request):
             shop_id_list = str(shop_id_list).split(',')
             
             shop_list = request.POST.get('shop_list')
-            shop_list = str(shop_list).split(',')
+            shop_list = str(shop_list).split('_SOP_CH')
 
             shop_range = request.POST.get('shop_range')
             shop_image_list = []
@@ -2136,7 +2238,7 @@ def update_city(request):
             hospital_id_list = str(hospital_id_list).split(',')
             
             hospital_list = request.POST.get('hospital_list')
-            hospital_list = str(hospital_list).split(',')
+            hospital_list = str(hospital_list).split('_HOS_CH')
 
             hospital_range = request.POST.get('hospital_range')
             hospital_image_list = []
@@ -2156,7 +2258,7 @@ def update_city(request):
             college_id_list = str(college_id_list).split(',')
 
             college_list = request.POST.get('college_list')
-            college_list = str(college_list).split(',')
+            college_list = str(college_list).split('_EDU_CH')
 
 
             college_range = request.POST.get('college_range')
@@ -2185,25 +2287,24 @@ def update_city(request):
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 def update_city_sms(city_obj):
-    
     authkey = "118994AIG5vJOpg157989f23"
     # user_obj = Supplier.objects.get(supplier_id=su_id)
- #    contact_no = user_obj.contact_no
- #    print '---------contact_no------',contact_no
+    #    contact_no = user_obj.contact_no
+    #    print '---------contact_no------',contact_no
 
     mobiles = "+919403884595"
     message = "City \t" + str(city_obj.city_id.city_name) + "\t has been updated successfully"
-    sender = "DGSPCE"
+    sender = "CTHPLA"
     route = "4"
     country = "91"
     values = {
-              'authkey' : authkey,
-              'mobiles' : mobiles,
-              'message' : message,
-              'sender' : sender,
-              'route' : route,
-              'country' : country
-              }
+        'authkey': authkey,
+        'mobiles': mobiles,
+        'message': message,
+        'sender': sender,
+        'route': route,
+        'country': country
+    }
 
     url = "http://api.msg91.com/api/sendhttp.php"
     postdata = urllib.urlencode(values)
@@ -2312,7 +2413,7 @@ def update_city_data(request):
 def city_update(city_obj):
     gmail_user =  "cityhoopla2016"
     gmail_pwd =  "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     #pdb.set_trace()
     try:
@@ -2334,7 +2435,7 @@ def city_update(city_obj):
 def city_delete(adv_obj):
     gmail_user =  "cityhoopla2016"
     gmail_pwd =  "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     #pdb.set_trace()
     try:
@@ -2356,7 +2457,7 @@ def city_delete(adv_obj):
 def city_add(city_obj):
     gmail_user =  "cityhoopla2016"
     gmail_pwd =  "cityhoopla@2016"
-    FROM = 'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
     TO = ['cityhoopla2016@gmail.com']
     #pdb.set_trace()
     try:
@@ -2659,7 +2760,7 @@ def view_user_list(request):
 @csrf_exempt
 def delete_user(request):
     try:
-        user_obj = UserProfile.objects.get(username=request.POST.get('user_id'))
+        user_obj = UserProfile.objects.get(usre_email_id=request.POST.get('user_id'))
         user_obj.user_status = '0'
         user_obj.save()
         data = {'message': 'User Inactivated Successfully', 'success': 'true'}
@@ -2674,7 +2775,7 @@ def delete_user(request):
 @csrf_exempt
 def activate_user(request):
         try:
-            user_obj = UserProfile.objects.get(username=request.POST.get('user_id'))
+            user_obj = UserProfile.objects.get(usre_email_id=request.POST.get('user_id'))
             user_obj.user_status = '1'
             user_obj.save()
             data = {'message': 'User Activated Successfully', 'success':'true'}

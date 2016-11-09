@@ -489,16 +489,12 @@ License: You must have a valid license purchased only from themeforest(the above
     .font-regular{
         font-weight:500;
     }
-.verticalLine {
-    border-left: thick solid #ff0000;
-}
 
-.btn1:not(.btn1-sm):not(.btn1-lg) {
-    line-height: 2.3;
-    width: 353px;
-    
-    border-radius: 0px !important;
-}
+    .remove_btn{
+        float: right;
+        margin-top: 5px;
+        font-size: 20px;
+    }
 
     </style>
 
@@ -582,6 +578,8 @@ License: You must have a valid license purchased only from themeforest(the above
                             <!-- BEGIN FORM-->
                             <div class="row">
                                 <div class="col-lg-12">
+                                <a href="/view-subscriber-list/" class="brad-crum-1">{{ supplier_name }}</a>
+                                        <i class="fa fa-angle-right"></i>
                                     <a href="/advert-management/?subscriber_id={{supplier_id}}"
                                        class="brad-crum-1">Adverts</a>
                                     <i class="fa fa-angle-right"></i>
@@ -597,7 +595,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                    style="font-size:22px; font-weight:700;">Advert
                                                                 Details </label>
                                                             <button type="button" style="float:right"
-                                                                    class="btn btn-outline done_btn" onclick="preview_model();">
+                                                                    class="btn btn-outline done_btn">
                                                                 Preview Advert
                                                             </button>
                                                             <input hidden type="text" id="business_id" value="{{business_id}}">
@@ -1073,7 +1071,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                         Price
                                                                     </label>
                                                                     <input type="text"
-                                                                           onkeypress="return validateFloatKeyPresss(this,event);"
+                                                                           
                                                                            name="product_price"
                                                                            id="product_price"
                                                                            class="form-control product_price_cls"/></input>
@@ -1221,7 +1219,27 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                         Details </label>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-lg-12 col-md-12">
+
+                                                             <div class="col-md-3" style="padding-right: 0px;">
+                                                                           <label class="control-label " >
+                                                                               Title 
+                                                                           </label>
+                                                                           <select  name="title" id="title" class="form-control sel2" >
+                                                                                         <option value=""> Select Title</option>                                           
+                                                                                   <option value="Mr."> Mr.</option>
+                                                                                   <option value="Mrs."> Mrs.</option>
+                                                                                   <option value="Ms."> Ms.</option>
+                                                                                   <option value="Dr."> Dr.</option>
+                                                                                   <option value="Mas."> Mas.</option>
+                                                                                   <option value="Prof."> Prof.</option>
+                                                                                   <option value="Smt."> Smt.</option>
+                                                                                   <option value="Miss."> Miss.</option>
+                                                                               </select>   
+                                                                           <label class="error" style="color:red; display:none;"></label>
+                                                                    </div>
+
+
+                                                            <div class="col-lg-9 col-md-9">
                                                                 <div class="form-group">
                                                                     <label class="control-label "
                                                                            style="font-size:15px; ">Name
@@ -2126,171 +2144,12 @@ License: You must have a valid license purchased only from themeforest(the above
     </div>
 </div>
 
- <div class="modal fade draggable-modal" id="preview_model" tabindex="-1" role="basic" aria-hidden="true">
-           <div class="modal-dialog" style="width: 387px;">
-              <div class="modal-content">
-                <div class="modal-header" style="padding-left: 0px;">
-                      <img id="display_image2" style="width: 385px; height: 217px; margin-top: -15px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
-                 </div>                                           
-                 <div class="modal-body">
-
-	                <div class="form-body">
-	                
-							<div class="row "  id="border_color">
-	                	
-	                			<div class="col-lg-12">
-		                       <b><span style=" font-size: 17px;" id="advert_title_id">  </span></b> 
-		                     </div>
-	                			<div class="col-lg-12">
-		                     <span style=" font-size: 12px;" id="landmark_id">   </span>
-		                     </div>
-		                     <br>
-		                     <br>
-		               
-		                     <div class="col-lg-12">
-		                     	<!-- <i class="fa fa-percent" aria-hidden="true"></i> -->
-										<span style=" font-size: 12px;color: #227d69;" id="discount_discription_id"> 
-		                        </span>
-		                     </div>
-		                     
-		                     <br>   
-		                     <br>
-		                     		                        
-	                			<div class="col-lg-12">
-	   	                     <span style="font-size: 12px;color: #1e9e12;">  Offer valid from </span>
-	   	                     <span style="font-size: 12px;color: #1e9e12;" id="dt1_id"> </span>
-	   	                      <span style="font-size: 12px;color: #1e9e12;" >  to </span>
-	   	                     <span style="font-size: 12px;color: #1e9e12;" id="dt2_id">   </span>
-	   	                     
-									</div>
-									<div class="col-lg-12">
-	   	                     <span style="font-size: 12px; color: #af099f;">  23 Like | </span>
-	   	                     <span style="font-size: 12px; color: #2188b3;">  102 views |</span>
-	   	                     <span style="font-size: 12px; color: #654a94;">  12 Review </span>
-									</div>
-								   
-							</div> 
-						</div>
-					<hr style="border-style: dashed;"> 
-						 <div class="form-body">
-	               	<div class="row">
-	               		
-								  <div class="col-lg-12">
-		                      <b><span style="    font-size: 17px;">  Main Description </span></b> 
-		                    </div>
-	                			 <div class="col-lg-12">
-		                     
-		                         <span style="font-size: 12px;" id="short_discription_id">   
-		                        </span>
-		                      </div>                     
-		                  
-						  </div>
-						 
-						</div>
-						<br>
-						 <div class="form-body btn1  done_btn" style=" margin-left: -15px; width: 385px;">
-	                	<div class="row " >
-	                		<div class="col-lg-12" style="margin-left: -5px;height: 46px;">
-	                		  	<div class="col-lg-2 btn"> 
-		                       <i class="fa fa-thumbs-up" aria-hidden="true"></i>
-		                     </div>
-		                     <div class="col-lg-2 btn">
-										<i class="fa fa-heart-o" aria-hidden="true"></i>
-		                     </div>
-		                     <div class="col-lg-2 btn">
-									   <i class="fa fa-paper-plane" aria-hidden="true"></i>
-		                     </div>
-		                      <div class="col-lg-2 btn">
-									   <i class="fa fa-pencil" aria-hidden="true"></i>
-		                     </div>
-		                      <div class="col-lg-2 btn">
-									   <i class="fa fa-share-alt" aria-hidden="true"></i>
-		                     </div>
-		                      <div class="col-lg-2 btn">
-									   <i class="fa fa-envelope-o" aria-hidden="true"></i>
-		                     </div>
-		                    
-		                   </div>
-							</div>
-													 
-						</div>
-   					<br>
-   					
-   					 <div class="form-body ">
-	                	<div class="row " >
-	                	   
-	                		  	<div class="col-lg-12">
-		                       	<span style=" font-size: 12px;"> <b>Address</b>
-		                        </span>
-		                     </div>
-		              
-		                     <div class="col-lg-12">
-		                       	<span style=" font-size: 12px;" id="address_line1_id"> 
-		                        </span>
-		                     </div>
-		                      
-						  </div>
-						</div>
-						<br>
-						<div class="form-body ">  
-	                	<div class="row " >
-	                	
-	                		  	
-		                     <div class="col-lg-6">
-		                       	<span style=" font-size: 12px;"> <b> Contact Details 
-		                        </span>
-		                     </div>
-		                     <div class="col-lg-6">
-		                       	<span style=" font-size: 12px;"> Opening Hours </b>
-		                        </span>
-		                     </div>
-		                     
-		                     <div class="col-lg-6">
-		                       	<span style=" font-size: 12px;" id="phone_no_id"> 
-		                        </span>
-		                        <br>
-		                        <span style=" font-size: 12px;" id="email_primary_id"> 
-		                        </span>
-		                     </div>
-		                     <div class="col-lg-6">
-		                       	<span style=" font-size: 12px;" id="start1_id"> 
-		                        </span> to
-		                        <span style=" font-size: 12px;" id="end1_id"> 
-		                        </span>
-		                     </div>
-		                      
-						  </div>
-						</div>
-						
-					<hr style="border-style: dashed;">
-					
-				   <div class="form-body ">
-                	<div class="row " >
-                	    <div class="col-lg-12">
-							  <div class="col-lg-10 ">
-		                   <div class="pull-right " style="color: #797979;">
-		                       <button style="font-size: 16px;width:184px " type="button"
-		                          
-		                          class="btn done_btn " data-toggle="modal" >Avail Offer
-		                       </button>
-		                   </div>
-		                 </div>
-		                </div>
-		             </div>
-		        </div>
-						
-            </div>
-                   
-          </div>
-
-       </div>
-    </div>
-    
 <!--[if lt IE 9]>
 <script src="{% static 'assets/global/plugins/respond.min.js' %}"></script>
 <script src="{% static 'assets/global/plugins/excanvas.min.js' %}"></script>
 <![endif]-->
 <!-- BEGIN CORE PLUGINS -->
+<script src="//maps.googleapis.com/maps/api/js?key=AIzaSyCACTYbNRFKlics-01oZX6uglDWh8hM_FQ" async="" defer="defer" type="text/javascript"></script>
 <script src="{% static 'assets/global/plugins/jquery.min.js' %}" type="text/javascript"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <script src="{% static 'assets/global/plugins/bootstrap/js/bootstrap.min.js' %}" type="text/javascript"></script>
@@ -2335,7 +2194,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <script src="{% static 'assets/layouts/layout2/scripts/layout.min.js' %}" type="text/javascript"></script>
 <script src="{% static 'assets/layouts/layout2/scripts/demo.min.js' %}" type="text/javascript"></script>
 <script src="{% static 'assets/layouts/global/scripts/quick-sidebar.min.js' %}" type="text/javascript"></script>
-<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
 <script src="{% static 'assets/custom/js/jquery.ui.addresspicker.js' %}"></script>
 <script src="{% static 'assets/pages/scripts/form-wizard.min.js' %}" type="text/javascript"></script>
 <script src="{% static 'assets/global/plugins/bootstrap-wizard/jquery.bootstrap.wizard.min.js' %}"
@@ -2351,66 +2210,6 @@ License: You must have a valid license purchased only from themeforest(the above
 <script src="{% static 'assets/bootstrap-tagsinput.js' %}" type="text/javascript"></script>
 <script src="{% static 'assets/global/plugins/ion.rangeslider/js/ion.rangeSlider.min.js' %}"></script>
 <script type="text/javascript">
-
-var full_address = ''
- 
-function preview_model(){
-var full_address = ''
-advert_title_var = $('#advert_title').val();
-landmark_var = $('#landmark').val();
-discount_discription_var = $('#discount_discription').val();
-short_discription_var = $('#short_discription').val();
-start1_var = $('#start1').val();
-end1_var = $('#end1').val();
-phone_no_var = $('#phone_no').val();
-email_primary_var = $('#email_primary').val();
-other_details_var = $('#other_details').val();
-dt1_var = "{{start_date}}"
-dt2_var = "{{end_date}}"
-   
-   
-address_line1_var = $('#address_line1').val();
-area_var = $('#area').val();
-state_var = $('#statec :selected').text();
-city_var = $('#city :selected').text();
-pincode_var = $('#pincode :selected').text();
-
-
-if (address_line1_var != '' & area_var !='' & $('#city :selected').val() !='' & $('#statec :selected').val() !=''  & $('#pincode :selected').val() !='') {
-
-	full_address = full_address + address_line1_var +', '+ area_var +', '+ city_var +', '+ state_var +', '+ pincode_var +'.'
-}
-
-var display_image = document.getElementById("display_image");
-display_image = display_image.files[0];
-if (display_image != undefined) {
-	var display_image2 = document.getElementById("display_image2");
-	display_image2.src = display_image.result
-}
-
-//console.log(display_image.result)
-
-
-$('#advert_title_id').text(advert_title_var);
-$('#landmark_id').text(landmark_var);
-
-$('#short_discription_id').text(short_discription_var);
-
-$('#discount_discription_id').text(discount_discription_var);
-$('#start1_id').text(start1_var);
-$('#end1_id').text(end1_var);
-$('#phone_no_id').text(phone_no_var);
-$('#email_primary_id').text(email_primary_var);
-$('#other_details_id').text(other_details_var);
-
-$('#address_line1_id').text(full_address);
-$('#dt1_id').text(dt1_var);
-$('#dt2_id').text(dt2_var);
-$('#border_color').css("border-left", "thick solid {{category_color}}");
-
-$("#preview_model").modal('show');
-
-}
 
     $("#supplier_anchor").addClass("tab-active");
     $("#supplier_icon").addClass("icon-active");
@@ -2695,7 +2494,7 @@ $("#preview_model").modal('show');
                           var appendProductPrice = "<div class='row' id='prod"+ p_index +"'><div class='col-lg-5 col-md-5'><div class='form-group'><label class='control-label' style = 'font-size:15px; '>Product Name </label>"+
             "<input type='text'  name=''  class='form-control product_name_cls' /><label class='error font-12 font-regular' style='color:red; display:none;'></label>"+
             "</div></div><div class='col-lg-5 col-md-5'><div class='form-group'><label class='control-label '  style = 'font-size:15px; '>Product Price</label>"+
-            "<input type='text' onkeypress='return validateFloatKeyPresss(this,event);' name=''  class='form-control product_price_cls' /><label class='error font-12 font-regular' style='color:red; display:none;'></label></div></div>"+
+            "<input type='text'  name=''  class='form-control product_price_cls' /><label class='error font-12 font-regular' style='color:red; display:none;'></label></div></div>"+
             "<div class='col-lg-2 col-md-2'><div class='form-group'><a class='fa fa-times-circle  fa-lg' onclick='remove_product("+p_index+");' style='margin-top:35px;'></a>"+                                      
               "</div></div></div>";
                     
@@ -2773,218 +2572,6 @@ $("#preview_model").modal('show');
             validates();
             $('#address_line1, #address_line2, #area, #city, #statec, #pincode').change(validates);
         });
-
-        var geocoder = new google.maps.Geocoder();
-        var map;
-        var marker;
-        var infoWindow;
-        function geocodePosition(pos) {
-          geocoder.geocode({
-            latLng: pos
-          }, function(responses) {
-            if (responses && responses.length > 0) {
-              updateMarkerAddress(responses[0].formatted_address);
-            } else {
-              updateMarkerAddress('Cannot determine address at this location.');
-            }
-          });
-        }
-
-        function geocodePosition1(pos) {
-          geocoder.geocode({
-            latLng: pos
-          }, function(responses) {
-            if (responses && responses.length > 0) {
-            //$('#add_msg').text(responses[0].formatted_address);
-            //$("#update_add").modal('show');
-              updateMarkerAddress(responses[0].formatted_address);
-            } else {
-              updateMarkerAddress('Cannot determine address at this location.');
-            }
-          });
-        }
-
-        function updateMarkerStatus(str) {
-          //document.getElementById('markerStatus').innerHTML = str;
-        }
-
-        function updateMarkerPosition(latLng) {
-
-          $("#lat").val(latLng.lat());
-          $("#lng").val(latLng.lng());
-        }
-
-        function updateMarkerAddress(str) {
-          //document.getElementById('address').innerHTML = str;
-          infoWindow.setContent(str);
-        }
-
-        function initialize() {
-          var latLng = new google.maps.LatLng(-34.397, 150.644);
-         map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 8,
-            //center: latLng,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-          });
-             infoWindow = new google.maps.InfoWindow({map: map});
-             var latlngbounds = new google.maps.LatLngBounds();
-          marker = new google.maps.Marker({
-            position: latLng,
-            title: 'Point A',
-            map: map,
-            draggable: true
-          });
-          google.maps.event.addListener(map, 'click', function (e) {
-              $("#lat").val(e.latLng.lat());
-              $("#lng").val(e.latLng.lng());
-
-              placeMarker(e.latLng, map);
-              infoWindow.open(map, this);
-              map.setZoom(8);
-
-                  });
-          // Try HTML5 geolocation.
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-
-              var pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-
-              };
-
-              infoWindow.setPosition(pos);
-              infoWindow.setContent('You are here.');
-              map.setCenter(pos);
-              placeMarker2(position,map);
-
-            }, function() {
-              handleLocationError(true, infoWindow, map.getCenter());
-            });
-          } else {
-            // Browser doesn't support Geolocation
-            handleLocationError(false, infoWindow, map.getCenter());
-          }
-          // Update current position info.
-          //updateMarkerPosition(latLng);
-          //geocodePosition(latLng);
-
-
-          google.maps.event.addListener(marker, 'click', function() {
-              geocodePosition(marker.getPosition());
-                infoWindow.open(map, this);
-                map.setZoom(8);
-            });
-          // Add dragging event listeners.
-          google.maps.event.addListener(marker, 'dragstart', function() {
-            //updateMarkerAddress('Dragging...');
-          });
-
-          google.maps.event.addListener(marker, 'drag', function() {
-            //updateMarkerStatus('Dragging...');
-            updateMarkerPosition(marker.getPosition());
-          });
-
-          google.maps.event.addListener(marker, 'dragend', function() {
-            //updateMarkerStatus('Drag ended');
-            geocodePosition(marker.getPosition());
-            infoWindow.open(map, this);
-            map.setZoom(8);
-          });
-        }
-        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-              infoWindow.setPosition(pos);
-              infoWindow.setContent(browserHasGeolocation ?
-                                    'Error: The Geolocation service failed.' :
-                                    'Error: Your browser doesn\'t support geolocation.');
-            }
-        function placeMarker(position, map) {
-            if ( marker ) {
-                marker.setPosition(position);
-                geocodePosition(marker.getPosition());
-              } else {
-                marker = new google.maps.Marker({
-                  position: position,
-                  map: map,
-                 title: 'Drag Me!',
-                 draggable: true
-                });
-              }
-            map.panTo(position);
-          }
-          function placeMarker2(position, map) {
-            if ( marker ) {
-                marker.setPosition(position);
-
-              } else {
-                marker = new google.maps.Marker({
-                  position: position,
-                  map: map,
-                 title: 'Drag Me!',
-                 draggable: true
-                });
-              }
-            map.panTo(position);
-          }
-
-        function codeAddress() {
-
-            var geocoder = new google.maps.Geocoder();
-            var lat='';
-            var lng='';
-            var city_state_zip =$('#city :selected').text()+", "+$("#statec :selected").text()+", "+$("#pincode :selected").text();
-            var street_address = $("#address_line1").val()+" ," + $('#address_line2').val()  +", "+$("#area").val();
-            var address = street_address + " " + city_state_zip;
-            geocoder.geocode( { 'address': address}, function(results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-               lat = results[0].geometry.location.lat(); //getting the lat
-               $('#lat').val(lat);
-               lng = results[0].geometry.location.lng(); //getting the lng
-               $('#lng').val(lng);
-               map.setCenter(results[0].geometry.location);
-                    $("#lat").val(lat);
-              $("#lng").val(lng);
-               placeMarker(results[0].geometry.location,map);
-             } else {
-                    //alert("Geocode was not successful for the following reason: " + status);
-                    }
-             });
-             var latlng = new google.maps.LatLng(lat, lng);
-             var myOptions = {
-                 zoom: 4,
-                 center: latlng,
-                 mapTypeId: google.maps.MapTypeId.ROADMAP
-             }
-
-         }
-
-        function validates(){
-            if ($('#address_line1').val().length   > 0 || $('#address_line2').val().length   > 0  && $('#area').val().length   >   0   &&
-                $('#city :selected').text().length  >   0   &&
-                $('#statec :selected').text().length    >   0 && $('#pincode :selected').text().length    >   0) {
-                codeAddress();
-            }
-
-        }
-        function GetAddress() {
-            var lat = parseFloat();
-            var lng = parseFloat(document.getElementById("txtLongitude").value);
-            var latlng = new google.maps.LatLng(lat, lng);
-
-            geocoder.geocode({ 'latLng': latlng }, function (results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                    if (results[1]) {
-
-                        infoWindow.setContent(str);
-                    }
-                }
-            });
-        }
-        // Onload handler to fire off the app.
-        google.maps.event.addDomListener(window, 'load', initialize);
-
-
-        /*------------------------------GMAP_END------------------------------------*/
 
         var uploaded_file_mb = 0;
         var uploaded_file1_mb = 0;
@@ -3208,6 +2795,220 @@ $("#preview_model").modal('show');
             }
         }
 
+        var geocoder = new google.maps.Geocoder();
+        var map;
+        var marker;
+        var infoWindow;
+        function geocodePosition(pos) {
+          geocoder.geocode({
+            latLng: pos
+          }, function(responses) {
+            if (responses && responses.length > 0) {
+              updateMarkerAddress(responses[0].formatted_address);
+            } else {
+              updateMarkerAddress('Cannot determine address at this location.');
+            }
+          });
+        }
+
+        function geocodePosition1(pos) {
+          geocoder.geocode({
+            latLng: pos
+          }, function(responses) {
+            if (responses && responses.length > 0) {
+            //$('#add_msg').text(responses[0].formatted_address);
+            //$("#update_add").modal('show');
+              updateMarkerAddress(responses[0].formatted_address);
+            } else {
+              updateMarkerAddress('Cannot determine address at this location.');
+            }
+          });
+        }
+
+        function updateMarkerStatus(str) {
+          //document.getElementById('markerStatus').innerHTML = str;
+        }
+
+        function updateMarkerPosition(latLng) {
+
+          $("#lat").val(latLng.lat());
+          $("#lng").val(latLng.lng());
+        }
+
+        function updateMarkerAddress(str) {
+          //document.getElementById('address').innerHTML = str;
+          infoWindow.setContent(str);
+        }
+
+        function initialize() {
+          var latLng = new google.maps.LatLng(-34.397, 150.644);
+         map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 8,
+            //center: latLng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          });
+             infoWindow = new google.maps.InfoWindow({map: map});
+             var latlngbounds = new google.maps.LatLngBounds();
+          marker = new google.maps.Marker({
+            position: latLng,
+            title: 'Point A',
+            map: map,
+            draggable: true
+          });
+          google.maps.event.addListener(map, 'click', function (e) {
+              $("#lat").val(e.latLng.lat());
+              $("#lng").val(e.latLng.lng());
+
+              placeMarker(e.latLng, map);
+              infoWindow.open(map, this);
+              map.setZoom(8);
+
+                  });
+          // Try HTML5 geolocation.
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+
+              var pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+
+              };
+
+              infoWindow.setPosition(pos);
+              infoWindow.setContent('You are here.');
+              map.setCenter(pos);
+              placeMarker2(position,map);
+
+            }, function() {
+              handleLocationError(true, infoWindow, map.getCenter());
+            });
+          } else {
+            // Browser doesn't support Geolocation
+            handleLocationError(false, infoWindow, map.getCenter());
+          }
+          // Update current position info.
+          //updateMarkerPosition(latLng);
+          //geocodePosition(latLng);
+
+
+          google.maps.event.addListener(marker, 'click', function() {
+              geocodePosition(marker.getPosition());
+                infoWindow.open(map, this);
+                map.setZoom(8);
+            });
+          // Add dragging event listeners.
+          google.maps.event.addListener(marker, 'dragstart', function() {
+            //updateMarkerAddress('Dragging...');
+          });
+
+          google.maps.event.addListener(marker, 'drag', function() {
+            //updateMarkerStatus('Dragging...');
+            updateMarkerPosition(marker.getPosition());
+          });
+
+          google.maps.event.addListener(marker, 'dragend', function() {
+            //updateMarkerStatus('Drag ended');
+            geocodePosition(marker.getPosition());
+            infoWindow.open(map, this);
+            map.setZoom(8);
+          });
+        }
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+              infoWindow.setPosition(pos);
+              infoWindow.setContent(browserHasGeolocation ?
+                                    'Error: The Geolocation service failed.' :
+                                    'Error: Your browser doesn\'t support geolocation.');
+            }
+        function placeMarker(position, map) {
+            if ( marker ) {
+                marker.setPosition(position);
+                geocodePosition(marker.getPosition());
+              } else {
+                marker = new google.maps.Marker({
+                  position: position,
+                  map: map,
+                 title: 'Drag Me!',
+                 draggable: true
+                });
+              }
+            map.panTo(position);
+          }
+          function placeMarker2(position, map) {
+            if ( marker ) {
+                marker.setPosition(position);
+
+              } else {
+                marker = new google.maps.Marker({
+                  position: position,
+                  map: map,
+                 title: 'Drag Me!',
+                 draggable: true
+                });
+              }
+            map.panTo(position);
+          }
+
+        function codeAddress() {
+
+            var geocoder = new google.maps.Geocoder();
+            var lat='';
+            var lng='';
+            var city_state_zip =$('#city :selected').text()+", "+$("#statec :selected").text()+", "+$("#pincode :selected").text();
+            var street_address = $("#address_line1").val()+" ," + $('#address_line2').val()  +", "+$("#area").val();
+            var address = street_address + " " + city_state_zip;
+            geocoder.geocode( { 'address': address}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+               lat = results[0].geometry.location.lat(); //getting the lat
+               $('#lat').val(lat);
+               lng = results[0].geometry.location.lng(); //getting the lng
+               $('#lng').val(lng);
+               map.setCenter(results[0].geometry.location);
+                    $("#lat").val(lat);
+              $("#lng").val(lng);
+               placeMarker(results[0].geometry.location,map);
+             } else {
+                    //alert("Geocode was not successful for the following reason: " + status);
+                    }
+             });
+             var latlng = new google.maps.LatLng(lat, lng);
+             var myOptions = {
+                 zoom: 4,
+                 center: latlng,
+                 mapTypeId: google.maps.MapTypeId.ROADMAP
+             }
+
+         }
+
+        function validates(){
+            if ($('#address_line1').val().length   > 0 || $('#address_line2').val().length   > 0  && $('#area').val().length   >   0   &&
+                $('#city :selected').text().length  >   0   &&
+                $('#statec :selected').text().length    >   0 && $('#pincode :selected').text().length    >   0) {
+                codeAddress();
+            }
+
+        }
+        function GetAddress() {
+            var lat = parseFloat();
+            var lng = parseFloat(document.getElementById("txtLongitude").value);
+            var latlng = new google.maps.LatLng(lat, lng);
+
+            geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    if (results[1]) {
+
+                        infoWindow.setContent(str);
+                    }
+                }
+            });
+        }
+        // Onload handler to fire off the app.
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+
+        /*------------------------------GMAP_END------------------------------------*/
+
+        
+
         var start = $(".time_start").kendoTimePicker({
             change: startChange
         }).data("kendoTimePicker");
@@ -3261,6 +3062,12 @@ $("#preview_model").modal('show');
 
     var i = 1;
     function add_working() {
+
+        var arr = document.getElementsByClassName("opening_day")
+        if(arr.length >= 7){
+            return false;
+        }
+
         i = i + 1;
         if($("#day").val() == "All"){
             $("#wrk_hrs_label").css("display","block");
@@ -3272,13 +3079,14 @@ $("#preview_model").modal('show');
         }
 
         $("#working_hours").append(
-            "<div class='row'><div class='col-lg-4'><div class='form-group'><label class='control-label '>Day</label>"+
+            "<div id='hours_div_"+i+"' class='row'><div class='col-lg-4'><div class='form-group'><label class='control-label '>Day</label>"+
             "<select class='form-control opening_day sel2' id='day_"+i+"' onchange='day_change()' name='options2'><option value=''>Select Day</option><option value='Monday'>Monday</option>"+
             "<option value='Tuesday'>Tuesday</option><option value='Wednesday'>Wednesday</option><option value='Thursday'>Thursday</option>"+
             "<option value='Friday'>Friday</option><option value='Saturday'>Saturday</option> <option value='Sunday'>Sunday</option></select><label class='error' style='color:red; display:none;'></label>"+
             "</div></div><div class='form-group col-lg-4'><label class='control-label '>Start Time </label>"+
             "<input class='starttime time_start strt_wrk' id='start"+i+"' value='8.00 AM' style='width: 100%;' placeholder='Select Start Time' /><label class='error' style='color:red; display:none;'></label></div><div class='form-group col-lg-4'>"+
-            "<label class='control-label '>End Time</label><input class='endtime time_end end_wrk' id='end"+i+"' value='8.30 AM' style='width: 100%;' placeholder='Select End Time'/></div>"+
+            "<label class='control-label '>End Time</label><a class='fa fa-times-circle remove_btn' onclick='remove_working("+i+")' style='margin-left:10px;'></a>"+
+            "<input class='endtime time_end end_wrk' id='end"+i+"' value='8.30 AM' style='width: 100%;' placeholder='Select End Time'/></div>"+
             "</div>"
         );
         day_change();
@@ -3331,14 +3139,21 @@ $("#preview_model").modal('show');
             $(this).attr("disabled", false);
         });
         $(".opening_day").each(function() {
-            list.push($(this).val());
+            if($(this).val() != ""){
+                list.push($(this).val());
+            }
         });
         $.each(list, function (index, item) {
             $(".opening_day").each(function() {
-                $("option[value='" + item + "']", $(this)).attr("disabled", true);
+                $("option[value='"+item+"']", $(this)).attr("disabled", true);
             });
         });
 
+    }
+
+    function remove_working(id){
+        $('#hours_div_'+id).remove();
+        day_change();
     }
 
 
@@ -3628,12 +3443,27 @@ $("#preview_model").modal('show');
 
             var product_name_list = []
             product_name_list = $('.product_name_cls').map(function() {
-                return $(this).val();
+            
+                if ($(this).val()=='') {
+                    return $(this).val();
+                }
+                else {
+                    return $(this).val()+'_PRODUCT_NAME_IS_SEPARATED';
+                }            
+
             }).get();
 
             var product_price_list = []
             product_price_list = $('.product_price_cls').map(function() {
-                return $(this).val();
+                
+                if ($(this).val()=='') {
+                
+                    return $(this).val()+'TEST$PRICE$BLANK_PRODUCT_PRICE_IS_SEPARATED';
+                }
+                else {
+                    return $(this).val()+'_PRODUCT_PRICE_IS_SEPARATED';
+                }
+                
             }).get();
 
             var phone_category_list = []
@@ -3719,7 +3549,24 @@ $("#preview_model").modal('show');
             near_hospd = $('.ner_hosd').map(function() {
                 return $(this).val();
             }).get();
-
+            subcat_list = []
+            if($("#lvl1").val() != "" && $("#lvl1").val() != undefined){
+                subcat_list.push($("#lvl1").val())
+            }
+            if($("#lvl2").val() != "" && $("#lvl2").val() != undefined){
+                subcat_list.push($("#lvl2").val())
+            }
+            if($("#lvl3").val() != "" && $("#lvl3").val() != undefined){
+                subcat_list.push($("#lvl3").val())
+            }
+            if($("#lvl4").val() != "" && $("#lvl4").val() != undefined){
+                subcat_list.push($("#lvl4").val())
+            }
+            if($("#lvl5").val() != "" && $("#lvl5").val() != undefined){
+                subcat_list.push($("#lvl5").val())
+            }
+            
+            formData.append("title",$('#title').val());
             advert_keywords = $("#advert_keywords").val();
             formData.append("any_other_amenity",$('#any_other_amenity').val());
             formData.append("advert_keywords",advert_keywords);
@@ -4087,13 +3934,9 @@ $("#preview_model").modal('show');
             $(contact_name).parent().children('.error').text("Please enter Name");
             return false;
         }
-        else if(namePattern.test(first_name)){
-            $(contact_name).parent().children('.error').css("display", "none");
+        else{
+           $(contact_name).parent().children('.error').css("display", "none");
             return true;
-        }else{
-            $(contact_name).parent().children('.error').css("display", "block");
-            $(contact_name).parent().children('.error').text("Please enter valid Name");
-            return false;
         }
     }
 
@@ -4614,7 +4457,7 @@ $("#preview_model").modal('show');
     }
 
 
-            //------------------------------validation for float field for Client IP-------------------//
+            //------------------------------validation for float field -------------------//
 
     function validateFloatKeyPress(el, evt) {
         var charCode = (evt.which) ? evt.which : event.keyCode;
@@ -4658,4 +4501,3 @@ $("#preview_model").modal('show');
 </body>
 
 </html>
-

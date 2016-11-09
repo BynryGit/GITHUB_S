@@ -69,7 +69,7 @@
 
 
 <style type="text/css">
-
+   
 .has-success .control-label{
     color : #333;
 }
@@ -318,18 +318,13 @@ hr {
     padding: 6px 6px 6px 6px;
 }
 
-.sel2{
-    width: 100%;
-}
 
 .tab-active{
     background: rgb(13, 103, 230) none repeat scroll 0% 0% !important;
     color: rgb(16, 245, 182) !important;
 }
 
-.sel2{
-    width: 100%;
-}
+
 
 .div-border-top{
     border: 1px solid #cccccc;
@@ -575,6 +570,10 @@ float: right !important;
 #new_payment_report_paginate{
 float: right !important;
 }  
+
+.col-md-2 {
+    width: 11.66667%;
+}
 </style>
  <!-- END HEAD -->
  
@@ -690,121 +689,143 @@ float: right !important;
                                     </div>
                                     <div class="row">
                                     
-                                    <div class="col-md-2">
-                                            <p style="margin-top: 8px;">City :</p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <select class="form-control sel2" id="city_list" onchange="get_subscriber_data();">
-                                                <option value="">Select City</option>
-                                                {% for city in city_places_list %}
-                                                    <option value="{{city.city_place_id}}">{{city.city}}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
+	                                    <div class="col-md-2">
+	                                            <p style="margin-top: 8px;">City :</p>
+	                                    </div>
+	                                    <div class="col-md-4">
+                                         <select class="form-control sel2" id="city_list" onchange="get_subscriber_data();" >
+                                             <option value="">Select City</option>
+                                             <option value="all">All</option>
+                                             {% for city in city_places_list %}
+                                                 <option value="{{city.city_place_id}}">{{city.city}}</option>
+                                             {% endfor %}
+                                         </select>
+	                                    </div>
+                                     </div>
                                         
-                                        
+                                     <div class="row">   
                                         <div class="col-md-2">
                                             <p style="margin-top: 8px;">Subscriber :</p>
                                         </div>
                                         <div class="col-md-4">
-                                            <select class="form-control sel2" id="subscriber_list"  onchange="get_cat1_data();"> <!-- onchange="get_advert_data();" -->
-                                                <option value="">Select Subscriber</option>
-                                                {% for subscriber_obj in subscriber_data %}
+                                            <select class="form-control sel2" id="subscriber_list" onchange="get_category1_data();"> 
+																<option value="">Select Subscriber</option>
+
+                                               <!--  {% for subscriber_obj in subscriber_data %}
                                                     <option value="{{subscriber_obj.supplier_id}}">{{subscriber_obj.business_name}}</option>
-                                                {% endfor %}
+                                                {% endfor %} -->
+                                                
                                             </select>
                                              <label id="sub_err" class="error" style="color:red; display:none;"></label>
                                         </div>
                                      
-                                    </div>
+                                     </div>
                                     
-                                  <div class="row" >
-                                    
-												<span style="display:none" id="div1">                                    
-	                                    <div class="col-md-2" >
-	                                            <p style="margin-top: 8px;">Category :</p>
-	                                        </div>
-	                                        <div class="col-md-4">
-	                                            <select class="form-control sel2" id="cat_list" onchange="get_cat1_data();">
-	                                                <option value="">Select Category</option>
-	                                             
-	                                            </select>
-	                                            <label id="cat_err" class="error" style="color:red; display:none;"></label>
-	                                        </div>
-                                      </span>
+                                    <div class="row" >
+                                    	<div class="col-md-12" style="margin-left: -5px;">
+	                                    	 <div class="col-md-4" >
+	                                    	     <div class="row" >
+	                                    	
+				                                        <div class="col-md-4" style="padding-left: 6px;">
+					                                         <p style="margin-top: 8px;">Category :</p>
+					                                     </div>
+					                                     <div class="col-md-8">
+					                                         <select class="form-control sel2" id="cat_list" onchange="get_cat1_data();">
+																				<option value="">Select Category</option>					                                             
+					                                          <!-- 	 {% for category in category_data %}
+						                                                 <option value="{{category.category_id}}">{{category.category_name}}</option>
+						                                            {% endfor %} -->
+						                                             
+					                                         </select>
+					                                         <label id="cat_err" class="error" style="color:red; display:none;"></label>
+					                                     </div>
+					                                 
+			                                    </div>
+		                                    </div>
+		                                    
+	                                       <div class="col-md-4" style="display:none" id="div2">
+	                                            <div class="row" >                  
+			                                    <div class="col-md-4" >
+		                                            <p style="margin-top: 0px;">Category Level 1 :</p>
+		                                        </div>
+		                                        <div class="col-md-8">
+		                                            <select class="form-control sel2" id="cat_list1" onchange="get_cat2_data();">
+		                                                <option value="">Select Category Level 1</option>
+		                                             
+		                                            </select>
+		                                        </div>
+		                                        </div>
+	                                       </div>
+	                                       <div class="col-md-4" style="display:none" id="div3">
+	                                            <div class="row" >                  
+		                                        <div class="col-md-4" >
+		                                            <p style="margin-top: 0px;">Category Level 2 :</p>
+		                                        </div>
+		                                        <div class="col-md-8">
+		                                            <select class="form-control sel2" id="cat_list2" onchange="get_cat3_data();">
+		                                                <option value="">Select Category Level 2</option>
+		                                             
+		                                            </select>
+		                                        </div>
+		                                       </div>
+	                                    
+	                                       </div>
+                                       </div>
+                                    </div> 
+                                    <div class="row" >
+		                                 <div class="col-md-12" style="margin-left: -16px;">
+			                                  <div style="display:none" id="div4">
+			                                      <div class="row" >                                    
+				                                    <div class="col-md-4" >
+				                                            <p style="margin-top: 0px;">Category Level 3 :</p>
+				                                        </div>
+				                                        <div class="col-md-8">
+				                                            <select class="form-control sel2" id="cat_list3" onchange="get_cat4_data();">
+				                                                <option value="">Select Category Level 3</option>
+				                                             
+				                                            </select>
+				                                        </div>
+				                                    </div>
+			                                  </div>
+		                                 
+				                                <div style="display:none" id="div5">
+				                                       <div class="row" >                                    
+					                                    <div class="col-md-4" >
+					                                            <p style="margin-top: 0px;">Category Level 4 :</p>
+					                                        </div>
+					                                        <div class="col-md-8">
+					                                            <select class="form-control sel2" id="cat_list4" onchange="get_cat5_data();">
+					                                                <option value="">Select Category Level 4</option>
+					                                             
+					                                            </select>
+					                                        </div>
+					                                    </div>
+				                                 </div>
+				                                 
+				                                 <div style="display:none" id="div6">
+				                                     <div class="row" >                                    
+					                                    <div class="col-md-4" >
+					                                            <p style="margin-top: 0px;">Category Level 5 :</p>
+					                                        </div>
+					                                        <div class="col-md-8">
+					                                            <select class="form-control sel2" id="cat_list5" onchange="get_cat6_data();">
+					                                                <option value="">Select Category Level 5</option>
+					                                             
+					                                            </select>
+					                                        </div>
+					                                 </div>
+				                                 </div>
+		                                 
+		                                   </div>
+                                     </div> 
                                       
-                                      	<span style="display:none" id="div2">                                    
-	                                    <div class="col-md-2" >
-	                                            <p style="margin-top: 8px;">Category Level 1 :</p>
-	                                        </div>
-	                                        <div class="col-md-4">
-	                                            <select class="form-control sel2" id="cat_list1" onchange="get_cat2_data();">
-	                                                <option value="">Select Sub-Category Level 1</option>
-	                                             
-	                                            </select>
-	                                        </div>
-                                      </span>
-                                </div>        
-                               <div class="row" >
-                                  <span style="display:none" id="div3">                                    
-	                                    <div class="col-md-2" >
-	                                            <p style="margin-top: 8px;">Category Level 2 :</p>
-	                                        </div>
-	                                        <div class="col-md-4">
-	                                            <select class="form-control sel2" id="cat_list2" onchange="get_cat3_data();">
-	                                                <option value="">Select Sub-Category Level 2</option>
-	                                             
-	                                            </select>
-	                                        </div>
-                                 </span>
-                                  <span style="display:none" id="div4">                                    
-	                                    <div class="col-md-2" >
-	                                            <p style="margin-top: 8px;">Category Level 3 :</p>
-	                                        </div>
-	                                        <div class="col-md-4">
-	                                            <select class="form-control sel2" id="cat_list3" onchange="get_cat4_data();">
-	                                                <option value="">Select Sub-Category Level 3</option>
-	                                             
-	                                            </select>
-	                                        </div>
-                                 </span>
-                                 
-                                </div>
-                                <div class="row" >
-                                   <span style="display:none" id="div5">                                    
-	                                    <div class="col-md-2" >
-	                                            <p style="margin-top: 8px;">Category Level 4 :</p>
-	                                        </div>
-	                                        <div class="col-md-4">
-	                                            <select class="form-control sel2" id="cat_list4" onchange="get_cat5_data();">
-	                                                <option value="">Select Sub-Category Level 4</option>
-	                                             
-	                                            </select>
-	                                        </div>
-                                 </span>
-                                 <span style="display:none" id="div6">                                    
-	                                    <div class="col-md-2" >
-	                                            <p style="margin-top: 8px;">Category Level 5 :</p>
-	                                        </div>
-	                                        <div class="col-md-4">
-	                                            <select class="form-control sel2" id="cat_list5" onchange="get_cat6_data();">
-	                                                <option value="">Select Sub-Category Level 5</option>
-	                                             
-	                                            </select>
-	                                        </div>
-                                 </span>
-                                 
-                                </div>
-                                
-                                     
-                                
                                     <div class="row">
                                     
                                        <div class="col-md-2">
                                             <p style="margin-top: 8px;">Advert :</p>
                                         </div>
                                         <div class="col-md-4">
-                                            <select class="form-control sel2" id="advert_list" onchange="get_advert_date();">
+                                            <select class="form-control sel2" id="advert_list" >  <!-- onchange="get_advert_date();" -->
                                                 <option value="">Select Advert</option>
                                             </select>
                                         </div>
@@ -816,15 +837,25 @@ float: right !important;
                                         </div>
                                         <div class="col-md-4">
                                             <div class="input-group input-large date-picker input-daterange" data-date="10/11/2012" data-date-format="dd/mm/yyyy">
-                                                <input type="text" class="form-control" id="from_date" name="from" onchange="date_change();" value="{{pre_date}}">
+                                                <input type="text" class="form-control" id="from_date" name="from"  value="{{pre_date}}"> <!-- onchange="date_change();" -->
                                                 <span class="input-group-addon"> to </span>
-                                                <input type="text" class="form-control" id="to_date" name="to" onchange="date_change();" value="{{today_date}}">
+                                                <input type="text" class="form-control" id="to_date" name="to" value="{{today_date}}"> <!-- onchange="date_change();"  -->
                                             </div>
                                         </div>
                                         
-                                        
                                     </div>
-                                    <div class="portlet-body" style="margin-top: 57px;">
+                                     <div class="row">
+                                    
+                                          <div class="col-md-12"> 
+                                               <div class="row" style="float: right;">
+                                                 <div class="col-md-12">
+                                           		<button  style="width: 100px;" type="button" class="btn btn-outline grey_color " onclick="location.href = '/admin-report/';" >Clear</button>
+                                               	<button   style="width: 100px;" type="button"  id="filter-continue"  class="btn btn-outline done_btn" >Ok </button>
+                                          	     </div>
+                                          	  </div>
+                                          </div>
+                                     </div>
+                                    <div class="portlet-body" style="margin-top: 68px; display:none" id="advert_table_display">
                                         <table class="table table-striped table-bordered table-hover table-responsive" id="advert_table">
                                             <thead>
                                                 <tr>
@@ -868,17 +899,20 @@ float: right !important;
                                         <div class="col-md-4">
                                             <select class="form-control sel2" id="sub_city_list" onchange="get_category_data();">
                                                 <option value="">Select City</option>
+                                                <option value="all">All</option>
                                                 {% for city in city_places_list %}
                                                     <option value="{{city.city_place_id}}">{{city.city}}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
-                                        
+                                     </div>
+                                     
+                                     <div class="row">   
                                         <div class="col-md-2">
                                             <p style="margin-top: 8px;">Subscriber :</p>
                                         </div>
                                         <div class="col-md-4">
-                                            <select class="form-control sel2" id="subscribers_list" onchange="get_category_data1();"><!-- onchange="get_subscription_plans();" -->
+                                            <select class="form-control sel2" id="subscribers_list" onchange="get_cat_sub_data();">
                                                 <option value="">Select Subscriber</option>
                                                 {% for subscriber_obj in subscriber_data %}
                                                     <option value="{{subscriber_obj.supplier_id}}">{{subscriber_obj.business_name}}</option>
@@ -888,90 +922,115 @@ float: right !important;
                                         </div>
                                     </div>
                                     
-                                   <div class="row" >
+                                    <div class="row" >
+                                    	<div class="col-md-12" style="margin-left: -5px;">
+	                                    	 <div class="col-md-4" >
+	                                    	     <div class="row" >
+	                                    	          <div class="col-md-4" style="padding-left: 6px;">
+	                                                   <p style="margin-top: 8px;">Category :</p>
+	                                                 </div>
+				                                        <div class="col-md-8">
+				                                            <select class="form-control sel2" id="sub_cat_list" onchange="get_category_data1();">
+				                                                <option value="">Select Category</option>
+					                                          	 {% for category in category_data %}
+						                                                 <option value="{{category.category_id}}">{{category.category_name}}</option>
+						                                           {% endfor %}
+				                                             
+				                                            </select>
+				                                            <label id="sub_cat_err" class="error" style="color:red; display:none;"></label>
+				                                        </div>
+			                                    </div>
+		                                    </div>
+		                                    
+	                                       <div class="col-md-4" style="display:none" id="category_id2">
+	                                            <div class="row" >                  
+					                                    <div class="col-md-4" >
+					                                            <p style="margin-top: 0px;">Category Level 1 :</p>
+					                                        </div>
+					                                        <div class="col-md-8">
+					                                            <select class="form-control sel2" id="sub_cat_list1" onchange="get_category_data2();">
+					                                                <option value="">Select Category Level 1</option>
+					                                             
+					                                            </select>
+					                                        </div>
+		                                         </div>
+	                                       </div>
+	                                       <div class="col-md-4" style="display:none" id="category_id3">
+	                                              <div class="row" >                  
+						                                    <div class="col-md-4" >
+						                                            <p style="margin-top: 0px;">Category Level 2 :</p>
+						                                        </div>
+						                                        <div class="col-md-8">
+						                                            <select class="form-control sel2" id="sub_cat_list2" onchange="get_category_data3();">
+						                                                <option value="">Select Category Level 2</option>
+						                                             
+						                                            </select>
+						                                            <label id="" class="error" style="color:red; display:none;"></label>
+						                                        </div>
+		                                             </div>
+	                                        </div>
+                                       </div>
+                                    </div>
                                     
-												<span style="display:none" id="category_id1">                                    
-	                                    <div class="col-md-2" >
-	                                            <p style="margin-top: 8px;">Category :</p>
+                                    <div class="row" >
+                                    	<div class="col-md-12" style="margin-left: -16px;">
+	                                    	 <div class="col-md-4" style="display:none" id="category_id4">
+	                                    	     <div class="row" >
+	                                    	          <div class="col-md-2" >
+				                                            <p style="margin-top: 0px;">Category Level 3 :</p>
+				                                        </div>
+				                                        <div class="col-md-4">
+				                                            <select class="form-control sel2" id="sub_cat_list3" onchange="get_category_data4();">
+				                                                <option value="">Select Category Level 3</option>
+				                                             
+				                                            </select>
+				                                        </div>
+			                                    </div>
+		                                     </div>
+		                                    
+	                                       <div class="col-md-4" style="display:none" id="category_id5">
+	                                            <div class="row" >                  
+					                                    <div class="col-md-2" >
+					                                            <p style="margin-top: 0px;">Category Level 4 :</p>
+					                                        </div>
+					                                        <div class="col-md-4">
+					                                            <select class="form-control sel2" id="sub_cat_list4" onchange="get_category_data5();">
+					                                                <option value="">Select Category Level 4</option>
+					                                             
+					                                            </select>
+					                                            <label id="" class="error" style="color:red; display:none;"></label>
+					                                        </div>
+		                                        </div>
+	                                       </div>
+	                                       <div class="col-md-4" style="display:none" id="category_id6">
+	                                              <div class="row" >                  
+						                                    <div class="col-md-2" >
+						                                            <p style="margin-top: 0px;">Category Level 5 :</p>
+						                                        </div>
+						                                        <div class="col-md-4">
+						                                            <select class="form-control sel2" id="sub_cat_list5" onchange="get_category_data6();">
+						                                                <option value="">Select Category Level 5</option>
+						                                             
+						                                            </select>
+						                                        </div>
+		                                             </div>
 	                                        </div>
-	                                        <div class="col-md-4">
-	                                            <select class="form-control sel2" id="sub_cat_list" onchange="get_category_data1();">
-	                                                <option value="">Select Category</option>
-	                                             
-	                                            </select>
-	                                            <label id="sub_cat_err" class="error" style="color:red; display:none;"></label>
-	                                        </div>
-                                      </span>
-                                      
-                                      	<span style="display:none" id="category_id2">                                    
-	                                    <div class="col-md-2" >
-	                                            <p style="margin-top: 8px;">Category Level 1 :</p>
-	                                        </div>
-	                                        <div class="col-md-4">
-	                                            <select class="form-control sel2" id="sub_cat_list1" onchange="get_category_data2();">
-	                                                <option value="">Select Sub-Category Level 1</option>
-	                                             
-	                                            </select>
-	                                        </div>
-                                      </span>
-                                 </div>
-                                 <div class="row" >
+                                       </div>
+                                    </div> 
+                  
+												<div class="row" style="display:none" id="display_subscription">
                                     
-												<span style="display:none" id="category_id3">                                    
-	                                    <div class="col-md-2" >
-	                                            <p style="margin-top: 8px;">Category Level 2 :</p>
-	                                        </div>
-	                                        <div class="col-md-4">
-	                                            <select class="form-control sel2" id="sub_cat_list2" onchange="get_category_data3();">
-	                                                <option value="">Select Sub-Category Level 2</option>
-	                                             
-	                                            </select>
-	                                            <label id="" class="error" style="color:red; display:none;"></label>
-	                                        </div>
-                                      </span>
-                                      
-                                      	<span style="display:none" id="category_id4">                                    
-	                                    <div class="col-md-2" >
-	                                            <p style="margin-top: 8px;">Category Level 3 :</p>
-	                                        </div>
-	                                        <div class="col-md-4">
-	                                            <select class="form-control sel2" id="sub_cat_list3" onchange="get_category_data4();">
-	                                                <option value="">Select Sub-Category Level 3</option>
-	                                             
-	                                            </select>
-	                                        </div>
-                                      </span>
-                                 </div>
-                                 
-                                   <div class="row" >
-                                    
-												<span style="display:none" id="category_id5">                                    
-	                                    <div class="col-md-2" >
-	                                            <p style="margin-top: 8px;">Category Level 4 :</p>
-	                                        </div>
-	                                        <div class="col-md-4">
-	                                            <select class="form-control sel2" id="sub_cat_list4" onchange="get_category_data5();">
-	                                                <option value="">Select Sub-Category Level 4</option>
-	                                             
-	                                            </select>
-	                                            <label id="" class="error" style="color:red; display:none;"></label>
-	                                        </div>
-                                      </span>
-                                      
-                                      	<span style="display:none" id="category_id6">                                    
-	                                    <div class="col-md-2" >
-	                                            <p style="margin-top: 8px;">Category Level 5 :</p>
-	                                        </div>
-	                                        <div class="col-md-4">
-	                                            <select class="form-control sel2" id="sub_cat_list5" onchange="get_category_data6();">
-	                                                <option value="">Select Sub-Category Level 5</option>
-	                                             
-	                                            </select>
-	                                        </div>
-                                      </span>
-                                 </div>
-
-                                    <div class="portlet-body" style="margin-top: 57px;">
+                                          <div class="col-md-12"> 
+                                               <div class="row" style="float: right;">
+                                                 <div class="col-md-12">
+                                           		<button  style="width: 100px;" type="button" class="btn btn-outline grey_color " onclick="location.href = '/admin-report/';" >Clear</button>
+                                               	<button   style="width: 100px;" type="button"  id="filter-continue1"  class="btn btn-outline done_btn" >Ok </button>
+                                          	     </div>
+                                          	  </div>
+                                          </div>
+                                     </div>
+                                     
+                                    <div class="portlet-body" style="margin-top: 68px; display:none" id="subscription_plan_display">
                                         <table class="table table-striped table-bordered table-hover table-responsive"  width="100%" id="subscription_plan">
                                             <thead>
                                                 <tr>
@@ -1875,7 +1934,151 @@ float: right !important;
         <!-- END THEME LAYOUT SCRIPTS -->
         
 <script type="text/javascript">
-    $("#reports_anchor").addClass("tab-active");
+
+$("#filter-continue").click(function(event)  {
+    if ($("#advert_list").val() != '') {
+    	
+			$("#advert_table_display").css("display","block");
+			city_list = $("#city_list").val();
+			subscriber_list = $("#subscriber_list").val();
+			cat_list = $("#cat_list").val();
+			cat_list1 = $("#cat_list1").val();
+			cat_list2 = $("#cat_list2").val();
+        
+        from_date = $("#from_date").val();
+        end_date = $("#to_date").val();
+        advert_id = $("#advert_list").val();
+        
+        data = '/get_filter_data/?advert_id='+advert_id+'&from_date='+from_date+'&to_date='+end_date+'&city_list='+city_list+'&subscriber_list='+subscriber_list+'&cat_list='+cat_list+'&cat_list1='+cat_list1+'&cat_list2='+cat_list2
+        $('#advert_table').removeAttr('width').dataTable({
+            "bDestroy" : true,
+            buttons: [
+                //{ extend: 'print', className: 'btn dark btn-outline',
+                //filename: 'Advert Health Report', "title": "CityHoopla : Advert Health Report" },
+                { extend: 'pdf', className: 'btn green btn-outline', orientation: 'landscape',
+                    filename: 'Advert Health Report', "title": "CityHoopla : Advert Health Report",
+                    customize: function(doc) {
+                        doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
+                        doc.defaultStyle.alignment= 'center'; //<-- set fontsize to 16 instead of 10
+                        doc.styles.tableHeader.fontSize = 8; //<-- set fontsize to 16 instead of 10
+                    }
+                },
+            ],
+
+            "order": [
+                [0, 'asc']
+            ],
+
+            "ajax": data,
+             "columns": [
+                {"data": "advert_id","sClass": "text-center"},
+                {"data": "advert_title"},
+                {"data": "advert_views","sClass": "text-center"},
+                {"data": "advert_likes","sClass": "text-center"},
+                {"data": "advert_favourites","sClass": "text-center"},
+                {"data": "advert_calls","sClass": "text-center"},
+                {"data": "advert_call_backs","sClass": "text-center"},
+                {"data": "advert_emails","sClass": "text-center"},
+                {"data": "advert_coupons","sClass": "text-center"},
+                {"data": "advert_reviews","sClass": "text-center"},
+                {"data": "advert_sms","sClass": "text-center"},
+                {"data": "advert_whatsapp","sClass": "text-center"},
+                {"data": "advert_facebook","sClass": "text-center"},
+                {"data": "advert_twitter","sClass": "text-center"}
+            ],
+
+                   "columnDefs": [
+                {"className": "dt-center", "targets": "_all", width: 150}
+            ],
+
+             "paging":   true,
+         
+             "scrollX":     true,
+				 "filter": false,
+             "info":     false,
+          // removeAttr('width').
+            "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
+
+        });
+ 
+  } 
+});
+
+$("#filter-continue1").click(function(event)  {
+
+			$("#subscription_plan_display").css("display","block");
+			city_list = $("#sub_city_list").val();
+			subscriber_list = $("#subscribers_list").val();
+			cat_list = $("#sub_cat_list").val();
+			cat_list1 = $("#sub_cat_list1").val();
+			cat_list2 = $("#sub_cat_list2").val();
+               
+        
+        data = '/get_filter_data1/?city_list='+city_list+'&subscriber_list='+subscriber_list+'&cat_list='+cat_list+'&cat_list1='+cat_list1+'&cat_list2='+cat_list2
+
+
+        $('#subscription_plan').removeAttr('width').dataTable({
+            "bDestroy" : true,
+            buttons: [
+               // { extend: 'print', className: 'btn dark btn-outline',
+                 //   filename: 'Subscription Plan', "title": "CityHoopla : Subscription Plan"
+                // },
+                { extend: 'pdf', className: 'btn green btn-outline', orientation: 'landscape',
+                    filename: 'Subscription Plan', "title": "CityHoopla : Subscription Plan",
+                    customize: function(doc) {
+                        doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
+                        doc.defaultStyle.alignment= 'center'; //<-- set fontsize to 16 instead of 10
+                        doc.styles.tableHeader.fontSize = 8; //<-- set fontsize to 16 instead of 10
+                    }
+                },
+            ],
+
+            "order": [
+                [0, 'asc']
+            ],
+
+            "ajax": data,
+            "columns": [
+                {"data": "advert_id","sClass": "text-center"},
+                {"data": "advert_title"},
+                {"data": "category"},
+                {"data": "start_date","sClass": "text-center"},
+                {"data": "end_date","sClass": "text-center"},
+                {"data": "premium_service"},
+                {"data": "premium_start_date","sClass": "text-center"},
+                {"data": "premium_end_date","sClass": "text-center"},
+                {"data": "advert_slider","sClass": "text-center"},
+                {"data": "slider_start_date","sClass": "text-center"},
+                {"data": "slider_end_date","sClass": "text-center"},
+                {"data": "top_advert","sClass": "text-center"},
+                {"data": "top_advert_start_date","sClass": "text-center"},
+                {"data": "top_advert_end_date","sClass": "text-center"},
+                {"data": "uploaded_pictures","sClass": "text-center"},
+                {"data": "uploaded_videos","sClass": "text-center"},
+                {"data": "memory_usages","sClass": "text-center"},
+                {"data": "total_service_cost","sClass": "text-center"},
+                {"data": "total_amount_paid","sClass": "text-center"},
+                {"data": "saleman_name"},
+                {"data": "saleman_number","sClass": "text-center"}
+            ],
+
+              "columnDefs": [
+                {"className": "dt-center", "targets": "_all", width: 150}
+            ],
+
+             "paging":   true,
+          
+             "scrollX":     true,
+				 "filter": false,
+             "info":     false,
+          // .removeAttr('width').
+            "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
+
+        });
+        
+});
+
+   $("#reports_anchor").addClass("tab-active");
 	$("#reports_icon").addClass("icon-active");
 	$("#reports_active").css("display","block");
 	
@@ -2014,9 +2217,7 @@ else if ($("#mngt_clist").val() == "8") {
   table_init16();
 }
 
-}
-
-		
+}		
 $(".sel2").select2({
             width: '100%'
         })
@@ -2253,8 +2454,6 @@ $(".sel2").select2({
              "info":     false,
           // removeAttr('width').
          
-                    
-                    
             "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
 
         });
@@ -2624,7 +2823,7 @@ function get_subscription_plans(){
             ],
 
                "columnDefs": [
-                {"className": "dt-center", "targets": "_all", width: 320}
+                {"className": "dt-center", "targets": "_all", width: 170}
             ],
 
              "paging":   true,
@@ -3052,6 +3251,36 @@ $('#analytical_data').dataTable({
 });
 
 function get_subscriber_data(){
+
+        $("#subscriber_list").html("");
+		  $("#subscriber_list").append("<option value=''>Select Subscriber</option>");        
+        $('#subscriber_list').val("").change();
+        $("#cat_list").html("");
+		  $("#cat_list").append("<option value=''>Select Category</option>");        
+        $('#cat_list').val("").change();
+        $("#cat_list1").html("");
+        $("#cat_list1").append("<option value=''>Select Category Level 1</option>");
+        $('#cat_list1').val("").change();
+        $("#cat_list2").html("");
+        $("#cat_list2").append("<option value=''>Select Category Level 2</option>");
+        $('#cat_list2').val("").change();
+        
+        $("#cat_list3").html("");
+        $("#cat_list3").append("<option value=''>Select Category Level 3</option>");
+        $('#cat_list3').val("").change();
+        
+        $("#cat_list4").html("");
+        $("#cat_list4").append("<option value=''>Select Category Level 4</option>");
+        $('#cat_list4').val("").change();
+        
+        $("#cat_list5").html("");
+        $("#cat_list5").append("<option value=''>Select Category Level 5</option>");
+        $('#cat_list5').val("").change();
+        
+        $("#advert_list").html("");
+        $("#advert_list").append("<option value=''>Select Advert</option>");
+        $('#advert_list').val("").change();
+        
 		  $('#sub_err').css("display", "none");
 		  $("#div1").css("display","none");
 	     $("#div2").css("display","none");
@@ -3060,42 +3289,28 @@ function get_subscriber_data(){
 	     $("#div5").css("display","none");
 	     $("#div6").css("display","none");
 
-        
-    if($("#city_list").val() == ""){
-	     $("#div1").css("display","none");
-	     $("#div2").css("display","none");
-	     $("#div3").css("display","none");
-	     $("#div4").css("display","none");
-	     $("#div5").css("display","none");
-	     $("#div6").css("display","none");
-        $("#subscriber_list").html("");
-        $("#subscriber_list").append("<option value=''>Select Subscriber</option>");
-
-        table_init();
-        return false;
-    }
-    $.ajax({
+       if ($("#city_list").val() == '') {
+       	return false;
+       }
+    
+   $.ajax({
         type: 'GET',
         url: '/get-subscriber-list/',
         data:{'city_id':$("#city_list").val()},
         success: function (response) {
             $("#subscriber_list").html("");
             $("#subscriber_list").append("<option value=''>Select Subscriber</option>");
+            
+            if (response.supplier_list.length > 0) {
+					$("#subscriber_list").append("<option value='all'>All</option>");            	
+
+            }      
+            
             $.each(response.supplier_list, function (index, item) {
                 data = '<option value="'+ item.supplier_obj_id +'">'+ item.supplier_obj_name +'</option>'
                 $("#subscriber_list").append(data);
             });
             
-          	
-            $("#div1").css("display","block");
-            $("#cat_list").html("");
-            $("#cat_list").append("<option value=''>Select Category</option>");
-            $.each(response.advert_list, function (index, item) {
-                data = '<option value="'+ item.category_id +'">'+ item.category_nm +'</option>'
-                $("#cat_list").append(data);
-            });
-       	
-        
         },
         error: function (response) {
             alert("Error!");
@@ -3103,73 +3318,106 @@ function get_subscriber_data(){
 
     });
     
-    table_citybase_data();
 }
 
-function table_citybase_data(){
-    city_id = $("#city_list").val()
-     from_date = $("#from_date").val();
-        to_date = $("#to_date").val();
+
+function get_category1_data(){
+
+
+        $("#cat_list").html("");
+        $("#cat_list").append("<option value=''>Select Category</option>");
+        $('#cat_list').val("").change();
+        $("#cat_list1").html("");
+        $("#cat_list1").append("<option value=''>Select Category Level 1</option>");
+        $('#cat_list1').val("").change();
+        $("#cat_list2").html("");
+        $("#cat_list2").append("<option value=''>Select Category Level 2</option>");
+        $('#cat_list2').val("").change();
         
-        $('#advert_table').removeAttr('width').dataTable({
-            "bDestroy" : true,
-            buttons: [
-               
-                { extend: 'pdf', className: 'btn green btn-outline', orientation: 'landscape',
-                    filename: 'Advert Health Report', "title": "CityHoopla : Advert Health Report",
-                    customize: function(doc) {
-                        doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                        doc.defaultStyle.alignment= 'center'; //<-- set fontsize to 16 instead of 10
-                        doc.styles.tableHeader.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                    }
-                },
-               //	 { extend: 'excel', className: 'btn yellow btn-outline ',
-               //     filename: 'Advert Health Report', "title": "CityHoopla : Advert Health Report"
-                //},
-            ],
-
-            "order": [
-                [0, 'asc']
-            ],
-
-            "ajax": "/get_advert_health_citybase/?city_id="+city_id+"&from_date="+from_date+"&to_date="+to_date,
-            "columns": [
-                {"data": "advert_id","sClass": "text-center"},
-                {"data": "advert_title"},
-                {"data": "advert_views","sClass": "text-center"},
-                {"data": "advert_likes","sClass": "text-center"},
-                {"data": "advert_favourites","sClass": "text-center"},
-                {"data": "advert_calls","sClass": "text-center"},
-                {"data": "advert_call_backs","sClass": "text-center"},
-                {"data": "advert_emails","sClass": "text-center"},
-                {"data": "advert_coupons","sClass": "text-center"},
-                {"data": "advert_reviews","sClass": "text-center"},
-                {"data": "advert_sms","sClass": "text-center"},
-                {"data": "advert_whatsapp","sClass": "text-center"},
-                {"data": "advert_facebook","sClass": "text-center"},
-                {"data": "advert_twitter","sClass": "text-center"}
-            ],
-
-              "columnDefs": [
-                {"className": "dt-center", "targets": "_all", width: 150}
-            ],
-
-             "paging":   true,
+        $("#cat_list3").html("");
+        $("#cat_list3").append("<option value=''>Select Category Level 3</option>");
+        $('#cat_list3').val("").change();
         
-             "scrollX":     true,
-				 "filter": false,
-             "info":     false,
-          // removeAttr('width').
-            "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
-
-        });
-
-
-
-    }
+        $("#cat_list4").html("");
+        $("#cat_list4").append("<option value=''>Select Category Level 4</option>");
+        $('#cat_list4').val("").change();
+        
+        $("#cat_list5").html("");
+        $("#cat_list5").append("<option value=''>Select Category Level 5</option>");
+        $('#cat_list5').val("").change();
+        
+        $("#advert_list").html("");
+        $("#advert_list").append("<option value=''>Select Advert</option>");
+        $('#advert_list').val("").change();
+        
+		  $('#sub_err').css("display", "none");
+		  $("#div1").css("display","none");
+	     $("#div2").css("display","none");
+	     $("#div3").css("display","none");
+	     $("#div4").css("display","none");
+	     $("#div5").css("display","none");
+	     $("#div6").css("display","none");
+	
+	   if ($("#subscriber_list").val() == '') {
+       	return false;
+       }
+       
     
+     $.ajax({
+        type: 'GET',
+        url: '/get-category1-list/',
+        data:{'subscriber_id':$("#subscriber_list").val()},
+        success: function (response) {
+                        
+            $("#div1").css("display","block");
+            $("#cat_list").html("");
+            $("#cat_list").append("<option value=''>Select Category</option>");
+            
+            if (response.category_list.length > 0) {
+			       $("#cat_list").append("<option value='all'>All</option>");            	
+             }      
+            
+            
+            $.each(response.category_list, function (index, item) {
+                data = '<option value="'+ item.category_id +'">'+ item.category_nm +'</option>'
+                $("#cat_list").append(data);
+            });
+       	
+        },
+        error: function (response) {
+            alert("Error!");
+        },
+
+    });
     
+
+}
+
+
 function get_cat1_data(){
+        $("#cat_list1").html("");
+        $("#cat_list1").append("<option value=''>Select Category Level 1</option>");
+        $('#cat_list1').val("").change();
+        $("#cat_list2").html("");
+        $("#cat_list2").append("<option value=''>Select Category Level 2</option>");
+        $('#cat_list2').val("").change();
+        
+        $("#cat_list3").html("");
+        $("#cat_list3").append("<option value=''>Select Category Level 3</option>");
+        $('#cat_list3').val("").change();
+        
+        $("#cat_list4").html("");
+        $("#cat_list4").append("<option value=''>Select Category Level 4</option>");
+        $('#cat_list4').val("").change();
+        
+        $("#cat_list5").html("");
+        $("#cat_list5").append("<option value=''>Select Category Level 5</option>");
+        $('#cat_list5').val("").change();
+        
+        $("#advert_list").html("");
+        $("#advert_list").append("<option value=''>Select Advert</option>");
+        $('#advert_list').val("").change();
+        
 		  $('#sub_err').css("display", "none");
 	     $("#div2").css("display","none");
 	     $("#div3").css("display","none");
@@ -3178,25 +3426,11 @@ function get_cat1_data(){
 	     $("#div6").css("display","none");
 
 
-    if($("#cat_list").val() == "" && $("#subscriber_list").val() == "" ){
+    if($("#cat_list").val() == ""){
 
         return false;
      }
-    
-    if($("#cat_list").val() == "" && $("#subscriber_list").val() != ""){
-
-        table_supplier_base();
-        return false;
-     }
-     if($("#cat_list").val() != "" && $("#subscriber_list").val() == ""){
-
-		  $('#sub_err').css("display", "block");
-        $('#sub_err').text("Please select subscriber");
-     	
-        return false;
-     }
-
-
+ 
     $.ajax({
         type: 'GET',
         url: '/get-catlevel1-list/',
@@ -3205,7 +3439,11 @@ function get_cat1_data(){
           	  	if(response.success=='true'){
           	  		 $("#div2").css("display","block");
              		 $("#cat_list1").html("");
-           			 $("#cat_list1").append("<option value=''>Select Sub-Category Level 1</option>");
+           			 $("#cat_list1").append("<option value=''>Select Category Level 1</option>");
+           			 
+           			 if (response.category1_list.length > 0) {
+			             $("#cat_list1").append("<option value='all'>All</option>");            	
+                   }  
          		    $.each(response.category1_list, function (index, item) {
            		      data = '<option value="'+ item.category_id +'">'+ item.category_nm +'</option>'
             	    $("#cat_list1").append(data);
@@ -3214,11 +3452,9 @@ function get_cat1_data(){
         else {
 	     		       $("#div2").css("display","none");
              		 $("#cat_list1").html("");
-           			 $("#cat_list1").append("<option value=''>Select Sub-Category Level 1</option>");
+           			 $("#cat_list1").append("<option value=''>Select Category Level 1</option>");
 	     	}  
-           
-            	
-        
+                   	   
         },
         error: function (response) {
             alert("Error!");
@@ -3229,151 +3465,26 @@ function get_cat1_data(){
      if($("#cat_list1").val() == ""){
      
         cat1_data();
-
     }
-   
-    
 }
-
-function table_supplier_base(){
-         
-    from_date = $("#from_date").val();
-    to_date = $("#to_date").val();
-    sub_id = $("#subscriber_list").val();
-       
-        $('#advert_table').removeAttr('width').dataTable({
-            "bDestroy" : true,
-            buttons: [
-                
-                { extend: 'pdf', className: 'btn green btn-outline', orientation: 'landscape',
-                    filename: 'Advert Health Report', "title": "CityHoopla : Advert Health Report",
-                    customize: function(doc) {
-                        doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                        doc.defaultStyle.alignment= 'center'; //<-- set fontsize to 16 instead of 10
-                        doc.styles.tableHeader.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                    }
-                },
-               //	 { extend: 'excel', className: 'btn yellow btn-outline ',
-               //     filename: 'Advert Health Report', "title": "CityHoopla : Advert Health Report"
-                //},
-            ],
-
-            "order": [
-                [0, 'asc']
-            ],
-
-            "ajax": "/get_advert_health_supplierbase/?sub_id="+sub_id+"&from_date="+from_date+"&to_date="+to_date,
-            "columns": [
-                {"data": "advert_id","sClass": "text-center"},
-                {"data": "advert_title"},
-                {"data": "advert_views","sClass": "text-center"},
-                {"data": "advert_likes","sClass": "text-center"},
-                {"data": "advert_favourites","sClass": "text-center"},
-                {"data": "advert_calls","sClass": "text-center"},
-                {"data": "advert_call_backs","sClass": "text-center"},
-                {"data": "advert_emails","sClass": "text-center"},
-                {"data": "advert_coupons","sClass": "text-center"},
-                {"data": "advert_reviews","sClass": "text-center"},
-                {"data": "advert_sms","sClass": "text-center"},
-                {"data": "advert_whatsapp","sClass": "text-center"},
-                {"data": "advert_facebook","sClass": "text-center"},
-                {"data": "advert_twitter","sClass": "text-center"}
-            ],
-      
-           "columnDefs": [
-                {"className": "dt-center", "targets": "_all", width: 150}
-            ],
-
-             "paging":   true,
-
-             "scrollX":     true,
-				 "filter": false,
-             "info":     false,
-          // .removeAttr('width').
-
-            "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
-
-        });
-        
-
-   }
-    
-   
 
 // First function
   function cat1_data(){
   
-    if ($('#cat_list').val()!=''  && $('#subscriber_list').val()!='' ) {
-    
-    
-        cat_id = $("#cat_list").val();
-        sub_id = $("#subscriber_list").val();
-        to_date = $("#to_date").val();
-        sub_id = $("#subscriber_list").val();
-
-        $('#advert_table').removeAttr('width').dataTable({
-            "bDestroy" : true,
-            buttons: [
-               // { extend: 'print', className: 'btn dark btn-outline',
-                //    filename: 'Advert Health Report', "title": "CityHoopla : Advert Health Report"
-                // },
-                { extend: 'pdf', className: 'btn green btn-outline', orientation: 'landscape',
-                    filename: 'Advert Health Report', "title": "CityHoopla : Advert Health Report",
-                    customize: function(doc) {
-                        doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                        doc.defaultStyle.alignment= 'center'; //<-- set fontsize to 16 instead of 10
-                        doc.styles.tableHeader.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                    }
-                },
-               //	 { extend: 'excel', className: 'btn yellow btn-outline ',
-               //     filename: 'Advert Health Report', "title": "CityHoopla : Advert Health Report"
-                //},
-            ],
-
-            "order": [
-                [0, 'asc']
-            ],
-
-            "ajax": "/get-advert-table-data/?cat_id="+cat_id+"&sub_id="+sub_id+"&from_date="+from_date+"&to_date="+to_date,
-            "columns": [
-                {"data": "advert_id","sClass": "text-center"},
-                {"data": "advert_title"},
-                {"data": "advert_views","sClass": "text-center"},
-                {"data": "advert_likes","sClass": "text-center"},
-                {"data": "advert_favourites","sClass": "text-center"},
-                {"data": "advert_calls","sClass": "text-center"},
-                {"data": "advert_call_backs","sClass": "text-center"},
-                {"data": "advert_emails","sClass": "text-center"},
-                {"data": "advert_coupons","sClass": "text-center"},
-                {"data": "advert_reviews","sClass": "text-center"},
-                {"data": "advert_sms","sClass": "text-center"},
-                {"data": "advert_whatsapp","sClass": "text-center"},
-                {"data": "advert_facebook","sClass": "text-center"},
-                {"data": "advert_twitter","sClass": "text-center"}
-            ],
-
-              "columnDefs": [
-                {"className": "dt-center", "targets": "_all", width: 150}
-            ],
-
-             "paging":   true,
-       
-             "scrollX":     true,
-				 "filter": false,
-             "info":     false,
-          // removeAttr('width').
-            "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
-
-        });
-        
-        
+    if ($('#cat_list').val()!='' ) {
+             
          $.ajax({
 		        type: 'GET',
 		        url: '/get_advert_list1/',
-		        data:{'supplier_id':$("#subscriber_list").val(),'cat_id':$("#cat_list").val()},
+		        data:{'cat_id':$("#cat_list").val()},
 		        success: function (response) {
 		            $("#advert_list").html("");
 		            $("#advert_list").append("<option value=''>Select Advert</option>");
+		            
+           			 if (response.advert_list.length > 0) {
+			             $("#advert_list").append("<option value='all'>All</option>");            	
+                   }  
+                   
 		            $.each(response.advert_list, function (index, item) {
 		                data = '<option value="'+ item.advert_obj_id +'">'+ item.advert_obj_name +'</option>'
 		                $("#advert_list").append(data);
@@ -3384,40 +3495,41 @@ function table_supplier_base(){
 		        },
 
         });
-    
-    }
-    else { if ($('#cat_list').val() =='') 
-             {
-           	$('#cat_err').css("display", "block");
-             $('#cat_err').text("Please select category");
-             }
-           else 
-            {
-           	$('#sub_err').css("display", "block");
-             $('#sub_err').text("Please select subscriber");
-            }
-    	
-         }
-
-
-    }
+     }
+  }
 
       
     
 function get_cat2_data(){
-	     $("#div3").css("display","none");
-	     $("#div4").css("display","none");
-	     $("#div5").css("display","none");
-	     $("#div6").css("display","none");
-    if($("#cat_list1").val() == ""){
-	     $("#div3").css("display","none");
-	     $("#div4").css("display","none");
-	     $("#div5").css("display","none");
-	     $("#div6").css("display","none");
-        $("#cat_list2").html("");
-        $("#cat_list2").append("<option value=''>Select Sub-Category Level 2</option>");
 
-        table_init();
+        $("#cat_list2").html("");
+        $("#cat_list2").append("<option value=''>Select Category Level 2</option>");
+        $('#cat_list2').val("").change();
+     
+        $("#cat_list3").html("");
+        $("#cat_list3").append("<option value=''>Select Category Level 3</option>");
+        $('#cat_list3').val("").change();
+        
+        $("#cat_list4").html("");
+        $("#cat_list4").append("<option value=''>Select Category Level 4</option>");
+        $('#cat_list4').val("").change();
+        
+        $("#cat_list5").html("");
+        $("#cat_list5").append("<option value=''>Select Category Level 5</option>");
+        $('#cat_list5').val("").change();
+        
+        
+        $("#advert_list").html("");
+        $("#advert_list").append("<option value=''>Select Advert</option>");
+        $('#advert_list').val("").change();
+         
+	     $("#div3").css("display","none");
+	     $("#div4").css("display","none");
+	     $("#div5").css("display","none");
+	     $("#div6").css("display","none");
+    
+    if($("#cat_list1").val() == ""){
+
         return false;
     }
     $.ajax({
@@ -3428,7 +3540,12 @@ function get_cat2_data(){
           if(response.success=='true'){
         	   $("#div3").css("display","block");
             $("#cat_list2").html("");
-            $("#cat_list2").append("<option value=''>Select Sub-Category Level 2</option>");
+            $("#cat_list2").append("<option value=''>Select Category Level 2</option>");
+            
+	  			 if (response.category2_list.length > 0) {
+	             $("#cat_list2").append("<option value='all'>All</option>");            	
+	          }  
+                   
             $.each(response.category2_list, function (index, item) {
                 data = '<option value="'+ item.category_id +'">'+ item.category_nm +'</option>'
                 $("#cat_list2").append(data);
@@ -3438,12 +3555,10 @@ function get_cat2_data(){
          else {
           $("#div3").css("display","none");
             $("#cat_list2").html("");
-            $("#cat_list2").append("<option value=''>Select Sub-Category Level 2</option>");
+            $("#cat_list2").append("<option value=''>Select Category Level 2</option>");
 	     		
 	     	 }
           
-       	
-        
         },
         error: function (response) {
             alert("Error!");
@@ -3455,81 +3570,25 @@ function get_cat2_data(){
         cat2_data();
 
     }
-    
 }
-
 
 // Second  function
   function cat2_data(){
 
-    if ($('#cat_list1').val()!=''  && $('#cat_list').val()!='' && $('#subscriber_list').val()!='' ) {
-    
-    
-        cat1_id = $("#cat_list1").val();
-        cat_id = $("#cat_list").val();
-        sub_id = $('#subscriber_list').val()
-        
-        $('#advert_table').removeAttr('width').dataTable({
-            "bDestroy" : true,
-            buttons: [
-                
-                { extend: 'pdf', className: 'btn green btn-outline', orientation: 'landscape',
-                    filename: 'Advert Health Report', "title": "CityHoopla : Advert Health Report",
-                    customize: function(doc) {
-                        doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                        doc.defaultStyle.alignment= 'center'; //<-- set fontsize to 16 instead of 10
-                        doc.styles.tableHeader.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                    }
-                },
-               //	 { extend: 'excel', className: 'btn yellow btn-outline ',
-               //     filename: 'Advert Health Report', "title": "CityHoopla : Advert Health Report"
-                //},
-            ],
-
-            "order": [
-                [0, 'asc']
-            ],
-
-            "ajax": "/get-advert-table-data1/?cat_id="+cat_id+"&cat1_id="+cat1_id+"&sub_id="+sub_id,
-           "columns": [
-                {"data": "advert_id","sClass": "text-center"},
-                {"data": "advert_title"},
-                {"data": "advert_views","sClass": "text-center"},
-                {"data": "advert_likes","sClass": "text-center"},
-                {"data": "advert_favourites","sClass": "text-center"},
-                {"data": "advert_calls","sClass": "text-center"},
-                {"data": "advert_call_backs","sClass": "text-center"},
-                {"data": "advert_emails","sClass": "text-center"},
-                {"data": "advert_coupons","sClass": "text-center"},
-                {"data": "advert_reviews","sClass": "text-center"},
-                {"data": "advert_sms","sClass": "text-center"},
-                {"data": "advert_whatsapp","sClass": "text-center"},
-                {"data": "advert_facebook","sClass": "text-center"},
-                {"data": "advert_twitter","sClass": "text-center"}
-            ],
-
-           
-              "columnDefs": [
-                {"className": "dt-center", "targets": "_all", width: 150}
-            ],
-
-             "paging":   true,
-            
-             "scrollX":     true,
-				 "filter": false,
-             "info":     false,
-          // removeAttr('width').
-            "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
-
-        });
-
+    if ($('#cat_list1').val()!=''  && $('#cat_list').val()!='') {
+  
                $.ajax({
 		        type: 'GET',
 		        url: '/get_advert_list2/',
-		        data:{'supplier_id':$("#subscriber_list").val(),'cat_id':$("#cat_list").val(),'cat1_id':$("#cat_list1").val()},
+		        data:{'cat_id':$("#cat_list").val(),'cat1_id':$("#cat_list1").val()},
 		        success: function (response) {
 		            $("#advert_list").html("");
 		            $("#advert_list").append("<option value=''>Select Advert</option>");
+
+           			 if (response.advert_list.length > 0) {
+			             $("#advert_list").append("<option value='all'>All</option>");            	
+                   }  
+                   		       
 		            $.each(response.advert_list, function (index, item) {
 		                data = '<option value="'+ item.advert_obj_id +'">'+ item.advert_obj_name +'</option>'
 		                $("#advert_list").append(data);
@@ -3541,22 +3600,34 @@ function get_cat2_data(){
 
         });
     }
-  
-    }
+   }
     
     
 function get_cat3_data(){
-	     $("#div4").css("display","none");
-	     $("#div5").css("display","none");
-	     $("#div6").css("display","none");
-    if($("#cat_list2").val() == ""){
-	     $("#div4").css("display","none");
-	     $("#div5").css("display","none");
-	     $("#div6").css("display","none");
-        $("#cat_list3").html("");
-        $("#cat_list3").append("<option value=''>Select Sub-Category Level 3</option>");
 
-        table_init();
+        $("#cat_list3").html("");
+        $("#cat_list3").append("<option value=''>Select Category Level 3</option>");
+        $('#cat_list3').val("").change();
+        
+        $("#cat_list4").html("");
+        $("#cat_list4").append("<option value=''>Select Category Level 4</option>");
+        $('#cat_list4').val("").change();
+        
+        $("#cat_list5").html("");
+        $("#cat_list5").append("<option value=''>Select Category Level 5</option>");
+        $('#cat_list5').val("").change();
+        
+        
+        $("#advert_list").html("");
+        $("#advert_list").append("<option value=''>Select Advert</option>");
+        $('#advert_list').val("").change();
+        
+	     $("#div4").css("display","none");
+	     $("#div5").css("display","none");
+	     $("#div6").css("display","none");
+    
+    if($("#cat_list2").val() == ""){
+
         return false;
     }
     $.ajax({
@@ -3567,7 +3638,13 @@ function get_cat3_data(){
           if(response.success=='true'){
         	   $("#div4").css("display","block");
             $("#cat_list3").html("");
-            $("#cat_list3").append("<option value=''>Select Sub-Category Level 3</option>");
+            $("#cat_list3").append("<option value=''>Select Category Level 3</option>");
+
+            
+	  			 if (response.category3_list.length > 0) {
+	             $("#cat_list3").append("<option value='all'>All</option>");            	
+	          }  
+	                      
             $.each(response.category3_list, function (index, item) {
                 data = '<option value="'+ item.category_id +'">'+ item.category_nm +'</option>'
                 $("#cat_list3").append(data);
@@ -3577,11 +3654,9 @@ function get_cat3_data(){
          else {
 	     		$("#div4").css("display","none");
             $("#cat_list3").html("");
-            $("#cat_list3").append("<option value=''>Select Sub-Category Level 3</option>");
+            $("#cat_list3").append("<option value=''>Select Category Level 3</option>");
 	     	 }          	
-         
-       	
-        
+                 
         },
         error: function (response) {
             alert("Error!");
@@ -3591,80 +3666,27 @@ function get_cat3_data(){
 
    if($("#cat_list3").val() == ""){
         cat3_data();
-
-    }
-    
+    }   
 }
 
 // Third  function
   function cat3_data(){
 
-    if ($('#cat_list2').val()!=''  && $('#cat_list1').val()!=''  && $('#cat_list').val()!='' && $('#subscriber_list').val()!='' ) {
-    
-        cat2_id = $("#cat_list2").val();
-        cat1_id = $("#cat_list1").val();
-        cat_id = $("#cat_list").val();
-        sub_id = $('#subscriber_list').val()
-        
-        $('#advert_table').removeAttr('width').dataTable({
-            "bDestroy" : true,
-            buttons: [
-               
-                { extend: 'pdf', className: 'btn green btn-outline', orientation: 'landscape',
-                    filename: 'Advert Health Report', "title": "CityHoopla : Advert Health Report",
-                    customize: function(doc) {
-                        doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                        doc.defaultStyle.alignment= 'center'; //<-- set fontsize to 16 instead of 10
-                        doc.styles.tableHeader.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                    }
-                },
-               //	 { extend: 'excel', className: 'btn yellow btn-outline ',
-               //     filename: 'Advert Health Report', "title": "CityHoopla : Advert Health Report"
-                //},
-            ],
-
-            "order": [
-                [0, 'asc']
-            ],
-
-            "ajax": "/get-advert-table-data2/?cat_id="+cat_id+"&cat1_id="+cat1_id+"&sub_id="+sub_id+"&cat2_id="+cat2_id,
-             "columns": [
-                {"data": "advert_id","sClass": "text-center"},
-                {"data": "advert_title"},
-                {"data": "advert_views","sClass": "text-center"},
-                {"data": "advert_likes","sClass": "text-center"},
-                {"data": "advert_favourites","sClass": "text-center"},
-                {"data": "advert_calls","sClass": "text-center"},
-                {"data": "advert_call_backs","sClass": "text-center"},
-                {"data": "advert_emails","sClass": "text-center"},
-                {"data": "advert_coupons","sClass": "text-center"},
-                {"data": "advert_reviews","sClass": "text-center"},
-                {"data": "advert_sms","sClass": "text-center"},
-                {"data": "advert_whatsapp","sClass": "text-center"},
-                {"data": "advert_facebook","sClass": "text-center"},
-                {"data": "advert_twitter","sClass": "text-center"}
-            ],
-        "columnDefs": [
-                {"className": "dt-center", "targets": "_all", width: 150}
-            ],
-
-             "paging":   true,
+    if ($('#cat_list2').val()!=''  && $('#cat_list1').val()!=''  && $('#cat_list').val()!='' ) {
            
-             "scrollX":     true,
-				 "filter": false,
-             "info":     false,
-          // removeAttr('width').
-            "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
-
-        });
-
                $.ajax({
 		        type: 'GET',
 		        url: '/get_advert_list3/',
-		        data:{'supplier_id':$("#subscriber_list").val(),'cat_id':$("#cat_list").val(),'cat1_id':$("#cat_list1").val(),'cat2_id':$("#cat_list2").val()},
+		        data:{'cat_id':$("#cat_list").val(),'cat1_id':$("#cat_list1").val(),'cat2_id':$("#cat_list2").val()},
 		        success: function (response) {
 		            $("#advert_list").html("");
 		            $("#advert_list").append("<option value=''>Select Advert</option>");
+
+           			 if (response.advert_list.length > 0) {
+			             $("#advert_list").append("<option value='all'>All</option>");            	
+                   }  
+                   		       
+                   		       		            
 		            $.each(response.advert_list, function (index, item) {
 		                data = '<option value="'+ item.advert_obj_id +'">'+ item.advert_obj_name +'</option>'
 		                $("#advert_list").append(data);
@@ -3676,20 +3698,28 @@ function get_cat3_data(){
 
         });
     }
-  
-    }
+  }
     
     
 function get_cat4_data(){
-	     $("#div5").css("display","none");
-	     $("#div6").css("display","none");
-    if($("#cat_list3").val() == ""){
-	     $("#div5").css("display","none");
-	     $("#div6").css("display","none");
-        $("#cat_list4").html("");
-        $("#cat_list4").append("<option value=''>Select Sub-Category Level 4</option>");
         
-        table_init();
+        $("#cat_list4").html("");
+        $("#cat_list4").append("<option value=''>Select Category Level 4</option>");
+        $('#cat_list4').val("").change();
+        
+        $("#cat_list5").html("");
+        $("#cat_list5").append("<option value=''>Select Category Level 5</option>");
+        $('#cat_list5').val("").change();
+       
+        $("#advert_list").html("");
+        $("#advert_list").append("<option value=''>Select Advert</option>");
+        $('#advert_list').val("").change();
+        
+	     $("#div5").css("display","none");
+	     $("#div6").css("display","none");
+  
+    if($("#cat_list3").val() == ""){
+        
         return false;
     }
     $.ajax({
@@ -3701,7 +3731,12 @@ function get_cat4_data(){
           if(response.success=='true'){
         	   $("#div5").css("display","block");
             $("#cat_list4").html("");
-            $("#cat_list4").append("<option value=''>Select Sub-Category Level 4</option>");
+            $("#cat_list4").append("<option value=''>Select Category Level 4</option>");
+
+	  			 if (response.category4_list.length > 0) {
+	             $("#cat_list4").append("<option value='all'>All</option>");            	
+	          }  
+	                      
             $.each(response.category4_list, function (index, item) {
                 data = '<option value="'+ item.category_id +'">'+ item.category_nm +'</option>'
                 $("#cat_list4").append(data);
@@ -3711,12 +3746,10 @@ function get_cat4_data(){
          else {
             $("#div5").css("display","none");
             $("#cat_list4").html("");
-            $("#cat_list4").append("<option value=''>Select Sub-Category Level 4</option>");
+            $("#cat_list4").append("<option value=''>Select Category Level 4</option>");
 	     		
 	     	 }
            
-       	
-        
         },
         error: function (response) {
             alert("Error!");
@@ -3733,72 +3766,21 @@ function get_cat4_data(){
 // Fourth  function
   function cat4_data(){
 
-    if ($('#cat_list3').val()!=''  && $('#cat_list2').val()!=''  && $('#cat_list1').val()!=''  && $('#cat_list').val()!='' && $('#subscriber_list').val()!='' ) {
- 		  
- 		  cat3_id = $("#cat_list3").val();
-        cat2_id = $("#cat_list2").val();
-        cat1_id = $("#cat_list1").val();
-        cat_id = $("#cat_list").val();
-        sub_id = $('#subscriber_list').val()
-        
-        $('#advert_table').removeAttr('width').dataTable({
-            "bDestroy" : true,
-            buttons: [
-                
-                { extend: 'pdf', className: 'btn green btn-outline', orientation: 'landscape',
-                    filename: 'Advert Health Report', "title": "CityHoopla : Advert Health Report",
-                    customize: function(doc) {
-                        doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                        doc.defaultStyle.alignment= 'center'; //<-- set fontsize to 16 instead of 10
-                        doc.styles.tableHeader.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                    }
-                },
-              
-            ],
-
-            "order": [
-                [0, 'asc']
-            ],
-
-            "ajax": "/get-advert-table-data3/?cat_id="+cat_id+"&cat1_id="+cat1_id+"&sub_id="+sub_id+"&cat2_id="+cat2_id+"&cat3_id="+cat3_id,
-             "columns": [
-                {"data": "advert_id","sClass": "text-center"},
-                {"data": "advert_title"},
-                {"data": "advert_views","sClass": "text-center"},
-                {"data": "advert_likes","sClass": "text-center"},
-                {"data": "advert_favourites","sClass": "text-center"},
-                {"data": "advert_calls","sClass": "text-center"},
-                {"data": "advert_call_backs","sClass": "text-center"},
-                {"data": "advert_emails","sClass": "text-center"},
-                {"data": "advert_coupons","sClass": "text-center"},
-                {"data": "advert_reviews","sClass": "text-center"},
-                {"data": "advert_sms","sClass": "text-center"},
-                {"data": "advert_whatsapp","sClass": "text-center"},
-                {"data": "advert_facebook","sClass": "text-center"},
-                {"data": "advert_twitter","sClass": "text-center"}
-            ],
-
-             "columnDefs": [
-                {"className": "dt-center", "targets": "_all", width: 150}
-            ],
-
-             "paging":   true,
-           
-             "scrollX":     true,
-				 "filter": false,
-             "info":     false,
-          // removeAttr('width').
-            "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
-
-        });
-
+    if ($('#cat_list3').val()!=''  && $('#cat_list2').val()!=''  && $('#cat_list1').val()!=''  && $('#cat_list').val()!='' ) {
+ 		
                $.ajax({
 		        type: 'GET',
 		        url: '/get_advert_list4/',
-		        data:{'supplier_id':$("#subscriber_list").val(),'cat_id':$("#cat_list").val(),'cat1_id':$("#cat_list1").val(),'cat2_id':$("#cat_list2").val(),'cat3_id':$("#cat_list3").val()},
+		        data:{'cat_id':$("#cat_list").val(),'cat1_id':$("#cat_list1").val(),'cat2_id':$("#cat_list2").val(),'cat3_id':$("#cat_list3").val()},
 		        success: function (response) {
 		            $("#advert_list").html("");
 		            $("#advert_list").append("<option value=''>Select Advert</option>");
+
+           			 if (response.advert_list.length > 0) {
+			             $("#advert_list").append("<option value='all'>All</option>");            	
+                   }  
+                   		       
+                   		       		            
 		            $.each(response.advert_list, function (index, item) {
 		                data = '<option value="'+ item.advert_obj_id +'">'+ item.advert_obj_name +'</option>'
 		                $("#advert_list").append(data);
@@ -3814,16 +3796,20 @@ function get_cat4_data(){
     }
     
     
-
-
 function get_cat5_data(){
-	     $("#div6").css("display","none");
-    if($("#cat_list4").val() == ""){
-	     $("#div6").css("display","none");
+        
         $("#cat_list5").html("");
-        $("#cat_list5").append("<option value=''>Select Sub-Category Level 5</option>");
+        $("#cat_list5").append("<option value=''>Select Category Level 5</option>");
+        $('#cat_list5').val("").change();
 
-        table_init();
+        $("#advert_list").html("");
+        $("#advert_list").append("<option value=''>Select Advert</option>");
+        $('#advert_list').val("").change();
+        
+	     $("#div6").css("display","none");
+	     
+    if($("#cat_list4").val() == ""){
+
         return false;
     }
     $.ajax({
@@ -3834,7 +3820,13 @@ function get_cat5_data(){
           if(response.success=='true'){
           	$("#div6").css("display","block");
             $("#cat_list5").html("");
-            $("#cat_list5").append("<option value=''>Select Sub-Category Level 5</option>");
+            $("#cat_list5").append("<option value=''>Select Category Level 5</option>");
+
+	  			 if (response.category5_list.length > 0) {
+	             $("#cat_list5").append("<option value='all'>All</option>");            	
+	          }  
+	                       
+            
             $.each(response.category5_list, function (index, item) {
                 data = '<option value="'+ item.category_id +'">'+ item.category_nm +'</option>'
                 $("#cat_list5").append(data);
@@ -3844,7 +3836,7 @@ function get_cat5_data(){
          else {
 	     		$("#div6").css("display","none");
             $("#cat_list5").html("");
-            $("#cat_list5").append("<option value=''>Select Sub-Category Level 5</option>");
+            $("#cat_list5").append("<option value=''>Select Category Level 5</option>");
 	     	 }          	
             
        	
@@ -3863,77 +3855,24 @@ function get_cat5_data(){
      
 }
 
-
 // Fourth  function
   function cat5_data(){
 
-    if ($('#cat_list4').val()!=''  && $('#cat_list3').val()!=''  && $('#cat_list2').val()!=''  && $('#cat_list1').val()!=''  && $('#cat_list').val()!='' && $('#subscriber_list').val()!='' ) {
+    if ($('#cat_list4').val()!=''  && $('#cat_list3').val()!=''  && $('#cat_list2').val()!=''  && $('#cat_list1').val()!=''  && $('#cat_list').val()!=''  ) {
  		  
-		  cat4_id = $("#cat_list4").val(); 		  
- 		  cat3_id = $("#cat_list3").val();
-        cat2_id = $("#cat_list2").val();
-        cat1_id = $("#cat_list1").val();
-        cat_id = $("#cat_list").val();
-        sub_id = $('#subscriber_list').val()
-        
-        $('#advert_table').removeAttr('width').dataTable({
-            "bDestroy" : true,
-            buttons: [
-              
-                { extend: 'pdf', className: 'btn green btn-outline', orientation: 'landscape',
-                    filename: 'Advert Health Report', "title": "CityHoopla : Advert Health Report",
-                    customize: function(doc) {
-                        doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                        doc.defaultStyle.alignment= 'center'; //<-- set fontsize to 16 instead of 10
-                        doc.styles.tableHeader.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                    }
-                },
-              
-            ],
-
-            "order": [
-                [0, 'asc']
-            ],
-
-            "ajax": "/get-advert-table-data4/?cat_id="+cat_id+"&cat1_id="+cat1_id+"&sub_id="+sub_id+"&cat2_id="+cat2_id+"&cat3_id="+cat3_id+"&cat4_id="+cat4_id,
-            "columns": [
-                {"data": "advert_id","sClass": "text-center"},
-                {"data": "advert_title"},
-                {"data": "advert_views","sClass": "text-center"},
-                {"data": "advert_likes","sClass": "text-center"},
-                {"data": "advert_favourites","sClass": "text-center"},
-                {"data": "advert_calls","sClass": "text-center"},
-                {"data": "advert_call_backs","sClass": "text-center"},
-                {"data": "advert_emails","sClass": "text-center"},
-                {"data": "advert_coupons","sClass": "text-center"},
-                {"data": "advert_reviews","sClass": "text-center"},
-                {"data": "advert_sms","sClass": "text-center"},
-                {"data": "advert_whatsapp","sClass": "text-center"},
-                {"data": "advert_facebook","sClass": "text-center"},
-                {"data": "advert_twitter","sClass": "text-center"}
-            ],
-
-              "columnDefs": [
-                {"className": "dt-center", "targets": "_all", width: 150}
-            ],
-
-             "paging":   true,
-            
-             "scrollX":     true,
-				 "filter": false,
-             "info":     false,
-          // removeAttr('width').
-            "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
-
-        });
-
-               $.ajax({
+		    $.ajax({
 		        type: 'GET',
 		        url: '/get_advert_list5/',
-		        data:{'supplier_id':$("#subscriber_list").val(),'cat_id':$("#cat_list").val(),'cat1_id':$("#cat_list1").val(),'cat2_id':$("#cat_list2").val(),'cat3_id':$("#cat_list3").val(),'cat4_id':$("#cat_list4").val()},
+		        data:{'cat_id':$("#cat_list").val(),'cat1_id':$("#cat_list1").val(),'cat2_id':$("#cat_list2").val(),'cat3_id':$("#cat_list3").val(),'cat4_id':$("#cat_list4").val()},
 		        success: function (response) {
 		            $("#advert_list").html("");
 		            $("#advert_list").append("<option value=''>Select Advert</option>");
+		            
+           			 if (response.advert_list.length > 0) {
+			             $("#advert_list").append("<option value='all'>All</option>");            	
+                   }  
+                   		       
+                   		       		            
 		            $.each(response.advert_list, function (index, item) {
 		                data = '<option value="'+ item.advert_obj_id +'">'+ item.advert_obj_name +'</option>'
 		                $("#advert_list").append(data);
@@ -3945,81 +3884,27 @@ function get_cat5_data(){
 
         });
     }
-  
-    }
+   }
 
 
 // Fifth  function
   function get_cat6_data(){
 
-    if ($('#cat_list5').val()!=''  &&  $('#cat_list4').val()!=''  && $('#cat_list3').val()!=''  && $('#cat_list2').val()!=''  && $('#cat_list1').val()!=''  && $('#cat_list').val()!='' && $('#subscriber_list').val()!='' ) {
+    if ($('#cat_list5').val()!=''  &&  $('#cat_list4').val()!=''  && $('#cat_list3').val()!=''  && $('#cat_list2').val()!=''  && $('#cat_list1').val()!=''  && $('#cat_list').val()!='' ) {
  		  
-		  cat4_id = $("#cat_list4").val();		  
-		  cat4_id = $("#cat_list4").val(); 		  
- 		  cat3_id = $("#cat_list3").val();
-        cat2_id = $("#cat_list2").val();
-        cat1_id = $("#cat_list1").val();
-        cat_id = $("#cat_list").val();
-        sub_id = $('#subscriber_list').val()
-        
-        $('#advert_table'). removeAttr('width').dataTable({
-            "bDestroy" : true,
-            buttons: [
-                
-                { extend: 'pdf', className: 'btn green btn-outline', orientation: 'landscape',
-                    filename: 'Advert Health Report', "title": "CityHoopla : Advert Health Report",
-                    customize: function(doc) {
-                        doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                        doc.defaultStyle.alignment= 'center'; //<-- set fontsize to 16 instead of 10
-                        doc.styles.tableHeader.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                    }
-                },
-              
-            ],
-
-            "order": [
-                [0, 'asc']
-            ],
-
-            "ajax": "/get-advert-table-data5/?cat_id="+cat_id+"&cat1_id="+cat1_id+"&sub_id="+sub_id+"&cat2_id="+cat2_id+"&cat3_id="+cat3_id+"&cat4_id="+cat4_id+"&cat5_id="+cat5_id,
-            "columns": [
-                {"data": "advert_id","sClass": "text-center"},
-                {"data": "advert_title"},
-                {"data": "advert_views","sClass": "text-center"},
-                {"data": "advert_likes","sClass": "text-center"},
-                {"data": "advert_favourites","sClass": "text-center"},
-                {"data": "advert_calls","sClass": "text-center"},
-                {"data": "advert_call_backs","sClass": "text-center"},
-                {"data": "advert_emails","sClass": "text-center"},
-                {"data": "advert_coupons","sClass": "text-center"},
-                {"data": "advert_reviews","sClass": "text-center"},
-                {"data": "advert_sms","sClass": "text-center"},
-                {"data": "advert_whatsapp","sClass": "text-center"},
-                {"data": "advert_facebook","sClass": "text-center"},
-                {"data": "advert_twitter","sClass": "text-center"}
-            ],
-
-           "columnDefs": [
-                {"className": "dt-center", "targets": "_all", width: 150}
-            ],
-
-             "paging":   true,
-         
-             "scrollX":     true,
-				 "filter": false,
-             "info":     false,
-          // removeAttr('width').
-            "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
-
-        });
-
                $.ajax({
 		        type: 'GET',
 		        url: '/get_advert_list6/',
-		        data:{'supplier_id':$("#subscriber_list").val(),'cat_id':$("#cat_list").val(),'cat1_id':$("#cat_list1").val(),'cat2_id':$("#cat_list2").val(),'cat3_id':$("#cat_list3").val(),'cat4_id':$("#cat_list4").val(),'cat5_id':$("#cat_list5").val()},
+		        data:{'cat_id':$("#cat_list").val(),'cat1_id':$("#cat_list1").val(),'cat2_id':$("#cat_list2").val(),'cat3_id':$("#cat_list3").val(),'cat4_id':$("#cat_list4").val(),'cat5_id':$("#cat_list5").val()},
 		        success: function (response) {
 		            $("#advert_list").html("");
 		            $("#advert_list").append("<option value=''>Select Advert</option>");
+		            
+		            
+           			 if (response.advert_list.length > 0) {
+			             $("#advert_list").append("<option value='all'>All</option>");            	
+                   }  
+                   		            
 		            $.each(response.advert_list, function (index, item) {
 		                data = '<option value="'+ item.advert_obj_id +'">'+ item.advert_obj_name +'</option>'
 		                $("#advert_list").append(data);
@@ -4034,39 +3919,10 @@ function get_cat5_data(){
   
     }
 
-
-function get_advert_data(){
-    if($("#subscriber_list").val() == ""){
-        $("#advert_list").html("");
-        $("#advert_list").append("<option value=''>Select Advert</option>");
-        $("#from_date").val("");
-        $("#to_date").val("");
-        table_init();
-        return false;
-    }
-    $.ajax({
-        type: 'GET',
-        url: '/get_advert_list/',
-        data:{'supplier_id':$("#subscriber_list").val()},
-        success: function (response) {
-            $("#advert_list").html("");
-            $("#advert_list").append("<option value=''>Select Advert</option>");
-            $.each(response.advert_list, function (index, item) {
-                data = '<option value="'+ item.advert_obj_id +'">'+ item.advert_obj_name +'</option>'
-                $("#advert_list").append(data);
-            });
-        },
-        error: function (response) {
-            alert("Error!");
-        },
-
-    });
-}
-
 function get_advert_date(){
     if($("#advert_list").val() == ""){
-        $("#from_date").val("");
-        $("#to_date").val("");
+       // $("#from_date").val("");
+       // $("#to_date").val("");
         return false;
     }
     $.ajax({
@@ -4080,7 +3936,9 @@ function get_advert_date(){
                 from_date = $("#from_date").val();
                 end_date = $("#to_date").val();
                 advert_id = $("#advert_list").val();
-                data = '/get_advert_health/?advert_id='+advert_id+'&from_date='+from_date+'&to_date='+end_date
+                sub_id = $('#subscriber_list').val()
+
+                data = '/get_advert_health/?advert_id='+advert_id+'&from_date='+from_date+'&to_date='+end_date+'&sub_id='+sub_id
                 $('#advert_table').removeAttr('width').dataTable({
                     "bDestroy" : true,
                     buttons: [
@@ -4091,7 +3949,7 @@ function get_advert_date(){
                         doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
                         doc.defaultStyle.alignment= 'center'; //<-- set fontsize to 16 instead of 10
                         doc.styles.tableHeader.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                    }
+                        }
                         },
                     ],
 
@@ -4263,7 +4121,88 @@ function date_change(){
 }
 
 function get_category_data(){
+			$("#display_subscription").css("display","none");
+        $("#subscribers_list").html("");
+        $("#subscribers_list").append("<option value=''>Select Subscriber</option>");
+        $('#subscribers_list').val("").change();
+        $("#sub_cat_list").html("");
+        $("#sub_cat_list").append("<option value=''>Select Category</option>");
+	     $('#sub_cat_list').val("").change();
+        $("#sub_cat_list1").html("");
+        $("#sub_cat_list1").append("<option value=''>Select Category Level1</option>");
+        $('#sub_cat_list1').val("").change();
+        $("#sub_cat_list2").html("");
+        $("#sub_cat_list2").append("<option value=''>Select Category Level2</option>");
+        $('#sub_cat_list2').val("").change();
+        $("#sub_cat_list3").html("");
+        $("#sub_cat_list3").append("<option value=''>Select Category Level3</option>");
+        $('#sub_cat_list3').val("").change();
+        $("#sub_cat_list4").html("");
+        $("#sub_cat_list4").append("<option value=''>Select Category Level4</option>");
+        $('#sub_cat_list4').val("").change();
 
+        $("#sub_cat_list5").html("");
+        $("#sub_cat_list5").append("<option value=''>Select Category Level5</option>");
+
+          
+	     $("#category_id1").css("display","none");	     
+	     $("#category_id2").css("display","none");
+	     $("#category_id3").css("display","none");
+	     $("#category_id4").css("display","none");
+	     $("#category_id5").css("display","none");
+	     $("#category_id6").css("display","none");
+			     
+		if ($("#sub_city_list").val() =='') {
+			return false;
+		}
+	     $.ajax({
+	        type: 'GET',
+	        url: '/get-subscriber-list/',
+	        data:{'city_id':$("#sub_city_list").val()},
+	        success: function (response) {
+	        
+	            $("#subscribers_list").html("");
+	            
+	             $("#subscribers_list").append("<option value=''>Select Subscriber</option>");
+	            if (response.supplier_list.length>0) {
+	            	$("#subscribers_list").append("<option value='all'>All</option>");
+	            }
+	           
+	            $.each(response.supplier_list, function (index, item) {
+	                data = '<option value="'+ item.supplier_obj_id +'">'+ item.supplier_obj_name +'</option>'
+	                $("#subscribers_list").append(data);
+	            });
+	            
+	        },
+	        error: function (response) {
+	            alert("Error!");
+	        },
+	
+	    });
+}
+
+function get_cat_sub_data(){
+			$("#display_subscription").css("display","none");
+        $("#sub_cat_list").html("");
+        $("#sub_cat_list").append("<option value=''>Select category</option>");
+	     $('#sub_cat_list').val("").change();
+        $("#sub_cat_list1").html("");
+        $("#sub_cat_list1").append("<option value=''>Select Category Level1</option>");
+        $('#sub_cat_list1').val("").change();
+        $("#sub_cat_list2").html("");
+        $("#sub_cat_list2").append("<option value=''>Select Category Level2</option>");
+        $('#sub_cat_list2').val("").change();
+        $("#sub_cat_list3").html("");
+        $("#sub_cat_list3").append("<option value=''>Select Category Level3</option>");
+        $('#sub_cat_list3').val("").change();
+        $("#sub_cat_list4").html("");
+        $("#sub_cat_list4").append("<option value=''>Select Category Level4</option>");
+        $('#sub_cat_list4').val("").change();
+
+        $("#sub_cat_list5").html("");
+        $("#sub_cat_list5").append("<option value=''>Select Category Level5</option>");
+
+          
 	     $("#category_id1").css("display","none");	     
 	     $("#category_id2").css("display","none");
 	     $("#category_id3").css("display","none");
@@ -4271,35 +4210,25 @@ function get_category_data(){
 	     $("#category_id5").css("display","none");
 	     $("#category_id6").css("display","none");
 		
-    if($("#sub_city_list").val() == ""){
-	     $("#category_id1").css("display","none");	     
-	     $("#category_id2").css("display","none");
-	     $("#category_id3").css("display","none");
-	     $("#category_id4").css("display","none");
-	     $("#category_id5").css("display","none");
-	     $("#category_id6").css("display","none");
-	     
-        table_init2();
-        return false;
-    }
-    $.ajax({
+    		
+       if ($("#subscribers_list").val() =='') {
+			return false;
+		  }
+		
+    		    $.ajax({
         type: 'GET',
-        url: '/get-subscriber-list/',
-        data:{'city_id':$("#sub_city_list").val()},
+        url: '/get-category1-list/',
+        data:{'subscriber_id':$("#subscribers_list").val()},
         success: function (response) {
-        
-            $("#subscribers_list").html("");
-            $("#subscribers_list").append("<option value=''>Select Subscriber</option>");
-            $.each(response.supplier_list, function (index, item) {
-                data = '<option value="'+ item.supplier_obj_id +'">'+ item.supplier_obj_name +'</option>'
-                $("#subscribers_list").append(data);
-            });
-            
-          	
-            $("#category_id1").css("display","block");
+                        
             $("#sub_cat_list").html("");
             $("#sub_cat_list").append("<option value=''>Select Category</option>");
-            $.each(response.advert_list, function (index, item) {
+
+				if (response.category_list.length>0) {
+	            	$("#sub_cat_list").append("<option value='all'>All</option>");
+	            }
+	                      
+            $.each(response.category_list, function (index, item) {
                 data = '<option value="'+ item.category_id +'">'+ item.category_nm +'</option>'
                 $("#sub_cat_list").append(data);
             });
@@ -4310,72 +4239,27 @@ function get_category_data(){
         },
 
     });
-    
-    table_citybase_data1();
-}
-
-    function table_citybase_data1(){
-     city_id = $("#sub_city_list").val()
-    
-        $('#subscription_plan').removeAttr('width').dataTable({
-            "bDestroy" : true,
-            buttons: [
-               
-                { extend: 'pdf', className: 'btn green btn-outline', orientation: 'landscape',
-                    filename: 'Subscription Plan', "title": "CityHoopla : Subscription Plan",
-                    customize: function(doc) {
-                        doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                        doc.defaultStyle.alignment= 'center'; //<-- set fontsize to 16 instead of 10
-                        doc.styles.tableHeader.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                    }
-                },
-            ],
-
-            "order": [
-                [0, 'asc']
-            ],
-
-            "ajax": "/get_subscription_plan_citybase/?city_id="+city_id,
-            "columns": [
-                {"data": "advert_id","sClass": "text-center"},
-                {"data": "advert_title"},
-                {"data": "category"},
-                {"data": "start_date","sClass": "text-center"},
-                {"data": "end_date","sClass": "text-center"},
-                {"data": "premium_service"},
-                {"data": "premium_start_date","sClass": "text-center"},
-                {"data": "premium_end_date","sClass": "text-center"},
-                {"data": "advert_slider","sClass": "text-center"},
-                {"data": "slider_start_date","sClass": "text-center"},
-                {"data": "slider_end_date","sClass": "text-center"},
-                {"data": "top_advert","sClass": "text-center"},
-                {"data": "top_advert_start_date","sClass": "text-center"},
-                {"data": "top_advert_end_date","sClass": "text-center"},
-                {"data": "uploaded_pictures","sClass": "text-center"},
-                {"data": "uploaded_videos","sClass": "text-center"},
-                {"data": "memory_usages","sClass": "text-center"},
-                {"data": "total_service_cost","sClass": "text-center"},
-                {"data": "total_amount_paid","sClass": "text-center"},
-                {"data": "saleman_name"},
-                {"data": "saleman_number","sClass": "text-center"}
-            ],
-
-                  "columnDefs": [
-                {"className": "dt-center", "targets": "_all", width: 150}
-            ],
-
-             "paging":   true,
-        
-             "scrollX":     true,
-				 "filter": false,
-             "info":     false,
-          // removeAttr('width').
-            "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
-
-        });
     }
-    
+
 function get_category_data1(){
+			$("#display_subscription").css("display","none");
+        $("#sub_cat_list1").html("");
+        $("#sub_cat_list1").append("<option value=''>Select Category Level1</option>");
+        $('#sub_cat_list1').val("").change();
+        $("#sub_cat_list2").html("");
+        $("#sub_cat_list2").append("<option value=''>Select Category Level2</option>");
+        $('#sub_cat_list2').val("").change();
+        $("#sub_cat_list3").html("");
+        $("#sub_cat_list3").append("<option value=''>Select Category Level3</option>");
+        $('#sub_cat_list3').val("").change();
+        $("#sub_cat_list4").html("");
+        $("#sub_cat_list4").append("<option value=''>Select Category Level4</option>");
+        $('#sub_cat_list4').val("").change();
+
+        $("#sub_cat_list5").html("");
+        $("#sub_cat_list5").append("<option value=''>Select Category Level5</option>");
+        
+        
 	     $('#sub_sub_err').css("display", "none");
 	     $("#category_id2").css("display","none");
 	     $("#category_id3").css("display","none");
@@ -4383,36 +4267,10 @@ function get_category_data1(){
 	     $("#category_id5").css("display","none");
 	     $("#category_id6").css("display","none");
 
-    if($("#sub_cat_list").val() == "" && $("#subscribers_list").val() == "" ){
-	     $("#category_id2").css("display","none");
-	     $("#category_id3").css("display","none");
-	     $("#category_id4").css("display","none");
-	     $("#category_id5").css("display","none");
-	     $("#category_id6").css("display","none");
+    if($("#sub_cat_list").val() == ""){
 
         return false;
     }
-    
-    if($("#sub_cat_list").val() == "" && $("#subscribers_list").val() != "" ){
-	     $("#category_id2").css("display","none");
-	     $("#category_id3").css("display","none");
-	     $("#category_id4").css("display","none");
-	     $("#category_id5").css("display","none");
-	     $("#category_id6").css("display","none");
-		  table_data_supplier();
-        return false;
-    }
-     if($("#sub_cat_list").val() != "" && $("#subscribers_list").val() == "" ){
-	     $("#category_id2").css("display","none");
-	     $("#category_id3").css("display","none");
-	     $("#category_id4").css("display","none");
-	     $("#category_id5").css("display","none");
-	     $("#category_id6").css("display","none");
-		  $('#sub_sub_err').css("display", "block");
-        $('#sub_sub_err').text("Please select subscriber");
-        return false;
-    }
-    
     
     $.ajax({
         type: 'GET',
@@ -4424,195 +4282,54 @@ function get_category_data1(){
         	   $("#category_id2").css("display","block");
             $("#sub_cat_list1").html("");
             $("#sub_cat_list1").append("<option value=''>Select Category Level1</option>");
+            
+				if (response.category1_list.length>0) {
+            	$("#sub_cat_list1").append("<option value='all'>All</option>");
+            }
+	                      
             $.each(response.category1_list, function (index, item) {
                 data = '<option value="'+ item.category_id +'">'+ item.category_nm +'</option>'
                 $("#sub_cat_list1").append(data);
             });
         	}     
         else {
+        		$("#display_subscription").css("display","block");
 	     		$("#category_id2").css("display","none");
             $("#sub_cat_list1").html("");
             $("#sub_cat_list1").append("<option value=''>Select Category Level1</option>");
 	     		}           
-          		
-        
+          	
         },
         error: function (response) {
             alert("Error!");
         },
 
     });
-    
-     if($("#sub_cat_list1").val() == ""){
-     
-       sub_cat1_data();
-
-    }
-    
-}
-
-
-
-    function table_data_supplier(){
-    
-		  sub_id = $("#subscribers_list").val();
-        $('#subscription_plan').removeAttr('width').dataTable({
-            "bDestroy" : true,
-            buttons: [
-                
-                { extend: 'pdf', className: 'btn green btn-outline', orientation: 'landscape',
-                    filename: 'Subscription Plan', "title": "CityHoopla : Subscription Plan",
-                    customize: function(doc) {
-                        doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                        doc.defaultStyle.alignment= 'center'; //<-- set fontsize to 16 instead of 10
-                        doc.styles.tableHeader.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                    }
-                },
-            ],
-
-            "order": [
-                [0, 'asc']
-            ],
-
-            "ajax": "/get_subscription_plan_supplier/?sub_id="+sub_id,
-             "columns": [
-                {"data": "advert_id","sClass": "text-center"},
-                {"data": "advert_title"},
-                {"data": "category"},
-                {"data": "start_date","sClass": "text-center"},
-                {"data": "end_date","sClass": "text-center"},
-                {"data": "premium_service"},
-                {"data": "premium_start_date","sClass": "text-center"},
-                {"data": "premium_end_date","sClass": "text-center"},
-                {"data": "advert_slider","sClass": "text-center"},
-                {"data": "slider_start_date","sClass": "text-center"},
-                {"data": "slider_end_date","sClass": "text-center"},
-                {"data": "top_advert","sClass": "text-center"},
-                {"data": "top_advert_start_date","sClass": "text-center"},
-                {"data": "top_advert_end_date","sClass": "text-center"},
-                {"data": "uploaded_pictures","sClass": "text-center"},
-                {"data": "uploaded_videos","sClass": "text-center"},
-                {"data": "memory_usages","sClass": "text-center"},
-                {"data": "total_service_cost","sClass": "text-center"},
-                {"data": "total_amount_paid","sClass": "text-center"},
-                {"data": "saleman_name"},
-                {"data": "saleman_number","sClass": "text-center"}
-            ],
-
-             "columnDefs": [
-                {"className": "dt-center", "targets": "_all", width: 150}
-            ],
-
-             "paging":   true,
-         
-             "scrollX":     true,
-				 "filter": false,
-             "info":     false,
-          // removeAttr('width').
-            "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
-
-        });
-    }
-    
-// First function
-  function sub_cat1_data(){
-    if ($('#sub_cat_list').val()!=''  && $('#subscribers_list').val()!='' ) {
-    
-        cat_id = $("#sub_cat_list").val();
-        sub_id = $("#subscribers_list").val();
        
-        
-        $('#subscription_plan').removeAttr('width').dataTable({
-            "bDestroy" : true,
-            buttons: [
-               
-                { extend: 'pdf', className: 'btn green btn-outline', orientation: 'landscape',
-                    filename: 'Subscription Plan', "title": "CityHoopla : Subscription Plan",
-                    customize: function(doc) {
-                        doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                        doc.defaultStyle.alignment= 'center'; //<-- set fontsize to 16 instead of 10
-                        doc.styles.tableHeader.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                    }
-                },
-            ],
-
-            "order": [
-                [0, 'asc']
-            ],
-
-            "ajax": "/get_subtable_data1/?cat_id="+cat_id+"&sub_id="+sub_id,
-             "columns": [
-                {"data": "advert_id","sClass": "text-center"},
-                {"data": "advert_title"},
-                {"data": "category"},
-                {"data": "start_date","sClass": "text-center"},
-                {"data": "end_date","sClass": "text-center"},
-                {"data": "premium_service"},
-                {"data": "premium_start_date","sClass": "text-center"},
-                {"data": "premium_end_date","sClass": "text-center"},
-                {"data": "advert_slider","sClass": "text-center"},
-                {"data": "slider_start_date","sClass": "text-center"},
-                {"data": "slider_end_date","sClass": "text-center"},
-                {"data": "top_advert","sClass": "text-center"},
-                {"data": "top_advert_start_date","sClass": "text-center"},
-                {"data": "top_advert_end_date","sClass": "text-center"},
-                {"data": "uploaded_pictures","sClass": "text-center"},
-                {"data": "uploaded_videos","sClass": "text-center"},
-                {"data": "memory_usages","sClass": "text-center"},
-                {"data": "total_service_cost","sClass": "text-center"},
-                {"data": "total_amount_paid","sClass": "text-center"},
-                {"data": "saleman_name"},
-                {"data": "saleman_number","sClass": "text-center"}
-            ],
-
-         "columnDefs": [
-                {"className": "dt-center", "targets": "_all", width: 150}
-            ],
-
-             "paging":   true,
-         
-             "scrollX":     true,
-				 "filter": false,
-             "info":     false,
-          // removeAttr('width').
-            "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
-
-        });
-    
-    
-    }
-    else { if ($('#sub_cat_list').val() =='') 
-             {
-           	$('#sub_cat_err').css("display", "block");
-             $('#sub_cat_err').text("Please select category");
-             }
-           else 
-            {
-           	$('#sub_sub_err').css("display", "block");
-             $('#sub_sub_err').text("Please select subscriber");
-             
-            }
-    	
-         }
-
-
-    }
-    
-    
-
+}
+ 
 function get_category_data2(){
-			
+			$("#display_subscription").css("display","none");
+        $("#sub_cat_list2").html("");
+        $("#sub_cat_list2").append("<option value=''>Select Category Level2</option>");
+        $('#sub_cat_list2').val("").change();
+        $("#sub_cat_list3").html("");
+        $("#sub_cat_list3").append("<option value=''>Select Category Level3</option>");
+        $('#sub_cat_list3').val("").change();
+        $("#sub_cat_list4").html("");
+        $("#sub_cat_list4").append("<option value=''>Select Category Level4</option>");
+        $('#sub_cat_list4').val("").change();
+
+        $("#sub_cat_list5").html("");
+        $("#sub_cat_list5").append("<option value=''>Select Category Level5</option>");
+        
+        	
 	     $("#category_id3").css("display","none");
 	     $("#category_id4").css("display","none");
 	     $("#category_id5").css("display","none");
 	     $("#category_id6").css("display","none");
 
     if($("#sub_cat_list1").val() == ""){
-
-	     $("#category_id3").css("display","none");
-	     $("#category_id4").css("display","none");
-	     $("#category_id5").css("display","none");
-	     $("#category_id6").css("display","none");
 	     
         return false;
     }
@@ -4626,12 +4343,18 @@ function get_category_data2(){
 		        	   $("#category_id3").css("display","block");
 		            $("#sub_cat_list2").html("");
 		            $("#sub_cat_list2").append("<option value=''>Select Category Level2</option>");
+		            
+						if (response.category2_list.length>0) {
+		            	$("#sub_cat_list2").append("<option value='all'>All</option>");
+		            }
+            		            
 		            $.each(response.category2_list, function (index, item) {
 		                data = '<option value="'+ item.category_id +'">'+ item.category_nm +'</option>'
 		                $("#sub_cat_list2").append(data);
             });
         	}     
         else {
+        		$("#display_subscription").css("display","block");
 	         $("#category_id3").css("display","none");
             $("#sub_cat_list2").html("");
             $("#sub_cat_list2").append("<option value=''>Select Category Level2</option>");
@@ -4643,102 +4366,27 @@ function get_category_data2(){
         },
 
     });
-    
-      if($("#sub_cat_list2").val() == ""){
-     
-       sub_cat2_data();
-
-    }
-   
-    
-}
-
-// Second function
-  function sub_cat2_data(){
-    if ($('#sub_cat_list').val()!=''  && $('#sub_cat_list1').val()!=''  && $('#subscribers_list').val()!='' ) {
-    
-        cat_id = $("#sub_cat_list").val();
-        cat_id1 = $("#sub_cat_list1").val();
-        sub_id = $("#subscribers_list").val();
        
-        
-        $('#subscription_plan').removeAttr('width').dataTable({
-            "bDestroy" : true,
-            buttons: [
-                //{ extend: 'print', className: 'btn dark btn-outline',
-                 //   filename: 'Subscription Plan', "title": "CityHoopla : Subscription Plan"
-                // },
-                { extend: 'pdf', className: 'btn green btn-outline', orientation: 'landscape',
-                    filename: 'Subscription Plan', "title": "CityHoopla : Subscription Plan",
-                    customize: function(doc) {
-                        doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                        doc.defaultStyle.alignment= 'center'; //<-- set fontsize to 16 instead of 10
-                        doc.styles.tableHeader.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                    }
-                },
-            ],
-
-            "order": [
-                [0, 'asc']
-            ],
-
-            "ajax": "/get_subtable_data2/?cat_id="+cat_id+"&sub_id="+sub_id+"&cat_id1="+cat_id1,
-             "columns": [
-                {"data": "advert_id","sClass": "text-center"},
-                {"data": "advert_title"},
-                {"data": "category"},
-                {"data": "start_date","sClass": "text-center"},
-                {"data": "end_date","sClass": "text-center"},
-                {"data": "premium_service"},
-                {"data": "premium_start_date","sClass": "text-center"},
-                {"data": "premium_end_date","sClass": "text-center"},
-                {"data": "advert_slider","sClass": "text-center"},
-                {"data": "slider_start_date","sClass": "text-center"},
-                {"data": "slider_end_date","sClass": "text-center"},
-                {"data": "top_advert","sClass": "text-center"},
-                {"data": "top_advert_start_date","sClass": "text-center"},
-                {"data": "top_advert_end_date","sClass": "text-center"},
-                {"data": "uploaded_pictures","sClass": "text-center"},
-                {"data": "uploaded_videos","sClass": "text-center"},
-                {"data": "memory_usages","sClass": "text-center"},
-                {"data": "total_service_cost","sClass": "text-center"},
-                {"data": "total_amount_paid","sClass": "text-center"},
-                {"data": "saleman_name"},
-                {"data": "saleman_number","sClass": "text-center"}
-            ],
-
-            "columnDefs": [
-                {"className": "dt-center", "targets": "_all", width: 150}
-            ],
-
-             "paging":   true,
-        
-             "scrollX":     true,
-				 "filter": false,
-             "info":     false,
-          // removeAttr('width').
-            "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
-
-        });
-    
-    
-    }
-
-    }
-    
-    
+}
+  
 
 function get_category_data3(){
+			$("#display_subscription").css("display","none");
+        $("#sub_cat_list3").html("");
+        $("#sub_cat_list3").append("<option value=''>Select Category Level3</option>");
+        $('#sub_cat_list3').val("").change();
+        $("#sub_cat_list4").html("");
+        $("#sub_cat_list4").append("<option value=''>Select Category Level4</option>");
+        $('#sub_cat_list4').val("").change();
+
+        $("#sub_cat_list5").html("");
+        $("#sub_cat_list5").append("<option value=''>Select Category Level5</option>");
+        
 	     $("#category_id4").css("display","none");
 	     $("#category_id5").css("display","none");
 	     $("#category_id6").css("display","none");
 
     if($("#sub_cat_list2").val() == ""){
-
-	     $("#category_id4").css("display","none");
-	     $("#category_id5").css("display","none");
-	     $("#category_id6").css("display","none");
-
 
         return false;
     }
@@ -4752,119 +4400,45 @@ function get_category_data3(){
         	   $("#category_id4").css("display","block");
             $("#sub_cat_list3").html("");
             $("#sub_cat_list3").append("<option value=''>Select Category Level3</option>");
+            
+					if (response.category3_list.length>0) {
+	            	$("#sub_cat_list3").append("<option value='all'>All</option>");
+	            }
+		                        
             $.each(response.category3_list, function (index, item) {
                 data = '<option value="'+ item.category_id +'">'+ item.category_nm +'</option>'
                 $("#sub_cat_list3").append(data);
             });
         	}     
         else {
+        		$("#display_subscription").css("display","block");
 	     		 $("#category_id4").css("display","none");
              $("#sub_cat_list3").html("");
              $("#sub_cat_list3").append("<option value=''>Select Category Level3</option>");
 	     		}  
-	     		
-	     		
-	     		
-           
-            	
-        
+	     	     	  
         },
         error: function (response) {
             alert("Error!");
         },
 
-    });
-    
-      if($("#sub_cat_list3").val() == ""){
-     
-       sub_cat3_data();
-
-    }
-   
-    
+    });   
 }
 
-// Third function
-  function sub_cat3_data(){
-    if ($('#sub_cat_list').val()!=''  && $('#sub_cat_list1').val()!=''  && $('#sub_cat_list2').val()!=''  && $('#subscribers_list').val()!='' ) {
-    
-        cat_id = $("#sub_cat_list").val();
-        cat_id1 = $("#sub_cat_list1").val();
-        cat_id2 = $("#sub_cat_list2").val();
-        sub_id = $("#subscribers_list").val();
-       
-        
-        $('#subscription_plan').removeAttr('width').dataTable({
-            "bDestroy" : true,
-            buttons: [
-               
-                { extend: 'pdf', className: 'btn green btn-outline', orientation: 'landscape',
-                    filename: 'Subscription Plan', "title": "CityHoopla : Subscription Plan",
-                    customize: function(doc) {
-                        doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                        doc.defaultStyle.alignment= 'center'; //<-- set fontsize to 16 instead of 10
-                        doc.styles.tableHeader.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                    }
-                },
-            ],
-
-            "order": [
-                [0, 'asc']
-            ],
-
-            "ajax": "/get_subtable_data3/?cat_id="+cat_id+"&sub_id="+sub_id+"&cat_id1="+cat_id1+"&cat_id2="+cat_id2,
-            "columns": [
-                {"data": "advert_id","sClass": "text-center"},
-                {"data": "advert_title"},
-                {"data": "category"},
-                {"data": "start_date","sClass": "text-center"},
-                {"data": "end_date","sClass": "text-center"},
-                {"data": "premium_service"},
-                {"data": "premium_start_date","sClass": "text-center"},
-                {"data": "premium_end_date","sClass": "text-center"},
-                {"data": "advert_slider","sClass": "text-center"},
-                {"data": "slider_start_date","sClass": "text-center"},
-                {"data": "slider_end_date","sClass": "text-center"},
-                {"data": "top_advert","sClass": "text-center"},
-                {"data": "top_advert_start_date","sClass": "text-center"},
-                {"data": "top_advert_end_date","sClass": "text-center"},
-                {"data": "uploaded_pictures","sClass": "text-center"},
-                {"data": "uploaded_videos","sClass": "text-center"},
-                {"data": "memory_usages","sClass": "text-center"},
-                {"data": "total_service_cost","sClass": "text-center"},
-                {"data": "total_amount_paid","sClass": "text-center"},
-                {"data": "saleman_name"},
-                {"data": "saleman_number","sClass": "text-center"}
-            ],
-
-         "columnDefs": [
-                {"className": "dt-center", "targets": "_all", width: 150}
-            ],
-
-             "paging":   true,
-            
-             "scrollX":     true,
-				 "filter": false,
-             "info":     false,
-          // removeAttr('width').
-            "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
-
-        });
-    
-    
-    }
- 
-    }
 
 function get_category_data4(){
+			$("#display_subscription").css("display","none");
+        $("#sub_cat_list4").html("");
+        $("#sub_cat_list4").append("<option value=''>Select Category Level4</option>");
+        $('#sub_cat_list4').val("").change();
+
+        $("#sub_cat_list5").html("");
+        $("#sub_cat_list5").append("<option value=''>Select Category Level5</option>");
+        
 	     $("#category_id5").css("display","none");
 	     $("#category_id6").css("display","none");
 
     if($("#sub_cat_list3").val() == ""){
-
-	     $("#category_id5").css("display","none");
-	     $("#category_id6").css("display","none");
-
 
         return false;
     }
@@ -4879,116 +4453,41 @@ function get_category_data4(){
         	   $("#category_id5").css("display","block");
             $("#sub_cat_list4").html("");
             $("#sub_cat_list4").append("<option value=''>Select Category Level4</option>");
+            
+					if (response.category4_list.length>0) {
+	            	$("#sub_cat_list4").append("<option value='all'>All</option>");
+	            }
+	                        
             $.each(response.category4_list, function (index, item) {
                 data = '<option value="'+ item.category_id +'">'+ item.category_nm +'</option>'
                 $("#sub_cat_list4").append(data);
             });
         	}     
         else {
+        		$("#display_subscription").css("display","block");
 	     		$("#category_id5").css("display","none");
             $("#sub_cat_list4").html("");
             $("#sub_cat_list4").append("<option value=''>Select Category Level4</option>");
 	     		}  
 	     		
 	     		
-	     		
-           
-            	
-        
         },
         error: function (response) {
             alert("Error!");
         },
 
     });
-    
-    if($("#sub_cat_list4").val() == ""){
-     
-       sub_cat4_data();
-
-    } 
-    
+        
 }
 
-// Fourth function
-  function sub_cat3_data(){
-    if ($('#sub_cat_list').val()!=''  && $('#sub_cat_list1').val()!=''  && $('#sub_cat_list2').val()!=''  && $('#sub_cat_list3').val()!=''  && $('#subscribers_list').val()!='' ) {
-    
-        cat_id = $("#sub_cat_list").val();
-        cat_id1 = $("#sub_cat_list1").val();
-        cat_id2 = $("#sub_cat_list2").val();
-        cat_id3 = $("#sub_cat_list3").val();
-        sub_id = $("#subscribers_list").val();
-       
-        
-        $('#subscription_plan').removeAttr('width').dataTable({
-            "bDestroy" : true,
-            buttons: [
-                
-                { extend: 'pdf', className: 'btn green btn-outline', orientation: 'landscape',
-                    filename: 'Subscription Plan', "title": "CityHoopla : Subscription Plan",
-                    customize: function(doc) {
-                        doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                        doc.defaultStyle.alignment= 'center'; //<-- set fontsize to 16 instead of 10
-                        doc.styles.tableHeader.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                    }
-                },
-            ],
-
-            "order": [
-                [0, 'asc']
-            ],
-
-            "ajax": "/get_subtable_data4/?cat_id="+cat_id+"&sub_id="+sub_id+"&cat_id1="+cat_id1+"&cat_id2="+cat_id2+"&cat_id3="+cat_id3,
-             "columns": [
-                {"data": "advert_id","sClass": "text-center"},
-                {"data": "advert_title"},
-                {"data": "category"},
-                {"data": "start_date","sClass": "text-center"},
-                {"data": "end_date","sClass": "text-center"},
-                {"data": "premium_service"},
-                {"data": "premium_start_date","sClass": "text-center"},
-                {"data": "premium_end_date","sClass": "text-center"},
-                {"data": "advert_slider","sClass": "text-center"},
-                {"data": "slider_start_date","sClass": "text-center"},
-                {"data": "slider_end_date","sClass": "text-center"},
-                {"data": "top_advert","sClass": "text-center"},
-                {"data": "top_advert_start_date","sClass": "text-center"},
-                {"data": "top_advert_end_date","sClass": "text-center"},
-                {"data": "uploaded_pictures","sClass": "text-center"},
-                {"data": "uploaded_videos","sClass": "text-center"},
-                {"data": "memory_usages","sClass": "text-center"},
-                {"data": "total_service_cost","sClass": "text-center"},
-                {"data": "total_amount_paid","sClass": "text-center"},
-                {"data": "saleman_name"},
-                {"data": "saleman_number","sClass": "text-center"}
-            ],
-
-         "columnDefs": [
-                {"className": "dt-center", "targets": "_all", width: 150}
-            ],
-
-             "paging":   true,
-             
-             "scrollX":     true,
-				 "filter": false,
-             "info":     false,
-          // removeAttr('width').
-            "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
-
-        });
-    
-    
-    }
-
-    }
-
 function get_category_data5(){
+			$("#display_subscription").css("display","none");
+        $("#sub_cat_list5").html("");
+        $("#sub_cat_list5").append("<option value=''>Select Category Level5</option>");
+        
 	     $("#category_id6").css("display","none");
+    
     if($("#sub_cat_list4").val() == ""){
-
-	     $("#category_id6").css("display","none");
-
 
         return false;
     }
@@ -5002,110 +4501,30 @@ function get_category_data5(){
         	   $("#category_id6").css("display","block");
             $("#sub_cat_list5").html("");
             $("#sub_cat_list5").append("<option value=''>Select Category Level5</option>");
+            
+					if (response.category5_list.length>0) {
+	            	$("#sub_cat_list5").append("<option value='all'>All</option>");
+	            }
+	                        
             $.each(response.category5_list, function (index, item) {
                 data = '<option value="'+ item.category_id +'">'+ item.category_nm +'</option>'
                 $("#sub_cat_list5").append(data);
             });
         	}     
         else {
+        		$("#display_subscription").css("display","block");
 	     		$("#category_id6").css("display","none");
             $("#sub_cat_list5").html("");
             $("#sub_cat_list5").append("<option value=''>Select Category Level5</option>");
 	     		}  
-	     		
-	     		
-           
-            	
-        
+	     	    
         },
         error: function (response) {
             alert("Error!");
         },
 
     });
-    
-     if($("#sub_cat_list5").val() == ""){
-     
-       sub_cat5_data();
-
-    } 
-    
 }
-
-// Fifth function
-  function sub_cat3_data(){
-    if ($('#sub_cat_list').val()!=''  && $('#sub_cat_list1').val()!=''  && $('#sub_cat_list2').val()!=''  && $('#sub_cat_list3').val()!='' && $('#sub_cat_list4').val()!=''  && $('#subscribers_list').val()!='' ) {
-    
-        cat_id = $("#sub_cat_list").val();
-        cat_id1 = $("#sub_cat_list1").val();
-        cat_id2 = $("#sub_cat_list2").val();
-        cat_id3 = $("#sub_cat_list3").val();
-        cat_id4 = $("#sub_cat_list4").val();
-        sub_id = $("#subscribers_list").val();
-       
-        
-        $('#subscription_plan').removeAttr('width').dataTable({
-            "bDestroy" : true,
-            buttons: [
-                
-                { extend: 'pdf', className: 'btn green btn-outline', orientation: 'landscape',
-                    filename: 'Subscription Plan', "title": "CityHoopla : Subscription Plan",
-                    customize: function(doc) {
-                        doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                        doc.defaultStyle.alignment= 'center'; //<-- set fontsize to 16 instead of 10
-                        doc.styles.tableHeader.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                    }
-                },
-            ],
-
-            "order": [
-                [0, 'asc']
-            ],
-
-            "ajax": "/get_subtable_data5/?cat_id="+cat_id+"&sub_id="+sub_id+"&cat_id1="+cat_id1+"&cat_id2="+cat_id2+"&cat_id3="+cat_id3+"&cat_id4="+cat_id4,
-             "columns": [
-                {"data": "advert_id","sClass": "text-center"},
-                {"data": "advert_title"},
-                {"data": "category"},
-                {"data": "start_date","sClass": "text-center"},
-                {"data": "end_date","sClass": "text-center"},
-                {"data": "premium_service"},
-                {"data": "premium_start_date","sClass": "text-center"},
-                {"data": "premium_end_date","sClass": "text-center"},
-                {"data": "advert_slider","sClass": "text-center"},
-                {"data": "slider_start_date","sClass": "text-center"},
-                {"data": "slider_end_date","sClass": "text-center"},
-                {"data": "top_advert","sClass": "text-center"},
-                {"data": "top_advert_start_date","sClass": "text-center"},
-                {"data": "top_advert_end_date","sClass": "text-center"},
-                {"data": "uploaded_pictures","sClass": "text-center"},
-                {"data": "uploaded_videos","sClass": "text-center"},
-                {"data": "memory_usages","sClass": "text-center"},
-                {"data": "total_service_cost","sClass": "text-center"},
-                {"data": "total_amount_paid","sClass": "text-center"},
-                {"data": "saleman_name"},
-                {"data": "saleman_number","sClass": "text-center"}
-            ],
-
-           
-         "columnDefs": [
-                {"className": "dt-center", "targets": "_all", width: 150}
-            ],
-
-             "paging":   true,
-         
-             "scrollX":     true,
-				 "filter": false,
-             "info":     false,
-          // removeAttr('width').
-            "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
-
-        });
-    
-    
-    }
-
-    }
 
 
 </script>        

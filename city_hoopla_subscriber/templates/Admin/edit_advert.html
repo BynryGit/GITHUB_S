@@ -507,6 +507,13 @@ hr {
     font-weight:500;
 }
 
+
+.remove_btn{
+    float: right;
+    margin-top: 5px;
+    font-size: 20px;
+}
+
     </style>
 
 <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
@@ -608,6 +615,8 @@ hr {
                             <!-- BEGIN FORM-->
                             <div class="row">
                                 <div class="col-lg-12 col-md-12">
+                                    <a href="/view-subscriber-list/" class="brad-crum-1">{{ supplier_name }}</a>
+                                        <i class="fa fa-angle-right"></i>
                                     <a href="/advert-management/?subscriber_id={{ supplier_id }}" class="brad-crum-1">{{advert_data.advert_name}}</a>
                                     &nbsp;<i class="fa fa-angle-right"></i>&nbsp;
                                     <span class="brad-crum-2">Edit Advert</span>
@@ -666,8 +675,9 @@ hr {
                                                                         <div class="row">
                                                                             <input type="text" name="business_id" hidden
                                                                                    value="{{business_data.business_id}}">
+                            <input id="change_flag" name="change_flag" hidden value="0"></input> 
 
-                                                                            <input type="hidden" name="supplier_id" id="supplier_id_hidden"
+                            <input type="hidden" name="supplier_id" id="supplier_id_hidden"
                                                                                    value="{{ supplier_id }}"   >
                                                                             <div class="col-lg-4 col-md-4">
                                                                                 <div class="form-group">
@@ -1252,7 +1262,8 @@ hr {
                                                                                         Amount
                                                                                         <span class="required"> * </span>
                                                                                     </label>
-                                                                                    <input id="generated_amount"
+                                <input id="change_payment_flag" hidden value="0"></input>
+                                <input id="generated_amount"
                                                                                            onkeyup="changeprice_edit()"
                                                                                            readonly type="text" value="{{payment_details.total_amount}}"
                                                                                            class="form-control"
@@ -1263,9 +1274,9 @@ hr {
                                                                                     <label class="control-label font-15 font-regular">Tax Payable
                                                                                         <span class="required"> * </span>
                                                                                     </label>
-                                                                                    <select id="tax_type" name="tax_type"
-                                                                                            style="width:100%;"
-                                                                                            onchange="changeprice_edit()"
+                                    <select id="tax_type" name="tax_type"
+                                             style="width:100%;"
+                                              onchange="changeprice_edit()"
                                                                                             class="form-control">
                                                                                         <option value=""> Tax Type</option>
                                                                                         {% for tax in tax_list %}
@@ -1301,11 +1312,11 @@ hr {
                                                                                 <div class="col-lg-4 col-md-4">
                                                                                     <label class="control-label font-15 font-regular">Total Amount Paid
                                                                                     </label>
-                                                                                    <input type="text" id="paid_amount"
-                                                                                           onkeypress="return validateFloatKeyPress(this,event);"
-                                                                                           class="form-control" value="{{payment_details.paid_amount}}"
-                                                                                           name="total_paid_amount"/>
-                                                                                    <label class="error font-12 font-regular"
+                        <input type="text" id="paid_amount"
+                         onkeypress="return validateFloatKeyPress(this,event);"
+                                         class="form-control" value="{{payment_details.paid_amount}}"
+                                        onkeyup="check_changes();"         name="total_paid_amount"/>
+                                                <label class="error font-12 font-regular"
                                                                                            style="color:red; display:none;"></label>
                                                                                 </div>
                                                                                 <div class="col-lg-8 col-md-8" id="payment_mode">
@@ -1364,51 +1375,51 @@ hr {
                                                                             </div>
 
 
-                                                                            <div class="row" id="che">
-                                                                                <br>
-                                                                                <label class="control-label font-15 font-regular" style="margin-left: 14px;">Cheque
+                                     <div class="row" id="che">
+                                                         <br>
+                                        <label class="control-label font-15 font-regular" style="margin-left: 14px;">Cheque
                                                                                     Details </label>
-                                                                                <div class="form-group">
+                                                <div class="form-group">
 
-                                                                                        <div class="col-lg-4 col-md-4">
-                                                                                            <label class="control-label font-15 font-regular">
-                                                                                                Bank Name
-                                                                                                <span class="required"> * </span>
-                                                                                            </label>
-                                                                                            <input type="text"
-                                                                                                   class="form-control"
-                                                                                                   id="bank_name" value="{{payment_details.bank_name}}"
-                                                                                                   name="bank_name"/>
-                                                                                            <label class="error font-12 font-regular"
-                                                                                                   style="color:red; display:none;"></label>
+                                                <div class="col-lg-4 col-md-4">
+                                                              <label class="control-label font-15 font-regular">
+                                                             Bank Name
+                                         <span class="required"> * </span>
+                                                         </label>
+                                            <input type="text" onkeyup="check_changes();"
+                                                 class="form-control"
+                                             id="bank_name" value="{{payment_details.bank_name}}"
+                                                                 name="bank_name"/>
+                                              <label class="error font-12 font-regular"
+                                                                  style="color:red; display:none;"></label>
                                                                                         </div>
 
-                                                                                        <div class="col-lg-4 col-md-4">
-                                                                                            <label class="control-label font-15 font-regular" >
-                                                                                                Bank Branch Name
-                                                                                                <span class="required"> * </span>
-                                                                                            </label>
-                                                                                            <input type="text" value="{{payment_details.branch_name}}"
-                                                                                                   class="form-control"
-                                                                                                   id="bank_branch_name"
+                                        <div class="col-lg-4 col-md-4">
+                                                    <label class="control-label font-15 font-regular" >
+                                                   Bank Branch Name
+                                                        <span class="required"> * </span>
+                                           </label>
+                                            <input type="text" value="{{payment_details.branch_name}}"
+                                            class="form-control" onkeyup="check_changes();"
+                                                            id="bank_branch_name"
                                                                                                    name="bank_branch_name"/>
                                                                                             <label class="error font-12 font-regular"
                                                                                                    style="color:red; display:none;"></label>
                                                                                         </div>
 
-                                                                                        <div class="col-lg-4 col-md-4">
-                                                                                            <label class="control-label font-15 font-regular" >
-                                                                                                Cheque Number
-                                                                                                <span class="required"> * </span>
-                                                                                            </label>
-                                                                                            <input type="text" value="{{payment_details.cheque_number}}"
-                                                                                                   onkeypress="return validateFloatKeyPresss(this,event);"
-                                                                                                   class="form-control"
-                                                                                                   id="cheque_number"
-                                                                                                   name="cheque_number"/>
-                                                                                            <label class="error font-12 font-regular"
-                                                                                                   style="color:red; display:none;"></label>
-                                                                                        </div>
+                                                    <div class="col-lg-4 col-md-4">
+                                                      <label class="control-label font-15 font-regular" >
+                                                 Cheque Number
+                                                <span class="required"> * </span>
+                                                     </label>
+                                              <input type="text" value="{{payment_details.cheque_number}}"
+                                         onkeypress="return validateFloatKeyPresss(this,event);" onkeyup="check_changes();"
+                                            class="form-control" 
+                                                                 id="cheque_number"
+                                                            name="cheque_number"/>
+                                                 <label class="error font-12 font-regular"
+                                                  style="color:red; display:none;"></label>
+                                             </div>
 
                                                                                 </div>
                                                                             </div>
@@ -1420,8 +1431,8 @@ hr {
                                                                                     <label class="control-label font-15 font-regular">Note
                                                                                         <span class="required"> * </span>
                                                                                     </label>
-                                                                                    <textarea type="text" id="note" maxlength="5000"
-                                                                                           class="form-control"
+                            <textarea type="text" id="note" maxlength="5000"
+                                 class="form-control" onkeyup="check_changes();"
                                                                                            name="payment_note"></textarea>
                                                                                     <label class="error col-lg-12 font-12 font-regular"
                                                                                            style="color:red; display:none;padding-left: 0px;"></label>
@@ -1440,9 +1451,9 @@ hr {
                                                                                 <a type="button"
                                                                                        href="/advert-management/?subscriber_id={{ supplier_id }}"
                                                                                        class="btn btn-outline grey_color"> Cancel </a>
-                                                                                <button type="button"
-                                                                                   id="save_payment_detail"
-                                                                                   class="btn btn-outline grey_color"> Update & Quit</button>
+                                            <button type="button"
+                                 id="save_payment_detail"
+                                                                 class="btn btn-outline grey_color"> Update & Quit</button>
                                                                                 <button type="submit" id="save_payment_continue"
                                                                                         class="btn btn-outline done_btn">
                                                                                     Update & Continue
@@ -1979,53 +1990,52 @@ hr {
                                                                                         </div>
                                                                                     </div>
 
-                                                                                    <div class="col-lg-5 col-md-5">
-                                                                                        <div class="form-group">
-                                                                                            <label class="control-label " style="font-size:15px; font-weight:500;">Product
-                                                                                                Price
-                                                                                            </label>
-                                                                                            <input type="text"
-                                                                                                   onkeypress="return validateFloatKeyPresss(this,event);"
-                                                                                                   name="product_price"
-                                                                                                   id="product_price"
-                                                                                                   class="form-control product_price_cls"/></input>
-                                                                                            <label class="error font-12 font-regular"
-                                                                                                   style="color:red; display:none;"></label>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                {% else %}
-                                                                                    {% for products in product_list %}
-                                                                                        <div id="editp{{ products.product_id }}">
-                                                                                        <div class="col-lg-5 col-md-5" >
-                                                                                            <div class="form-group">
-                                                                                                <label class="control-label " style="font-size:15px; font-weight:500;">Product
-                                                                                                    Name
-                                                                                                </label>
-                                                                                                <input type="text" value="{{products.product_name}}"
-                                                                                                       name="product_name"
-                                                                                                       id="product_name"
-                                                                                                       class="form-control product_name_cls"/>
-                                                                                                <label class="error font-12 font-regular"
-                                                                                                       style="color:red; display:none;"></label>
-                                                                                            </div>
-                                                                                        </div>
+                        <div class="col-lg-5 col-md-5">
+                            <div class="form-group">
+                                <label class="control-label " style="font-size:15px; font-weight:500;">Product
+                                                        Price
+                                       </label>
+                                <input type="text"
+                                            name="product_price"
+                                            id="product_price"
+                                    class="form-control product_price_cls"/></input>
+                                          <label class="error font-12 font-regular"
+                                        style="color:red; display:none;"></label>
+                                 </div>
+                                </div>
+                                                {% else %}
+                                            {% for products in product_list %}
+                                    <div id="editp{{ products.product_id }}">
+                                        <div class="col-lg-5 col-md-5" >
+                                            <div class="form-group">
+                                                    <label class="control-label " style="font-size:15px; font-weight:500;">Product
+                                                        Name
+                                            </label>
+                                             <input type="text" value="{{products.product_name}}"
+                                                 name="product_name"
+                                                 id="product_name"
+                                         class="form-control product_name_cls"/>
+                                         <label class="error font-12 font-regular"
+                                            style="color:red; display:none;"></label>
+                                            </div>
+                                        </div>
 
-                                                                                        <div class="col-lg-5 col-md-5">
-                                                                                            <div class="form-group">
-                                                                                                <label class="control-label " style="font-size:15px; font-weight:500;">Product
-                                                                                                    Price
-                                                                                                </label>
-                                                                                                <input type="text" value="{{products.product_price}}"
-                                                                                                       onkeypress="return validateFloatKeyPresss(this,event);"
-                                                                                                       name="product_price"
-                                                                                                       id="product_price"
-                                                                                                       class="form-control product_price_cls"/></input>
-                                                                                                <label class="error font-12 font-regular"
-                                                                                                       style="color:red; display:none;"></label>
-                                                                                            </div>
-                                                                                        </div>
+                                    <div class="col-lg-5 col-md-5">
+                                        <div class="form-group">
+                                                 <label class="control-label " style="font-size:15px; font-weight:500;">Product
+                                                    Price
+                                               </label>
+                                                <input type="text" value="{{products.product_price}}"
+                            
+                                                 name="product_price"
+                                                 id="product_price"
+                                                class="form-control product_price_cls"/></input>
+                                                <label class="error font-12 font-regular"
+                                                style="color:red; display:none;"></label>
+                                                </div>
+                                        </div>
 
-                                                                                        <div class='col-lg-2 col-md-2'>
+                                        <div class='col-lg-2 col-md-2'>
                                                                                                 <div class='form-group'>
                                                                                                     <a class='fa fa-times-circle  fa-lg' onclick="del_product({{ products.product_id }})" style='margin-top:35px;'></a>
                                                                                                                         </div>
@@ -2161,7 +2171,110 @@ hr {
                                                                                         <label  style="font-size:15px; font-weight:700;">Contact Details </label>
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="col-lg-12 col-md-12">
+
+                                                                            <div class="col-md-3" style="padding-right: 0px;">
+                           
+                                                                                                       <label class="control-label " style="font-size:15px;">
+                                                                                                           Title 
+                                                                                                       </label>
+                                                                                                       <select  name="title" id="title" class="form-control sel2" >
+                                                                                                         
+                                                                                                         {% if title == 'Mr.' %}
+                                                                                                         <option value=""> Select Title</option>
+                                                                                                                 <option selected value="Mr."> Mr.</option>
+                                                                                                                   <option value="Mrs."> Mrs.</option>
+                                                                                                                   <option value="Ms."> Ms.</option>
+                                                                                                                   <option value="Dr."> Dr.</option>
+                                                                                                                   <option value="Mas."> Mas.</option>
+                                                                                                                   <option value="Prof."> Prof.</option>
+                                                                                                                   <option value="Smt."> Smt.</option>
+                                                                                                                   <option value="Miss."> Miss.</option>
+                                                                                                               {% elif title == 'Mrs.' %}
+                                                                                                               <option value=""> Select Title</option>
+                                                                                                                         <option  value="Mr."> Mr.</option>                                      
+                                                                                                                 <option selected value="Mrs."> Mrs.</option>                                                                                                                         
+                                                                                                                   <option value="Ms."> Ms.</option>
+                                                                                                                   <option value="Dr."> Dr.</option>
+                                                                                                                   <option value="Mas."> Mas.</option>
+                                                                                                                   <option value="Prof."> Prof.</option>
+                                                                                                                   <option value="Smt."> Smt.</option>
+                                                                                                                   <option value="Miss."> Miss.</option>
+                                                                                                               {% elif title == 'Ms.' %}
+                                                                                                                <option value=""> Select Title</option>
+                                                                                                                <option  value="Mr."> Mr.</option>                                       
+                                                                                                                 <option  value="Mrs."> Mrs.</option>                                                                                                                         
+                                                                                                                   <option selected value="Ms."> Ms.</option>
+                                                                                                                   <option value="Dr."> Dr.</option>
+                                                                                                                   <option value="Mas."> Mas.</option>
+                                                                                                                   <option value="Prof."> Prof.</option>
+                                                                                                                   <option value="Smt."> Smt.</option>
+                                                                                                                   <option value="Miss."> Miss.</option>
+                                                                                                               {% elif title == 'Dr.' %}
+                                                                                                                <option value=""> Select Title</option>
+                                                                                                                <option  value="Mr."> Mr.</option>                                       
+                                                                                                                 <option  value="Mrs."> Mrs.</option>                                                                                                                         
+                                                                                                                   <option  value="Ms."> Ms.</option>
+                                                                                                                   <option selected value="Dr."> Dr.</option>
+                                                                                                                   <option value="Mas."> Mas.</option>
+                                                                                                                   <option value="Prof."> Prof.</option>
+                                                                                                                   <option value="Smt."> Smt.</option>
+                                                                                                                   <option value="Miss."> Miss.</option>
+                                                                                                               {% elif title == 'Mas.' %}
+                                                                                                                <option value=""> Select Title</option>
+                                                                                                                        <option  value="Mr."> Mr.</option>                                       
+                                                                                                                 <option  value="Mrs."> Mrs.</option>                                                                                                                         
+                                                                                                                   <option  value="Ms."> Ms.</option>
+                                                                                                                   <option  value="Dr."> Dr.</option>
+                                                                                                                   <option selected value="Mas."> Mas.</option>
+                                                                                                                   <option value="Prof."> Prof.</option>
+                                                                                                                   <option value="Smt."> Smt.</option>
+                                                                                                                   <option value="Miss."> Miss.</option>
+                                                                                                                {% elif title == 'Prof.' %}
+                                                                                                                <option value=""> Select Title</option>
+                                                                                                                        <option  value="Mr."> Mr.</option>                                       
+                                                                                                                 <option  value="Mrs."> Mrs.</option>                                                                                                                         
+                                                                                                                   <option  value="Ms."> Ms.</option>
+                                                                                                                   <option  value="Dr."> Dr.</option>
+                                                                                                                   <option  value="Mas."> Mas.</option>
+                                                                                                                   <option selected value="Prof."> Prof.</option>
+                                                                                                                   <option value="Smt."> Smt.</option>
+                                                                                                                   <option value="Miss."> Miss.</option>
+                                                                                                                     {% elif title == 'Smt.' %}
+                                                                                                                <option value=""> Select Title</option>
+                                                                                                                        <option  value="Mr."> Mr.</option>                                       
+                                                                                                                 <option  value="Mrs."> Mrs.</option>                                                                                                                         
+                                                                                                                   <option  value="Ms."> Ms.</option>
+                                                                                                                   <option  value="Dr."> Dr.</option>
+                                                                                                                   <option  value="Mas."> Mas.</option>
+                                                                                                                   <option value="Prof."> Prof.</option>
+                                                                                                                   <option selected value="Smt."> Smt.</option>
+                                                                                                                   <option value="Miss."> Miss.</option>        
+                                                                                                                {% elif title == 'Miss.' %}
+                                                                                                                <option value=""> Select Title</option>
+                                                                                                                        <option  value="Mr."> Mr.</option>                                       
+                                                                                                                 <option  value="Mrs."> Mrs.</option>                                                                                                                         
+                                                                                                                   <option  value="Ms."> Ms.</option>
+                                                                                                                   <option  value="Dr."> Dr.</option>
+                                                                                                                   <option  value="Mas."> Mas.</option>
+                                                                                                                   <option value="Prof."> Prof.</option>
+                                                                                                                   <option  value="Smt."> Smt.</option>
+                                                                                                                   <option selected value="Miss."> Miss.</option>                                      
+                                                                                                               {% else %}
+                                                                                                                <option value=""> Select Title</option>
+                                                                                                                <option  value="Mr."> Mr.</option>                                       
+                                                                                                                 <option  value="Mrs."> Mrs.</option>                                                                                                                         
+                                                                                                                   <option  value="Ms."> Ms.</option>
+                                                                                                                   <option  value="Dr."> Dr.</option>
+                                                                                                                   <option  value="Mas."> Mas.</option>
+                                                                                                                   <option value="Prof."> Prof.</option>
+                                                                                                                   <option  value="Smt."> Smt.</option>
+                                                                                                                   <option value="Miss."> Miss.</option>    
+                                                                                                               {% endif %}
+                                                                                                           </select>   
+                                                                                                       <label class="error" style="color:red; display:none;"></label>
+                                                                                                   </div>
+
+                                                                                <div class="col-lg-9 col-md-9">
                                                                                     <div class="form-group">
                                                                                         <label class="control-label " style="font-size:15px; font-weight:500;">Name
                                                                                             <span class="required"> * </span>
@@ -2206,9 +2319,11 @@ hr {
 
                                                                             <br>
 
-                                                                                                                                          {% if cat_amenities %}
 
-                                                         <div class="row div-border div-color cat_amenity" style="padding-bottom: 9px !important;">
+
+																	<div class="row div-border div-color cat_amenity" style="padding-bottom: 9px !important;">
+                                                                   {% if cat_amenities %}
+                                                         
                                                             <div class="col-lg-12 col-md-12">
                                                                 <div class="form-group"
                                                                      style="margin-top: 10px;margin-bottom: 0px;">
@@ -2247,7 +2362,11 @@ hr {
                                                                         style="color:red; display:none;"></label>
                                                              </div>
 
-                                                              <div class="col-lg-12 col-md-12">
+                                                         
+
+                                                                        {% endif %}
+                                                                        
+                                                                             <div class="col-lg-12 col-md-12">
                                                                  <div class="form-group"
                                                                       style="margin-top: 10px;margin-bottom: 0px;">
                                                                      <label style="font-size:15px; font-weight:700;"> Other Amenities
@@ -2269,13 +2388,8 @@ hr {
                                                                     </label>
                                                                </div>
                                                            </div>
-
-                                                         </div>
+                                                                    </div>
                                                          <br>
-                                                                        {% else %}
-                                                                        <div class="row">
-                                                                        </div>
-                                                                        {% endif %}
 
                                                                             <div class="row div-border div-color">
                                                                                 <div class="col-lg-10 col-md-10">
@@ -2390,7 +2504,7 @@ hr {
                                                                                             <label class="control-label " style="font-size:15px; font-weight:500;">Start
                                                                                                 Time
                                                                                             </label>
-                                                                                            <input id="start1" value="{{time.start_time}}" class="starttime time_start strt_wrk" placeholder="Select Start Time"
+                                                                                            <input id="start{{forloop.counter}}" value="{{time.start_time}}" class="starttime time_start strt_wrk" placeholder="Select Start Time"
                                                                                                    style="width: 100%;"/>
                                                                                             <label class="error font-12 font-regular" style="color:red; display:none;"></label>
                                                                                         </div>
@@ -2399,7 +2513,8 @@ hr {
                                                                                             <label class="control-label " style="font-size:15px; font-weight:500;">End
                                                                                                 Time
                                                                                             </label>
-                                                                                            <input id="end1" value="{{time.end_time}}" class="endtime time_end end_wrk" placeholder="Select End Time"
+                                                                                            <a class='fa fa-times-circle remove_btn' onclick='remove_first_working({{forloop.counter}})' style='margin-left:10px;'></a>
+                                                                                            <input id="end{{forloop.counter}}" value="{{time.end_time}}" class="endtime time_end end_wrk" placeholder="Select End Time"
                                                                                                    style="width: 100%;"/>
                                                                                             <label class="error font-12 font-regular" style="color:red; display:none;"></label>
                                                                                         </div>
@@ -2410,14 +2525,17 @@ hr {
                                                                                 {% if time_list%}
                                                                                     {% for time in time_list %}
                                                                                         {% if forloop.counter > 1%}
-                                                                                        <div class='row'>
+                                                                                        <div id="hours_div_{{forloop.counter}}" class='row'>
                                                                                             <div class="col-lg-4 col-md-4">
                                                                                                 <div class="form-group">
                                                                                                     <label class="control-label " style="font-size:15px; font-weight:500;">Day
                                                                                                         <!-- <span class="required"> * </span> -->
                                                                                                     </label>
 
-                                                                                                        <select class="form-control opening_day week_days sel2" id="day{{forloop.counter}}" name="day" name="options2">
+                                                                                                        <select class="form-control opening_day week_days sel2"
+                                                                                                                id="day{{forloop.counter}}"
+                                                                                                                onchange='day_change()'
+                                                                                                                name="day" name="options2">
 
                                                                                                         <option value="">Select Day</option>
 
@@ -2465,7 +2583,7 @@ hr {
                                                                                                 <label class="control-label " style="font-size:15px; font-weight:500;">Start
                                                                                                     Time
                                                                                                 </label>
-                                                                                                <input id="start1" value="{{time.start_time}}" class="starttime time_start strt_wrk" placeholder="Select Start Time"
+                                                                                                <input id="start{{forloop.counter}} " value="{{time.start_time}}" class="starttime time_start strt_wrk" placeholder="Select Start Time"
                                                                                                        style="width: 100%;"/>
                                                                                                 <label class="error font-12 font-regular" style="color:red; display:none;"></label>
                                                                                             </div>
@@ -2474,7 +2592,8 @@ hr {
                                                                                                 <label class="control-label " style="font-size:15px; font-weight:500;">End
                                                                                                     Time
                                                                                                 </label>
-                                                                                                <input id="end1" value="{{time.end_time}}" class="endtime time_end end_wrk" placeholder="Select End Time"
+                                                                                                <a class='fa fa-times-circle remove_btn' onclick='remove_working({{forloop.counter}})' style='margin-left:10px;'></a>
+                                                                                                <input id="end{{forloop.counter}} " value="{{time.end_time}}" class="endtime time_end end_wrk" placeholder="Select End Time"
                                                                                                        style="width: 100%;"/>
                                                                                                 <label class="error font-12 font-regular" style="color:red; display:none;"></label>
                                                                                             </div>
@@ -3316,11 +3435,40 @@ hr {
     </div>
 </div>
 
+<div style="overflow-y:hidden;" id="nothing_to_save" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;"
+                     src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+
+            </div>
+            <div class="modal-body">
+                <div class="form-body">
+                    <h4 class="text-center">Nothing to save !</h4>
+                </div>
+                <div style="text-align:center !important;" class="modal-footer">
+                  
+                    <a href="/advert-management/?subscriber_id={{supplier_id}}"
+                       class="btn btn-primary" id="btn-loading-demo">OK</a>
+                 
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 <!--[if lt IE 9]>
 <script src="{% static 'assets/global/plugins/respond.min.js' %}"></script>
 <script src="{% static 'assets/global/plugins/excanvas.min.js' %}"></script>
 <![endif]-->
 <!-- BEGIN CORE PLUGINS -->
+<script src="//maps.googleapis.com/maps/api/js?key=AIzaSyCACTYbNRFKlics-01oZX6uglDWh8hM_FQ" async="" defer="defer" type="text/javascript"></script>
 <script src="{% static 'assets/global/plugins/jquery.min.js' %}" type="text/javascript"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <script src="{% static 'assets/global/plugins/bootstrap/js/bootstrap.min.js' %}" type="text/javascript"></script>
@@ -3365,7 +3513,8 @@ hr {
 <script src="{% static 'assets/layouts/layout2/scripts/layout.min.js' %}" type="text/javascript"></script>
 <script src="{% static 'assets/layouts/layout2/scripts/demo.min.js' %}" type="text/javascript"></script>
 <script src="{% static 'assets/layouts/global/scripts/quick-sidebar.min.js' %}" type="text/javascript"></script>
-<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
+
 <script src="{% static 'assets/custom/js/jquery.ui.addresspicker.js' %}"></script>
 <script src="{% static 'assets/pages/scripts/form-wizard.min.js' %}" type="text/javascript"></script>
 <script src="{% static 'assets/global/plugins/bootstrap-wizard/jquery.bootstrap.wizard.min.js' %}"
@@ -3865,6 +4014,7 @@ hr {
     });
 
     function sub_check_cat(lvl,this_val){
+
         //$("#continue-service-detail").css("display","none");
         main_category_id    =  $("#sub_category").val();
         supplier_id = $("#supplier_id_hidden").val();
@@ -4035,6 +4185,7 @@ hr {
     }
 
     $("#duration_list").change(function(){
+        $("#change_flag").val(1);
         duration = $("#duration_list").val();
         $('#dt50').val('');
         $('#dt2').val('');
@@ -4138,6 +4289,7 @@ hr {
 
     function check_advert(id,counter)
     {
+        $("#change_flag").val(1);
         var check_id = id;
         duration = $("#duration_list").val();
         if(document.getElementById('check_'+id+'_'+counter).checked) {
@@ -4264,6 +4416,7 @@ hr {
     }
 
     function check_tel(id){
+        $("#change_flag").val(1);
         var check_id = id;
         duration = $("#duration_list").val();
         $(".tel_start_date").each(function() {
@@ -4670,6 +4823,8 @@ hr {
     $("#save-service-detail").click(function(e){
         //e.preventDefault();
 
+    if($("#change_flag").val() == "1"){
+
         if (sub_flag == "false"){
             return false;
         }
@@ -4722,11 +4877,18 @@ hr {
                     alert("_Error");
             }
         });
+    }else{
+
+        $("#nothing_to_save").modal('show');
+    }
     });
 
     var business_id = ''
 
     $("#continue-service-detail ").click(function(e){
+
+    if($("#change_flag").val() == "1"){
+
         if (sub_flag == "false"){
             return false;
         }
@@ -4800,6 +4962,21 @@ hr {
                     alert("_Error");
             }
         });
+    }else{
+
+                    $("#tab_1").removeClass("active");
+                    $("#number_1").text("");
+                    $("#number_1").addClass("fa fa-check");
+                    $("#number_1").addClass("done");
+                    $("#desc_1").addClass("desc_done");
+                    $("#number_1").css("padding-top","15px");
+                    $("#number_1").css("padding-left","13px");
+                    $("#number_1").css("font-size","18px");
+                    $("#tab_2").addClass("active");
+                    $("#tab1").removeClass("active");
+                    $("#tab2").addClass("active");
+                    $(".progress-bar-success").css("width","66.667%");
+    }
     });
 
     function validate_subscription(id,lebel,msg){
@@ -4863,8 +5040,15 @@ hr {
 
 
     $('#save_payment_detail').click(function(event){
+
         event.preventDefault();
-        if(check_data()){
+        var payment_data = check_data();
+         if(payment_data == false ){
+                    return false
+         }
+        
+        if($("#change_payment_flag").val() == "1"){ 
+
             $.ajax({
                 type    : "POST",
                 url : '/update-payment-details/',
@@ -4891,14 +5075,26 @@ hr {
                 }
             });
 
+        }else{
+
+                $("#nothing_to_save").modal('show');
+
         }
     });
 
 
 
     $('#save_payment_continue').click(function(event){
+
         event.preventDefault();
-        if(check_data()){
+        
+       var payment_data = check_data();
+         if(payment_data == false ){
+                    return false
+         }
+        if($("#change_payment_flag").val() == "1"){ 
+
+
             $.ajax({
                 type    : "POST",
                 url : '/update-payment-details/',
@@ -4975,6 +5171,57 @@ hr {
                 }
             });
 
+        }else{
+
+                        cat_id = $("#sub_category").val();
+                        $("#categ").val(cat_id).change();
+                        $("#categ").prop("disabled","true");
+                        lvl1_id = $("#lvl_1").val();
+                        lvl2_id = $("#lvl_2").val();
+                        lvl3_id = $("#lvl_3").val();
+                        lvl4_id = $("#lvl_4").val();
+                        lvl5_id = $("#lvl_5").val();
+                        if(lvl1_id != ""){
+                            setTimeout(function(){
+                                $("#lvl1").val(lvl1_id).change();
+                                $("#lvl1").prop("disabled","true");
+                            }, 1000);
+                        }
+                        if(lvl2_id != ""){
+                            setTimeout(function(){
+                                $("#lvl2").val(lvl2_id).change();
+                                $("#lvl2").prop("disabled","true");
+                            }, 2000);
+                        }
+                        if(lvl3_id != ""){
+                            setTimeout(function(){
+                                $("#lvl3").val(lvl3_id).change();
+                                $("#lvl3").prop("disabled","true");
+                            }, 3000);
+                        }
+                        if(lvl4_id != ""){
+                            setTimeout(function(){
+                                $("#lvl4").val(lvl4_id).change();
+                                $("#lvl4").prop("disabled","true");
+                            }, 4000);
+                        }
+                        if(lvl5_id != ""){
+                            setTimeout(function(){
+                                $("#lvl5").val(lvl5_id).change();
+                                $("#lvl5").prop("disabled","true");
+                            }, 5000);
+                        }
+                               $("#tab_2").removeClass("active");
+                        $("#number_2").text("");
+                        $("#number_2").addClass("fa fa-check");
+                        $("#number_2").addClass("done");
+                        $("#desc_2").addClass("desc_done");
+                        $("#number_2").css("padding-top","15px");
+                        $("#number_2").css("padding-left","13px");
+                        $("#number_2").css("font-size","18px");
+                        $("#tab_3").addClass("active");
+                        $("#tab2").removeClass("active");
+                        $("#tab3").addClass("active");
         }
     });
 
@@ -5148,7 +5395,7 @@ hr {
                           var appendProductPrice = "<div class='row' id='prod"+ p_index +"'><div class='col-lg-5 col-md-5'><div class='form-group'><label class='control-label' style = 'font-size:15px; '>Product Name </label>"+
             "<input type='text'  name=''  class='form-control product_name_cls' /><label class='error font-12 font-regular' style='color:red; display:none;'></label>"+
             "</div></div><div class='col-lg-5 col-md-5'><div class='form-group'><label class='control-label '  style = 'font-size:15px; '>Product Price</label>"+
-            "<input type='text' onkeypress='return validateFloatKeyPresss(this,event);' name=''  class='form-control product_price_cls' /><label class='error font-12 font-regular' style='color:red; display:none;'></label></div></div>"+
+            "<input type='text'  name=''  class='form-control product_price_cls' /><label class='error font-12 font-regular' style='color:red; display:none;'></label></div></div>"+
             "<div class='col-lg-2 col-md-2'><div class='form-group'><a class='fa fa-times-circle  fa-lg' onclick='remove_product("+p_index+");' style='margin-top:35px;'></a>"+
               "</div></div></div>";
 
@@ -5346,218 +5593,6 @@ hr {
             $('#address_line1, #address_line2, #area, #city, #statec, #pincode').change(validates);
             day_change();
         });
-
-        var geocoder = new google.maps.Geocoder();
-        var map;
-        var marker;
-        var infoWindow;
-        function geocodePosition(pos) {
-          geocoder.geocode({
-            latLng: pos
-          }, function(responses) {
-            if (responses && responses.length > 0) {
-              updateMarkerAddress(responses[0].formatted_address);
-            } else {
-              updateMarkerAddress('Cannot determine address at this location.');
-            }
-          });
-        }
-
-        function geocodePosition1(pos) {
-          geocoder.geocode({
-            latLng: pos
-          }, function(responses) {
-            if (responses && responses.length > 0) {
-            //$('#add_msg').text(responses[0].formatted_address);
-            //$("#update_add").modal('show');
-              updateMarkerAddress(responses[0].formatted_address);
-            } else {
-              updateMarkerAddress('Cannot determine address at this location.');
-            }
-          });
-        }
-
-        function updateMarkerStatus(str) {
-          //document.getElementById('markerStatus').innerHTML = str;
-        }
-
-        function updateMarkerPosition(latLng) {
-
-          $("#lat").val(latLng.lat());
-          $("#lng").val(latLng.lng());
-        }
-
-        function updateMarkerAddress(str) {
-          //document.getElementById('address').innerHTML = str;
-          infoWindow.setContent(str);
-        }
-
-        function initialize() {
-          var latLng = new google.maps.LatLng(-34.397, 150.644);
-         map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 8,
-            //center: latLng,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-          });
-             infoWindow = new google.maps.InfoWindow({map: map});
-             var latlngbounds = new google.maps.LatLngBounds();
-          marker = new google.maps.Marker({
-            position: latLng,
-            title: 'Point A',
-            map: map,
-            draggable: true
-          });
-          google.maps.event.addListener(map, 'click', function (e) {
-              $("#lat").val(e.latLng.lat());
-              $("#lng").val(e.latLng.lng());
-
-              placeMarker(e.latLng, map);
-              infoWindow.open(map, this);
-              map.setZoom(8);
-
-                  });
-          // Try HTML5 geolocation.
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-
-              var pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-
-              };
-
-              infoWindow.setPosition(pos);
-              infoWindow.setContent('You are here.');
-              map.setCenter(pos);
-              placeMarker2(position,map);
-
-            }, function() {
-              handleLocationError(true, infoWindow, map.getCenter());
-            });
-          } else {
-            // Browser doesn't support Geolocation
-            handleLocationError(false, infoWindow, map.getCenter());
-          }
-          // Update current position info.
-          //updateMarkerPosition(latLng);
-          //geocodePosition(latLng);
-
-
-          google.maps.event.addListener(marker, 'click', function() {
-              geocodePosition(marker.getPosition());
-                infoWindow.open(map, this);
-                map.setZoom(8);
-            });
-          // Add dragging event listeners.
-          google.maps.event.addListener(marker, 'dragstart', function() {
-            //updateMarkerAddress('Dragging...');
-          });
-
-          google.maps.event.addListener(marker, 'drag', function() {
-            //updateMarkerStatus('Dragging...');
-            updateMarkerPosition(marker.getPosition());
-          });
-
-          google.maps.event.addListener(marker, 'dragend', function() {
-            //updateMarkerStatus('Drag ended');
-            geocodePosition(marker.getPosition());
-            infoWindow.open(map, this);
-            map.setZoom(8);
-          });
-        }
-        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-              infoWindow.setPosition(pos);
-              infoWindow.setContent(browserHasGeolocation ?
-                                    'Error: The Geolocation service failed.' :
-                                    'Error: Your browser doesn\'t support geolocation.');
-            }
-        function placeMarker(position, map) {
-            if ( marker ) {
-                marker.setPosition(position);
-                geocodePosition(marker.getPosition());
-              } else {
-                marker = new google.maps.Marker({
-                  position: position,
-                  map: map,
-                 title: 'Drag Me!',
-                 draggable: true
-                });
-              }
-            map.panTo(position);
-          }
-          function placeMarker2(position, map) {
-            if ( marker ) {
-                marker.setPosition(position);
-
-              } else {
-                marker = new google.maps.Marker({
-                  position: position,
-                  map: map,
-                 title: 'Drag Me!',
-                 draggable: true
-                });
-              }
-            map.panTo(position);
-          }
-
-        function codeAddress() {
-
-            var geocoder = new google.maps.Geocoder();
-            var lat='';
-            var lng='';
-            var city_state_zip =$('#city :selected').text()+", "+$("#statec :selected").text()+", "+$("#pincode :selected").text();
-            var street_address = $("#address_line1").val()+" ," + $('#address_line2').val()  +", "+$("#area").val();
-            var address = street_address + " " + city_state_zip;
-            geocoder.geocode( { 'address': address}, function(results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-               lat = results[0].geometry.location.lat(); //getting the lat
-               $('#lat').val(lat);
-               lng = results[0].geometry.location.lng(); //getting the lng
-               $('#lng').val(lng);
-               map.setCenter(results[0].geometry.location);
-                    $("#lat").val(lat);
-              $("#lng").val(lng);
-               placeMarker(results[0].geometry.location,map);
-             } else {
-                    //alert("Geocode was not successful for the following reason: " + status);
-                    }
-             });
-             var latlng = new google.maps.LatLng(lat, lng);
-             var myOptions = {
-                 zoom: 4,
-                 center: latlng,
-                 mapTypeId: google.maps.MapTypeId.ROADMAP
-             }
-
-         }
-
-        function validates(){
-            if ($('#address_line1').val().length   > 0 || $('#address_line2').val().length   > 0  && $('#area').val().length   >   0   &&
-                $('#city :selected').text().length  >   0   &&
-                $('#statec :selected').text().length    >   0 && $('#pincode :selected').text().length    >   0) {
-                codeAddress();
-            }
-
-        }
-        function GetAddress() {
-            var lat = parseFloat();
-            var lng = parseFloat(document.getElementById("txtLongitude").value);
-            var latlng = new google.maps.LatLng(lat, lng);
-
-            geocoder.geocode({ 'latLng': latlng }, function (results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                    if (results[1]) {
-
-                        infoWindow.setContent(str);
-                    }
-                }
-            });
-        }
-        // Onload handler to fire off the app.
-        google.maps.event.addDomListener(window, 'load', initialize);
-
-
-        /*------------------------------GMAP_END------------------------------------*/
 
         var uploaded_image_list = '';
         var uploaded_file_mb = 0;
@@ -5907,6 +5942,220 @@ hr {
             }
         }
 
+        var geocoder = new google.maps.Geocoder();
+        var map;
+        var marker;
+        var infoWindow;
+        function geocodePosition(pos) {
+          geocoder.geocode({
+            latLng: pos
+          }, function(responses) {
+            if (responses && responses.length > 0) {
+              updateMarkerAddress(responses[0].formatted_address);
+            } else {
+              updateMarkerAddress('Cannot determine address at this location.');
+            }
+          });
+        }
+
+        function geocodePosition1(pos) {
+          geocoder.geocode({
+            latLng: pos
+          }, function(responses) {
+            if (responses && responses.length > 0) {
+            //$('#add_msg').text(responses[0].formatted_address);
+            //$("#update_add").modal('show');
+              updateMarkerAddress(responses[0].formatted_address);
+            } else {
+              updateMarkerAddress('Cannot determine address at this location.');
+            }
+          });
+        }
+
+        function updateMarkerStatus(str) {
+          //document.getElementById('markerStatus').innerHTML = str;
+        }
+
+        function updateMarkerPosition(latLng) {
+
+          $("#lat").val(latLng.lat());
+          $("#lng").val(latLng.lng());
+        }
+
+        function updateMarkerAddress(str) {
+          //document.getElementById('address').innerHTML = str;
+          infoWindow.setContent(str);
+        }
+
+        function initialize() {
+          var latLng = new google.maps.LatLng(-34.397, 150.644);
+         map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 8,
+            //center: latLng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          });
+             infoWindow = new google.maps.InfoWindow({map: map});
+             var latlngbounds = new google.maps.LatLngBounds();
+          marker = new google.maps.Marker({
+            position: latLng,
+            title: 'Point A',
+            map: map,
+            draggable: true
+          });
+          google.maps.event.addListener(map, 'click', function (e) {
+              $("#lat").val(e.latLng.lat());
+              $("#lng").val(e.latLng.lng());
+
+              placeMarker(e.latLng, map);
+              infoWindow.open(map, this);
+              map.setZoom(8);
+
+                  });
+          // Try HTML5 geolocation.
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+
+              var pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+
+              };
+
+              infoWindow.setPosition(pos);
+              infoWindow.setContent('You are here.');
+              map.setCenter(pos);
+              placeMarker2(position,map);
+
+            }, function() {
+              handleLocationError(true, infoWindow, map.getCenter());
+            });
+          } else {
+            // Browser doesn't support Geolocation
+            handleLocationError(false, infoWindow, map.getCenter());
+          }
+          // Update current position info.
+          //updateMarkerPosition(latLng);
+          //geocodePosition(latLng);
+
+
+          google.maps.event.addListener(marker, 'click', function() {
+              geocodePosition(marker.getPosition());
+                infoWindow.open(map, this);
+                map.setZoom(8);
+            });
+          // Add dragging event listeners.
+          google.maps.event.addListener(marker, 'dragstart', function() {
+            //updateMarkerAddress('Dragging...');
+          });
+
+          google.maps.event.addListener(marker, 'drag', function() {
+            //updateMarkerStatus('Dragging...');
+            updateMarkerPosition(marker.getPosition());
+          });
+
+          google.maps.event.addListener(marker, 'dragend', function() {
+            //updateMarkerStatus('Drag ended');
+            geocodePosition(marker.getPosition());
+            infoWindow.open(map, this);
+            map.setZoom(8);
+          });
+        }
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+              infoWindow.setPosition(pos);
+              infoWindow.setContent(browserHasGeolocation ?
+                                    'Error: The Geolocation service failed.' :
+                                    'Error: Your browser doesn\'t support geolocation.');
+            }
+        function placeMarker(position, map) {
+            if ( marker ) {
+                marker.setPosition(position);
+                geocodePosition(marker.getPosition());
+              } else {
+                marker = new google.maps.Marker({
+                  position: position,
+                  map: map,
+                 title: 'Drag Me!',
+                 draggable: true
+                });
+              }
+            map.panTo(position);
+          }
+          function placeMarker2(position, map) {
+            if ( marker ) {
+                marker.setPosition(position);
+
+              } else {
+                marker = new google.maps.Marker({
+                  position: position,
+                  map: map,
+                 title: 'Drag Me!',
+                 draggable: true
+                });
+              }
+            map.panTo(position);
+          }
+
+        function codeAddress() {
+
+            var geocoder = new google.maps.Geocoder();
+            var lat='';
+            var lng='';
+            var city_state_zip =$('#city :selected').text()+", "+$("#statec :selected").text()+", "+$("#pincode :selected").text();
+            var street_address = $("#address_line1").val()+" ," + $('#address_line2').val()  +", "+$("#area").val();
+            var address = street_address + " " + city_state_zip;
+            geocoder.geocode( { 'address': address}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+               lat = results[0].geometry.location.lat(); //getting the lat
+               $('#lat').val(lat);
+               lng = results[0].geometry.location.lng(); //getting the lng
+               $('#lng').val(lng);
+               map.setCenter(results[0].geometry.location);
+                    $("#lat").val(lat);
+              $("#lng").val(lng);
+               placeMarker(results[0].geometry.location,map);
+             } else {
+                    //alert("Geocode was not successful for the following reason: " + status);
+                    }
+             });
+             var latlng = new google.maps.LatLng(lat, lng);
+             var myOptions = {
+                 zoom: 4,
+                 center: latlng,
+                 mapTypeId: google.maps.MapTypeId.ROADMAP
+             }
+
+         }
+
+        function validates(){
+            if ($('#address_line1').val().length   > 0 || $('#address_line2').val().length   > 0  && $('#area').val().length   >   0   &&
+                $('#city :selected').text().length  >   0   &&
+                $('#statec :selected').text().length    >   0 && $('#pincode :selected').text().length    >   0) {
+                codeAddress();
+            }
+
+        }
+        function GetAddress() {
+            var lat = parseFloat();
+            var lng = parseFloat(document.getElementById("txtLongitude").value);
+            var latlng = new google.maps.LatLng(lat, lng);
+
+            geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    if (results[1]) {
+
+                        infoWindow.setContent(str);
+                    }
+                }
+            });
+        }
+        // Onload handler to fire off the app.
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+
+        /*------------------------------GMAP_END------------------------------------*/
+
+        
+
         var start = $(".time_start").kendoTimePicker({
             change: startChange
         }).data("kendoTimePicker");
@@ -5963,9 +6212,16 @@ hr {
     var list = [];
 
     var i = 1;
+    var j = 8;
     function add_working() {
-        i = i + 1;
 
+        var arr = document.getElementsByClassName("opening_day")
+        if(arr.length >= 7){
+            return false;
+        }
+
+        i = i + 1;
+        j = j + 1;
         if($("#day").val() == "All"){
             $("#wrk_hrs_label").css("display","block");
             $("#wrk_hrs_label").text("Cannot add specific day as All is selected");
@@ -5976,13 +6232,14 @@ hr {
         }
 
         $("#working_hours").append(
-            "<div class='row'><div class='col-lg-4'><div class='form-group'><label class='control-label '>Day</label>"+
+            "<div id='hours_div_"+j+"' class='row'><div class='col-lg-4'><div class='form-group'><label class='control-label '>Day</label>"+
             "<select class='form-control opening_day sel2' id='day_"+i+"' onchange='day_change()' name='options2'><option value=''>Select Day</option><option value='Monday'>Monday</option>"+
             "<option value='Tuesday'>Tuesday</option><option value='Wednesday'>Wednesday</option><option value='Thursday'>Thursday</option>"+
             "<option value='Friday'>Friday</option><option value='Saturday'>Saturday</option> <option value='Sunday'>Sunday</option></select><label class='error' style='color:red; display:none;'></label>"+
             "</div></div><div class='form-group col-lg-4'><label class='control-label '>Start Time </label>"+
             "<input class='starttime time_start strt_wrk' id='start"+i+"' value='8.00 AM' style='width: 100%;' placeholder='Select Start Time' /><label class='error' style='color:red; display:none;'></label></div><div class='form-group col-lg-4'>"+
-            "<label class='control-label '>End Time</label><input class='endtime time_end end_wrk' id='end"+i+"' value='8.30 AM' style='width: 100%;' placeholder='Select End Time'/></div>"+
+            "<label class='control-label '>End Time</label><a class='fa fa-times-circle remove_btn' onclick='remove_working("+j+")' style='margin-left:10px;'></a>"+
+            "<input class='endtime time_end end_wrk' id='end"+i+"' value='8.30 AM' style='width: 100%;' placeholder='Select End Time'/></div>"+
             "</div>"
         );
         day_change();
@@ -6021,26 +6278,23 @@ hr {
             $("#working_hours").html('');
             $("#wrk_hrs_label").css("display","none");
             $(".opening_day option").each(function() {
-                $(this).prop("disabled", false);
+                $(this).attr("disabled", false);
             });
+            $("option[value='All']").siblings().removeAttr("disabled");
             return false;
         }
         day_change();
     });
 
-
-
     function day_change(){
         list = []
-
         $(".opening_day option").each(function() {
             $(this).attr("disabled", false);
         });
         $(".opening_day").each(function() {
-            if($(this).val() !="All"){
+            if($(this).val() != "" && $(this).val() !="All"){
                 list.push($(this).val());
             }
-
         });
         $.each(list, function (index, item) {
             $(".opening_day").each(function() {
@@ -6048,6 +6302,19 @@ hr {
             });
         });
 
+    }
+
+    function remove_working(id){
+        $('#hours_div_'+id).remove();
+        day_change();
+    }
+
+    function remove_first_working(id){
+        $('#day').val("").change();
+        $('#start1').val("");
+        $('#end1').val("");
+        list = []
+        day_change();
     }
 
 
@@ -6181,6 +6448,7 @@ hr {
     }
 
     function check_cat(lvl,this_val){
+        $("#change_flag").val(1);
         if($(this_val).attr('data-level')=="0"){
         clear_subcat();
         }
@@ -6212,6 +6480,7 @@ hr {
     var final_q;
     function changeprice_edit()
     {
+        $("#change_payment_flag").val(1);
         var price=$("#generated_amount").val();
         var tax=$("#tax_type").val();
         var amount=(tax/100)*price;
@@ -6339,12 +6608,27 @@ hr {
 
             var product_name_list = []
             product_name_list = $('.product_name_cls').map(function() {
-                return $(this).val();
+            
+                if ($(this).val()=='') {
+                    return $(this).val();
+                }
+                else {
+                    return $(this).val()+'_PRODUCT_NAME_IS_SEPARATED';
+                }            
+
             }).get();
 
             var product_price_list = []
             product_price_list = $('.product_price_cls').map(function() {
-                return $(this).val();
+                
+                if ($(this).val()=='') {
+                
+                    return $(this).val()+'TEST$PRICE$BLANK_PRODUCT_PRICE_IS_SEPARATED';
+                }
+                else {
+                    return $(this).val()+'_PRODUCT_PRICE_IS_SEPARATED';
+                }
+                
             }).get();
 
             var phone_category_list = []
@@ -6432,6 +6716,25 @@ hr {
                 return $(this).val();
             }).get();
 
+            subcat_list = []
+            if($("#lvl1").val() != "" && $("#lvl1").val() != undefined){
+                subcat_list.push($("#lvl1").val())
+            }
+            if($("#lvl2").val() != "" && $("#lvl2").val() != undefined){
+                subcat_list.push($("#lvl2").val())
+            }
+            if($("#lvl3").val() != "" && $("#lvl3").val() != undefined){
+                subcat_list.push($("#lvl3").val())
+            }
+            if($("#lvl4").val() != "" && $("#lvl4").val() != undefined){
+                subcat_list.push($("#lvl4").val())
+            }
+            if($("#lvl5").val() != "" && $("#lvl5").val() != undefined){
+                subcat_list.push($("#lvl5").val())
+            }
+            
+            
+            formData.append("title",$('#title').val());
             formData.append("any_other_amenity",$('#any_other_amenity').val());
             advert_keywords = $("#advert_keywords").val();
             formData.append("supplier_id",{{supplier_id}});
@@ -6791,13 +7094,9 @@ hr {
             $(contact_name).parent().children('.error').text("Please enter Name");
             return false;
         }
-        else if(namePattern.test(first_name)){
-            $(contact_name).parent().children('.error').css("display", "none");
+        else{
+           $(contact_name).parent().children('.error').css("display", "none");
             return true;
-        }else{
-            $(contact_name).parent().children('.error').css("display", "block");
-            $(contact_name).parent().children('.error').text("Please enter valid Name");
-            return false;
         }
     }
 
@@ -7391,6 +7690,11 @@ function del_product(id) {
 
     //-----------------------------------end-------------------------//
 
+
+        function check_changes(){
+        $("#change_payment_flag").val(1);
+    }
+
 </script>
 
 
@@ -7399,4 +7703,3 @@ function del_product(id) {
 </body>
 
 </html>
-

@@ -6,7 +6,7 @@
 {% load staticfiles %}
 <head>
         <meta charset="utf-8" />
-        <title>City Hoopla | City Star </title>
+        <title>City Hoopla | City Star List</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <meta content="" name="description" />
@@ -675,12 +675,11 @@ hr {
 <!--<div class="page-container" style="background-color: #666;">-->
 <div class="page-container">
     <!-- BEGIN SIDEBAR -->
-       <div class="page-sidebar-wrapper">
-       <div class="page-sidebar navbar-collapse collapse">
-           {% include 'Admin/side-panel.html' %}
-       </div>
-   </div>
-	
+<div class="page-sidebar-wrapper">
+        <div class="page-sidebar navbar-collapse collapse">
+            {% include 'Admin/side-panel.html' %}
+        </div>
+    </div>
     <div class="page-content-wrapper">
         <div class="page-content">
             <div class="row">
@@ -710,66 +709,134 @@ hr {
                              <div class="form-body">
                                                         
 			<div class="row" >
-			<div class="col-md-1" style="margin-top: 29px;width: 13.333%;"><b> {{city_name}} ({{star_count}})</b></div>
+			<div class="col-md-1" style="margin-top: 35px;width: 13.333%;"><b> {{city_name}} ({{star_count}})</b></div>
 			<div class="col-md-4">
 				
 		      <label class="control-label " style="font-size:15px; ">Search By</label>
-		      <input style="padding: 5px 12px;height: 27px; "
+		      <input style="padding: 5px 12px; "
 				                 type="text" class="form-control " id="txtSearch"
 				                 placeholder="Type Name" name="s"/>
 			</div>
-			<div class="col-md-3"><label class="control-label " style="font-size:15px; ">Filter By Status</label>
+			<div class="col-md-3">{% if status_value %}<label class="control-label " style="font-size:15px; ">Filter By : <b>{{status_value}}</b></label>{% else %}<label class="control-label " style="font-size:15px; ">Filter By Status</label>{% endif %}
 				<select name="status" id="status11" class="sel2" >
 					<option value=""> Select Status</option>
   			   	<option value="all"> All</option>
-  			      <option value="1"> Active</option>
-  			      <option value="0"> Inactive</option>  			                   
+  			      <option value="current"> Current</option>
+  			      <option value="default"> Default</option>  			     
+  			      <option value="active"> Active</option>  			     
+  			      <option value="deactivated"> Deactivated</option>  			     
+  			      <option value="expired"> Expired</option>  			     
             </select>   
          </div>			
 			</div>               
                                                         
 				
 				
-				<hr style="border-color: #DDD"> 																																												                                                        
+				<hr style="margin-bottom: 5px;border-color: #DDD"> 		
+					<div class="row">
+					<div class="col-md-12">
+						
+						<div class="col-md-2" style="color:green;font-size: 20px;">
+							<i class="fa fa-circle" aria-hidden="true"></i> <label style="color:black;font-size: 16px;">  Current</label>
+						</div>
+						
+						<div class="col-md-2" style="color:#009DFF;font-size: 20px;">
+							<i class="fa fa-circle" aria-hidden="true"></i> <label style="color:black;font-size: 16px;">  Default</label>
+						</div>
+						
+						<div class="col-md-2" style="color:yellow;font-size: 20px;">
+							<i class="fa fa-circle" aria-hidden="true"></i> <label style="color:black;font-size: 16px;">  Active</label>
+						</div>
+						
+						<div class="col-md-2" style="color:red;font-size: 20px;">
+							<i class="fa fa-circle" aria-hidden="true"></i> <label style="color:black;font-size: 16px;">  Deactivated</label>
+						</div>
+
+						<div class="col-md-2" style="color:grey;font-size: 20px;">
+							<i class="fa fa-circle" aria-hidden="true"></i> <label style="color:black;font-size: 16px;">  Expired</label>
+						</div>	
+														
+						</div>										
+						</div>										
+				
+																																															                                                        
+				<hr style="margin-top: 5px;border-color: #DDD"> 																																												                                                        
    <div class="row">
-	   <div class="col-lg-12">                            
-	 	{% for d in star_list %}	
+	   <div class="col-lg-12">      
+	   <label class="error111" style="display:none;"></label>  
+	   
+	   {% if star_list %}                     
+	 		{% for d in star_list %}	
 			<div class="col-lg-3 col-md-3 div-border-bottom1 div-color connect-star"  style="margin-left: 0.5%;margin-top: 10px;width: 31.333%;margin-right: 10px;border-radius: 25px !important; height: 400px; padding-left: 15px;padding-right: 10px;">
 				<div class="row">
 					<!-- <input type="hidden" id="starid" value="{{d.id}}"> -->
-					{% if d.status == '1' %}
-						<div class="col-md-1" style="color:#068115;font-size: 20px;margin-top:4px;">
+
+						{% if d.status == 'current' %}
+						<div class="col-md-1" style="color:green;font-size: 20px;margin-top:4px;">
 							<i class="fa fa-circle" aria-hidden="true"></i>
 						</div>
-					{% elif d.status == '0' %}
-						<div class="col-md-1" style="color:rgb(233, 16, 16);font-size: 20px;margin-top:4px;">
+					{% elif d.status == 'default' %}
+						<div class="col-md-1" style="color:#009DFF;font-size: 20px;margin-top:4px;">
+							<i class="fa fa-circle" aria-hidden="true"></i>
+						</div>
+					{% elif d.status == 'expired' %}
+						<div class="col-md-1" style="color:grey;font-size: 20px;margin-top:4px;">
+							<i class="fa fa-circle" aria-hidden="true"></i>
+						</div>
+					{% elif d.status == 'active' %}
+						<div class="col-md-1" style="color:yellow;font-size: 20px;margin-top:4px;">
+							<i class="fa fa-circle" aria-hidden="true"></i>
+						</div>
+					{% elif d.status == 'deactivated' %}
+						<div class="col-md-1" style="color:red;font-size: 20px;margin-top:4px;">
 							<i class="fa fa-circle" aria-hidden="true"></i>
 						</div>
 					{% else %} 
-					<div class="col-md-1" style="color: #8F8F8F;font-size: 20px;margin-top:4px;">
+					<div class="col-md-1" style="color: white;font-size: 20px;margin-top:4px;">
 							<i class="fa fa-circle" aria-hidden="true"></i>
 						</div>
-					{% endif %}		
-					<div class="col-md-7 name" style="font-size: 12px;width: 69.333%;padding-top: 9px; padding-left: 16px;">   
-						<b>{{d.title}} {{d.name}}</b>
-					</div>   
+					{% endif %}	
+						
+					{% if default_status != '' %}
+						{% if current_status == '' %} 
+							{% if d.status == 'default' %} 
+								<div class="col-md-7 name" style="font-size: 12px;width: 69.333%;padding-top: 9px; padding-left: 16px;">   
+									<b>{{d.title}} {{d.name}}</b> (Current)
+								</div> 
+							{% else %} 
+								<div class="col-md-7 name" style="font-size: 12px;width: 69.333%;padding-top: 9px; padding-left: 16px;">   
+									<b>{{d.title}} {{d.name}}</b>
+								</div> 
+							{% endif %}
+						{% elif current_status != '' %} 
+							<div class="col-md-7 name" style="font-size: 12px;width: 69.333%;padding-top: 9px; padding-left: 16px;">   
+								<b>{{d.title}} {{d.name}}</b>
+							</div> 
+						{% endif %}
+					{% else %} 
+						<div class="col-md-7 name" style="font-size: 12px;width: 69.333%;padding-top: 9px; padding-left: 16px;">   
+							<b>{{d.title}} {{d.name}}</b>
+						</div> 
+					{% endif %}
 					<div class="col-md-4" style="margin-top: -29px;font-size: 20px;margin-left: 170px;">   
-						{% if d.status == '1' %}
-							<i class="fa fa-ban" style="color:#B73C33;" aria-hidden="true"></i>
-							<a href="/city-star/edit_citystar/?star_id={{d.id}}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-						{% elif d.status == '0' %}
-							<a style="margin-right: 2px;" id="{{d.id}}" onclick="act_date(this.id);" >
-								<i class="fa fa-power-off" aria-hidden="true"></i>
+						{% if d.status == 'current' %}
+							<a style="margin-right: 2px;" title="Deactivate" id="{{d.id}}" onclick="act_date(this.id);" >
+								<i class="fa fa-power-off"  aria-hidden="true"></i>
 							</a>
-							<a href="/city-star/edit_citystar/?star_id={{d.id}}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+							<a title="Edit" href="/city-star/edit_citystar/?star_id={{d.id}}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+						
+						{% elif d.status == 'active' %}
+							<a style="margin-right: 2px;" title="Deactivate" id="{{d.id}}" onclick="act_date(this.id);" >
+								<i class="fa fa-power-off"  aria-hidden="true"></i>
+							</a>
+							<a title="Edit" href="/city-star/edit_citystar/?star_id={{d.id}}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
 						{% else %}
-							<a style="margin-right: 2px;" id="{{d.id}}" onclick="act_date(this.id);" >
+							<!-- <a style="margin-right: 2px;" title="Activation" id="{{d.id}}" onclick="act_date(this.id);" >
 								<i class="fa fa-power-off" aria-hidden="true"></i>
-							</a>
-							<a href="/city-star/edit_citystar/?star_id={{d.id}}"><i class="fa fa-pencil" aria-hidden="true"></i></a>					
+							</a> -->
+							<a title="Edit" href="/city-star/edit_citystar/?star_id={{d.id}}"><i class="fa fa-pencil" aria-hidden="true"></i></a>					
 						{% endif %}
 						
-						<!-- <a href="/city-star/edit_citystar/?star_id={{d.id}}"><i class="fa fa-pencil" aria-hidden="true"></i></a> -->
 					</div>      		
 				</div>		
 				<div class="row" style="margin-top: 11px;padding-left: 10px;">
@@ -778,18 +845,19 @@ hr {
 				<div class="col-md-12 ellipsify"  style="padding-top: 9px; padding-left: 5px;">   
 				<label  >{{d.summary}}</label>	
 				</div>   
-				{% if d.status == '1' %}
+				{% if d.status == 'current' %}
 						<div class="row">
-							<div class="col-md-6" style="font-size: 12px;margin-top: 10px;width: 49%;"><label>Activate Date<br>
+							<div class="col-md-6" style="font-size: 10px;margin-top: 10px;width: 50%;"><label>Activation Date<br>
 							{{d.start_date}}</label>
 								 
 							</div> 
-							<div class="col-md-6" style="font-size: 12px;width: 51%;margin-top: 10px;"><label>Deactivate Date<br>
+							<div class="col-md-6" style="font-size: 10px;width: 50%;margin-top: 10px;"><label>Deactivation Date<br>
 								 {{d.end_date}} </label>
 							</div> 						      	
 						</div>
 						<div class="row" style="margin-top: 10px;margin-left: -25px;">
-							<div class="col-md-offset-2 col-md-3">
+							<div class="col-md-12">
+							<div class="col-md-offset-3 col-md-2">
 								<i class="fa fa-eye" aria-hidden="true"></i> {{d.views}}
 							</div> 
 							<div class="col-md-3">
@@ -799,17 +867,19 @@ hr {
 								<i class="fa fa-share" aria-hidden="true"></i> {{d.shares}}
 							</div> 			      	
 						</div>
-					{% elif d.status == '0' %}
+						</div>
+						{% elif d.status == 'default' %}
 						<div class="row">
 							<!-- <div class="col-md-6" style="font-size: 12px;margin-top: 10px;width: 49%;"><label>Activate Date<br>
 							{{d.start_date}}</label>
 								 
 							</div>  -->
-							<div class="col-md-7" style="font-size: 12px;width: 51%;margin-top: 10px;"><label>Deactivated On<br>
+							<!-- <div class="col-md-6" style="font-size: 10px;width: 50%;margin-top: 10px;"><label>Deactivated On<br>
 								 {{d.end_date}} </label>
-							</div> 						      	
+							</div> 		 -->				      	
 						</div>
 						<div class="row" style="margin-top: 10px;margin-left: -25px;">
+							<div class="col-md-12">
 							<div class="col-md-offset-2 col-md-3">
 								<i class="fa fa-eye" aria-hidden="true"></i> {{d.views}}
 							</div> 
@@ -820,13 +890,37 @@ hr {
 								<i class="fa fa-share" aria-hidden="true"></i> {{d.shares}}
 							</div> 			      	
 						</div>
+						</div>
+					{% elif d.status == 'deactivated' %}
+						<div class="row">
+							<!-- <div class="col-md-6" style="font-size: 12px;margin-top: 10px;width: 49%;"><label>Activate Date<br>
+							{{d.start_date}}</label>
+								 
+							</div>  -->
+							<div class="col-md-6" style="font-size: 10px;width: 50%;margin-top: 10px;"><label>Deactivated On<br>
+								 {{d.end_date}} </label>
+							</div> 						      	
+						</div>
+						<div class="row" style="margin-top: 10px;margin-left: -25px;">
+							<div class="col-md-12">
+							<div class="col-md-offset-2 col-md-3">
+								<i class="fa fa-eye" aria-hidden="true"></i> {{d.views}}
+							</div> 
+							<div class="col-md-3">
+								<i class="fa fa-thumbs-up" aria-hidden="true"></i> {{d.likes}} 
+							</div> 
+							<div class="col-md-3">
+								<i class="fa fa-share" aria-hidden="true"></i> {{d.shares}}
+							</div> 			      	
+						</div>
+						</div>
 					{% else %} 
 					<div class="row">
-							<div class="col-md-6" style="font-size: 12px;margin-top: 10px;width: 49%;"><label>Activate Date<br>
+							<div class="col-md-6" style="font-size: 10px;margin-top: 10px;width: 50%;"><label>Activation Date<br>
 							{{d.start_date}}</label>
 								 
 							</div> 
-							<div class="col-md-6" style="font-size: 12px;width: 51%;margin-top: 10px;"><label>Deactivate Date<br>
+							<div class="col-md-6" style="font-size: 10px;width: 50%;margin-top: 10px;"><label>Deactivation Date<br>
 								 {{d.end_date}} </label>
 							</div> 						      	
 						</div>
@@ -855,8 +949,10 @@ hr {
 				<br>
 			</div>
 		
-		{% endfor %}
-	                  
+			{% endfor %}
+		{% else %} 
+	         <label class="error211">No Data Available</label>  
+	   {% endif %}         
 	             </div>
              </div>
              </div>
@@ -889,7 +985,7 @@ hr {
 <!-- /.modal -->
 <!-- BEGIN FOOTER -->
 <div class="page-footer">
-    <div class="page-footer-inner"> 2016 &copy; DigiSpace.
+    <div class="page-footer-inner"> 2016 &copy; DigiSpace Software Private Limited
     </div>
     <div class="scroll-to-top">
         <i class="icon-arrow-up"></i>
@@ -901,23 +997,17 @@ hr {
 
 
 
-<div style="overflow-y:hidden;" id="error-modal" class="modal fade" role="dialog">
+<!-- <div style="overflow-y:hidden;" id="error-modal" class="modal fade" role="dialog">
     <div class="modal-dialog">
-
-        <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-
                 <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;"
                      src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
-
             </div>
             <div class="modal-body">
-            	
                 <div class="form-body" style="margin-top: -20px;">
                     <h4><b>Activate City Star</b></span></h4>
                 </div>
-               
                 <div class="form-body">
                 <div class="row">
                 	<div class="col-lg-12">
@@ -937,8 +1027,6 @@ hr {
                        </div>
                        <p>Note: Earlier City Star will be deactivated automaically</p>
                 </div>
-               
-                
                 <div style="text-align:left !important;" class="modal-footer">
                     <a onclick="activate_star()" class="btn btn-primary" id="btn-loading-demo">Activate </a>
                     <a class="btn btn-primary" id="btn-loading-demo" data-dismiss="modal">Cancel </a>
@@ -947,8 +1035,33 @@ hr {
         </div>
 
     </div>
-</div>
+</div> -->
 
+<div style="overflow-y:hidden;" id="error-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;"
+                     src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+            </div>
+            <div class="modal-body">
+               
+                <div class="form-body">
+                <div class="row">
+                	<div class="col-lg-12" style="text-align:center !important;margin-top: 0px;margin-bottom: 15px;font-size: 18px;font-weight: 300;">
+   		         	Do you want to deactivate this City Star?
+                  </div>
+                </div>
+            </div>
+             <div style="text-align:center !important;" class="modal-footer">
+                 <a onclick="activate_star()" class="btn" style="color: #FFF;background-color: #32C5D2;border-color: #32C5D2;" id="btn-loading-demo">Yes</a>
+                 <a class="btn " style="color: #FFF;background-color: #32C5D2;border-color: #32C5D2;" id="btn-loading-demo" data-dismiss="modal">No</a>
+             </div>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 <!--[if lt IE 9]>
 <script src="../assets/global/plugins/respond.min.js"></script>
@@ -983,7 +1096,7 @@ hr {
         <script src="{% static 'assets/global/scripts/app.min.js' %}" type="text/javascript"></script>
         <!-- END THEME GLOBAL SCRIPTS -->
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        <script src="{% static 'assets/pages/scripts/components-select2.min.js' %}" type="text/javascript"></script>
+<!--         <script src="{% static 'assets/pages/scripts/components-select2.min.js' %}" type="text/javascript"></script> -->
         <!-- END PAGE LEVEL SCRIPTS -->
         <!-- END THEME GLOBAL SCRIPTS -->
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
@@ -1008,6 +1121,7 @@ hr {
         <script src="{% static 'assets/bootstrap-tagsinput.js' %}" type="text/javascript"></script>
         <script src="{% static 'assets/global/plugins/ion.rangeslider/js/ion.rangeSlider.min.js' %}" ></script>
 <script type="text/javascript">
+	
 
 	 $( ".date-picker" ).datepicker({ 
  				minDate: 0,
@@ -1015,7 +1129,7 @@ hr {
 			});
 			
 	$(document).ready(function() {
-        
+        $('.sel2').select2({});
         $("#status11").change(function () {
 				search_status_list();
 			});
@@ -1030,12 +1144,18 @@ hr {
 			
 	document.getElementById("txtSearch").oninput=function(){
     var matcher = new RegExp(document.getElementById("txtSearch").value, "gi");
+    $('.error111').css("display", "none");	
     for (var i=0;i<document.getElementsByClassName("connect-star").length;i++) {
+    	$('.error111').css("display", "none");	
         if ( matcher.test(document.getElementsByClassName("name")[i].innerHTML)
         ) {
+        		$('.error111').css("display", "none");
             document.getElementsByClassName("connect-star")[i].style.display="inline-block";
+            
         } else {
             document.getElementsByClassName("connect-star")[i].style.display="none";
+            $('.error111').css("display", "block");
+            $('.error111').text("No Data Available.");
         }
     }
 }
@@ -1048,18 +1168,19 @@ function act_date(id) {
 
 function activate_star() {
 
-	var ddate = $("#d_date").val();
+	/*var ddate = $("#d_date").val();
 	//alert(ddate);
 	if (ddate== '') {
 		$('.error21').css("display", "block");
       $('.error21').text("Please Enter Deactivation Date");
       return false;
-	}
-	else {
+	}*/
+	//else {
 		$.ajax({
 		type	: "GET",
       url: "/city-star/activate_citystar/",
-      data:{'star_id':cstarid,'ddate':ddate},
+      //data:{'star_id':cstarid,'ddate':ddate},
+      data:{'star_id':cstarid},
       success: function(response){
           location.href="/city-star/starhome/?city_id="+response.city_id;
       },
@@ -1067,7 +1188,7 @@ function activate_star() {
        	alert("_Error");
       }
   		});
-	}
+	//}
 
 }
 

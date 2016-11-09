@@ -291,16 +291,13 @@ License: You must have a valid license purchased only from themeforest(the above
                                                     <div class="tab-pane active" id="tab_1">
                                                         <div class="row margin_bottom_15">
                                                             <div class="col-lg-12 col-md-12">
-                                                                <label class="control-label">City</label><br>
-                                                                <select disabled class="form-control city" name="city" id="city">
-                                                                    <option value="">Select City</option>
-                                                                    {% for city in city_list %}
-                                                                    <option selected value="{{city.city_place_id}}">{{city.city_id.city_name}}</option>
-                                                                    {% endfor %}
-                                                                </select>
+                                                                <label class="control-label">City: </label>
+                                                                {% for city in city_list %}
+                                                                <label class="font-bold font-blue font-15">{{city.city_id.city_name}}</label>
+                                                                <input type="hidden" id="city" name="city" value="{{city.city_place_id}}"/>
+                                                                {% endfor %}
                                                                 <label id="city_error" class="error_label" style="display:none;"></label>
                                                             </div>
-
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-lg-10 col-md-10 margin_top_7 margin_bottom_15">
@@ -366,11 +363,11 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                         <label class="error_label" style="display:none;"></label>
                                                                                     </td>
                                                                                     <td class="table_th">
-                                                                                        <input name="7_days_price" id="ta_7days" class="form-control" onkeypress='return validateFloatKeyPress(this,event);' type="text" value="{{top_advert_data.3days}}"/>
+                                                                                        <input name="7_days_price" id="ta_7days" class="form-control" onkeypress='return validateFloatKeyPress(this,event);' type="text" value="{{top_advert_data.7days}}"/>
                                                                                         <label class="error_label" style="display:none;"></label>
                                                                                     </td>
                                                                                     <td class="table_th">
-                                                                                        <input name="30_days_price" id="ta_30days" class="form-control" onkeypress='return validateFloatKeyPresss(this,event);' type="text" value="{{top_advert_data.3days}}"/>
+                                                                                        <input name="30_days_price" id="ta_30days" class="form-control" onkeypress='return validateFloatKeyPresss(this,event);' type="text" value="{{top_advert_data.30days}}"/>
                                                                                         <label class="error_label" style="display:none;"></label>
                                                                                     </td>
                                                                                     <td class="table_th">
@@ -635,7 +632,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- /.modal -->
 <!-- BEGIN FOOTER -->
 <div class="page-footer">
-    <div class="page-footer-inner"> 2016 &copy; DigiSpace.
+    <div class="page-footer-inner"> 2016 &copy; DigiSpace Software Private Limited
     </div>
     <div class="scroll-to-top">
         <i class="icon-arrow-up"></i>
@@ -865,23 +862,26 @@ License: You must have a valid license purchased only from themeforest(the above
 
     function validateFloatKeyPress(el, evt) {
         var charCode = (evt.which) ? evt.which : event.keyCode;
-        var number = el.value.split('.');
-        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
-            return false;
-        }
-        if (number[1].length > 1){
-            return false;
-        }
-        if (number.length > 1 && charCode == 46) {
-            return false;
-        }
-        var caratPos = getSelectionStart(el);
-        var dotPos = el.value.indexOf(".");
-        if (caratPos > dotPos && dotPos > -1 && (number[1].length > 1) && (number[1].length < 3)) {
-            if (charCode == 8)
-                return true;
-            else
+        if(charCode !=8){
+            var number = el.value.split('.');
+            if (charCode != 46 && charCode != 8 && charCode > 31 && (charCode < 48 || charCode > 57)) {
                 return false;
+            }
+            if (number[1].length > 1){
+                return false;
+            }
+            if (number.length > 1 && charCode == 46) {
+                return false;
+            }
+            var caratPos = getSelectionStart(el);
+            var dotPos = el.value.indexOf(".");
+            if (caratPos > dotPos && dotPos > -1 && (number[1].length > 1) && (number[1].length < 3)) {
+                if (charCode == 8)
+                    return true;
+                else
+                    return false;
+            }
+            return true;
         }
         return true;
     }

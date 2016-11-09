@@ -11,6 +11,7 @@ from crmapp.urls import crm_urlpatterns
 from citystarapp.urls import citystar_urlpatterns
 from citylifeapp.urls import citylife_urlpatterns
 
+
 #from django.views.generic import direct_to_template
 from django.views.generic import TemplateView
 urlpatterns = patterns('',
@@ -64,6 +65,7 @@ urlpatterns = patterns('',
     url(r'^save-service/', 'Admin.supplier.save_service',name='save_service'),  
     url(r'^register-supplier/', 'Admin.supplier.register_supplier',name='register_supplier'),  
     url(r'^save-advert/', 'Admin.advert.save_advert',name='save_advert'),
+    url(r'^save-advert-form/', 'Admin.advert.save_advert',name='save_advert'),
     url(r'^upload-advert-image/', 'Admin.advert.main_listing_image_file_upload',name='main_listing_image_file_upload'),   
     url(r'^get-advert-list/', 'Admin.advert.get_advert_list',name='get_advert_list'),  
     url(r'^delete-advert/', 'Admin.advert.delete_advert',name='delete_advert'),
@@ -78,6 +80,8 @@ urlpatterns = patterns('',
 
     # Advert Book
     url(r'^advert-booking-list/', 'Admin.advert.advert_booking_list',name='advert_booking_list'),
+    url(r'^get-advert-images/', 'Admin.advert.get_advert_images',name='get_advert_images'),
+    url(r'^get-advert-videos/', 'Admin.advert.get_advert_videos',name='get_advert_videos'),
 
     # New Version urls related to subscriber
 
@@ -89,8 +93,15 @@ urlpatterns = patterns('',
     url(r'^update-subscription-plan/', 'Admin.supplier.update_subscription_plan',name='update_subscription_plan'),
     url(r'^update-payment-details/', 'Admin.supplier.update_payment_details',name='update_payment_details'),
 
-#shubham
+    url(r'^get-booked-slots/', 'Admin.supplier.get_booked_slots',name='get_booked_slots'),
+    url(r'^get-edit-booked-slots/', 'Admin.supplier.get_edit_booked_slots',name='get_edit_booked_slots'),
+    url(r'^get-telephone-service-slots/', 'Admin.supplier.get_telephone_service_slots',name='get_telephone_service_slots'),
+    url(r'^get-edit-telephone-service-slots/', 'Admin.supplier.get_edit_telephone_service_slots',name='get_edit_telephone_service_slots'),
 
+#shubham
+    
+    url(r'^delete-place-image/', 'Admin.views.delete_place_image',name='delete_place_image'),
+    
     url(r'^register-city/', 'Admin.consumer.register_city',name='register_city'),
     url(r'^payment-city/', 'Admin.consumer.payment_city',name='payment_city'),
 
@@ -197,8 +208,7 @@ urlpatterns = patterns('',
     url(r'^admin-send-sms/', 'Admin.consumer.admin_send_sms',name='admin_send_sms'),
     url(r'^consumer-booking-details/', 'Admin.consumer.consumer_booking_details',name='advert_booking'),
 
-# #Dashboard
-    url(r'^get_advert_list/', 'Admin.dashboard.get_advert_list',name='get_advert_list'),
+# #Dashboard Shubham changes 22/10/2016
     url(r'^get_advert_date/', 'Admin.dashboard.get_advert_date',name='get_advert_date'),
     url(r'^get_advert_health/', 'Admin.dashboard.get_advert_health',name='get_advert_health'),
     url(r'^get_subscription_plan/', 'Admin.dashboard.get_subscription_plan',name='get_subscription_plan'),
@@ -209,10 +219,22 @@ urlpatterns = patterns('',
     url(r'^get_consumer_activity/', 'Admin.dashboard.get_consumer_activity',name='get_consumer_activity'),
     url(r'^get_consumer_usage/', 'Admin.dashboard.get_consumer_usage',name='get_consumer_usage'),
 
+    #url(r'^get-subscriber-list2/', 'Admin.dashboard.get_subscriber_list2',name='get_subscriber_list'),
+    url(r'^get_filter_data/', 'Admin.dashboard.get_filter_data',name='get_filter_data'),
+    url(r'^get_filter_data1/', 'Admin.dashboard.get_filter_data1',name='get_filter_data1'),
+    url(r'^get-category1-list/', 'Admin.dashboard.get_category1_list',name='get_category1_list'),
+
 #Dashboard Admin SHUBHAM
     url(r'^dashboard/', 'Admin.dashboard.admin_dashboard',name='admin_dashboard'),
     url(r'^get-admin-filter/', 'Admin.dashboard.get_admin_filter',name='get_admin_filter'),
     url(r'^get-admin-stat/', 'Admin.dashboard.get_admin_stat',name='get_admin_stat'),
+
+    #new dashboard
+    url(r'^get-login-graph-data/', 'Admin.dashboard.get_login_graph_data',name='get_login_graph_data'),
+    url(r'^get-subscription-graph/', 'Admin.dashboard.get_subscription_graph',name='get_subscription_graph'),
+    url(r'^get-subscription-graph1/', 'Admin.dashboard.get_subscription_graph1',name='get_subscription_graph1'),
+    url(r'^get-payment-graph/', 'Admin.dashboard.get_payment_graph',name='get_payment_graph'),
+
     url(r'^admin-report/', 'Admin.dashboard.admin_report',name='admin_report'),
     url(r'^get-subscriber-list/', 'Admin.dashboard.get_subscriber_list',name='get_subscriber_list'),
     url(r'^get-catlevel1-list/', 'Admin.dashboard.get_catlevel1_list',name='get_catlevel1_list'),
@@ -220,30 +242,14 @@ urlpatterns = patterns('',
     url(r'^get-catlevel3-list/', 'Admin.dashboard.get_catlevel3_list',name='get_catlevel3_list'),
     url(r'^get-catlevel4-list/', 'Admin.dashboard.get_catlevel4_list',name='get_catlevel4_list'),
     url(r'^get-catlevel5-list/', 'Admin.dashboard.get_catlevel5_list',name='get_catlevel5_list'),
-    url(r'^get-advert-table-data/', 'Admin.dashboard.get_advert_table_data',name='get_advert_table_data'),
-    url(r'^get-advert-table-data1/', 'Admin.dashboard.get_advert_table_data1',name='get_advert_table_data1'),
     url(r'^get_advert_list1/', 'Admin.dashboard.get_advert_list1',name='get_advert_list1'),
     url(r'^get_advert_list2/', 'Admin.dashboard.get_advert_list2',name='get_advert_list2'),
-    url(r'^get-advert-table-data2/', 'Admin.dashboard.get_advert_table_data2',name='get_advert_table_data2'),
     url(r'^get_advert_list3/', 'Admin.dashboard.get_advert_list3',name='get_advert_list3'),
-    url(r'^get-advert-table-data3/', 'Admin.dashboard.get_advert_table_data3',name='get_advert_table_data3'),
     url(r'^get_advert_list4/', 'Admin.dashboard.get_advert_list4',name='get_advert_list4'),
-    url(r'^get-advert-table-data4/', 'Admin.dashboard.get_advert_table_data4',name='get_advert_table_data4'),
     url(r'^get_advert_list5/', 'Admin.dashboard.get_advert_list5',name='get_advert_list5'),
-    url(r'^get-advert-table-data5/', 'Admin.dashboard.get_advert_table_data5',name='get_advert_table_data5'),
     url(r'^get_advert_list6/', 'Admin.dashboard.get_advert_list6',name='get_advert_list6'),
-    url(r'^get_advert_health_citybase/', 'Admin.dashboard.get_advert_health_citybase',name='get_advert_health_citybase'),
-    url(r'^get_subscription_plan_citybase/', 'Admin.dashboard.get_subscription_plan_citybase',name='get_subscription_plan_citybase'),
     url(r'^get_advert_health_datebase/', 'Admin.dashboard.get_advert_health_datebase',name='get_advert_health_datebase'),
-    url(r'^get_advert_health_supplierbase/', 'Admin.dashboard.get_advert_health_supplierbase',name='get_advert_health_supplierbase'),
 
-    #Subscription plan @admin report
-    url(r'^get_subtable_data1/', 'Admin.dashboard.get_subtable_data1',name='get_subtable_data1'),
-    url(r'^get_subtable_data2/', 'Admin.dashboard.get_subtable_data2',name='get_subtable_data2'),
-    url(r'^get_subtable_data3/', 'Admin.dashboard.get_subtable_data3',name='get_subtable_data3'),
-    url(r'^get_subtable_data4/', 'Admin.dashboard.get_subtable_data4',name='get_subtable_data4'),
-    url(r'^get_subtable_data5/', 'Admin.dashboard.get_subtable_data5',name='get_subtable_data5'),
-    url(r'^get_subscription_plan_supplier/', 'Admin.dashboard.get_subscription_plan_supplier',name='get_subscription_plan_supplier'),
 
     # Management @admin report
     url(r'^get_sales/', 'Admin.dashboard.get_sales',name='get_sales'),
@@ -277,7 +283,11 @@ urlpatterns = patterns('',
     url(r'^review-advert/', 'Admin.advert.review_advert',name='review_advert'),
     url(r'^review-edit-advert/', 'Admin.advert.review_edit_advert',name='review_advert'),
 
-# New urls date 08-10-16
+# New urls after date 08-10-16
     url(r'^delete-product/', 'Admin.advert.delete_product',name='delete_product'),
+    url(r'^regenerate-password/', 'Admin.supplier.regenerate_password',name='regenerate_password'), 
+    url(r'^set-new-password/', 'Admin.supplier.set_new_password',name='set_new_password'),  
+    url(r'^password-changed/', 'Admin.supplier.password_changed',name='password_changed'),
+    url(r'^advert-stat/', 'Admin.advert.advert_stat',name='advert_stat'),   
 
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

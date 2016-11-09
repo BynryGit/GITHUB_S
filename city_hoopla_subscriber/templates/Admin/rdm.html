@@ -792,8 +792,10 @@ hr {
 	                                            							<div class="pull-right">
 												                          		<a class="fa fa-pencil" href="/edit-city/?city_place_id={{ city.city_place_id }}" style="color:#3eb199; font-size:17px;"
 												                                                       ></a>
-												                                   
-												          
+												                              <span style="font-size:20px;">|</span>
+																						<a class="fa fa-trash-o" onclick="del_mod();" style="color:#3eb199; font-size:17px;"
+												                                                       ></a> 														                                                       
+																						<input type="hidden" id="cid_id" value="{{city.city_name}}">												          
 												                          </div>	
                                             			 			</div>                           
 												                          {% endif %} 
@@ -853,6 +855,25 @@ hr {
                 <!-- /.modal-dialog -->
             </div>
         </div>
+        
+	<div class="modal fade draggable-modal" id="del_mod" tabindex="-1" role="basic" aria-hidden="true">
+	    <div class="modal-dialog" style="width:400px;">
+	        <div class="modal-content">                                                
+	            <div class="modal-body">
+						<div class="modal-header">
+	                   <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 120px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+	                </div>
+	                <div class="form-body">
+	                    <h4 class="text-center" id="del_mod_msg">The City "City Name" cannot be deleted as there are active adverts present for it</h4>
+                   </div>
+                        <div style="text-align:center !important;" class="modal-footer">
+                        <button type="button" class="btn green" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+  </div>        
+        
           <div class="modal fade draggable-modal" id="delete_user" tabindex="-1" role="basic" aria-hidden="true">
                 <div class="modal-dialog" style="width:400px;">
                     <div class="modal-content">                                                
@@ -926,7 +947,7 @@ hr {
       	<!-- /.modal -->
         <!-- BEGIN FOOTER -->
         <div class="page-footer">
-            <div class="page-footer-inner"> 2016 &copy; DigiSpace.
+            <div class="page-footer-inner"> 2016 &copy; DigiSpace Software Private Limited
             </div>
             <div class="scroll-to-top">
                 <i class="icon-arrow-up"></i>
@@ -1008,6 +1029,13 @@ $('#state option[value='+ $('#selectedState').val() +']').attr("selected", "sele
     function delete_user_detail(id) {
         adv_id = id;
         $("#delete_user").modal('show');
+   }
+   
+      function del_mod() {
+        //alert($('#cid_id').val());
+        city_nm = $('#cid_id').val();
+        $('#del_mod_msg').text('The City '+city_nm+' cannot be deleted as there are active adverts present for it');
+        $("#del_mod").modal('show');
    }
  		
  		

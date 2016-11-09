@@ -512,30 +512,26 @@ color: #3eb199;
                         <ul class="nav navbar-nav pull-right">
                             <!-- BEGIN NOTIFICATION DROPDOWN -->
                             <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                            <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+                           <!--  <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
 			                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
 			                           data-close-others="true">
 			                            <i class="icon-bell"></i>
 			                            <span class="badge badge-default" style="    background-color: #d22917;"> 7 </span>
 			                        </a>
-                    			</li>
+                    			</li> -->
                             <!-- END NOTIFICATION DROPDOWN -->   
                             <!-- BEGIN USER LOGIN DROPDOWN -->
                             <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                             <li class="dropdown dropdown-user">
                                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                                    <img alt="" class="img-circle" src="{% static 'assets/layouts/layout2/img/avatar3_small.jpg'%}" />
-                                    <span class="username username-hide-on-mobile"> {{ username }} </span>
+<!--                                     <img alt="" class="img-circle" src="{% static 'assets/layouts/layout2/img/avatar3_small.jpg'%}" />
+ -->                                    <span class="username username-hide-on-mobile"> {{ username }} </span>
                                     <i class="fa fa-angle-down"></i>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-default">
                                     <li>
-                                        <a href="page_user_profile_1.html">
-                                            <i class="icon-user"></i> My Profile </a>
-                                    </li>
-                                    <li>
-                                        <a href="user_login.html">
-                                            <i class="icon-key"></i> Log Out </a>
+                                        <a href="/log-out/">
+                                        <i class="icon-key"></i> Log Out </a>
                                     </li>
                                 </ul>
                             </li>
@@ -640,7 +636,7 @@ color: #3eb199;
 	                                                                        </div>   
 	                                                                        <div class="col-md-6">
                                                                          		<div class="row">
-		                                                                         	<label class="control-label " style="font-size:15px; font-weight:700; ">Secondary Number
+		                                                                         	<label class="control-label " style="font-size:15px; font-weight:700; ">Landline Number
 			                                                                               </label>
 			                                                                     </div>
 			                                                                     <div class="row">
@@ -653,22 +649,14 @@ color: #3eb199;
                                                                          <div class="row">
                                                                          	<div class="col-md-6"  >
                                                                          		<div class="row">
-		                                                                         	<label class="control-label " style="font-size:15px; font-weight:700;margin-left: 30px !important;">Primary Email
+		                                                                         	<label class="control-label " style="font-size:15px; font-weight:700;margin-left: 30px !important;">Email
 			                                                                               </label>
 			                                                                     </div>
 			                                                                     <div class="row">
 			                                                                     	<p style="font-size:15px; font-weight:500;margin-left:30px !important;word-wrap: break-word !important;" >{{ subscriber.supplier_email }}</p>
 			                                                                     </div>        
 	                                                                        </div>
-	                                                                        <div class="col-md-6">
-                                                                         		<div class="row">
-		                                                                         	<label class="control-label " style="font-size:15px; font-weight:700; ">Secondary Email
-			                                                                               </label>
-			                                                                     </div>
-			                                                                     <div class="row">
-			                                                                     	<p style="font-size:15px; font-weight:500;word-wrap: break-word !important;">{{ subscriber.secondary_email }}</p>
-			                                                                     </div>        
-	                                                                        </div>    
+	                                 
                                                                          </div>
                                                                          
                                                                          
@@ -860,7 +848,7 @@ color: #3eb199;
                                                     </i>
                                                 </div>
                                                 <div class="col-lg-3" style="text-align:center;">
-                                                    <a > <i
+                                                    <a href="/advert-stat/?advert_id={{advert.advert_id}}"> <i
                                                             class="fa fa-bar-chart"
                                                             aria-hidden="true"></i></a>
                                                 </div>
@@ -1007,7 +995,7 @@ color: #3eb199;
       	<!-- /.modal -->
         <!-- BEGIN FOOTER -->
         <div class="page-footer">
-            <div class="page-footer-inner"> 2016 &copy; DigiSpace.
+            <div class="page-footer-inner"> 2016 &copy; DigiSpace Software Private Limited
             </div>
             <div class="scroll-to-top">
                 <i class="icon-arrow-up"></i>
@@ -1176,7 +1164,7 @@ color: #3eb199;
         </div>
         
         
-        <div class="model_style">
+        <!-- <div class="model_style">
         <div class="modal fade bs-modal-lg" id="createNew" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content" style="width: 453px; margin-left: 168px;">
@@ -1302,7 +1290,133 @@ color: #3eb199;
                 </div>
             </div>
         </div>
+    </div> -->
+    
+    <div class="modal fade bs-modal-lg" id="createNew" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 style=" font-size: 18px;">Apply Filters</h4>
+                </div>
+                <form id="scheduleFrm">
+                    <div class="row">
+                        <input id="supplier_id" name="supplier_id" hidden type="text" value="110">
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="form-group col-lg-12">
+                                <label style=" font-size: 16px;">
+                                    Category </label>
+                                <br>
+                                <select class="form-control sel2" style=" font-size: 14px;color: #797979;"
+                                        name="category_id" id="category_id">
+                                    <option value=""><b> All categories </b></option>
+                                    {% for obj_cat in category_list %}
+                                    <option value="{{obj_cat.category_id}}">{{obj_cat.category_name}}</option>
+                                    {%endfor%}
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <label style=" font-size: 16px;"> Time </label>
+                                <br>
+                                <input id="One_week" type="button" class="btn btn-outline green" name="Time"
+                                       value="1W" style="width: 19%;"
+                                       >
+                                <input id="One_month" type="button" class="btn btn-outline green" name="Time"
+                                       value="1M" style="width: 19%;"
+                                       >
+                                <input id="Three_month" type="button" class="btn btn-outline green" name="Time"
+                                       value="3M" style="width: 19%;"
+                                       >
+                                <input id="Six_month" type="button" class="btn btn-outline green" name="Time"
+                                       value="6M" style="width: 19%;"
+                                       >
+                                <input id="date_range" type="button" class="btn btn-outline green" name="Time"
+                                       value="Date Range" style="width: 19%;"
+                                       >
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row ">
+                            <div id="active_date" class="form-group col-md-12 "
+                                 style=" margin-left: -14px;    margin-bottom: 0px;margin-top: -22px;">
+                                <div class="form-group col-md-1 " >
+                                    <label class="control-label" style="    margin-top: 5px; font-size: 16px;">
+                                        From</label>
+                                </div>
+                                <div class="form-group col-md-5 " >
+                                    <div class="input-append date form_datetime">
+                                        <input type="text"
+                                            readonly
+                                            name="startDate"
+                                            id="startDate"
+                                            class="form-control date-picker"
+                                        >
+                                         <label class="error"
+                                               style="color:red; display:none;"></label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-1 ">
+                                    <label style="    margin-top: 5px; font-size: 16px;">
+                                        To</label>
+                                </div>
+                                <div class="form-group col-md-5 " >
+                                    <div class="input-append date form_datetime">
+                                        <input type="text"
+                                            readonly
+                                            name="endDate"
+                                            id="endDate"
+                                            class="form-control date-picker"
+                                        >
+                                         <label class="error"
+                                               style="color:red; display:none;"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-12 ">
+                                <label> <b>Status </b> </label>
+                            </div>
+
+                            <div class="form-group col-lg-12">
+                                <div class=" col-lg-4">
+                                    <label class="font-15 font-regular">
+                                    <input type="radio"
+                                           id="Active" name="stat"
+                                           value="1" checked
+                                           class="telephone_radio" />Active</label>
+                                </div>
+                                <div class=" col-lg-4">
+                                    <label class="font-15 font-regular">
+                                    <input type="radio"
+                                           id="Expired" name="stat"
+                                           value="0"
+                                           class="telephone_radio"/>Expired</label>
+                                </div>
+                                <div class=" col-lg-4">
+                                    <label class="font-15 font-regular">
+                                    <input type="radio"
+                                           id="Show_All" name="stat"
+                                           value=""
+                                           class="telephone_radio"/>Show All</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline grey_color " data-dismiss="modal">Cancel
+                            </button>
+                            <button type="button" id="submit_btn" onclick="filter_advert();"
+                                    class="btn btn-outline done_btn">Apply
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+
+ <!-- END CONTAINER -->
 <script src="{% static 'assets/global/plugins/respond.min.js' %}"></script>
 <script src="{% static 'assets/global/plugins/excanvas.min.js' %}"></script> 
 <![endif]-->
@@ -1377,7 +1491,9 @@ color: #3eb199;
     $("#supplier_active").css("display","block");
 $(document).ready(function(){
 $("#sortby").select2({});
-$("#category_id").select2({});
+$("#category_id").select2({
+width: '100%'
+});
         
             var maxHeight = 0;
     var maxHeader = 0;
@@ -1412,7 +1528,20 @@ $("#category_id").select2({});
     });
 });
 
+flag =0;
+
 function filter_advert() {
+
+			if (flag == 1){ 
+		var ck_status =check_date_range()
+
+		 isValid = false;
+			if (ck_status == false){
+				
+				return false;		
+		}
+		
+	}
 
     startDate_var = $('#startDate').val()
     endDate_var = $('#endDate').val()
@@ -1424,113 +1553,149 @@ function filter_advert() {
     location.href = '/advert-management/?subscriber_id='+supplier_id+'&start_date_var='+startDate_var+'&end_date_var='+endDate_var+'&status_var='+stat_var+'&category_var='+category_name_var+''
 }
 
+$('#date_range').on('click', function() {
+flag=1
+
+});
+function check_date_range(){
+
+  
+        if(check_start_date() & check_end_date() )
+        {
+            return true;
+        }else{
+     
+				return false;
+			}
+		
+}
+
+function check_start_date(){
+            var isValid = false;
+                if($("#startDate").val() ==""  || $("#startDate").val()== null)
+                {
+
+                    $("#startDate").parent().children('.error').css("display", "block");
+                    $("#startDate").parent().children('.error').text("Please select Start Date ");
+                  isValid = false;
+               }else{
+
+                    $("#startDate").parent().children('.error').css("display", "none");
+                isValid =  true;
+               }
+               return isValid;
+
+        }
+        
+ function check_end_date(){
+            var isValid = false;
+                if($("#endDate").val() ==""  || $("#endDate").val()== null)
+                {
+
+                    $("#endDate").parent().children('.error').css("display", "block");
+                    $("#endDate").parent().children('.error').text("Please select End Date ");
+                  isValid = false;
+               }else{
+
+                    $("#endDate").parent().children('.error').css("display", "none");
+                isValid =  true;
+               }
+               return isValid;
+
+        }
+
 function sort_by(){
     sortby = $("#sortby").val();
 	supplier_id=	{{ subscriber_id }}
     location.href = '/advert-management/?sort_by='+sortby+'&subscriber_id='+supplier_id+''
 }
 
-function activate_daterange() {
+    var date_flag = "1";
 
-   $('input[type="button"]').click(function() {
+    $("#One_week").click(function() {
+        var date = new Date();
+        date.setDate(date.getDate() - 7 );
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#startDate").val(newdate);
+        var date = new Date();
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#endDate").val(newdate);
+    });
+    $("#One_month").click(function() {
+        var date = new Date();
+        date.setDate(date.getDate() - 30 );
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#startDate").val(newdate);
+        var date = new Date();
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#endDate").val(newdate);
+    });
+    $("#Three_month").click(function() {
+        var date = new Date();
+        date.setDate(date.getDate() - 90 );
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#startDate").val(newdate);
+        var date = new Date();
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#endDate").val(newdate);
+    });
+    $("#Six_month").click(function() {
+        var date = new Date();
+        date.setDate(date.getDate() - 180 );
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#startDate").val(newdate);
+        var date = new Date();
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#endDate").val(newdate);
+    });
+    $("#date_range").click(function() {
+        $("#startDate").val(null);
+        $("#startDate").datepicker( "destroy" );
+        $("#startDate").datepicker({
+            dateFormat: 'dd/mm/yy',
 
-       if($(this).attr('id') == 'One_week') {
+        });
+        date_flag = "0";
+        $("#endDate").val(null);
+    });
 
-            var date = new Date();
+    $("#startDate").change(function(){
+        if(date_flag == "0"){
+            var from = $("#startDate").val().split("/");
+            var date = new Date(from[2], from[1] - 1, from[0]);
+            $("#endDate").datepicker( "destroy" );
+            $("#endDate").datepicker({
+                dateFormat: 'dd/mm/yy',
+                minDate: date,
 
-           //var date = new Date($('#start_'+id).val());
-            // days = parseInt($('#day_'+id).val(), 10) - 1;
-            date.setDate(date.getDate() - 7 );
-            var yyyy = date.getFullYear().toString();
-            var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-            var dd  = date.getDate().toString();
-            newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+            });
+        }
+    });
 
-            $("#startDate").val(newdate);
-
-
-            var date = new Date();
-
-            var yyyy = date.getFullYear().toString();
-            var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-            var dd  = date.getDate().toString();
-             newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-
-            $("#endDate").val(newdate);
-
-    }
-    else if($(this).attr('id') == 'One_month'){
-                       var date = new Date();
-
-                date.setDate(date.getDate() - 30 );
-                var yyyy = date.getFullYear().toString();
-                var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-                var dd  = date.getDate().toString();
-                  newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-
-                $("#startDate").val(newdate);
-
-
-            var date = new Date();
-
-                var yyyy = date.getFullYear().toString();
-                var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-                var dd  = date.getDate().toString();
-                 newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-
-                $("#endDate").val(newdate);
-       }
-           else if($(this).attr('id') == 'Three_month'){
-                       var date = new Date();
-
-                date.setDate(date.getDate() - 90 );
-                var yyyy = date.getFullYear().toString();
-                var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-                var dd  = date.getDate().toString();
-                  newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-
-                $("#startDate").val(newdate);
-
-
-            var date = new Date();
-
-                var yyyy = date.getFullYear().toString();
-                var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-                var dd  = date.getDate().toString();
-                   newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-
-                $("#endDate").val(newdate);
-       }
-           else if($(this).attr('id') == 'Six_month'){
-                       var date = new Date();
-
-                date.setDate(date.getDate() - 180 );
-                var yyyy = date.getFullYear().toString();
-                var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-                var dd  = date.getDate().toString();
-                 newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-
-                $("#startDate").val(newdate);
-
-
-            var date = new Date();
-
-                var yyyy = date.getFullYear().toString();
-                var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
-                var dd  = date.getDate().toString();
-                 newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-
-                $("#endDate").val(newdate);
-       }
-                  else if($(this).attr('id') == 'date_range'){
-
-                $("#startDate").val(null);
-
-                $("#endDate").val(null);
-       }
-
-   });
-}
 
 
 	var adv_id;

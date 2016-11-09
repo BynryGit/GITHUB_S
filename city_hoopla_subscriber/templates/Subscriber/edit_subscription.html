@@ -985,10 +985,11 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                 <label class="control-label font-15 font-bold font-green"
                                                                                        style="margin-bottom: 0px; padding-bottom: 0px;">Basic
                                                                                     Subscription
-                                                                                </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                                </label>
+                                                                                <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                                 <label class="error font-12">Atleast
                                                                                     one basic Plan needs to be
-                                                                                    selected</label>
+                                                                                    selected</label> -->
 
                                                                             </div>
                                                                         </div>
@@ -1073,18 +1074,18 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                                     {% if advert_service.checked == "true" %}
                                                                                                         <input type="checkbox"
                                                                                                            autocomplete="off"
-                                                                                                           id="check_{{advert_service.advert_rate_card_id}}"
+                                                                                                           id="check_{{advert_service.advert_rate_card_id}}_{{ forloop.counter }}"
                                                                                                            value="{{advert_service.service_name}}"
-                                                                                                           onclick='check_advert({{advert_service.advert_rate_card_id}});'
+                                                                                                           onclick='check_advert({{advert_service.advert_rate_card_id}},{{ forloop.counter }});'
                                                                                                            name="premium_service"
                                                                                                            checked
                                                                                                            class="premium_checkbox"/>{{advert_service.service_name}}</label>
                                                                                                     {% else %}
                                                                                                         <input type="checkbox"
                                                                                                            autocomplete="off"
-                                                                                                           id="check_{{advert_service.advert_rate_card_id}}"
+                                                                                                           id="check_{{advert_service.advert_rate_card_id}}_{{forloop.counter}}"
                                                                                                            value="{{advert_service.service_name}}"
-                                                                                                           onclick='check_advert({{advert_service.advert_rate_card_id}});'
+                                                                                                           onclick='check_advert({{advert_service.advert_rate_card_id}},{{ forloop.counter }});'
                                                                                                            name="premium_service"
                                                                                                            class="premium_checkbox"/>{{advert_service.service_name}}</label>
                                                                                                     {% endif %}
@@ -1095,7 +1096,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                                 {% if advert_service.checked == "true" %}
                                                                                                     <select id="day_{{advert_service.advert_rate_card_id}}"
                                                                                                         name="premium_ser_duration"
-                                                                                                        onchange="premium_duration({{advert_service.advert_rate_card_id}})"
+                                                                                                        onchange="premium_duration({{advert_service.advert_rate_card_id}},{{ forloop.counter }})"
                                                                                                         class="form-control days al_days">
                                                                                                         <option value="0">Days</option>
                                                                                                     {% if business_data.service_rate_card_duration >= 3 %}
@@ -1160,10 +1161,10 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                                     {% endif %}
                                                                                                 </select>
                                                                                                 {% else %}
-                                                                                                <select id="day_{{advert_service.advert_rate_card_id}}"
+                                                                                                <select id="day_{{ advert_service.advert_rate_card_id }}"
                                                                                                         disabled="disabled"
                                                                                                         name="premium_ser_duration"
-                                                                                                        onchange="premium_duration({{advert_service.advert_rate_card_id}})"
+                                                                                                        onchange="premium_duration({{advert_service.advert_rate_card_id}},{{ forloop.counter }})"
                                                                                                         class="form-control days">
                                                                                                 </select>
                                                                                                 {% endif %}
@@ -1175,17 +1176,17 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                                 {% if advert_service.checked == "true" %}
                                                                                                 <input type="text"
                                                                                                        value="{{advert_service.service_start_date}}"
-                                                                                                       id="start_{{advert_service.advert_rate_card_id}}"
+                                                                                                       id="start_{{ forloop.counter }}"
                                                                                                        autocomplete="off"
-                                                                                                       onchange="premium_startdate({{advert_service.advert_rate_card_id}})"
+                                                                                                       onchange="premium_startdate({{advert_service.advert_rate_card_id}},{{ forloop.counter }})"
                                                                                                        class="form-control pre_start_date date-picker1"
                                                                                                        name="premium_start_date">
                                                                                                 {% else %}
                                                                                                 <input type="text"
-                                                                                                       id="start_{{advert_service.advert_rate_card_id}}"
+                                                                                                       id="start_{{forloop.counter}}"
                                                                                                        autocomplete="off"
                                                                                                        disabled="disabled"
-                                                                                                       onchange="premium_startdate({{advert_service.advert_rate_card_id}})"
+                                                                                                       onchange="premium_startdate({{advert_service.advert_rate_card_id}},{{ forloop.counter }})"
                                                                                                        class="form-control pre_start_date date-picker1"
                                                                                                        name="premium_start_date">
                                                                                                 {% endif %}
@@ -1197,14 +1198,14 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                                 {% if advert_service.checked == "true" %}
                                                                                                 <input type="text"
                                                                                                        value="{{advert_service.service_end_date}}"
-                                                                                                       id="end_{{advert_service.advert_rate_card_id}}"
+                                                                                                       id="end_{{ forloop.counter }}"
                                                                                                        class="form-control pre_end_date"
                                                                                                        readonly
                                                                                                        autocomplete="off"
                                                                                                        name="premium_end_date">
                                                                                                 {% else %}
                                                                                                 <input type="text"
-                                                                                                       id="end_{{advert_service.advert_rate_card_id}}"
+                                                                                                       id="end_{{forloop.counter}}"
                                                                                                        class="form-control pre_end_date"
                                                                                                        readonly
                                                                                                        autocomplete="off"
@@ -1224,13 +1225,21 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                class="font-12 font-regular"
                                                                                style="color:red; display:none;"></label>
                                                                     </div>
-                                                                    <div class="form-group" style="padding-top:20px;">
+                                                                    {% if telephone_rate_card %}
+                                                                      <div class="form-group" style="padding-top:20px;">
                                                                         <div class="row" id="telephone_service">
                                                                             <div class="col-lg-12">
                                                                                 <div class="form-group">
                                                                                     <label class="control-label font-15 font-bold font-green">Telephone Enquiry Premium Service
                                                                                     </label>
-                                                                                    <hr style="border-top: 1px dashed #6B6B6B; margin-top: 0px; padding-top: 0px;">
+                                                                                    <hr style="border-top: 1px dashed #6B6B6B; margin-top: 0px; padding-top: 0px; margin-bottom: 9px;">
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-offset-9 col-md-3 ">
+                                                                                            <input type="button" value="Clear Selection"
+                                                                                                id="clear_selection" style="margin-left: 20px; margin-bottom: 7px;"
+                                                                                                class="btn btn-outline done_btn">
+                                                                                        </div>
+                                                                                    </div>
                                                                                     {% for rate_card in telephone_rate_card %}
                                                                                     <ul class="radio-list list-inline"
                                                                                         data-error-container="#form_2_membership_error">
@@ -1254,8 +1263,8 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                                 </li>
                                                                                             </div>
                                                                                             <div class="col-lg-3 col-md-3">
-                                                                                                <!--                                                                                <input type="text" id="advert2" disabled="disabled" class="form-control days"  name="to" placeholder="No of days">  -->
-                                                                                                <label class="control-label font-15 font-regular">Duration
+
+                                                                                                 <label class="control-label font-15 font-regular">Duration
                                                                                                 </label>
                                                                                                 {% if enquiry_service_data.enquiry_service_name == rate_card.service_name %}
                                                                                                     <select name="tel_ser_duration" id="tel_dur_{{rate_card.rate_card_id}}"
@@ -1341,7 +1350,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                class="error font-12 font-regular"
                                                                                style="color:red; display:none;"></label>
                                                                     </div>
-
+                                                                    {% endif %}
                                                                 </div>
                                                                 <div class="col-lg-2 col-md-2">
                                                                 <label class="control-label font-15 font-bold font-green">Subscription
@@ -1363,18 +1372,19 @@ License: You must have a valid license purchased only from themeforest(the above
 
                                                             <br>
 
-                                                            <div class="row">
-                                                                <div class="col-lg-12 col-md-12 text-right">
-
-                                                                    <a type="button"
-                                                                       href="/subscriber-portal/subscriber-advert/?supplier_id={{request.session.supplier_id}}"
-                                                                       class="btn btn-outline grey_color">
-                                                                        Cancel </a>
-                                                                    <input type="button" value="Update"
-                                                                           id="save-service-detail"
-                                                                           class="btn btn-outline done_btn">
-                                                                </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-12 col-md-12 text-right">
+                                                                <a type="button"
+                                                                   href="/subscriber-portal/subscriber-advert/?supplier_id={{request.session.supplier_id}}"
+                                                                   class="btn btn-outline grey_color">
+                                                                    Cancel </a>
+                                                                <input type="button" value="Update"
+                                                                       id="save-service-detail"
+                                                                       class="btn btn-outline done_btn">
                                                             </div>
+                                                        </div>
+
+
                                                         </form>
                                                     </div>
                                                 </div>
@@ -1399,7 +1409,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- /.modal -->
 <!-- BEGIN FOOTER -->
 <div class="page-footer">
-    <div class="page-footer-inner"> 2016 &copy; DigiSpace.
+    <div class="page-footer-inner"> 2016 &copy; DigiSpace Software Private Limited
     </div>
     <div class="scroll-to-top">
         <i class="icon-arrow-up"></i>
@@ -1765,10 +1775,15 @@ License: You must have a valid license purchased only from themeforest(the above
     var endDate = new Date(from[2], from[1] - 1, from[0]);
 
     $( "#dt50").datepicker({
+            minDate: 'today',
         dateFormat: 'dd/mm/yy'
+
     });
 
-    $( ".date-picker1" ).datepicker({});
+    $( ".date-picker1" ).datepicker({
+            minDate: 'today',
+        dateFormat: 'dd/mm/yy'
+    });
 
 
     referanceDay = {
@@ -1796,17 +1811,194 @@ License: You must have a valid license purchased only from themeforest(the above
 
     var cat_lvl = {{cat_lvl}};
     var cat_id = {{cat_id}};
+    var has_platinum = '';
+    var has_diamond = '';
+    var has_gold = '';
+    var has_silver = '';
+    var has_bronze = '';
+    var has_value = '';
+    var no1_ranges = '';
+    var no2_ranges = '';
+    var no3_ranges = '';
+    var no4_ranges = '';
+    var no5_ranges = '';
+
+    $( document ).ready(function() {
+        $.ajax({
+            type : "POST",
+            url : '/get-edit-booked-slots/',
+            data : {
+                'cat_id':cat_id,
+                'cat_lvl':cat_lvl,
+                'city_place_id':{{city_place_id}},
+                'business_id':{{business_data.business_id}},
+                'start_date':$("#dt50").val(),
+                'end_date':$("#dt2").val(),
+            },
+            success: function (response) {
+                if(response.success=='true'){
+                    has_platinum = response.has_platinum;
+                    has_diamond = response.has_diamond;
+                    has_gold = response.has_gold;
+                    has_silver = response.has_silver;
+                    has_bronze = response.has_bronze;
+                    has_value = response.has_value;
+
+                    var from = $("#dt50").val().split("/");
+                    var startDate = new Date(from[2], from[1] - 1, from[0]);
+                    var from = $("#dt2").val().split("/");
+                    var endDate = new Date(from[2], from[1] - 1, from[0]);
+                    $( "#start_"+1 ).datepicker( "destroy" );
+                    $( "#start_"+2 ).datepicker( "destroy" );
+                    $( "#start_"+3 ).datepicker( "destroy" );
+                    $( "#start_"+4 ).datepicker( "destroy" );
+                    $( "#start_"+5 ).datepicker( "destroy" );
+
+                    ranges1 = response.no1_ranges;
+                    no1_ranges = response.no1_ranges;
+                    $( "#start_"+1 ).datepicker({
+                        numberOfMonths: 1,
+                        beforeShowDay: function(date) {
+                            for(var i=0; i<ranges1.length; i++) {
+                            if(date >= new Date(ranges1[i].start_date) && date <= new Date(ranges1[i].end_date)) return [false, ''];
+                            }
+                            return [true, ''];
+                        },
+                        minDate: new Date(startDate),
+                        maxDate: new Date(endDate),
+                        dateFormat: 'dd/mm/yy'
+                    });
+                    $( "#start_"+1 ).val(response.no1_start_date);
+                    $( "#end_"+1 ).val(response.no1_end_date);
+
+                    ranges2 = response.no2_ranges;
+                    no2_ranges = response.no2_ranges;
+                    $( "#start_"+2 ).datepicker({
+                        numberOfMonths: 1,
+                        beforeShowDay: function(date) {
+                            for(var i=0; i<ranges2.length; i++) {
+                            if(date >= new Date(ranges2[i].start_date) && date <= new Date(ranges2[i].end_date)) return [false, ''];
+                            }
+                            return [true, ''];
+                        },
+                        minDate: new Date(startDate),
+                        maxDate: new Date(endDate),
+                        dateFormat: 'dd/mm/yy'
+                    });
+                    $( "#start_"+2 ).val(response.no2_start_date);
+                    $( "#end_"+2 ).val(response.no2_end_date);
+
+                    ranges3 = response.no3_ranges;
+                    no3_ranges = response.no3_ranges;
+                    $( "#start_"+3 ).datepicker({
+                        numberOfMonths: 1,
+                        beforeShowDay: function(date) {
+                            for(var i=0; i<ranges3.length; i++) {
+                            if(date >= new Date(ranges3[i].start_date) && date <= new Date(ranges3[i].end_date)) return [false, ''];
+                            }
+                            return [true, ''];
+                        },
+                        minDate: new Date(startDate),
+                        maxDate: new Date(endDate),
+                        dateFormat: 'dd/mm/yy'
+                    });
+                    $( "#start_"+3 ).val(response.no3_start_date);
+                    $( "#end_"+3 ).val(response.no3_end_date);
+
+                    ranges4 = response.no4_ranges;
+                    no4_ranges = response.no4_ranges;
+                    $( "#start_"+4 ).datepicker({
+                        numberOfMonths: 1,
+                        beforeShowDay: function(date) {
+                            for(var i=0; i<ranges4.length; i++) {
+                            if(date >= new Date(ranges4[i]) && date <= new Date(ranges4[i])) return [false, ''];
+                            }
+                            return [true, ''];
+                        },
+                        minDate: new Date(startDate),
+                        maxDate: new Date(endDate),
+                        dateFormat: 'dd/mm/yy'
+                    });
+                    $( "#start_"+4 ).val(response.no4_start_date)
+                    $( "#end_"+4 ).val(response.no4_end_date)
+
+                    ranges5 = response.no5_ranges;
+                    no5_ranges = response.no5_ranges;
+                    $( "#start_"+5 ).datepicker({
+                        numberOfMonths: 1,
+                        beforeShowDay: function(date) {
+                            for(var i=0; i<ranges5.length; i++) {
+                            if(date >= new Date(ranges5[i].start_date) && date <= new Date(ranges5[i].end_date)) return [false, ''];
+                            }
+                            return [true, ''];
+                        },
+                        minDate: new Date(startDate),
+                        maxDate: new Date(endDate),
+                        dateFormat: 'dd/mm/yy'
+                    });
+                    $( "#start_"+5 ).val(response.no5_start_date)
+                    $( "#end_"+5 ).val(response.no5_end_date)
+                }
+                if (response.success == "false") {
+                    $("#error-modal1").modal('show');
+                    $("#error-message1").text(response.message);
+                }
+                if (response.success == "Expired") {
+							location.href = '/subscriber-portal/'
+	       			}
+	       		
+            },
+            beforeSend: function () {
+                $("#processing").css('display','block');
+            },
+            complete: function () {
+                $("#processing").css('display','none');
+                if(has_platinum == "true"){
+                    $('#tel_check_1').prop("disabled", true);
+                    $("#uniform-tel_check_1").addClass("disabled");
+                }
+                if(has_diamond == "true"){
+                    $('#tel_check_2').prop("disabled", true);
+                    $("#uniform-tel_check_2").addClass("disabled");
+                }
+                if(has_gold == "true"){
+                    $('#tel_check_3').prop("disabled", true);
+                    $("#uniform-tel_check_3").addClass("disabled");
+                }
+                if(has_silver == "true"){
+                    $('#tel_check_4').prop("disabled", true);
+                    $("#uniform-tel_check_4").addClass("disabled");
+                }
+                if(has_bronze == "true"){
+                    $('#tel_check_5').prop("disabled", true);
+                    $("#uniform-tel_check_5").addClass("disabled");
+                }
+                if(has_value == "true"){
+                    $('#tel_check_6').prop("disabled", true);
+                    $("#uniform-tel_check_6").addClass("disabled");
+                }
+            },
+            error : function(response){
+                    alert("_Error");
+            }
+        });
+    });
 
     function check_cat(lvl,this_val){
         if($(this_val).attr('data-level')=="0"){
-        clear_subcat();
+            clear_subcat();
+        }
+        if($(this_val).val() == ""){
+            $('#lvl'+lvl+'_row').hide();
+            $("#subscription_div").css("display","none");
+            return false;
         }
         $.ajax({
             type    : "POST",
-            url : '/subscriber-portal/check-category/',
-            data : {'category_id':$(this_val).val(),'cat_level':lvl},
+            url : '/check-category-supplier/',
+            data : {'category_id':$(this_val).val(),'cat_level':lvl,'supplier_id':{{request.session.supplier_id}},'city_place_id':{{city_place_id}}},
             success: function (response) {
-                if(response.success!='false'){
+                if(response.success=='true'){
                     $('#lvl'+lvl).html('');
                     $('.subcat_select').select2();
                     $('.subcat_selects').select2();
@@ -1832,7 +2024,12 @@ License: You must have a valid license purchased only from themeforest(the above
                         cat_id = '';
                         $("#subscription_div").css("display","none");
                     }
+
                 }
+                if (response.success == "Expired") {
+							location.href = '/subscriber-portal/'
+	       			}
+	       			
             },
             error : function(response){
                 alert("_Error");
@@ -1862,10 +2059,107 @@ License: You must have a valid license purchased only from themeforest(the above
         } else {
             alert("Invalid Date");
         }
+        $("#mismatch-days").css("display", "none");
+        $('.premium_checkbox').prop("disabled", true);
+        $('.telephone_radio').prop("disabled", true);
+        $('.checker').addClass("disabled");
+        $('.checker').addClass("focus");
+        $('.checker').children("span").removeClass("checked");
+        $('.radio').addClass("disabled");
+        $('.radio').addClass("focus");
+        $('.radio').children("span").removeClass("checked");
+        $('.days').empty();
+        $('.days').prop("disabled", true);
+        $('.days').html('').select2({data: {id:null, text: null}});
+        $('.pre_start_date').prop("disabled", true);
+        $('.pre_start_date').val('');
+        $('.tel_start_date').val('');
+        $('.pre_end_date').val('');
+        $('.tel_end_date').val('');
+
         $(".premium_checkbox").prop("disabled", false);
         $('.telephone_radio').prop("disabled", false);
         $(".checker").removeClass("disabled");
         $(".radio").removeClass("disabled");
+        $(".pre_start_date").val("");
+        $(".pre_end_date").val("");
+
+        amount_1 = 0;
+        amount_2 = 0;
+        amount_3 = 0;
+        amount_4 = 0;
+        amount_5 = 0;
+        tel_amount_1 = 0;
+        tel_amount_2 = 0;
+        tel_amount_3 = 0;
+        tel_amount_4 = 0;
+        tel_amount_5 = 0;
+        tel_amount_6 = 0;
+        total_amount = amount;
+        $("#amount").val(parseFloat(total_amount).toFixed(2));
+
+        $.ajax({
+            type : "POST",
+            url : '/get-edit-telephone-service-slots/',
+            data : {
+                'cat_id':cat_id,
+                'cat_lvl':cat_lvl,
+                'city_place_id':{{city_place_id}},
+                'start_date':$("#dt50").val(),
+                'end_date':$("#dt2").val(),
+                'business_id':{{business_data.business_id}},
+            },
+            success: function (response) {
+                if(response.success=='true'){
+                    has_platinum = response.has_platinum;
+                    has_diamond = response.has_diamond;
+                    has_gold = response.has_gold;
+                    has_silver = response.has_silver;
+                    has_bronze = response.has_bronze;
+                    has_value = response.has_value;
+                }
+                if (response.success == "false") {
+                    $("#error-modal1").modal('show');
+                    $("#error-message1").text(response.message);
+                }
+                if (response.success == "Expired") {
+							location.href = '/subscriber-portal/'
+	       			}
+            },
+            beforeSend: function () {
+                $("#processing").css('display','block');
+            },
+            complete: function () {
+                $("#processing").css('display','none');
+                if(has_platinum == "true"){
+                    $('#tel_check_1').prop("disabled", true);
+                    $("#uniform-tel_check_1").addClass("disabled");
+                }
+                if(has_diamond == "true"){
+                    $('#tel_check_2').prop("disabled", true);
+                    $("#uniform-tel_check_2").addClass("disabled");
+                }
+                if(has_gold == "true"){
+                    $('#tel_check_3').prop("disabled", true);
+                    $("#uniform-tel_check_3").addClass("disabled");
+                }
+                if(has_silver == "true"){
+                    $('#tel_check_4').prop("disabled", true);
+                    $("#uniform-tel_check_4").addClass("disabled");
+                }
+                if(has_bronze == "true"){
+                    $('#tel_check_5').prop("disabled", true);
+                    $("#uniform-tel_check_5").addClass("disabled");
+                }
+                if(has_value == "true"){
+                    $('#tel_check_6').prop("disabled", true);
+                    $("#uniform-tel_check_6").addClass("disabled");
+                }
+            },
+            error : function(response){
+                    alert("_Error");
+            }
+        });
     }
 
     $("#duration_list").change(function(){
@@ -1878,9 +2172,11 @@ License: You must have a valid license purchased only from themeforest(the above
         $('.checker').addClass("disabled");
         $('.checker').addClass("focus");
         $('.checker').children("span").removeClass("checked");
+        $('.checker').children("span").find("input").prop('checked', false);
         $('.radio').addClass("disabled");
         $('.radio').addClass("focus");
         $('.radio').children("span").removeClass("checked");
+        $('.radio').children("span").find("input").prop('checked', false);
         $('.days').empty();
         $('.days').prop("disabled", true);
         $('.days').html('').select2({data: {id:null, text: null}});
@@ -1897,18 +2193,33 @@ License: You must have a valid license purchased only from themeforest(the above
             $("#dt50").prop("disabled", false);
             $.ajax({
                 type : "POST",
-                url : '/subscriber-portal/get-premium-subscription-amount/',
-                data : {'duration':duration,'service_name':'Subscription','cat_lvl':cat_lvl,'cat_id':cat_id},
+                url : '/get-premium-subscription-amount/',
+                data : {'duration':duration,'service_name':'Subscription','cat_lvl':cat_lvl,'cat_id':cat_id,'supplier_id':{{request.session.supplier_id}}},
 
                 success: function (response) {
                     if(response.success=='true'){
                         amount = response.amount;
                         $("#amount").val(parseFloat(response.amount).toFixed(2));
+                        amount_1 = 0;
+                        amount_2 = 0;
+                        amount_3 = 0;
+                        amount_4 = 0;
+                        amount_5 = 0;
+                        tel_amount_1 = 0;
+                        tel_amount_2 = 0;
+                        tel_amount_3 = 0;
+                        tel_amount_4 = 0;
+                        tel_amount_5 = 0;
+                        tel_amount_6 = 0;
+                        total_amount = response.amount;
                     }
                     if (response.success == "false") {
                         $("#error-modal1").modal('show');
                         $("#error-message1").text(response.message);
                     }
+                    if (response.success == "Expired") {
+							location.href = '/subscriber-portal/'
+	       		     }
                 },
                 beforeSend: function () {
                     $("#processing").css('display','block');
@@ -1926,34 +2237,95 @@ License: You must have a valid license purchased only from themeforest(the above
         }
     })
 
-    function check_advert(id)
+
+
+    function check_advert(id,counter)
     {
         var check_id = id;
         duration = $("#duration_list").val();
-        if(document.getElementById('check_'+id).checked) {
+        if(document.getElementById('check_'+id+'_'+counter).checked) {
             $('#day_'+id).prop("disabled", false);
-            service_name = $('#lebel_'+id).text();
+            service_name = $('#check_'+id+'_'+counter).val();
             if (service_name.trim() == 'No.1 Listing'){
+                total_amount = parseInt(total_amount) - parseInt(amount_1);
                 amount_1 = 0;
+                $("#amount").val(parseFloat(total_amount).toFixed(2));
             }
             if (service_name.trim() == 'No.2 Listing'){
+                total_amount = parseInt(total_amount) - parseInt(amount_2);
                 amount_2 = 0;
+                $("#amount").val(parseFloat(total_amount).toFixed(2));
             }
             if (service_name.trim() == 'No.3 Listing'){
+                total_amount = parseInt(total_amount) - parseInt(amount_3);
                 amount_3 = 0;
+                $("#amount").val(parseFloat(total_amount).toFixed(2));
             }
             if (service_name.trim() == 'Advert Slider'){
+                total_amount = parseInt(total_amount) - parseInt(amount_4);
                 amount_4 = 0;
+                $("#amount").val(parseFloat(total_amount).toFixed(2));
             }
             if (service_name.trim() == 'Top Advert'){
+                total_amount = parseInt(total_amount) - parseInt(amount_5);
                 amount_5 = 0;
+                $("#amount").val(parseFloat(total_amount).toFixed(2));
             }
+            $.ajax({
+                type : "POST",
+                url : '/get-booked-slots/',
+                data : {
+                    'cat_id':cat_id,
+                    'cat_lvl':cat_lvl,
+                    'service_name':service_name.trim(),
+                    'city_place_id':{{city_place_id}},
+                    'start_date':$("#dt50").val(),
+                    'end_date':$("#dt2").val(),
+                    'business_id':{{business_data.business_id}},
+                    },
+                success: function (response) {
+                    if(response.success=='true'){
+                        if(counter == 1){
+                            no1_ranges = response.date_list;
+                        }
+                        if(counter == 2){
+                            no2_ranges = response.date_list;
+                        }
+                        if(counter == 3){
+                            no3_ranges = response.date_list;
+                        }
+                        if(counter == 4){
+                            no4_ranges = response.booked_date_list;
+                        }
+                        if(counter == 5){
+                            no5_ranges = response.date_list;
+                        }
+                    }
+                    if (response.success == "false") {
+                        $("#error-modal1").modal('show');
+                        $("#error-message1").text(response.message);
+                    }
+                    if (response.success == "Expired") {
+							location.href = '/subscriber-portal/'
+	       		     }
+                },
+                beforeSend: function () {
+                    $("#processing").css('display','block');
+                },
+                complete: function () {
+                    $("#processing").css('display','none');
+                },
+                error : function(response){
+                        alert("_Error");
+                }
+            });
+
         } else {
             $('#day_'+id).prop("disabled", true);
-            $('#start_'+id).prop("disabled", true);
-            $('#start_'+id).val('');
-            $('#end_'+id).val('');
-            service_name = $('#lebel_'+id).text();
+            $('#start_'+counter).prop("disabled", true);
+            $('#start_'+counter).val('');
+            $('#end_'+counter).val('');
+            service_name = $('#check_'+id+'_'+counter).val();
             if (service_name.trim() == 'No.1 Listing'){
                 total_amount = parseInt(total_amount) - parseInt(amount_1);
                 amount_1 = 0;
@@ -1997,6 +2369,35 @@ License: You must have a valid license purchased only from themeforest(the above
         }
     }
 
+    $("#clear_selection").click(function(){
+        $('.radio').addClass("focus");
+        $('.radio').children("span").removeClass("checked");
+        $('.radio').children("span").find("input").prop('checked', false);
+        $(".tel_start_date").each(function() {
+            $(this).val('');
+        });
+        $(".tel_end_date").each(function() {
+            $(this).val('');
+        });
+        $(".tel_dur").each(function() {
+            $('.tel_dur').html('').select2({data: {id:null, text: null}});
+            $('.tel_dur').prop("disabled", true);
+        });
+        total_amount = parseInt(total_amount) - parseInt(tel_amount_1);
+        total_amount = parseInt(total_amount) - parseInt(tel_amount_2);
+        total_amount = parseInt(total_amount) - parseInt(tel_amount_3);
+        total_amount = parseInt(total_amount) - parseInt(tel_amount_4);
+        total_amount = parseInt(total_amount) - parseInt(tel_amount_5);
+        total_amount = parseInt(total_amount) - parseInt(tel_amount_6);
+        $("#amount").val(parseFloat(total_amount).toFixed(2));
+        tel_amount_1 = 0;
+        tel_amount_2 = 0;
+        tel_amount_3 = 0;
+        tel_amount_4 = 0;
+        tel_amount_5 = 0;
+        tel_amount_6 = 0;
+    });
+
     function check_tel(id){
         var check_id = id;
         duration = $("#duration_list").val();
@@ -2011,7 +2412,6 @@ License: You must have a valid license purchased only from themeforest(the above
             $('.tel_dur').prop("disabled", true);
         });
         $('#tel_dur_'+id).prop("disabled", false);
-
         service_name = $('#tel_lebel_'+id).text();
         total_amount = parseInt(total_amount) - parseInt(tel_amount_1);
         total_amount = parseInt(total_amount) - parseInt(tel_amount_2);
@@ -2039,6 +2439,9 @@ License: You must have a valid license purchased only from themeforest(the above
 
     function telphone_duration(id){
         duration = $('#tel_dur_'+id).val();
+        if(duration == ""){
+            return false;
+        }
         service_name = $('#tel_lebel_'+id).text();
         if(duration == "0"){
             return false;
@@ -2060,8 +2463,8 @@ License: You must have a valid license purchased only from themeforest(the above
 
         $.ajax({
             type : "POST",
-            url : '/subscriber-portal/get-telephone-subscription-amount/',
-            data : {'duration':duration,'service_name':service_name.trim()},
+            url : '/get-telephone-subscription-amount/',
+            data : {'duration':duration,'service_name':service_name.trim(),'cat_lvl':cat_lvl,'cat_id':cat_id,'supplier_id':{{request.session.supplier_id}}},
             success: function (response) {
                 if(response.success=='true'){
                     if (service_name.trim() == 'Platinum'){
@@ -2120,6 +2523,9 @@ License: You must have a valid license purchased only from themeforest(the above
                     $("#error-modal1").modal('show');
                     $("#error-message1").text(response.message);
                 }
+                 if (response.success == "Expired") {
+							location.href = '/subscriber-portal/'
+	       		     }
             },
             beforeSend: function () {
                 $("#processing").css('display','block');
@@ -2133,27 +2539,125 @@ License: You must have a valid license purchased only from themeforest(the above
         });
     }
 
-    function premium_duration(id){
+    function premium_duration(id,counter){
         var from = $("#dt50").val().split("/");
         var startDate = new Date(from[2], from[1] - 1, from[0]);
         var from = $("#dt2").val().split("/");
         var endDate = new Date(from[2], from[1] - 1, from[0]);
-        $( "#start_"+id ).val('');
-        $( "#end_"+id ).val('');
-        $( "#start_"+id ).prop("disabled", false);
-        $( "#start_"+id ).datepicker({
-            minDate: "",
-            maxDate: "",
-        });
-        $( "#start_"+id ).datepicker( "destroy" );
-        $( ".pre_start_date" ).datepicker({
-            minDate: new Date(startDate),
-            maxDate: new Date(endDate),
-            dateFormat: 'dd/mm/yy'
-        });
+        $( "#start_"+counter ).val('');
+        $( "#end_"+counter ).val('');
+        $( "#start_"+counter ).prop("disabled", false);
+        $( "#start_"+counter ).datepicker( "destroy" );
+        ranges = '';
+        if(counter == 1){
+            ranges1 = no1_ranges;
+            $( "#start_"+counter ).datepicker({
+                numberOfMonths: 1,
+                minDate: new Date(startDate),
+                maxDate: new Date(endDate),
+                beforeShowDay: function(date) {
+                    for(var i=0; i<ranges1.length; i++) {
+                        if(date >= new Date(ranges1[i].start_date) && date <= new Date(ranges1[i].end_date)) return [false, ''];
+                    }
+                    if($( "#start_2" ).val() && $( "#end_2" ).val()){
+                        var from = $('#start_2').val().split("/");
+                        var from2 = $('#end_2').val().split("/");
+                        if(date >= new Date(from[2], from[1] - 1, from[0]) && date <= new Date(from2[2], from2[1] - 1, from2[0])) return [false, ''];
+                    }
+                    if($( "#start_3" ).val() && $( "#end_3" ).val()){
+                        var from = $('#start_3').val().split("/");
+                        var from2 = $('#end_3').val().split("/");
+                        if(date >= new Date(from[2], from[1] - 1, from[0]) && date <= new Date(from2[2], from2[1] - 1, from2[0])) return [false, ''];
+                    }
+                    return [true, ''];
+                },
+                dateFormat: 'dd/mm/yy'
+            });
+        }
+        if(counter == 2){
+            ranges2 = no2_ranges;
+            $( "#start_"+counter ).datepicker({
+                numberOfMonths: 1,
+                minDate: new Date(startDate),
+                maxDate: new Date(endDate),
+                beforeShowDay: function(date) {
+                    for(var i=0; i<ranges2.length; i++) {
+                        if(date >= new Date(ranges2[i].start_date) && date <= new Date(ranges2[i].end_date)) return [false, ''];
+                    }
+                    if($( "#start_1" ).val() && $( "#end_1" ).val()){
+                        var from = $('#start_1').val().split("/");
+                        var from2 = $('#end_1').val().split("/");
+                        if(date >= new Date(from[2], from[1] - 1, from[0]) && date <= new Date(from2[2], from2[1] - 1, from2[0])) return [false, ''];
+                    }
+                    if($( "#start_3" ).val() && $( "#end_3" ).val()){
+                        var from = $('#start_3').val().split("/");
+                        var from2 = $('#end_3').val().split("/");
+                        if(date >= new Date(from[2], from[1] - 1, from[0]) && date <= new Date(from2[2], from2[1] - 1, from2[0])) return [false, ''];
+                    }
+                    return [true, ''];
+                },
+                dateFormat: 'dd/mm/yy'
+            });
+        }
+        if(counter == 3){
+            ranges3 = no3_ranges;
+            $( "#start_"+counter ).datepicker({
+                numberOfMonths: 1,
+                beforeShowDay: function(date) {
+                    for(var i=0; i<ranges3.length; i++) {
+                        if(date >= new Date(ranges3[i].start_date) && date <= new Date(ranges3[i].end_date)) return [false, ''];
+                    }
+                    if($( "#start_1" ).val() && $( "#end_1" ).val()){
+                        var from = $('#start_1').val().split("/");
+                        var from2 = $('#end_1').val().split("/");
+                        if(date >= new Date(from[2], from[1] - 1, from[0]) && date <= new Date(from2[2], from2[1] - 1, from2[0])) return [false, ''];
+                    }
+                    if($( "#start_2" ).val() && $( "#end_2" ).val()){
+                        var from = $('#start_2').val().split("/");
+                        var from2 = $('#end_2').val().split("/");
+                        if(date >= new Date(from[2], from[1] - 1, from[0]) && date <= new Date(from2[2], from2[1] - 1, from2[0])) return [false, ''];
+                    }
+                    return [true, ''];
+                },
+                minDate: new Date(startDate),
+                maxDate: new Date(endDate),
+                dateFormat: 'dd/mm/yy'
+            });
+        }
+        if(counter == 4){
+            ranges4 = no4_ranges;
+            $( "#start_"+counter ).datepicker({
+                numberOfMonths: 1,
+                beforeShowDay: function(date) {
+                    for(var i=0; i<ranges4.length; i++) {
+                        if(date >= new Date(ranges4[i]) && date <= new Date(ranges4[i])) return [false, ''];
+                    }
+                    return [true, ''];
+                },
+                minDate: new Date(startDate),
+                maxDate: new Date(endDate),
+                dateFormat: 'dd/mm/yy'
+            });
+        }
+        if(counter == 5){
+            ranges5 = no5_ranges;
+            $( "#start_"+counter ).datepicker({
+                numberOfMonths: 1,
+                beforeShowDay: function(date) {
+                    for(var i=0; i<ranges5.length; i++) {
+                        if(date >= new Date(ranges5[i].start_date) && date <= new Date(ranges5[i].end_date)) return [false, ''];
+                    }
+                    return [true, ''];
+                },
+                minDate: new Date(startDate),
+                maxDate: new Date(endDate),
+                dateFormat: 'dd/mm/yy'
+            });
+        }
+
 
         duration = $('#day_'+id).val();
-        service_name = $('#check_'+id).val();
+        service_name = $('#check_'+id+'_'+counter).val();
 
         if(duration == "0"){
             return false;
@@ -2161,8 +2665,8 @@ License: You must have a valid license purchased only from themeforest(the above
 
         $.ajax({
             type : "POST",
-            url : '/subscriber-portal/get-premium-subscription-amount/',
-            data : {'duration':duration,'service_name':service_name.trim(),'cat_lvl':cat_lvl,'cat_id':cat_id},
+            url : '/get-premium-subscription-amount/',
+            data : {'duration':duration,'service_name':service_name.trim(),'cat_lvl':cat_lvl,'cat_id':cat_id,'supplier_id':{{request.session.supplier_id}}},
 
             success: function (response) {
                 if(response.success=='true'){
@@ -2190,6 +2694,9 @@ License: You must have a valid license purchased only from themeforest(the above
                     $("#error-modal1").modal('show');
                     $("#error-message1").text(response.message);
                 }
+                 if (response.success == "Expired") {
+							location.href = '/subscriber-portal/'
+	       		     }
             },
             beforeSend: function () {
                 $("#processing").css('display','block');
@@ -2203,9 +2710,11 @@ License: You must have a valid license purchased only from themeforest(the above
         });
     }
 
-    function premium_startdate(id){
-        var from = $('#start_'+id).val().split("/");
+    function premium_startdate(id,counter){
+        var from = $('#start_'+counter).val().split("/");
+        $("#end_"+counter).val('');
         var date = new Date(from[2], from[1] - 1, from[0]);
+        var startDate = new Date(from[2], from[1] - 1, from[0]);
         days = parseInt($('#day_'+id).val(), 10) - 1;
         if(!isNaN(date.getTime())){
             date.setDate(date.getDate() + days);
@@ -2214,8 +2723,56 @@ License: You must have a valid license purchased only from themeforest(the above
             var dd  = date.getDate().toString();
             newdate = (dd[1]?dd:"0"+dd[0]) + "/" + (mm[1]?mm:"0"+mm[0]) + "/"+ yyyy  ; // padding
             new_date = (mm[1]?mm:"0"+mm[0]) + "/" + (dd[1]?dd:"0"+dd[0]) + "/"+ yyyy  ; // padding
-            $("#end_"+id).val(newdate);
 
+            ranges = '';
+            if(counter == '1'){
+                ranges = no1_ranges;
+            }
+            if(counter == '2'){
+                ranges = no2_ranges;
+            }
+            if(counter == '3'){
+                ranges = no3_ranges;
+            }
+            if(counter == '4'){
+                ranges = no4_ranges;
+            }
+            if(counter == '5'){
+                ranges = no5_ranges;
+            }
+            var date_flag = '0';
+            date_array = getDates(startDate, new Date(new_date));
+            if(counter != '4'){
+                $.each(date_array, function (index, items) {
+                    $.each(ranges, function (index, item) {
+                        var from = new Date(item.start_date);
+                        var to   = new Date(item.end_date);
+                        var check = items;
+                        if(check > from && check < to){
+                            date_flag = '1';
+                        }
+                    });
+                });
+            }
+            else{
+                $.each(date_array, function (index, items) {
+                    $.each(ranges, function (index, item) {
+                        var from = new Date(item);
+                        var check = items;
+                        if(check.toDateString() === from.toDateString()){
+                            date_flag = '1';
+                        }
+                    });
+                });
+            }
+
+            if(date_flag == '1'){
+                $('#mismatch-days').css("display", "block");
+                $('#mismatch-days').text("Premium Service is not available for selected Date and Duration");
+                return false;
+            }
+
+            $("#end_"+counter).val(newdate);
             var from = $('#dt2').val().split("/");
             if(new Date(from[2], from[1] - 1, from[0]) < new Date(new_date))
             {
@@ -2225,7 +2782,7 @@ License: You must have a valid license purchased only from themeforest(the above
             else{
                 var from = newdate.split("/");
                 var newdate = new Date(from[2], from[1] - 1, from[0]);
-                var from = $('#start_'+id).val().split("/");
+                var from = $('#start_'+counter).val().split("/");
                 var date = new Date(from[2], from[1] - 1, from[0]);
                 $('#mismatch-days').css("display", "none");
                 $('#mismatch-days').text("");
@@ -2233,6 +2790,19 @@ License: You must have a valid license purchased only from themeforest(the above
         } else {
             alert("Invalid Date");
         }
+    }
+
+    function getDates(startDate, stopDate) {
+        var dateArray = new Array();
+        var date = startDate;
+        var currentDate = startDate;
+        while (currentDate <= stopDate) {
+
+            //currentDate = currentDate.addDays(1);
+            currentDate = date.setDate(date.getDate() + 1);
+            dateArray.push( new Date (currentDate) );
+        }
+        return dateArray;
     }
 
     $("#save-service-detail").click(function(e){
@@ -2288,6 +2858,9 @@ License: You must have a valid license purchased only from themeforest(the above
                     $("#error-modal1").modal('show');
                     $("#error-message1").text(response.message);
                 }
+                 if (response.success == "Expired") {
+							location.href = '/subscriber-portal/'
+	       		     }
             },
             beforeSend: function () {
                 $("#processing").css('display','block');
