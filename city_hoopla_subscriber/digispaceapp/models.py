@@ -458,6 +458,8 @@ class Advert(models.Model):
     keywords                    = models.CharField(max_length=1000, blank=True, null=True)
     other_amenity                    = models.CharField(max_length=500,blank=True,null=True)
     title                       =       models.CharField(blank=True,null=True,max_length=50,default=None)
+    discount_start_date         =  models.CharField(blank=True,null=True,max_length=50,default=None)
+    discount_end_date         =  models.CharField(blank=True,null=True,max_length=50,default=None)    
     
     def __unicode__(self):
         return unicode(self.advert_id)
@@ -713,9 +715,12 @@ class Business(models.Model):
     business_updated_by = models.CharField(max_length=30, null=True, blank=True)
     business_updated_date = models.DateTimeField(default=datetime.now, null=True, blank=True)
     is_active = models.CharField(max_length=2, default='1', null=True, blank=True)
+    country_id =models.ForeignKey(Country,blank=True,null=True)
+    state_id                    = models.ForeignKey(State,blank=True,null=True)
 
     def __unicode__(self):
         return unicode(self.business_id)
+
 
 class CategorywiseAmenity(models.Model):
     categorywise_amenity_id = models.AutoField(primary_key=True, editable=False)
@@ -737,9 +742,9 @@ class CategorywiseAmenity(models.Model):
 
 
 class Amenities(models.Model):
-    amenity_id                 = models.AutoField(primary_key=True, editable=False)
-    advert_id                  = models.ForeignKey(Advert,blank=True,null=True)
-    categorywise_amenity_id    = models.ForeignKey(CategorywiseAmenity,blank=True,null=True)
+    amenity_id                  = models.AutoField(primary_key=True, editable=False)
+    advert_id                   = models.ForeignKey(Advert,blank=True,null=True)
+    categorywise_amenity_id     = models.ForeignKey(CategorywiseAmenity,blank=True,null=True)
     creation_date               = models.DateTimeField(null=True,blank=True)
     created_by                  = models.CharField(max_length=500,null=True,blank=True)
     updated_by                  = models.CharField(max_length=500,null=True,blank= True)

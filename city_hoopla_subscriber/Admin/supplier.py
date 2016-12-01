@@ -101,9 +101,11 @@ def add_subscriber(request):
         return render(request, 'Admin/add_supplier.html', data)
 
 
+
 @csrf_exempt
 def check_category(request):
     # pdb.set_trace()
+    print request.POST
     if not request.user.is_authenticated():
         data = {'success':'Expired'}
 
@@ -125,11 +127,13 @@ def check_category(request):
                 if request.POST.get('cat_level') == '5':
                     cat_obj = CategoryLevel5.objects.filter(parent_category_id=request.POST.get('category_id'))
                 cat_list = []
+                print 'aaaa',cat_obj
                 if cat_obj:
                     for cat in cat_obj:
                         options_data = '<option value=' + str(cat.category_id) + '>' + cat.category_name + '</option>'
                         cat_list.append(options_data)
                     data = { 'success': 'true','category_list': cat_list}
+                    print 'QQQQQQQQQQQQ',data
                 else:
                     cat_level = int(request.POST.get('cat_level')) - 1
                     print "main_category_id",request.POST.get('main_category_id')
@@ -192,6 +196,7 @@ def check_category(request):
         except Exception, e:
             print e
     return HttpResponse(json.dumps(data), content_type='application/json')
+
 
 
 # TO GET THE Country
@@ -1115,8 +1120,14 @@ def save_service(request):
             transaction_code="TID" + str(password),
             is_active=0,
             business_created_date=datetime.now(),
-            business_created_by=supplier_obj.contact_email
+            business_created_by=supplier_obj.contact_email,
+            country_id = Country.objects.get(country_id=request.POST.get('country1')) if request.POST.get('country1') else None,
+            state_id=State.objects.get(state_id=request.POST.get('statec1')) if request.POST.get('statec1') else None,
+            city_place_id=City_Place.objects.get(city_place_id=request.POST.get('city1')) if request.POST.get(
+                    'city1') else None,
         )
+
+
         business_obj.save()
         if request.POST.get('lvl1'):
             business_obj.category_level_1 = CategoryLevel1.objects.get(category_id=request.POST.get('lvl1'))

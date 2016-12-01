@@ -21,7 +21,7 @@ License: You must have a valid license purchased only from themeforest(the above
 {% load staticfiles %}
 <head>
     <meta charset="utf-8"/>
-    <title>City Hoopla | Edit Subscription </title>
+    <title>CityHoopla | Edit Subscription </title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
     <meta content="" name="description"/>
@@ -678,22 +678,25 @@ License: You must have a valid license purchased only from themeforest(the above
             <!--</div>-->
             <div class="top-menu" style="display:inline-block;">
                 <ul class="nav navbar-nav pull-right">
-                  
+                    <!-- BEGIN NOTIFICATION DROPDOWN -->
+                    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+
+                    <!-- END NOTIFICATION DROPDOWN -->
                     <li class="dropdown dropdown-user">
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
                            data-close-others="true">
-                            
+                            <!-- <img alt="" class="img-circle" src="{% static 'assets/layouts/layout2/img/avatar3_small.jpg" /> -->
                             <span class="username username-hide-on-mobile"> {{ request.session.login_user }} </span>
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-default">
                             <li>
-                                <a href="/subscriber-portal/subscriber-profile/?supplier_id={{request.session.supplier_id}}">
+                                <a href="/edit-profile/?user_id={{request.session.login_user}}">
                                     <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
                             </li>
                             <li>
-                                <a href="/subscriber-portal/log-out/">
-                                    <i class="icon-key" aria-hidden="true"></i> Log Out </a>
+                                <a href="/log-out/">
+                                    <i class="icon-key"></i> Log Out </a>
                             </li>
                         </ul>
                     </li>
@@ -783,7 +786,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <a href="/subscriber-portal/subscriber-advert/?supplier_id={{request.session.supplier_id}}"
                                        class="brad-crum-1">Advert</a>
                                     &nbsp;<i class="fa fa-angle-right"></i>&nbsp;
-                                    <span class="brad-crum-2">Edit subscription</span>
+                                    <span class="brad-crum-2">Edit Subscription</span>
                                     <div class="portlet-body">
                                         <div class="portlet light " id="form_wizard_1">
 
@@ -793,182 +796,281 @@ License: You must have a valid license purchased only from themeforest(the above
                                                 {% csrf_token %}
                                                 <div class="form-wizard">
                                                     <div class="form-body">
-                                                        <form id="subscription_form" method="POST">
-                                                            <label class="control-label font-18 font-bold font-blue">Select
-                                                                            Business Category </label>
-                                                            <div class="row">
-                                                                <input type="text" name="business_id" hidden
-                                                                       value="{{business_data.business_id}}">
-                                                                <div class="col-lg-4 col-md-4">
-                                                                    <div class="form-group">
-                                                                        <label style="font-size:15px; ">Category</label>
-                                                                        <input type="hidden" name="user_id"
-                                                                               value="2"/>
-                                                                        <span class="required"> * </span>
-                                                                        <select data-level="0"
-                                                                                class="form-control sel2"
-                                                                                id="sub_category" onchange="check_cat(1,this)"
-                                                                                name="sub_category">
-                                                                            <option value="">Select Category</option>
-                                                                            {% for cat in category_list %}
-                                                                                {% if business_data.category_id == cat.category_id %}
-                                                                                    <option selected value="{{ cat.category_id }}">
-                                                                                        {{ cat.category }}
+                                                         <form id="subscription_form" method="POST">
+                                                               <label class="control-label font-18 font-bold font-blue">Select
+                                                                        City  </label>
+
+                                                                       <div class="row">
+                                                                            <div class="col-lg-4">
+                                                                            <div class="form-group">
+                                                                                <label class="control-label "
+                                                                                       style="font-size:15px; "> Country
+                                                                                    <span class="required"> * </span>
+
+                                                                                </label>
+                                                                                <select class="form-control select2-hidden-accessible"
+                                                                                        id="country1"
+                                                                                        name="country1">
+                                                                                    <option value="">Select
+                                                                                        Country
                                                                                     </option>
-                                                                                {%else%}
-                                                                                    <option value="{{ cat.category_id }}">
-                                                                                        {{ cat.category }}
+                                                                                    {% for country in country_list %}
+                                                                                        {% if business_data.country_id == country.country_id %}
+                                                                                            <option selected value="{{ country.country_id }}">
+                                                                                                {{ country.country_name }}
+                                                                                            </option>
+                                                                                        {% else %}
+                                                                                            <option value="{{ country.country_id }}">
+                                                                                                {{ country.country_name }}
+                                                                                            </option>
+                                                                                        {% endif %}
+                                                                                    {% endfor %}
+                                                                                </select>
+                                                                                <label id="country_lebel"
+                                                                                       class="error font-12 font-regular"
+                                                                                       style="color:red; display:none;"></label>
+                                                                            </div>
+                                                                            </div>
+
+                                                                            <div class="col-lg-4 ">
+                                                                            <div class="form-group form-height">
+                                                                                <label class="control-label "
+                                                                                       style="font-size:15px; ">State
+                                                                                    <span class="required"> * </span>
+                                                                                </label>
+                                                                                <select class="form-control select2-hidden-accessible"
+                                                                                        id="statec1"
+                                                                                        name="statec1">
+                                                                                    <option value="">
+                                                                                        Select State
                                                                                     </option>
-                                                                                {%endif%}
-                                                                            {% endfor %}
-                                                                        </select>
-                                                                        <label id="sub_category_lebel"
-                                                                               class="error font-12 font-regular"
-                                                                               style="color:red; display:none;"></label>
+                                                                                    {% for state in state_list %}
+                                                                                        {% if business_data.state_id == state.state_id %}
+                                                                                            <option selected value="{{ state.state_id }}">
+                                                                                                {{ state.state_name }}
+                                                                                            </option>
+                                                                                        {% else %}
+                                                                                            <option value="{{ state.state_id }}">
+                                                                                                {{ state.state_name }}
+                                                                                            </option>
+                                                                                        {% endif %}
+                                                                                    {% endfor %}
+                                                                                </select>
+                                                                                <label id="state_lebel"
+                                                                                       class="error font-12 font-regular"
+                                                                                       style="color:red; display:none;"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-4">
+                                                                            <div class="form-group form-height">
+                                                                                <label class="control-label "
+                                                                                       style="font-size:15px; ">City
+                                                                                    <span class="required"> * </span>
+                                                                                </label>
+                                                                                <select class="form-control select2-hidden-accessible"
+                                                                                        id="city1"
+                                                                                        name="city1">
+                                                                                    <option value="">
+                                                                                        Select City
+                                                                                    </option>
+                                                                                    {% for city in city_list %}
+                                                                                        {% if business_data.city_place_id == city.city_place_id %}
+                                                                                            <option selected value="{{ city.city_place_id }}">
+                                                                                                {{ city.city_id.city_name }}
+                                                                                            </option>
+                                                                                        {% else %}
+                                                                                            <option value="{{ city.city_place_id }}">
+                                                                                                {{ city.city_id.city_name }}
+                                                                                            </option>
+                                                                                        {% endif %}
+                                                                                    {% endfor %}
+                                                                                </select>
+                                                                                <label id="city_lebel"
+                                                                                       class="error font-12 font-regular"
+                                                                                       style="color:red; display:none;"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                      </div>
+                                                            <div  id="select_category_div">
+                                                                <label class="control-label font-18 font-bold font-blue">Select
+                                                                                Business Category </label>
+                                                                <div class="row">
+                                                                    <input type="text" name="business_id" hidden
+                                                                           value="{{business_data.business_id}}">
+                                                                    <input type="hidden" name="supplier_id" id="supplier_id_hidden"
+                                                                            value="{{ supplier_id }}"   >
+                                                                    <div class="col-lg-4 col-md-4">
+                                                                        <div class="form-group">
+                                                                            <label style="font-size:15px; ">Category</label>
+                                                                            <input type="hidden" name="user_id"
+                                                                                   value="2"/>
+                                                                            <span class="required"> * </span>
+                                                                            <select data-level="0"
+                                                                                    class="form-control sel2"
+                                                                                    id="sub_category" onchange="check_cat(1,this)"
+                                                                                    name="sub_category">
+                                                                                <option value="">Select Category</option>
+                                                                                {% for category in category_list %}
+                                                                                    {% if business_data.category_id == category.category_id %}
+                                                                                        <option selected value="{{ category.category_id }}">
+                                                                                            {{ category.category_name }}
+                                                                                        </option>
+                                                                                    {% else %}
+                                                                                        <option value="{{ category.category_id }}">
+                                                                                            {{ category.category_name }}
+                                                                                        </option>
+                                                                                    {% endif %}
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                            <label id="sub_category_lebel"
+                                                                                   class="error font-12 font-regular"
+                                                                                   style="color:red; display:none;"></label>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                                {% if business_data.category_level_1 %}
-                                                                    <div class="col-lg-4 col-md-6" id="lvl1_row" >
-                                                                {% else %}
-                                                                    <div class="col-lg-4 col-md-6" id="lvl1_row" style="display:none;">
-                                                                {% endif %}
-                                                                    <div class="form-group">
-                                                                        <label style="font-size:15px; ">Sub Category(Level 1) </label>
-                                                                        <span class="required"> * </span>
-                                                                        <select class="form-control subcat_select sel2"
-                                                                                onchange="check_cat(2,this)"
-                                                                                id="lvl1" name="lvl1">
-                                                                            <option value="">Select Sub Category</option>
-                                                                            {% for cat in category_lvl1_list %}
-                                                                                {% if business_data.category_level_1 == cat.category_id %}
-                                                                                    <option selected value="{{ cat.category_id }}">
-                                                                                        {{ cat.category_name }}
-                                                                                    </option>
-                                                                                {%else%}
-                                                                                    <option value="{{ cat.category_id }}">
-                                                                                        {{ cat.category_name }}
-                                                                                    </option>
-                                                                                {%endif%}
-                                                                            {% endfor %}
-                                                                        </select>
-                                                                        <label class="error font-12 font-regular"
-                                                                               style="color:red; display:none;"></label>
+                                                                    {% if business_data.category_level_1 %}
+                                                                        <div class="col-lg-4 col-md-6" id="lvl1_row" >
+                                                                    {% else %}
+                                                                        <div class="col-lg-4 col-md-6" id="lvl1_row" style="display:none;">
+                                                                    {% endif %}
+                                                                        <div class="form-group">
+                                                                            <label style="font-size:15px; ">Sub Category(Level 1) </label>
+                                                                            <span class="required"> * </span>
+                                                                            <select class="form-control subcat_select sel2"
+                                                                                    onchange="check_cat(2,this)"
+                                                                                    id="lvl1" name="lvl1">
+                                                                                <option value="">Select Sub Category</option>
+                                                                                {% for category in category_lvl1_list %}
+                                                                                    {% if business_data.category_level_1 == category.category_id %}
+                                                                                        <option selected value="{{ category.category_id }}">
+                                                                                            {{ category.category_name }}
+                                                                                        </option>
+                                                                                    {% else %}
+                                                                                        <option value="{{ category.category_id }}">
+                                                                                            {{ category.category_name }}
+                                                                                        </option>
+                                                                                    {% endif %}
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                            <label class="error font-12 font-regular"
+                                                                                   style="color:red; display:none;"></label>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
 
 
-                                                                {% if business_data.category_level_2 %}
-                                                                    <div class="col-lg-4 col-md-6" id="lvl2_row" >
-                                                                {% else %}
-                                                                    <div class="col-lg-4 col-md-6" id="lvl2_row" style="display:none;">
-                                                                {% endif %}
-                                                                    <div class="form-group">
-                                                                        <label  style="font-size:15px; ">Sub Category(Level 2) </label>
-                                                                        <span class="required"> * </span>
-                                                                        <select class="form-control subcat_select sel2"
-                                                                                onchange="check_cat(3,this)"
-                                                                                id="lvl2" name="lvl2">
-                                                                            <option value="">Select Sub Category</option>
-                                                                            {% for cat in category_lvl2_list %}
-                                                                                {% if business_data.category_level_2 == cat.category_id %}
-                                                                                    <option selected value="{{ cat.category_id }}">
-                                                                                        {{ cat.category_name }}
-                                                                                    </option>
-                                                                                {%else%}
-                                                                                    <option value="{{ cat.category_id }}">
-                                                                                        {{ cat.category_name }}
-                                                                                    </option>
-                                                                                {%endif%}
-                                                                            {% endfor %}
-                                                                        </select>
-                                                                        <label class="error font-12 font-regular"
-                                                                               style="color:red; display:none;"></label>
+                                                                    {% if business_data.category_level_2 %}
+                                                                        <div class="col-lg-4 col-md-6" id="lvl2_row" >
+                                                                    {% else %}
+                                                                        <div class="col-lg-4 col-md-6" id="lvl2_row" style="display:none;">
+                                                                    {% endif %}
+                                                                        <div class="form-group">
+                                                                            <label  style="font-size:15px; ">Sub Category(Level 2) </label>
+                                                                            <span class="required"> * </span>
+                                                                            <select class="form-control subcat_select sel2"
+                                                                                    onchange="check_cat(3,this)"
+                                                                                    id="lvl2" name="lvl2">
+                                                                                <option value="">Select Sub Category</option>
+                                                                                {% for category in category_lvl2_list %}
+                                                                                    {% if business_data.category_level_2 == category.category_id %}
+                                                                                        <option selected value="{{ category.category_id }}">
+                                                                                            {{ category.category_name }}
+                                                                                        </option>
+                                                                                    {% else %}
+                                                                                        <option value="{{ category.category_id }}">
+                                                                                            {{ category.category_name }}
+                                                                                        </option>
+                                                                                    {% endif %}
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                            <label class="error font-12 font-regular"
+                                                                                   style="color:red; display:none;"></label>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                {% if business_data.category_level_3 %}
-                                                                    <div class="col-lg-4 col-md-6" id="lvl3_row" >
-                                                                {% else %}
-                                                                    <div class="col-lg-4 col-md-6" id="lvl3_row" style="display:none;">
-                                                                {% endif %}
-                                                                    <div class="form-group">
-                                                                        <label  style="font-size:15px; ">Sub Category(Level 3) </label>
-                                                                        <span class="required"> * </span>
-                                                                        <select class="form-control subcat_select sel2"
-                                                                                onchange="check_cat(4,this)"
-                                                                                id="lvl3" name="lvl3">
-                                                                            <option value="">Select Sub Category</option>
-                                                                            {% for cat in category_lvl3_list %}
-                                                                                {% if business_data.category_level_3 == cat.category_id %}
-                                                                                    <option selected value="{{ cat.category_id }}">
-                                                                                        {{ cat.category_name }}
-                                                                                    </option>
-                                                                                {%else%}
-                                                                                    <option value="{{ cat.category_id }}">
-                                                                                        {{ cat.category_name }}
-                                                                                    </option>
-                                                                                {%endif%}
-                                                                            {% endfor %}
-                                                                        </select>
-                                                                        <label class="error font-12 font-regular"
-                                                                               style="color:red; display:none;"></label>
+                                                                <div class="row">
+                                                                    {% if business_data.category_level_3 %}
+                                                                        <div class="col-lg-4 col-md-6" id="lvl3_row" >
+                                                                    {% else %}
+                                                                        <div class="col-lg-4 col-md-6" id="lvl3_row" style="display:none;">
+                                                                    {% endif %}
+                                                                        <div class="form-group">
+                                                                            <label  style="font-size:15px; ">Sub Category(Level 3) </label>
+                                                                            <span class="required"> * </span>
+                                                                            <select class="form-control subcat_select sel2"
+                                                                                    onchange="check_cat(4,this)"
+                                                                                    id="lvl3" name="lvl3">
+                                                                                <option value="">Select Sub Category</option>
+                                                                                {% for category in category_lvl3_list %}
+                                                                                    {% if business_data.category_level_3 == category.category_id %}
+                                                                                        <option selected value="{{ category.category_id }}">
+                                                                                            {{ category.category_name }}
+                                                                                        </option>
+                                                                                    {% else %}
+                                                                                        <option value="{{ category.category_id }}">
+                                                                                            {{ category.category_name }}
+                                                                                        </option>
+                                                                                    {% endif %}
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                            <label class="error font-12 font-regular"
+                                                                                   style="color:red; display:none;"></label>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                                {% if business_data.category_level_4 %}
-                                                                    <div class="col-lg-4 col-md-6" id="lvl4_row" >
-                                                                {% else %}
-                                                                    <div class="col-lg-4 col-md-6" id="lvl4_row" style="display:none;">
-                                                                {% endif %}
-                                                                    <div class="form-group">
-                                                                        <label  style="font-size:15px; ">Sub Category(Level 4) </label>
-                                                                        <span class="required"> * </span>
-                                                                        <select class="form-control subcat_select sel2"
-                                                                                onchange="check_cat(5,this)"
-                                                                                id="lvl4" name="lvl4">
-                                                                            <option value="">Select Sub Category</option>
-                                                                            {% for cat in category_lvl4_list %}
-                                                                                {% if business_data.category_level_4 == cat.category_id %}
-                                                                                    <option selected value="{{ cat.category_id }}">
-                                                                                        {{ cat.category_name }}
-                                                                                    </option>
-                                                                                {%else%}
-                                                                                    <option value="{{ cat.category_id }}">
-                                                                                        {{ cat.category_name }}
-                                                                                    </option>
-                                                                                {%endif%}
-                                                                            {% endfor %}
-                                                                        </select>
-                                                                        <label class="error font-12 font-regular"
-                                                                               style="color:red; display:none;"></label>
+                                                                    {% if business_data.category_level_4 %}
+                                                                        <div class="col-lg-4 col-md-6" id="lvl4_row" >
+                                                                    {% else %}
+                                                                        <div class="col-lg-4 col-md-6" id="lvl4_row" style="display:none;">
+                                                                    {% endif %}
+                                                                        <div class="form-group">
+                                                                            <label  style="font-size:15px; ">Sub Category(Level 4) </label>
+                                                                            <span class="required"> * </span>
+                                                                            <select class="form-control subcat_select sel2"
+                                                                                    onchange="check_cat(5,this)"
+                                                                                    id="lvl4" name="lvl4">
+                                                                                <option value="">Select Sub Category</option>
+                                                                                {% for category in category_lvl4_list %}
+                                                                                    {% if business_data.category_level_4 == category.category_id %}
+                                                                                        <option selected value="{{ category.category_id }}">
+                                                                                            {{ category.category_name }}
+                                                                                        </option>
+                                                                                    {% else %}
+                                                                                        <option value="{{ category.category_id }}">
+                                                                                            {{ category.category_name }}
+                                                                                        </option>
+                                                                                    {% endif %}
+                                                                                {% endfor %}
+
+                                                                            </select>
+                                                                            <label class="error font-12 font-regular"
+                                                                                   style="color:red; display:none;"></label>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                                {% if business_data.category_level_5 %}
-                                                                    <div class="col-lg-4 col-md-6" id="lvl5_row" >
-                                                                {% else %}
-                                                                    <div class="col-lg-4 col-md-6" id="lvl5_row" style="display:none;">
-                                                                {% endif %}
-                                                                    <div class="form-group">
-                                                                        <label  style="font-size:15px; ">Sub Category(Level 5) </label>
-                                                                        <span class="required"> * </span>
-                                                                        <select class="form-control subcat_select sel2"
-                                                                                onchange="check_cat(6,this)"
-                                                                                id="lvl5" name="lvl5">
-                                                                            <option value="">Select Sub Category</option>
-                                                                            {% for cat in category_lvl5_list %}
-                                                                                {% if business_data.category_level_5 == cat.category_id %}
-                                                                                    <option selected value="{{ cat.category_id }}">
-                                                                                        {{ cat.category_name }}
-                                                                                    </option>
-                                                                                {%else%}
-                                                                                    <option value="{{ cat.category_id }}">
-                                                                                        {{ cat.category_name }}
-                                                                                    </option>
-                                                                                {%endif%}
-                                                                            {% endfor %}
-                                                                        </select>
-                                                                        <label class="error font-12 font-regular"
-                                                                               style="color:red; display:none;"></label>
+                                                                    {% if business_data.category_level_5 %}
+                                                                        <div class="col-lg-4 col-md-6" id="lvl5_row" >
+                                                                    {% else %}
+                                                                        <div class="col-lg-4 col-md-6" id="lvl5_row" style="display:none;">
+                                                                    {% endif %}
+                                                                        <div class="form-group">
+                                                                            <label  style="font-size:15px; ">Sub Category(Level 5) </label>
+                                                                            <span class="required"> * </span>
+                                                                            <select class="form-control subcat_select sel2"
+                                                                                    onchange="check_cat(6,this)"
+                                                                                    id="lvl5" name="lvl5">
+                                                                                <option value="">Select Sub Category</option>
+                                                                                {% for category in category_lvl5_list %}
+                                                                                    {% if business_data.category_level_5 == category.category_id %}
+                                                                                        <option selected value="{{ category.category_id }}">
+                                                                                            {{ category.category_name }}
+                                                                                        </option>
+                                                                                    {% else %}
+                                                                                        <option value="{{ category.category_id }}">
+                                                                                            {{ category.category_name }}
+                                                                                        </option>
+                                                                                    {% endif %}
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                            <label class="error font-12 font-regular"
+                                                                                   style="color:red; display:none;"></label>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1372,7 +1474,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
                                                             <br>
 
-                                                        <div class="row">
+                                                       <div class="row">
                                                             <div class="col-lg-12 col-md-12 text-right">
                                                                 <a type="button"
                                                                    href="/subscriber-portal/subscriber-advert/?supplier_id={{request.session.supplier_id}}"
@@ -1383,21 +1485,21 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                        class="btn btn-outline done_btn">
                                                             </div>
                                                         </div>
-
-
+                                                        
                                                         </form>
+                                                      
                                                     </div>
+                                                    <!-- END FORM-->
                                                 </div>
-                                                <!-- END FORM-->
                                             </div>
+                                            <!-- END PORTLET-->
                                         </div>
-                                        <!-- END PORTLET-->
                                     </div>
                                 </div>
+                                <!-- END CONTENT BODY -->
                             </div>
-                            <!-- END CONTENT BODY -->
+                            <!-- END CONTENT -->
                         </div>
-                        <!-- END CONTENT -->
                     </div>
                 </div>
             </div>
@@ -1760,6 +1862,56 @@ License: You must have a valid license purchased only from themeforest(the above
 <script src="{% static 'assets/global/plugins/ion.rangeslider/js/ion.rangeSlider.min.js' %}"></script>
 <script type="text/javascript">
 
+    var sub_flag = "true";
+
+    $("#supplier_anchor").addClass("tab-active");
+    $("#supplier_icon").addClass("icon-active");
+    $("#supplier_active").css("display","block");
+
+    $('html').bind('keypress', function(e){
+        if(e.keyCode == 13)
+        {
+            return false;
+        }
+    });
+
+
+    $("#next-payment-detail").click(function(){
+        $("#tab_1").removeClass("active");
+        $("#tab_2").addClass("active");
+        $("#tab1").removeClass("active");
+        $("#tab2").addClass("active");
+        $(".progress-bar-success").css("width","66.667%");
+        return false;
+    });
+
+    $("#prev-subscription-detail").click(function(){
+        $("#tab_2").removeClass("active");
+        $("#tab_1").addClass("active");
+        $("#tab2").removeClass("active");
+        $("#tab1").addClass("active");
+        $(".progress-bar-success").css("width","33.334%");
+        return false;
+    });
+
+    $("#next-advert-detail").click(function(){
+        $("#tab_2").removeClass("active");
+        $("#tab_3").addClass("active");
+        $("#tab2").removeClass("active");
+        $("#tab3").addClass("active");
+        $(".progress-bar-success").css("width","100%");
+        return false;
+    });
+
+    $("#prev-payment-detail").click(function(){
+        $("#tab_3").removeClass("active");
+        $("#tab_2").addClass("active");
+        $("#tab3").removeClass("active");
+        $("#tab2").addClass("active");
+        $(".progress-bar-success").css("width","66.667%");
+        return false;
+    });
+
     $("#duration_list").val("{{business_data.service_rate_card_duration}}").change();
     $("#dt50").val("{{business_data.start_date}}");
     $("#dt2").val("{{business_data.end_date}}");
@@ -1826,7 +1978,7 @@ License: You must have a valid license purchased only from themeforest(the above
     $( document ).ready(function() {
         $.ajax({
             type : "POST",
-            url : '/get-edit-booked-slots/',
+            url : '/subscriber-portal/get-edit-booked-slots/',
             data : {
                 'cat_id':cat_id,
                 'cat_lvl':cat_lvl,
@@ -1944,9 +2096,8 @@ License: You must have a valid license purchased only from themeforest(the above
                     $("#error-message1").text(response.message);
                 }
                 if (response.success == "Expired") {
-							location.href = '/subscriber-portal/'
-	       			}
-	       		
+							location.href = '/subscriber-portal/?status=Expired'
+	       			}	                
             },
             beforeSend: function () {
                 $("#processing").css('display','block');
@@ -1985,6 +2136,9 @@ License: You must have a valid license purchased only from themeforest(the above
     });
 
     function check_cat(lvl,this_val){
+        supplier_id=$("#supplier_id_hidden").val();
+        $("#subscription_div").css("display","none");
+        $("#duration_list").val("").change();
         if($(this_val).attr('data-level')=="0"){
             clear_subcat();
         }
@@ -1995,13 +2149,14 @@ License: You must have a valid license purchased only from themeforest(the above
         }
         $.ajax({
             type    : "POST",
-            url : '/check-category-supplier/',
-            data : {'category_id':$(this_val).val(),'cat_level':lvl,'supplier_id':{{request.session.supplier_id}},'city_place_id':{{city_place_id}}},
+            url : '/subscriber-portal/check-category-supplier/',
+            data : {'category_id':$(this_val).val(),'cat_level':lvl,'supplier_id':supplier_id,'city_place_id':{{city_place_id}}},
             success: function (response) {
                 if(response.success=='true'){
                     $('#lvl'+lvl).html('');
                     $('.subcat_select').select2();
                     $('.subcat_selects').select2();
+                    
                     $('.select2').css("width","100%");
                     $('#lvl'+lvl).append('<option value="">Select SubCategory</option>');
                     $.each(response.category_list, function (index, item) {
@@ -2016,20 +2171,23 @@ License: You must have a valid license purchased only from themeforest(the above
                     if(response.has_rate_card == 'true'){
                         cat_lvl = parseInt(lvl) - 1;
                         cat_id = $(this_val).val();
+                        $('#lvl'+lvl+'_row').hide();
+                        $('#lvl'+lvl).css("display",'none');
                         $("#subscription_div").css("display","block");
                         $("#selectedDuration").css("display","none");
                     }
                     else{
                         cat_lvl = '';
                         cat_id = '';
+                        //$("#subscription_div").css("display","none");
+                        $('#lvl'+lvl+'_row').hide();
                         $("#subscription_div").css("display","none");
                     }
 
                 }
-                if (response.success == "Expired") {
-							location.href = '/subscriber-portal/'
-	       			}
-	       			
+                 if (response.success == "Expired") {
+							location.href = '/subscriber-portal/?status=Expired'
+	       			}	                
             },
             error : function(response){
                 alert("_Error");
@@ -2100,7 +2258,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
         $.ajax({
             type : "POST",
-            url : '/get-edit-telephone-service-slots/',
+            url : '/subscriber-portal/get-edit-telephone-service-slots/',
             data : {
                 'cat_id':cat_id,
                 'cat_lvl':cat_lvl,
@@ -2123,8 +2281,8 @@ License: You must have a valid license purchased only from themeforest(the above
                     $("#error-message1").text(response.message);
                 }
                 if (response.success == "Expired") {
-							location.href = '/subscriber-portal/'
-	       			}
+							location.href = '/subscriber-portal/?status=Expired'
+	       			}	                
             },
             beforeSend: function () {
                 $("#processing").css('display','block');
@@ -2189,12 +2347,13 @@ License: You must have a valid license purchased only from themeforest(the above
         $(".tel_end_date").each(function() {
             $(this).val('');
         });
+        supplier_id=$("#supplier_id_hidden").val();
         if (duration != ""){
             $("#dt50").prop("disabled", false);
             $.ajax({
                 type : "POST",
-                url : '/get-premium-subscription-amount/',
-                data : {'duration':duration,'service_name':'Subscription','cat_lvl':cat_lvl,'cat_id':cat_id,'supplier_id':{{request.session.supplier_id}}},
+                url : '/subscriber-portal/get-premium-subscription-amount/',
+                data : {'duration':duration,'service_name':'Subscription','cat_lvl':cat_lvl,'cat_id':cat_id,'supplier_id':supplier_id},
 
                 success: function (response) {
                     if(response.success=='true'){
@@ -2218,8 +2377,8 @@ License: You must have a valid license purchased only from themeforest(the above
                         $("#error-message1").text(response.message);
                     }
                     if (response.success == "Expired") {
-							location.href = '/subscriber-portal/'
-	       		     }
+							location.href = '/subscriber-portal/?status=Expired'
+	       			}	                    
                 },
                 beforeSend: function () {
                     $("#processing").css('display','block');
@@ -2273,7 +2432,7 @@ License: You must have a valid license purchased only from themeforest(the above
             }
             $.ajax({
                 type : "POST",
-                url : '/get-booked-slots/',
+                url : '/subscriber-portal/get-booked-slots/',
                 data : {
                     'cat_id':cat_id,
                     'cat_lvl':cat_lvl,
@@ -2306,8 +2465,8 @@ License: You must have a valid license purchased only from themeforest(the above
                         $("#error-message1").text(response.message);
                     }
                     if (response.success == "Expired") {
-							location.href = '/subscriber-portal/'
-	       		     }
+							location.href = '/subscriber-portal/?status=Expired'
+	       			}	                    
                 },
                 beforeSend: function () {
                     $("#processing").css('display','block');
@@ -2463,8 +2622,8 @@ License: You must have a valid license purchased only from themeforest(the above
 
         $.ajax({
             type : "POST",
-            url : '/get-telephone-subscription-amount/',
-            data : {'duration':duration,'service_name':service_name.trim(),'cat_lvl':cat_lvl,'cat_id':cat_id,'supplier_id':{{request.session.supplier_id}}},
+            url : '/subscriber-portal/get-telephone-subscription-amount/',
+            data : {'duration':duration,'service_name':service_name.trim(),'cat_lvl':cat_lvl,'cat_id':cat_id,'supplier_id':{{supplier_id}}},
             success: function (response) {
                 if(response.success=='true'){
                     if (service_name.trim() == 'Platinum'){
@@ -2523,9 +2682,9 @@ License: You must have a valid license purchased only from themeforest(the above
                     $("#error-modal1").modal('show');
                     $("#error-message1").text(response.message);
                 }
-                 if (response.success == "Expired") {
-							location.href = '/subscriber-portal/'
-	       		     }
+                if (response.success == "Expired") {
+							location.href = '/subscriber-portal/?status=Expired'
+	       			}	                
             },
             beforeSend: function () {
                 $("#processing").css('display','block');
@@ -2662,11 +2821,12 @@ License: You must have a valid license purchased only from themeforest(the above
         if(duration == "0"){
             return false;
         }
+        supplier_id=$("#supplier_id_hidden").val();
 
         $.ajax({
             type : "POST",
-            url : '/get-premium-subscription-amount/',
-            data : {'duration':duration,'service_name':service_name.trim(),'cat_lvl':cat_lvl,'cat_id':cat_id,'supplier_id':{{request.session.supplier_id}}},
+            url : '/subscriber-portal/get-premium-subscription-amount/',
+            data : {'duration':duration,'service_name':service_name.trim(),'cat_lvl':cat_lvl,'cat_id':cat_id,'supplier_id':supplier_id},
 
             success: function (response) {
                 if(response.success=='true'){
@@ -2694,9 +2854,9 @@ License: You must have a valid license purchased only from themeforest(the above
                     $("#error-modal1").modal('show');
                     $("#error-message1").text(response.message);
                 }
-                 if (response.success == "Expired") {
-							location.href = '/subscriber-portal/'
-	       		     }
+                if (response.success == "Expired") {
+							location.href = '/subscriber-portal/?status=Expired'
+	       			}	                
             },
             beforeSend: function () {
                 $("#processing").css('display','block');
@@ -2806,9 +2966,28 @@ License: You must have a valid license purchased only from themeforest(the above
     }
 
     $("#save-service-detail").click(function(e){
+        if(sub_flag == "false"){
+            return false;
+        }
         if(cat_lvl == ''){
             return false;
         }
+
+                valid_coun = validate_subscription("#country1","#country_lebel","Please select Country");
+        if(valid_coun == false){
+            return false;
+        }
+
+            valid_stat = validate_subscription("#statec1","#state_lebel","Please select State");
+        if(valid_stat == false){
+            return false;
+        }
+
+           valid_cit = validate_subscription("#city1","#city_lebel","Please select City");
+        if(valid_cit == false){
+            return false;
+        }
+
         valid_cat = validate_subscription("#sub_category","#sub_category_lebel","Please select Category");
         if(valid_cat == false){
             return false;
@@ -2858,9 +3037,9 @@ License: You must have a valid license purchased only from themeforest(the above
                     $("#error-modal1").modal('show');
                     $("#error-message1").text(response.message);
                 }
-                 if (response.success == "Expired") {
-							location.href = '/subscriber-portal/'
-	       		     }
+                if (response.success == "Expired") {
+							location.href = '/subscriber-portal/?status=Expired'
+	       			}	                
             },
             beforeSend: function () {
                 $("#processing").css('display','block');
@@ -2875,7 +3054,7 @@ License: You must have a valid license purchased only from themeforest(the above
     });
 
     function validate_subscription(id,lebel,msg){
-        if($(id).val() == ""){
+        if($(id).val() == "" || $(id).val() == null){
             $(lebel).css("display", "block");
             $(lebel).text(msg);
             return false;
@@ -2891,6 +3070,9 @@ License: You must have a valid license purchased only from themeforest(the above
         $.each($("input[name='premium_service']:checked"), function(){
             check_id = $(this).attr('id');
             id = check_id.split('_');
+            var from_1 = $('#dt2').val().split("/");
+            var from_2 = $("#end_"+id[2]).val().split("/");
+
             if($("#day_"+id[1]).val() == "0" || $("#day_"+id[1]).val() == ""){
                 $("#mismatch-days").css("display", "block");
                 msg = "Please select Duration for "+$(this).val();
@@ -2898,21 +3080,21 @@ License: You must have a valid license purchased only from themeforest(the above
                 flag = 1;
                 return false;
             }
-            else if($("#start_"+id[1]).val() == ""){
+            else if($("#start_"+id[2]).val() == ""){
                 $("#mismatch-days").css("display", "block");
                 msg = "Please add Start Date for "+$(this).val();
                 $("#mismatch-days").text(msg);
                 flag = 1;
                 return false;
             }
-            else if($("#end_"+id[1]).val() == ""){
+            else if($("#end_"+id[2]).val() == ""){
                 $("#mismatch-days").css("display", "block");
-                msg = "Please add Start Date for "+$(this).val();
+                msg = $(this).val()+" is not available for selected Date and Duration";
                 $("#mismatch-days").text(msg);
                 flag = 1;
                 return false;
             }
-            else if(new Date($('#dt2').val()) < new Date($("#end_"+id[1]).val()))
+            else if(new Date(from_1[2], from_1[1] - 1, from_1[0]) < new Date(from_2[2], from_2[1] - 1, from_2[0]))
             {
                 $('#mismatch-days').css("display", "block");
                 msg = "Premium Service end date should be less than or equal to Duration end date for "+$(this).val();
@@ -2928,6 +3110,115 @@ License: You must have a valid license purchased only from themeforest(the above
         });
         return flag;
     }
+
+        /  For Select Subscription /
+
+    $("#country1").change(function () {
+        getState1();
+    });
+    $("#statec1").change(function () {
+        getCity1();
+    });
+    $("#city1").change(function () {
+        getCategory1();
+    });
+
+    function getState1() {
+        $("#select_category_div").css("display","none");
+        $("#sub_category").val("").change();
+        clear_subcat();
+        country_id = $('#country1 :selected').val();
+        if (country_id) {
+            $.ajax({
+                type: 'GET',
+                url: '/get-state/',
+                data: {'country_id': country_id},
+                success: function (response) {
+                    $('#statec1').html('');
+                    $('#statec1').append("<option value=''>Select State</option>");
+                    $('#statec1').val("").change();
+                    $.each(response.state_list, function (index, item) {
+                        $('#statec1').append(item);
+                    });
+                    //$('#statec1').val("").change();
+                    $('#currency').val(response.currency)
+                },
+                error: function (response) {
+                    alert("Error!");
+                },
+            });
+        }
+        else {
+            $('#statec1').html('');
+            $('#statec1').append("<option value=''>Select State</option>");
+            $('#statec1').val("").change();
+        }
+    }
+
+    function getCity1() {
+        $("#select_category_div").css("display","none");
+        $("#sub_category").val("").change();
+        clear_subcat();
+        state_id = $('#statec1 :selected').val();
+        if (state_id) {
+            $.ajax({
+                type: 'GET',
+                url: '/get-city-place/',
+                data: {'state_id': state_id},
+                success: function (response) {
+                    //alert('success');
+                    $('#city1').html('');
+                    $('#city1').append("<option value=''>Select City</option>");
+                    $('#city1').val("").change();
+                    $.each(response.city_list, function (index, item) {
+                        $('#city1').append(item);
+                    });
+                },
+                error: function (response) {
+                    alert("Error!");
+                },
+            });
+        }
+        else {
+            $('#city1').html('');
+            $('#city1').append("<option value=''>Select City</option>");
+            $('#city1').val("").change();
+        }
+    }
+
+
+    function getCategory1() {
+        $("#select_category_div").css("display","none");
+        city_place_id = $('#city1 :selected').val();
+        if (city_place_id) {
+            $.ajax({
+                type: 'GET',
+                url: '/get-categories/',
+                data: {'city_place_id': city_place_id},
+                success: function (response) {
+                    //alert('success');
+                    $('#sub_category').html('');
+                    $("#sub_category").append("<option value=''>Select Category</option>")
+                    $.each(response.cat_list, function (index, item) {
+                        $('#sub_category').append(item);
+                    });
+                    $('#sub_category').val("").change();
+                    $("#select_category_div").css("display","block");
+                    clear_subcat();
+                },
+                error: function (response) {
+                    alert("Error!");
+                },
+            });
+        }
+        else {
+            $('#sub_category').val("").change();
+        }
+    }
+
+/ End For Subscription /
+
+
 
     $(function() {
 
@@ -3009,9 +3300,55 @@ License: You must have a valid license purchased only from themeforest(the above
         return flag;
     }
 
+
+
+    $(function() {
+
+        $("#tax_type").select2({});
+
+        $(".days").select2({
+            width: '100%'
+        });
+
+        $(".select2-hidden-accessible").select2({
+            width: '100%'
+        });
+
+        $(".sel2").select2({
+            width: '100%'
+        });
+
+        $("#categ").select2({
+            width: '100%'
+        });
+
+        if("{{payment_details.payment_mode}}" == 'cash' || "{{payment_details.payment_mode}}" == ''){
+            $("#che").hide();
+        }
+
+
+        $('input[type="radio"]').click(function() {
+            if($(this).attr('id') == 'cheque') {
+                $('#che').show();
+                $("#bank_name").val('');
+                $("#bank_branch_name").val('');
+                $("#cheque_number").val('');
+            }
+            else {
+                $('#che').hide();
+                $("#bank_name").val('');
+                $("#bank_branch_name").val('');
+                $("#cheque_number").val('');
+            }
+        });
+
+    });
+
+
 </script>
 
 
 </body>
 
 </html>
+

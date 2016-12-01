@@ -628,12 +628,10 @@ def get_city_place(request):
     try:
         city_objs = City_Place.objects.filter(state_id=state_id, city_status='1')
 
-        print "======city_objs", city_objs
         for city in city_objs:
             options_data = '<option value=' + str(
                 city.city_place_id) + '>' + city.city_id.city_name + '</option>'
             city_list.append(options_data)
-            print city_list
         data = {'city_list': city_list}
 
     except Exception, ke:
@@ -656,7 +654,6 @@ def get_pincode_place(request):
         for pincode in pincode_objs:
             options_data = '<option>' + pincode['pincode'] + '</option>'
             pincode_list.append(options_data)
-            print pincode_list
         data = {'pincode_list': pincode_list}
 
     except Exception, ke:
@@ -678,6 +675,7 @@ def get_pincode_places(request):
             options_data = '<option value="'+ str(pincode.pincode_id) +'">' + str(pincode.pincode) + '</option>'
             pincode_list.append(options_data)
         data = {'pincode_list': pincode_list}
+        
 
     except Exception, ke:
         print ke
@@ -689,7 +687,6 @@ def get_pincode_places(request):
 def get_states(request):
    
    country_id=request.GET.get('country_id')
-   print '.................country_id.....................',country_id
    state_list=[]
    try:
       state_objs=State.objects.filter(country_id=country_id,state_status='1').order_by('state_name')
@@ -697,9 +694,7 @@ def get_states(request):
          options_data = '<option value="' + str(
                    state.state_id) + '">' + state.state_name + '</option>'
          state_list.append(options_data)
-         print state_list
       data = {'state_list': state_list}
-      print '........data..........',data
 
    except Exception, ke:
       print ke
@@ -3160,6 +3155,7 @@ def edit_advert(request):
                 }
                 product_list.append(product_data)
 
+
         time_list = []
         time_obj = WorkingHours.objects.filter(advert_id=advert_id)
         if time_obj:
@@ -4133,5 +4129,26 @@ def advert_booking_list(request):
                 'username': request.session['login_user']}
         return render(request, 'Admin/advert_bookings.html', data)
 
+# TO GET THE CATEGORY 
+def get_categories(request):
+   # pdb.set_trace()
+   city_place_id=request.GET.get('city_place_id')
+   cat_list=[]
+   category_id_list=[]
+   try:
+        cat_obj=CategoryCityMap.objects.filter(city_place_id=city_place_id)
+        for cat in cat_obj:
+            cat_status = cat.category_id.category_status
+            if int(cat_status) == 1:
+                category_id =cat.category_id.category_id
+                category_id_list.append(category_id)
+        category_list = Category.objects.filter(category_id__in=category_id_list).exclude(category_name= 'Event Ticket Resale')
+        for category in category_list:
+            options_data = '<option value="'+ str(category.category_id) +'">' + str(category.category_name) + '</option>'
+            cat_list.append(options_data)
+        data = {'cat_list': cat_list}
 
-
+   except Exception, ke:
+      print ke
+      data={'state_list': 'none','message':'No city available'}
+   return HttpResponse(json.dumps(data), content_type='application/json')

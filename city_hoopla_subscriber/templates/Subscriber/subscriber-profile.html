@@ -1361,34 +1361,25 @@ hr {
  																
  															<div class="row">	
  																<div class="col-xs-12">
-                                                   <div class="form-group">
-                                                       <label class="control-label " style="font-size:15px; ">Name
-                                                           <span class="required"> * </span>
-                                                       </label>
-                                                          <select class="form-control sel2 select2-hidden-accessible"
-                                                              disabled
-                                                               id="sale_person_name"
-                                                               name="user_name">
-
-                               											{% for sale in sales_person_list %}
-                                                               {% if sale.sales_person_id == sales_person_name %}
-                                                                       <option value="{{ sale.sales_person_id  }}" selected>
-                                                                               {{sale.sales_person_name  }}
-                                                                       </option>
-                                                                       {% else %}
-                                                                       <option value="{{ sale.sales_person_id  }}" >
-                                                                               {{sale.sales_person_name  }}
-                                                                       </option>
-                                                                       {% endif %}
-                                                                 {% endfor %}
-
-                                                       </select>
-                                                       <label class="error"
-                                                              style="color:red; display:none;"></label>
+ 																		<div class="row">
+ 																				 <div class="col-xs-6" >
+ 																				 		<label style="font-size: 16px;" class="control-label"><br>Name
+				                                                      </label>
+				                                                       <input readonly value="{{sales_person_name}}" type="text" class="form-control" />
+				 																				 		<label class="error" style="color:red; display:none;"></label>
+				 															    </div>
+				 																				 
+				 																 <div class="col-xs-6" >
+				 																	  <label style="  font-size: 16px;" class="control-label"><br>Contact Number
+				
+				                                                      </label>
+				                                                       <input readonly value="{{sales_person_contact_number}}" type="text" class="form-control" />
+				 																		 <label class="error" style="color:red; display:none;"></label>                                                                                                                 				 
+				 																 </div>
+				 															</div>
+                                                       </div>
                                                    </div>
-                                               </div>
-                                               </div>
-                                               </div> 	
+                                                </div> 	
                                              </div>  
                                              <hr style="width: 643px; margin-left: -226px;">
                                              <div class="row">
@@ -1755,7 +1746,7 @@ $("#save-continue").click(function(event)  {
 							$("#error-modal").modal('show');                    
 	       			}				
 	       			if (response.success == "Expired") {
-							location.href = '/subscriber-portal/'
+							location.href = '/subscriber-portal/?status=Expired'
 	       			}				                        		                      		                       		
                },
                	beforeSend: function () {

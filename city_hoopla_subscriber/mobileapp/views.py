@@ -44,9 +44,6 @@ from django.core.files.base import ContentFile
 
 # Push Notifications
 from push_notifications.models import APNSDevice, GCMDevice
-
-
-
 import operator
 
 # SERVER_URL = "http://192.168.0.151:9090"
@@ -61,6 +58,7 @@ radians_to_degrees = 180.0 / math.pi
 @csrf_exempt
 def get_about_city(request):
     json_obj = json.loads(request.body)
+    
     city_id = json_obj['city_id']
     try:
         advert_list = []

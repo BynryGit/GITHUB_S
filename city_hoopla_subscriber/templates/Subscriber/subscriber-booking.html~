@@ -1008,9 +1008,8 @@ hr {
                                     </div>
 
                                     {% endfor %}
-                                </div>       <!-- END PORTLET-->
-                            <!--</div>-->
-                        <!--</div>-->
+                                </div>     
+                           <!-- END PORTLET-->
                     </div>
                 </div>
             </div>
@@ -1081,10 +1080,16 @@ hr {
                                 <div class="form-group col-md-5 " >
                                     <div class="input-append date form_datetime">
                                         <input type="text"
-                                            readonly
                                             name="startDate"
                                             id="startDate"
                                             class="form-control date-picker"
+                                            style="display:none"
+                                        >
+                                        <input type="text"
+                                            readonly
+                                            name="startDate"
+                                            id="startDate1"
+                                            class="form-control"
                                         >
                                     </div>
                                 </div>
@@ -1095,10 +1100,16 @@ hr {
                                 <div class="form-group col-md-5 " >
                                     <div class="input-append date form_datetime">
                                         <input type="text"
-                                            readonly
                                             name="endDate"
                                             id="endDate"
                                             class="form-control date-picker"
+                                             style="display:none"
+                                        >
+                                         <input type="text"
+                                            readonly
+                                            name="endDate"
+                                            id="endDate1"
+                                            class="form-control"
                                         >
                                     </div>
                                 </div>
@@ -1120,8 +1131,7 @@ hr {
             </div>
         </div>
     </div>
-
-
+</div>
 
     <!-- END CONTAINER -->
 <!-- BEGIN FOOTER -->
@@ -1133,7 +1143,7 @@ hr {
             <i class="icon-arrow-up"></i>
         </div>
     </div>
-</div>
+
 <!-- END FOOTER -->
 
     <!-- BEGIN CORE PLUGINS -->
@@ -1212,10 +1222,16 @@ $(document).ready(function(){
     $('.basic_div').each(function() {
         maxBasic = Math.max(maxBasic, $(this).height());
     }).height(maxBasic);
-
+	
+	$("#startDate").val(null);
+	$("#startDate").datepicker( "destroy" );
     $("#startDate").datepicker({
         dateFormat: 'dd/mm/yy'
     });
+    
+  	$("#endDate").val(null);
+	$("#endDate").datepicker( "destroy" );
+	
     $("#endDate").datepicker({
         dateFormat: 'dd/mm/yy'
     });
@@ -1223,7 +1239,6 @@ $(document).ready(function(){
     $(".sel2").select2({
         width: '100%'
     });
-
 });
 
 
@@ -1258,6 +1273,11 @@ var date_flag = "1";
     }
 
     $("#One_week").click(function() {
+        	$("#startDate").hide();
+	    	$("#endDate").hide();
+	    	$("#startDate1").show();
+	    	$("#endDate1").show();
+	    	
         date_init();
         var date = new Date();
         date.setDate(date.getDate() - 7 );
@@ -1265,15 +1285,21 @@ var date_flag = "1";
         var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
         var dd  = date.getDate().toString();
         newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        $("#startDate").val(newdate);
+        $("#startDate1").val(newdate);
         var date = new Date();
         var yyyy = date.getFullYear().toString();
         var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
         var dd  = date.getDate().toString();
         newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        $("#endDate").val(newdate);
+        $("#endDate1").val(newdate);
     });
+    
     $("#One_month").click(function() {
+        	$("#startDate").hide();
+	    	$("#endDate").hide();
+	    	$("#startDate1").show();
+	    	$("#endDate1").show();
+	    	    
         date_init();
         var date = new Date();
         date.setDate(date.getDate() - 30 );
@@ -1281,15 +1307,20 @@ var date_flag = "1";
         var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
         var dd  = date.getDate().toString();
         newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        $("#startDate").val(newdate);
+        $("#startDate1").val(newdate);
         var date = new Date();
         var yyyy = date.getFullYear().toString();
         var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
         var dd  = date.getDate().toString();
         newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        $("#endDate").val(newdate);
+        $("#endDate1").val(newdate);
     });
     $("#Three_month").click(function() {
+        	$("#startDate").hide();
+	    	$("#endDate").hide();
+	    	$("#startDate1").show();
+	    	$("#endDate1").show();
+	    	    
         date_init();
         var date = new Date();
         date.setDate(date.getDate() - 90 );
@@ -1297,15 +1328,20 @@ var date_flag = "1";
         var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
         var dd  = date.getDate().toString();
         newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        $("#startDate").val(newdate);
+        $("#startDate1").val(newdate);
         var date = new Date();
         var yyyy = date.getFullYear().toString();
         var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
         var dd  = date.getDate().toString();
         newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        $("#endDate").val(newdate);
+        $("#endDate1").val(newdate);
     });
     $("#Six_month").click(function() {
+        	$("#startDate").hide();
+	    	$("#endDate").hide();
+	    	$("#startDate1").show();
+	    	$("#endDate1").show();
+	    	    
         date_init();
         var date = new Date();
         date.setDate(date.getDate() - 180 );
@@ -1313,15 +1349,21 @@ var date_flag = "1";
         var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
         var dd  = date.getDate().toString();
         newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        $("#startDate").val(newdate);
+        $("#startDate1").val(newdate);
         var date = new Date();
         var yyyy = date.getFullYear().toString();
         var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
         var dd  = date.getDate().toString();
         newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        $("#endDate").val(newdate);
+        $("#endDate1").val(newdate);
     });
     $("#date_range").click(function() {
+    
+       	$("#startDate").show();
+	    	$("#endDate").show();
+	    	$("#startDate1").hide();
+	    	$("#endDate1").hide();
+	    	
         $("#startDate").val(null);
         $("#startDate").datepicker( "destroy" );
         $("#startDate").datepicker({

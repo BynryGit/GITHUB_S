@@ -3681,128 +3681,47 @@ def get_filter_data1(request):
 def get_login_graph_data(request):
     try:
         data = {}
-        final_list = []
-        final_list1 = []
-        count_zero1 = 0
-        count_11 = 0
-        count_22 = 0
-        count_33 = 0
-        count_zero_guest = 0
-        count_first_guest = 0
-        count_second_guest = 0
-        count_third_guest = 0
+        # current_time = datetime.now().strftime('%H:%M')
+        current_hour = datetime.now().strftime('%H')
+        hours = 0
+        hours_list = [" 00:"]
+        for i in range(int(current_hour) + 1):
+            hours = hours + 1
+            if hours < 10:
+                hour = ' 0' + str(hours) + ':'
+            else:
+                hour = ' ' + str(hours) + ':'
+            hours_list.append(hour)
+
+        list = []
+
         try:
             city_front = request.GET.get('citys_var')
-            print '//.....Login data .....city_front......//', city_front
-            
-            ############################...Todays Login...REGISTERED USER..(3)....###############################
-            count_zero1 = 0
-            count_first = 0
-            count_second = 0
-            count_third = 0
 
-            current_date = datetime.now()
-            year = current_date.year
-            month = current_date.month
-            day = current_date.day
+            past_date = datetime.now() - timedelta(1)
+            present_date = datetime.now() + timedelta(1)
 
-            past_date = datetime(year,month,day)
-            present_date = datetime.now()
-            list = []
+            for hour in hours_list:
+                hour_based_data = []
+                consumer_list = ConsumerProfile.objects.filter(last_login__range=[past_date, present_date],
+                                                               last_login__regex=hour, consumer_type='register')
+                if city_front:
+                    consumer_list = consumer_list.filter(city_place_id=city_front)
 
-            if city_front == 'all':
-                consumer_lst = ConsumerProfile.objects.filter(last_time_login__gt=past_date,last_time_login__lt=present_date)
-            else:
-                consumer_lst = ConsumerProfile.objects.filter(last_time_login__gt=past_date,
-                                                                   city_place_id=city_front,last_time_login__lt=present_date)
+                register_user_count = len(consumer_list)
 
-            print '..........consumer_lst.........',consumer_lst
-            for obj in consumer_lst:
-                consumer_id = obj.consumer_id
+                consumer_list = ConsumerProfile.objects.filter(last_login__range=[past_date, present_date],
+                                                               last_login__regex=hour, consumer_type='guest')
+                if city_front:
+                    consumer_list = consumer_list.filter(city_place_id=city_front)
 
-                consumer_list0 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=' 00:',consumer_type='register').count()
-                count_zero1 = count_zero1 + consumer_list0
+                guest_user_count = len(consumer_list)
 
-                for hour in range(0, 9):
-                    hour = ' 0' + str(hour) + ':'
-                    consumer_list = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='register').count()
-                    count_first = count_first + consumer_list
-                count_first = int(count_first)
+                hours = hour + "00"
+                hour_based_data = [hours.strip(), register_user_count, guest_user_count]
+                list.append(hour_based_data)
 
-                for hour in range(9, 17):
-                    if hour == 9:
-                        hour = ' 0' + str(hour) + ':'
-                    else:
-                        hour = ' ' + str(hour) + ':'
-                    consumer_list1 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='register').count()
-                    count_second = count_second + consumer_list1
-                count_second = int(count_second)
-
-                for hour in range(17, 24):
-                    hour = ' ' + str(hour) + ':'
-                    consumer_list2 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='register').count()
-                    count_third = count_third + consumer_list2
-                count_third = int(count_third)
-
-                print '..........count_zero...REGISTERD.......', count_zero1
-                print '..........count_1.....REGISTERD.....', count_first
-                print '..........count_2......REGISTERD....', count_second
-                print '..........count_3......REGISTERD....', count_third
-
-
-            ############################...Todays Login....GUEST USER.(3)....###############################
-
-            current_date = datetime.now()
-            year = current_date.year
-            month = current_date.month
-            day = current_date.day
-
-            past_date = datetime(year,month,day)
-            present_date = datetime.now()
-            list = []
-
-            if city_front == 'all':
-                consumer_lst = ConsumerProfile.objects.filter(last_time_login__gt=past_date,last_time_login__lt=present_date)
-            else:
-                consumer_lst = ConsumerProfile.objects.filter(last_time_login__gt=past_date,
-                                                                   city_place_id=city_front,last_time_login__lt=present_date)
-
-            for obj in consumer_lst:
-                consumer_id = obj.consumer_id
-
-                consumer_list0 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=' 0:',consumer_type='guest').count()
-                count_zero_guest = count_zero_guest + consumer_list0
-
-                for hour in range(0, 9):
-                    hour = ' 0' + str(hour) + ':'
-                    consumer_list = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='guest').count()
-                    count_first_guest = count_first_guest + consumer_list
-                count_first_guest = int(count_first_guest)
-
-                for hour in range(9, 17):
-                    if hour == 9:
-                        hour = ' 0' + str(hour) + ':'
-                    else:
-                        hour = ' ' + str(hour) + ':'
-                    consumer_list1 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='guest').count()
-                    count_second_guest = count_second_guest + consumer_list1
-                count_second_guest = int(count_second_guest)
-
-                for hour in range(17, 24):
-                    hour = ' ' + str(hour) + ':'
-                    consumer_list2 = ConsumerProfile.objects.filter(consumer_id=consumer_id,last_time_login__regex=hour,consumer_type='guest').count()
-                    count_third_guest = count_third_guest + consumer_list2
-                count_third_guest = int(count_third_guest)
-
-                print '..........count_zero_guest..........', count_zero_guest
-                print '..........count_first_guest..........', count_first_guest
-                print '..........count_second_guest..........', count_second_guest
-                print '..........count_third_guest..........', count_third_guest
-
-
-            data = {'success': 'true', 'city_places_list': get_city_places(request),
-                    'count_zero1': count_zero1, 'count_first': count_first, 'count_second': count_second, 'count_third': count_third,
-                    'count_zero_guest': count_zero_guest, 'count_first_guest': count_first_guest, 'count_second_guest': count_second_guest, 'count_third_guest': count_third_guest}
+            data = {'success': 'true', 'list': list}
 
         except IntegrityError as e:
             print e
@@ -3832,13 +3751,18 @@ def get_subscription_graph(request):
                 category_obj = Category.objects.get(category_id = cat.category_id.category_id)
                 if category_obj.category_status == '1':
                     cat_list.append(category_obj)
+            final_list.append(["Category","count"])                       
             for cat in cat_list:
-                business_data = {
-                    'day' : cat.category_name,
-                    'visits' : Business.objects.filter(category = cat.category_id).count()
-                }
-                final_list.append(business_data)
+                day = str(cat.category_name),
+                visits = Business.objects.filter(category = cat.category_id).count()
 
+                # business_data = {
+                #     'day' : cat.category_name,
+                #     'visits' : Business.objects.filter(category = cat.category_id).count()
+                # }
+                # final_list.append(business_data)
+                final_list.append([day[0],visits])
+            print 'SSSSSSSSSSSSSSSSSSSS',final_list
             data = {'success': 'true','final_list':final_list}
 
         except IntegrityError as e:

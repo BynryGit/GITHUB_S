@@ -1677,7 +1677,7 @@ License: You must have a valid license purchased only from themeforest(the above
         }
         $.ajax({
             type    : "POST",
-            url : '/check-category-supplier/',
+            url : '/subscriber-portal/check-category-supplier/',
             data : {'category_id':$(this_val).val(),'cat_level':lvl,'supplier_id':{{request.session.supplier_id}},'city_place_id':{{city_place_id}}},
             success: function (response) {
                 if(response.success!='false'){
@@ -1708,6 +1708,9 @@ License: You must have a valid license purchased only from themeforest(the above
                     }
 
                 }
+                if (response.success == "Expired") {
+							location.href = '/subscriber-portal/?status=Expired'
+	       			}	
             },
             error : function(response){
                 alert("_Error");
@@ -1776,7 +1779,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
         $.ajax({
             type : "POST",
-            url : '/get-telephone-service-slots/',
+            url : '/subscriber-portal/get-telephone-service-slots/',
             data : {
                 'cat_id':cat_id,
                 'cat_lvl':cat_lvl,
@@ -1797,6 +1800,9 @@ License: You must have a valid license purchased only from themeforest(the above
                     $("#error-modal1").modal('show');
                     $("#error-message1").text(response.message);
                 }
+                 if (response.success == "Expired") {
+							location.href = '/subscriber-portal/?status=Expired'
+	       			}	
             },
             beforeSend: function () {
                 $("#processing").css('display','block');
@@ -1864,7 +1870,7 @@ License: You must have a valid license purchased only from themeforest(the above
             $("#dt50").prop("disabled", false);
             $.ajax({
                 type : "POST",
-                url : '/get-premium-subscription-amount/',
+                url : '/subscriber-portal/get-premium-subscription-amount/',
                 data : {'duration':duration,'service_name':'Subscription','cat_lvl':cat_lvl,'cat_id':cat_id,'supplier_id':{{request.session.supplier_id}}},
 
                 success: function (response) {
@@ -1876,6 +1882,9 @@ License: You must have a valid license purchased only from themeforest(the above
                         $("#error-modal1").modal('show');
                         $("#error-message1").text(response.message);
                     }
+                     if (response.success == "Expired") {
+							location.href = '/subscriber-portal/?status=Expired'
+	       			}	
                 },
                 beforeSend: function () {
                     $("#processing").css('display','block');
@@ -1934,7 +1943,7 @@ License: You must have a valid license purchased only from themeforest(the above
             }
             $.ajax({
                 type : "POST",
-                url : '/get-booked-slots/',
+                url : '/subscriber-portal/get-booked-slots/',
                 data : {
                     'cat_id':cat_id,
                     'cat_lvl':cat_lvl,
@@ -1965,6 +1974,9 @@ License: You must have a valid license purchased only from themeforest(the above
                         $("#error-modal1").modal('show');
                         $("#error-message1").text(response.message);
                     }
+                     if (response.success == "Expired") {
+							location.href = '/subscriber-portal/?status=Expired'
+	       			}	
                 },
                 beforeSend: function () {
                     $("#processing").css('display','block');
@@ -2089,7 +2101,7 @@ License: You must have a valid license purchased only from themeforest(the above
         supplier_id=$("#supplier_id_hidden").val();
         $.ajax({
             type : "POST",
-            url : '/get-telephone-subscription-amount/',
+            url : '/subscriber-portal/get-telephone-subscription-amount/',
             data : {'duration':duration,'service_name':service_name.trim(),'supplier_id':{{request.session.supplier_id}}},
             success: function (response) {
                 if(response.success=='true'){
@@ -2149,6 +2161,9 @@ License: You must have a valid license purchased only from themeforest(the above
                     $("#error-modal1").modal('show');
                     $("#error-message1").text(response.message);
                 }
+                 if (response.success == "Expired") {
+							location.href = '/subscriber-portal/?status=Expired'
+	       			}	
             },
             beforeSend: function () {
                 $("#processing").css('display','block');
@@ -2319,6 +2334,9 @@ License: You must have a valid license purchased only from themeforest(the above
                     $("#error-modal1").modal('show');
                     $("#error-message1").text(response.message);
                 }
+                 if (response.success == "Expired") {
+							location.href = '/subscriber-portal/?status=Expired'
+	       			}	
             },
             beforeSend: function () {
                 $("#processing").css('display','block');
@@ -2509,6 +2527,9 @@ License: You must have a valid license purchased only from themeforest(the above
                     $("#error-modal1").modal('show');
                     $("#error-message1").text(response.message);
                 }
+                 if (response.success == "Expired") {
+							location.href = '/subscriber-portal/?status=Expired'
+	       			}	
             },
             beforeSend: function () {
                 $("#processing").css('display','block');

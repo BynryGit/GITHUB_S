@@ -926,7 +926,6 @@ def get_states(request):
 
             }
             state_list.append(options_data)
-            print state_list
         return  state_list
     except Exception, e:
         print 'Exception ', e
@@ -945,7 +944,6 @@ def get_state(request):
             options_data = '<option value=' + str(
                    sta.state_id) + '>' + sta.state_name + '</option>'
             state_list.append(options_data)
-            print state_list
         data = {'state_list':state_list,'currency':currency.currency }    
     except Exception, e:
         print 'Exception ', e

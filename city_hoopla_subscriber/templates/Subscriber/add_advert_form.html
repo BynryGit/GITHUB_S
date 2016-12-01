@@ -878,7 +878,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                 <label style="font-size:15px;">Category </label>
                                                                 <input type="hidden" id="user_id"
                                                                                            value="{{user_id}}"></input>
-                                                                                    <input type="hidden" id="supplier_id"
+                                                                                    <input type="hidden" id="supplier_id_hidden"
                                                                                            value="{{supplier_id}}"></input>
                                                                 <span class="required"> * </span>
                                                                 <select data-level="0" disabled
@@ -1015,7 +1015,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                style="color:red; display:none;"></label>
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                             </div>
 
                                                             <div id="happy_textarea">
                                                                 <div class="row">
@@ -1187,7 +1187,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                             </div>
                                                         </div>
 
-                                                        <div class="row div-border-left-right div-color">
+                                                     <div class="row div-border-left-right div-color">
                                                             <div class="col-lg-12 col-md-12">
                                                                 <div class="form-group">
                                                                     <label class="control-label "
@@ -1206,9 +1206,80 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                     </label>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                            
+                                                             <div id="discounted_row">  
+                                                                          
+                                                            <div class="col-lg-12 col-md-12">
+                                                                <div class="form-group">
+                                                                    <label class="control-label "
+                                                                           style="font-size:15px; ">Discount Validity
+                                                                        Dates
+                                                                         <span class="required"> * </span> 
+                                                                    </label>
+                                                                   
+                                                                   
+                                                                    </div>   
+                                                           </div>    
+                                                                  
+                                                                  
+                                                       <div id="ck_sub">                
+                                                          <div class="col-lg-12 col-md-12"
+                                                               style="margin-top: -5px !important;font-size:15px; padding-left: 12px;">
+                                                                 <input type="checkbox" onclick="same_sub_check();"
+                                                                        id="inlineCheckbox21"
+                                                                        class="discount"
+                                                                        value="0"
+                                                                        > 
+                                                                Same as Subscription</input>
+                                                          </div>
+                                                      </div>    
+                                                          
+                                                                        <div id="dates_subscriptions">                                                          
+                                                          <div class="form-group col-md-1 "  style="margin-top: 10px !important;">
+                                                                        <label class="control-label" style="    margin-top: 5px; font-size: 15px;">
+                                                                            Start</label>
+                                                                    </div>
+                                                          
+                                                          <div class="form-group col-md-4 " style="margin-top: 10px !important;margin-left:10px !important">
+                                                                    <div class="input-append date form_datetime">
+                                                                        <input type="text"
+                                                                            name="startDate"
+                                                                            id="startDate"
+                                                                            class="form-control date-picker">
+                                                                        <input  id="s1" readonly type="text" class="form-control" value="{{start_date}}"></input>
+                                                                        
+                                                                        <label class="error"
+                                                                               style="color:red; display:none;"></label>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                              <div class="form-group col-md-1 " style="margin-top: 10px !important;">
+                                                                <label style="    margin-top: 5px; font-size: 15px;">
+                                                                    End</label>
+                                                            </div>
+                                                                
+                                                                <div class="form-group col-md-4 "  style="margin-top: 10px !important;">
+                                                                    <div class="input-append date form_datetime">
+                                                                        <input type="text"
+                                                                            
+                                                                            name="endDate"
+                                                                            id="endDate"
+                                                                            class="form-control date-picker">
+                                                                          <input  type="text" readonly class="form-control" id="e1" value="{{end_date}}"></input>
+                                                                        <label class="error"
+                                                                               style="color:red; display:none;"></label>
+                                                                    </div>
+                                                                </div>
+                                                             </div>   
+                                                    </div> 
+                                                      <div class="col-lg-12 col-md-12">
+                                                        <label class="control-label font-12 font-regular" id="dis_error" 
+                                                                            style="color:red; display:none;">
+                                                                    </label> 
+                                                      </div>                
+                                                   </div>
 
-                                                        <div class="row div-border-left-right div-color">
+                                                   <div class="row div-border-left-right div-color">
                                                             <div class="col-lg-12 col-md-12">
                                                                 <div class="form-group">
                                                                     <label class="control-label "
@@ -1236,7 +1307,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                            style="font-size:15px; "> Country
                                                                         <span class="required"> * </span>
                                                                     </label>
-                                                                    <select class="form-control sel2 select2-hidden-accessible"
+                                                                    <select disabled class="form-control sel2 select2-hidden-accessible"
                                                                             id="country"
                                                                             name="country">
                                                                         <option value="">Select
@@ -1389,7 +1460,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                            style="font-size:15px; ">State
                                                                         <span class="required"> * </span>
                                                                     </label>
-                                                                    <select class="form-control sel2 select2-hidden-accessible"
+                                                                    <select disabled class="form-control sel2 select2-hidden-accessible"
                                                                             onchange=""
                                                                             id="statec"
                                                                             name="statec">
@@ -1408,7 +1479,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                            style="font-size:15px; ">City
                                                                         <span class="required"> * </span>
                                                                     </label>
-                                                                    <select class="form-control sel2 select2-hidden-accessible"
+                                                                    <select disabled class="form-control sel2 select2-hidden-accessible"
                                                                             id="city"
                                                                             name="city">
                                                                         <option value="">
@@ -1486,16 +1557,15 @@ License: You must have a valid license purchased only from themeforest(the above
                                                             <div class="col-lg-6 col-md-6">
                                                                 <div class="form-group">
                                                                     <label class="control-label "
-                                                                           style="font-size:15px; ">Mobile Number
-
-                                                                        <span class="required"> * </span>
+                                                                           style="font-size:15px; ">Mobile/ Landline/ Toll-Free
                                                                     </label>
                                                                     <input type="text"
                                                                            onkeypress="return validateFloatKeyPresss(this,event);"
                                                                            name="phone_no"
-                                                                           id="phone_no" maxlength="10"
+                                                                           maxlength="15"
+                                                                           id="phone_no"
                                                                            class="form-control phone_number"/></input>
-                                                                    <label class="error font-12 font-regular"
+                                                                    <label class="error"
                                                                            style="color:red; display:none;"></label>
                                                                 </div>
                                                             </div>
@@ -1503,7 +1573,6 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                 <div class="form-group">
                                                                     <label class="control-label "
                                                                            style="font-size:15px; ">Email
-                                                                        <span class="required"> * </span>
                                                                     </label>
                                                                     <input type="text"
                                                                            name="email_primary"
@@ -1513,6 +1582,21 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                            style="color:red; display:none;"></label>
                                                                 </div>
                                                             </div>
+                                                              <div class="col-lg-12 col-md-12">
+	                                                                 <div class="form-group">
+	                                                                     <label class="control-label "
+	                                                                            style="font-size:15px; ">Website
+	                                                                         
+	                                                                         <!-- <span class="required"> * </span> -->
+	                                                                     </label>
+	                                                                      <input type="text"                                                          
+	                                                                            id="website"
+	                                                                            name="website"
+	                                                                            class="form-control"/> </input>
+	                                                                     <label class="error font-12 font-regular"
+	                                                                            style="color:red; display:none;"></label>
+	                                                                 </div>
+                                                               </div>
                                                         </div>
 
                                                         <br>
@@ -1572,76 +1656,94 @@ License: You must have a valid license purchased only from themeforest(the above
 
                                                          </div>
                                                          <br>
-                                                                        {% else %}
-                                                                        <div class="row">
+                                                         {% else %}
+                                                         <div class="row">
+                                                         </div>
+                                                         {% endif %}
+
+                                                                 <div class="row div-border div-color">
+                                                                         <div class="col-lg-10 col-md-10">
+                                                                            <div class="form-group"
+                                                                                 style="margin-top: 10px;margin-bottom: 0px;">
+                                                                                <label style="font-size:15px; font-weight:700;">Working
+                                                                                    Hours </label>
+                                                                            </div>
+                                                                         </div>
+                                                                         <div class="col-lg-2 col-md-2">
+                                                                            <div class="form-group"
+                                                                                 style="margin-top: 10px;margin-bottom: 0px;">
+                                                                                <a class="fa fa-plus-circle fa-lg"
+                                                                                   onclick="add_working()"
+                                                                                   style="margin-top:6px; margin-left:10px;"></a>
+                                                                            </div>
+                                                                         </div>
+
+                                                                        <div class="col-lg-4 col-md-4">
+                                                                            <div class="form-group">
+                                                                                <label class="control-label "
+                                                                                       style="font-size:15px; ">Day
+                                                                                    <!-- <span class="required"> * </span> -->
+                                                                                </label>
+                                                                                <select class="form-control opening_day sel2"
+                                                                                onchange="day_change()"
+                                                                                        id="day" name="day"
+                                                                                        name="options2">
+                                                                                    <option value="">Select Day</option>
+                                                                                    <option value="All">All</option>
+                                                                                    <option value="Mon-Sat">Mon-Sat
+                                                                                    </option>
+                                                                                    <option value="Monday">Monday
+                                                                                    </option>
+                                                                                    <option value="Tuesday">Tuesday
+                                                                                    </option>
+                                                                                    <option value="Wednesday">
+                                                                                        Wednesday
+                                                                                    </option>
+                                                                                    <option value="Thursday">Thursday
+                                                                                    </option>
+                                                                                    <option value="Friday">Friday
+                                                                                    </option>
+                                                                                    <option value="Saturday">Saturday
+                                                                                    </option>
+                                                                                    <option value="Sunday">Sunday
+                                                                                    </option>
+                                                                                </select>
+                                                                                <label class="error"
+                                                                                       style="color:red; display:none;"></label>
+                                                                            </div>
                                                                         </div>
-                                                                        {% endif %}
 
+                                                                        <div class="form-group col-lg-4 col-md-4">
+                                                                            <label class="control-label "
+                                                                                   style="font-size:15px; ">Start
+                                                                                Time
+                                                                            </label>
+                                                                            <input id="start1"
+                                                                                   class="starttime time_start strt_wrk"
+                                                                                   placeholder="Select Start Time"
+                                                                                   style="width: 100%;"/>
+                                                                            <label class="error"
+                                                                                   style="color:red; display:none;"></label>
+                                                                        </div>
 
-
-                                                        <div class="row div-border div-color">
-                                                            <div class="col-lg-10 col-md-10">
-                                                                <div class="form-group"
-                                                                     style="margin-top: 10px;margin-bottom: 0px;">
-                                                                    <label style="font-size:15px; font-weight:700;">Working
-                                                                        Hours </label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-2 col-md-2">
-                                                                <div class="form-group"
-                                                                     style="margin-top: 10px;margin-bottom: 0px;">
-                                                                    <a class="fa fa-plus-circle fa-lg"
-                                                                       onclick="add_working()"
-                                                                       style="margin-top:6px; margin-left:10px;"></a>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-lg-4 col-md-4">
-                                                                <div class="form-group">
-                                                                    <label class="control-label "
-                                                                           style="font-size:15px; ">Day
-                                                                        <!-- <span class="required"> * </span> -->
-                                                                    </label>
-                                                                    <select class="form-control opening_day week_days sel2"
-                                                                            id="day" name="day" name="options2">
-                                                                        <option value="">Select Day</option>
-                                                                        <option value="All">All</option>
-                                                                        <option value="Monday">Monday</option>
-                                                                        <option value="Tuesday">Tuesday</option>
-                                                                        <option value="Wednesday">Wednesday</option>
-                                                                        <option value="Thursday">Thursday</option>
-                                                                        <option value="Friday">Friday</option>
-                                                                        <option value="Saturday">Saturday</option>
-                                                                        <option value="Sunday">Sunday</option>
-                                                                    </select>
-                                                                    <label class="error font-12 font-regular"
-                                                                           style="color:red; display:none;"></label>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="form-group col-lg-4 col-md-4">
-                                                                <label class="control-label " style="font-size:15px; ">Start
-                                                                    Time
-                                                                </label>
-                                                                <input id="start1" class="starttime time_start strt_wrk"
-                                                                       placeholder="Select Start Time"
-                                                                       style="width: 100%;"/>
-                                                                <label class="error font-12 font-regular"
-                                                                       style="color:red; display:none;"></label>
-                                                            </div>
-
-                                                            <div class="form-group col-lg-4 col-md-4">
-                                                                <label class="control-label " style="font-size:15px; ">End
-                                                                    Time
-                                                                </label>
-                                                                <input id="end1" class="endtime time_end end_wrk"
-                                                                       placeholder="Select End Time"
-                                                                       style="width: 100%;"/>
-                                                                <label class="error font-12 font-regular"
-                                                                       style="color:red; display:none;"></label>
-                                                            </div>
-                                                            <div id="working_hours" class="col-lg-12 col-md-12"></div>
-                                                        </div>
+                                                                        <div class="form-group col-lg-4 col-md-4">
+                                                                            <label class="control-label "
+                                                                                   style="font-size:15px; ">End
+                                                                                Time
+                                                                            </label>
+                                                                            <input id="end1"
+                                                                                   class="endtime time_end end_wrk"
+                                                                                   placeholder="Select End Time"
+                                                                                   style="width: 100%;"/>
+                                                                            <label class="error"
+                                                                                   style="color:red; display:none;"></label>
+                                                                        </div>
+                                                                        <div id="working_hours"
+                                                                             class="col-lg-12 col-md-12"></div>
+                                                                        <label id="wrk_hrs_label" class="error"
+                                                                               style="color:red; display:none; padding-left: 15px; margin-bottom: 10px;"></label>
+                                                                    </div>
+                                                        
                                                         <div class="row">
                                                             <label id="wrk_hrs_label" class="error"
                                                                 style="color:red; display:none; padding-left: 15px; margin-bottom: 10px;"></label>
@@ -1662,7 +1764,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                 <div class="form-group">
                                                                     <label style="font-size:15px;">Property Market Rate
                                                                         (Per Sq Feet)
-                                                                        <span class="required"> * </span>
+
                                                                     </label>
                                                                     <input type="text"
                                                                            onkeypress="return validateFloatKeyPresss(this,event);"
@@ -1676,7 +1778,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                             <div class="col-lg-12 col-md-12">
                                                                 <div class="form-group">
                                                                     <label style="font-size:15px;">Possession Status
-                                                                        <span class="required"> * </span>
+                                                                       <!--  <span class="required"> * </span> -->
                                                                     </label>
                                                                     <select class="form-control sel2 property_status"
                                                                             id="possesion_status"
@@ -1743,164 +1845,204 @@ License: You must have a valid license purchased only from themeforest(the above
 
 
 
-                                                            <div class="row">
-                                                                <div class="col-lg-12 col-md-12">
-                                                                    <div class="col-lg-2 col-md-2" style="float:right">
-                                                                        <div class="form-group">
-                                                                            <a class="fa fa-plus-circle fa-lg near_attraction"
-                                                                               style="margin-top:33px;"></a>
+                                                              <div class="row">
+			                                                                 <div class="col-lg-10 col-md-10">
+			                                                                     <div class="form-group" style="margin-top: 10px;margin-bottom: 0px;">
+			                                                                         <label  style="font-size:15px; font-weight:700;padding-left: 14px !important;" >Nearby Attractions</label>
+			                                                                     </div>
+			                                                                 </div>
+			                                                                 <div class="col-lg-2 col-md-2">
+			                                                                     <div class="form-group">
+			                                                                         <a class="fa fa-plus-circle fa-lg near_attraction"
+			                                                                            style="margin-top:15px; font-size: 1.5em;"></a>
+			                                                                     </div>
+			                                                                 </div>
+                                                                            <div class="col-lg-12 col-md-12">
+                                                                                <div class="col-lg-10 col-md-10">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label "
+                                                                                               style="font-size:15px;">
+                                                                                            Name
+                                                                                            
+                                                                                            <!--    <span class="required"> * </span> -->
+                                                                                        </label>
+                                                                                        <input type="text"
+                                                                                               name="near_attraction"
+                                                                                               class="form-control near_by_attr"/>
+                                                                                        <label class="error"
+                                                                                               style="color:red; display:none;"></label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div id="near-by-attraction"
+                                                                                 class="col-lg-12 col-md-12"></div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div class="col-lg-10 col-md-10">
-                                                                        <div class="form-group">
-                                                                            <label class="control-label "
-                                                                                   style="font-size:15px;">Near By
-                                                                                Attraction
-                                                                                <!--    <span class="required"> * </span> -->
-                                                                            </label>
-                                                                            <input type="text"
-                                                                                   name="near_attraction"
-                                                                                   class="form-control near_by_attr"/>
-                                                                            <label class="error font-12 font-regular"
-                                                                                   style="color:red; display:none;"></label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div id="near-by-attraction"
-                                                                     class="col-lg-12 col-md-12"></div>
-                                                            </div>
 
-                                                            <div class="row">
-                                                                <div class="col-lg-12 col-md-12">
-                                                                    <div class="col-lg-2 col-md-2 " style="float:right">
-                                                                        <div class="form-group">
-                                                                            <a class="fa fa-plus-circle fa-lg near_shops"
-                                                                               style="margin-top:33px;"></a>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-5 col-md-10">
-                                                                        <div class="form-group">
-                                                                            <label class="control-label "
-                                                                                   style="font-size:15px;">Nearest
-                                                                                Shopping Mall/Market
-                                                                                <span class="required"
-                                                                                      style="padding-left: 0px;"> * </span>
-                                                                            </label>
-                                                                            <input type="text" name="near_shopping"
-                                                                                   class="form-control near_shop_mal"/>
-                                                                            <label class="error font-12 font-regular"
-                                                                                   style="color:red; display:none;"></label>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-5 col-md-10">
-                                                                        <div class="form-group">
-                                                                            <label class="control-label "
-                                                                                   style="font-size:15px;">Distance
-                                                                                From Property (Km)
-                                                                                <span class="required"> * </span>
-                                                                            </label>
+                                                                        <div class="row">
+                                                                        	  <div class="col-lg-10 col-md-10">
+				                                                                     <div class="form-group" style="margin-top: 10px;margin-bottom: 0px;">
+				                                                                         <label  style="font-size:15px; font-weight:700;padding-left: 14px !important;" >Nearest
+				                                                                                             Shopping Mall/Market</label>
+				                                                                     </div>
+				                                                                 </div>
+				                                                                 <div class="col-lg-2 col-md-2">
+				                                                                     <div class="form-group">
+				                                                                         <a class="fa fa-plus-circle fa-lg near_shops"
+				                                                                            style="margin-top:15px;font-size: 1.5em;"></a>
+				                                                                     </div>
+				                                                                 </div>
+                                                                            <div class="col-lg-12 col-md-12">   
+                                                                             <div class="col-lg-12">
+                                                                               <div class="row">   
+                                                                                <div class="col-lg-5 col-md-5">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label "
+                                                                                               style="font-size:15px;">
+                                                                                             Name
+                                                                                            <!-- <span class="required"
+                                                                                                  style="padding-left: 0px;"> * </span> -->
+                                                                                        </label>
+                                                                                        <p></p>
+                                                                                        <input type="text"
+                                                                                               name="near_shopping"
+                                                                                               class="form-control near_shop_mal"/>
+                                                                                        <label class="error"
+                                                                                               style="color:red; display:none;"></label>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-5 col-md-5">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label "
+                                                                                               style="font-size:15px;">Distance
+                                                                                            From Property (Km)
+                                                                                     <!--        <span class="required"> * </span> -->
+                                                                                        </label>
 
-                                                                            </label>
-                                                                            <input type="text"
-                                                                                   onkeypress=" return validateFloatKeyPress(this,event);"
-                                                                                   name="dis_frm_prop"
-                                                                                   class="form-control near_shop_d"/>
-                                                                            <label class="error font-12 font-regular"
-                                                                                   style="color:red; display:none;"></label>
+                                                                                        </label>
+                                                                                        <input type="text"
+                                                                                               onkeypress="return validateFloatKeyPress(this,event);"
+                                                                                               name="dis_frm_prop"
+                                                                                               class="form-control near_shop_d"/>
+                                                                                        <label class="error"
+                                                                                               style="color:red; display:none;"></label>
+                                                                                    </div>
+                                                                                </div>
+                                                                               </div>
+                                                                              </div>
+                                                                            </div>
+                                                                            <div id="near-shopping-market"
+                                                                                 class="col-lg-12 col-md-12"></div>
                                                                         </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div id="near-shopping-market"
-                                                                     class="col-lg-12 col-md-12"></div>
-                                                            </div>
 
-                                                            <div class="row">
-                                                                <div class="col-lg-12 col-md-12">
-                                                                    <div class="col-lg-2 col-md-2" style="float:right">
-                                                                        <div class="form-group">
-                                                                            <a class="fa fa-plus-circle fa-lg near_schools"
-                                                                               style="margin-top:33px;"></a>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-5 col-md-10">
-                                                                        <div class="form-group">
-                                                                            <label class="control-label "
-                                                                                   style="font-size:15px;">Nearest
-                                                                                School
-                                                                                <span class="required"> * </span>
-                                                                            </label>
-                                                                            <p></p>
-                                                                            <input type="text" name="near_school"
-                                                                                   class="form-control ner_sch"/>
-                                                                            <label class="error font-12 font-regular"
-                                                                                   style="color:red; display:none;"></label>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-5 col-md-10">
-                                                                        <div class="form-group">
-                                                                            <label class="control-label "
-                                                                                   style="font-size:15px;">Distance
-                                                                                From Property (Km)
-                                                                                <span class="required"> * </span>
-                                                                            </label>
+                                                                 <div class="row">
+				                                                               <div class="col-lg-10 col-md-10">
+				                                                                       <div class="form-group" style="margin-top: 10px;margin-bottom: 0px;">
+				                                                                          <label  style="font-size:15px; font-weight:700;padding-left: 14px !important;" >Nearest
+				                                                                                          School </label>
+				                                                                       </div>
+				                                                                    </div>
+				                                                              <div class="col-lg-2 col-md-2">
+				                                                                  <div class="form-group">
+				                                                                      <a class="fa fa-plus-circle fa-lg near_schools"
+				                                                                         style="margin-top:15px;font-size: 1.5em;"></a>
+				                                                                  </div>
+				                                                              </div>
+                                                                            <div class="col-lg-12 col-md-12">
+                                                                             <div class="col-lg-12">
+                                                                                        	<div class="row">
+                                                                                <div class="col-lg-5 col-md-5">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label "
+                                                                                               style="font-size:15px;">Nearest
+                                                                                            School
+                                                                                            <!-- <span class="required"> * </span> -->
+                                                                                        </label>
+                                                                                        <p></p>
+                                                                                        <input type="text"
+                                                                                               name="near_school"
+                                                                                               class="form-control ner_sch"/>
+                                                                                        <label class="error"
+                                                                                               style="color:red; display:none;"></label>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-5 col-md-5">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label "
+                                                                                               style="font-size:15px;">Distance
+                                                                                            From Property (Km)
+                                                                                            <!-- <span class="required"> * </span> -->
+                                                                                        </label>
 
-                                                                            </label>
-                                                                            <input type="text"
-                                                                                   onkeypress="return validateFloatKeyPress(this,event);"
-                                                                                   name="dis_frm_prop"
-                                                                                   class="form-control ner_schd"/>
-                                                                            <label class="error font-12 font-regular"
-                                                                                   style="color:red; display:none;"></label>
+                                                                                        </label>
+                                                                                        <input type="text"
+                                                                                               onkeypress="return validateFloatKeyPress(this,event);"
+                                                                                               name="dis_frm_prop"
+                                                                                               class="form-control ner_schd"/>
+                                                                                        <label class="error"
+                                                                                               style="color:red; display:none;"></label>
+                                                                                    </div>
+                                                                                </div>
+                                                                               </div>
+                                                                              </div>
+                                                                            </div>
+                                                                            <div id="near-school"
+                                                                                 class="col-lg-12 col-md-12"></div>
                                                                         </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div id="near-school" class="col-lg-12 col-md-12"></div>
-                                                            </div>
 
-                                                            <div class="row">
-                                                                <div class="col-lg-12 col-md-12">
-                                                                    <div class="col-lg-2 col-md-2" style="float:right">
-                                                                        <div class="form-group">
-                                                                            <a class="fa fa-plus-circle fa-lg near_hospitals"
-                                                                               style="margin-top:33px;"></a>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-5 col-md-10">
-                                                                        <div class="form-group">
-                                                                            <label class="control-label "
-                                                                                   style="font-size:15px;">Nearest
-                                                                                Hospital
-                                                                                <span class="required"> * </span>
-                                                                            </label>
-                                                                            <p></p>
-                                                                            <input type="text" name="name"
-                                                                                   class="form-control ner_hos"/>
-                                                                            <label class="error font-12 font-regular"
-                                                                                   style="color:red; display:none;"></label>
-                                                                        </div>
-                                                                    </div>
+                                                          <div class="row">
+                                                                        	<div class="col-lg-10 col-md-10">
+			                                                                     <div class="form-group" style="margin-top: 10px;margin-bottom: 0px;">
+			                                                                         <label  style="font-size:15px; font-weight:700;padding-left: 14px !important;" >Nearest
+			                                                                                             Hospital</label>
+			                                                                     </div>
+			                                                                 </div>
+			                                                                 <div class="col-lg-2 col-md-2">
+			                                                                     <div class="form-group">
+			                                                                         <a class="fa fa-plus-circle fa-lg near_hospitals"
+			                                                                            style="margin-top:15px;font-size: 1.5em;"></a>
+			                                                                     </div>
+			                                                                 </div>
+                                                                            <div class="col-lg-12 col-md-12">
+                                                                              <div class="col-lg-12">
+                                                                               <div class="row">
+                                                                                <div class="col-lg-5 col-md-5">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label "
+                                                                                               style="font-size:15px;">Nearest
+                                                                                            Hospital
+                                                                                            <!-- <span class="required"> * </span> -->
+                                                                                        </label>
+                                                                                        <p></p>
+                                                                                        <input type="text" name="name"
+                                                                                               class="form-control ner_hos"/>
+                                                                                        <label class="error"
+                                                                                               style="color:red; display:none;"></label>
+                                                                                    </div>
+                                                                                </div>
 
-                                                                    <div class="col-lg-5 col-md-10">
-                                                                        <div class="form-group">
-                                                                            <label class="control-label "
-                                                                                   style="font-size:15px;">Distance
-                                                                                From Property (Km)
-                                                                                <span class="required"> * </span>
-                                                                            </label>
+                                                                                <div class="col-lg-5 col-md-5">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label "
+                                                                                               style="font-size:15px;">Distance
+                                                                                            From Property (Km)
+                                                                                           <!--  <span class="required"> * </span> -->
+                                                                                        </label>
 
-                                                                            </label>
-                                                                            <input type="text"
-                                                                                   onkeypress="return validateFloatKeyPress(this,event)"
-                                                                                   name="dis_frm_prop"
-                                                                                   class="form-control ner_hosd"/>
-                                                                            <label class="error font-12 font-regular"
-                                                                                   style="color:red; display:none;"></label>
+                                                                                        </label>
+                                                                                        <input type="text"
+                                                                                               onkeypress="return validateFloatKeyPress(this,event);"
+                                                                                               name="dis_frm_prop"
+                                                                                               class="form-control ner_hosd"/>
+                                                                                        <label class="error"
+                                                                                               style="color:red; display:none;"></label>
+                                                                                    </div>
+                                                                                </div>
+                                                                               </div>
+                                                                              </div>
+                                                                            </div>
+                                                                            <div id="near-hospital"
+                                                                                 class="col-lg-12 col-md-12"></div>
                                                                         </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div id="near-hospital"
-                                                                     class="col-lg-12 col-md-12"></div>
-                                                            </div>
 
                                                             <div class="row">
                                                                 <div class="col-lg-12 col-md-12">
@@ -1909,7 +2051,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                             <label class="control-label "
                                                                                    style="font-size:15px;">Railway
                                                                                 Station (Km)
-                                                                                <span class="required"> * </span>
+                                                                                <!-- <span class="required"> * </span> -->
                                                                             </label>
                                                                             <input type="text"
                                                                                    onkeypress="return validateFloatKeyPress(this,event)"
@@ -1925,7 +2067,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                         <div class="form-group">
                                                                             <label class="control-label "
                                                                                    style="font-size:15px;">Airport (Km)
-                                                                                <span class="required"> * </span>
+                                                                                <!-- <span class="required"> * </span> -->
                                                                             </label>
                                                                             <input type="text"
                                                                                    onkeypress="return validateFloatKeyPress(this,event);"
@@ -2415,9 +2557,9 @@ License: You must have a valid license purchased only from themeforest(the above
 
                         </div>
                         <div class="col-lg-12">
-                            <span style="font-size: 12px; color: #af099f;">  23 Like | </span>
-                            <span style="font-size: 12px; color: #2188b3;">  102 views |</span>
-                            <span style="font-size: 12px; color: #654a94;">  12 Review </span>
+                            <span style="font-size: 12px; color: #af099f;">  0 Like | </span>
+                            <span style="font-size: 12px; color: #2188b3;">  0 views |</span>
+                            <span style="font-size: 12px; color: #654a94;">  0 Review </span>
                         </div>
 
                     </div>
@@ -2603,6 +2745,25 @@ License: You must have a valid license purchased only from themeforest(the above
 <script src="{% static 'assets/global/plugins/ion.rangeslider/js/ion.rangeSlider.min.js' %}"></script>
 <script type="text/javascript">
 
+function remove_school(s_index){
+
+        $("#school"+s_index).remove();
+    }
+
+function remove_shop(r_index){
+
+        $("#shop"+r_index).remove();
+    }  
+
+function remove_hospital(t_index){
+
+        $("#hospital"+t_index).remove();
+    }      
+   
+function remove_nearby_attraction(q_index){
+
+        $("#near"+q_index).remove();
+    }
 var full_address = ''
 
 function preview_model(){
@@ -2665,14 +2826,44 @@ function preview_model(){
 
         });
 
-        $(document).ready(function(){
+             $(document).ready(function(){
+                 $("#country").val("{{country_id}}").change();
+            setTimeout(function(){
+                $("#statec").val({{state_id}}).change();
+            }, 1000);
+            setTimeout(function(){
+                $("#city").val({{city_place_id}}).change();
+            }, 2000);
+             $("#s1").hide();
+                    $("#e1").hide();
+              $( ".date-picker" ).datepicker({ 
+                minDate: 0,
+                dateFormat: 'dd/mm/yy'
+ 
+            });
+
+
+             $('#website').val('');
+             $("#discounted_row").hide();
             $("#categ").val("{{category_id}}").change();
             if ("{{category_level_1}}" != ""){
                 setTimeout(function(){
-
                     $("#lvl1").val("{{category_level_1}}").change();
                     $("#lvl1").prop("disabled", true);
+                    if($('#categ option:selected').text().trim() == "Real Estate"){
+                
+                            if($('#lvl1 option:selected').text().trim() == "Realtors"){
+                        
+                                          $("#property_desc").hide();
+                                $("#cat_desc").hide();
+                            }else{
+                                    $("#property_desc").show();
+                                $("#cat_desc").hide();
+                            }
+                        }
                 }, 1000);
+                
+                  
             }
             if ("{{category_level_2}}" != ""){
                 setTimeout(function(){
@@ -2698,7 +2889,7 @@ function preview_model(){
                     $("#lvl5").prop("disabled", true);
                 }, 5000);
             }
-
+      
         });
 
     $("#short_discription").keyup(function(){
@@ -2741,6 +2932,55 @@ function preview_model(){
         $("#discount_discription").parent().children('.dis_count').text(text_count);
     });
 
+
+
+
+    $("#discount_discription").keyup(function(){
+        text_length = $("#discount_discription").val().trim().length;
+        text_count = text_length + "/5000 Characters";
+        $("#discount_discription").parent().children('.dis_count').text(text_count);
+
+        if (text_length > "0"){
+            $("#discounted_row").show();
+        }else if(text_length == "0"){
+                $("#discounted_row").hide();
+        
+        }
+
+        var from = $("#s1").val().split("/");
+        var startDate = new Date(from[2], from[1] - 1, from[0]);
+        var from = $("#e1").val().split("/");
+        var endDate = new Date(from[2], from[1] - 1, from[0]);
+           $( "#startDate" ).val('');
+        $( "#endDate" ).val('');
+        $( "#startDate" ).prop("disabled", false);
+        $( "#startDate" ).datepicker( "destroy" );
+        $( "#endDate" ).prop("disabled", false);
+        $( "#endDate" ).datepicker( "destroy" );
+        
+      $("#startDate").datepicker({
+            dateFormat: 'dd/mm/yy',
+            minDate: new Date(startDate),
+          maxDate: new Date(endDate)
+        });
+        
+            $("#startDate").change(function(){
+                
+            var from = $("#startDate").val().split("/");
+            var date = new Date(from[2], from[1] - 1, from[0]);
+            $("#endDate").datepicker( "destroy" );
+            $("#endDate").val("");
+            $("#endDate").datepicker({
+                dateFormat: 'dd/mm/yy',
+                minDate: date,
+                    maxDate: new Date(endDate)
+            });
+ 
+    });
+        
+        
+    });
+
          $('#discount_discription').bind('keypress', function(e) {
     if ((e.keyCode || e.which) == 13) {
         e.preventDefault();
@@ -2751,6 +2991,8 @@ function preview_model(){
         return false;
     }
 });
+
+
 
 
 
@@ -2960,46 +3202,73 @@ function preview_model(){
             $('.sel2').select2();
         });
 
-        var otherattraction ="<div class='col-lg-10 col-md-10'><div class='form-group'>"+
-            "<label class='control-label ' style='font-size:15px;;'>Near By Atrraction"+
-            "</label><input type='text' name='name'  class='form-control near_by_attr' /><label class='error font-12 font-regular' style='color:red; display:none;'>"+
-            "</div></div>"
+         var q_index = 1;
 
         $(".near_attraction").click(function(){
+        
+           var otherattraction ="<div  id='near"+ q_index +"'><div class='col-lg-10 col-md-10' ><div class='form-group'>"+
+            "<label class='control-label ' style='font-size:15px;;'>Name"+
+            "</label><input type='text' name='name'  class='form-control near_by_attr' /><label class='error font-12 font-regular' style='color:red; display:none;'>"+
+            "</div></div>"+
+            "<div class='col-lg-2 col-md-2' style='padding-left: 25px !important;'><div class='form-group'><a class='fa fa-times-circle  fa-lg' onclick='remove_nearby_attraction("+q_index+");' style='margin-top:35px;font-size: 1.5em;'></a>"+                                      
+              "</div></div></div>";
+
             $(otherattraction).appendTo('#near-by-attraction');
+            
+            q_index++;
         });
 
-        var nearshoping  ="<div class='col-lg-5 col-md-10'><div class='form-group'>"+
-            "<label class='control-label ' style='font-size:15px;;'>Nearest Shopping Mall/Market"+
-            "</label><input type='text' name='name' class='form-control near_shop_mal' /><label class='error font-12 font-regular' style='color:red; display:none;'></label>"+
-            "</div></div><div class='col-lg-5 col-md-10'><div class='form-group'>"+
-            "<label class='control-label ' style='font-size:15px;;'>Distance From Property (Km)</label>"+
-            "</label><input type='text' name='name' onkeypress='return validateFloatKeyPress(this,event);' class='form-control near_shop_d' /><label class='error font-12 font-regular' style='color:red; display:none;'></label></div>"
+        
+        var r_index = 1;
 
         $(".near_shops").click(function(){
+	
+				        var nearshoping  ="<div class='col-lg-12'> <div class='row'> <div  id='shop"+ r_index +"'><div class='col-lg-5 col-md-5'><div class='form-group'>"+
+            "<label class='control-label ' style='font-size:15px;;'>Name"+
+            "</label><p></p><input type='text' name='name' class='form-control near_shop_mal' /><label class='error font-12 font-regular' style='color:red; display:none;'></label>"+
+            "</div></div><div class='col-lg-5 col-md-10'><div class='form-group'>"+
+            "<label class='control-label ' style='font-size:15px;;'>Distance From Property (Km)</label>"+
+            "</label><input type='text' name='name' onkeypress='return validateFloatKeyPress(this,event);' class='form-control near_shop_d' /><label class='error font-12 font-regular' style='color:red; display:none;'></label></div></div>"+
+            "<div class='col-lg-2 col-md-2' style='padding-left: 25px !important;'><div class='form-group'><a class='fa fa-times-circle  fa-lg' onclick='remove_shop("+r_index+");' style='margin-top:35px; font-size: 1.5em; '></a>"+                                      
+              "</div></div></div></div></div>";        
+        
             $(nearshoping).appendTo('#near-shopping-market');
+            r_index++;
         });
 
-        var nearschool  ="<div class='col-lg-5 col-md-10'><div class='form-group'>"+
-            "<label class='control-label ' style='font-size:15px;;'>Nearest School"+
-            "</label><input type='text' name='name' class='form-control ner_sch' /><label class='error font-12 font-regular' style='color:red; display:none;'></label>"+
-            "</div></div><div class='col-lg-5 col-md-10'><div class='form-group'>"+
-            "<label class='control-label ' style='font-size:15px;;'>Distance From Property</label>"+
-            "</label><input type='text' name='name' onkeypress='return validateFloatKeyPress(this,event);' data-required='1' class='form-control ner_schd' /><label class='error font-12 font-regular' style='color:red; display:none;'></label></div>"
+        var s_index = 1;
 
         $(".near_schools").click(function(){
+        
+        var nearschool  ="<div class='col-lg-12'> <div class='row'> <div  id='school"+ s_index +"'><div class='col-lg-5 col-md-10'><div class='form-group'>"+
+            "<label class='control-label ' style='font-size:15px;;'>Name"+
+            "</label><p></p><input type='text' name='name' class='form-control ner_sch' /><label class='error font-12 font-regular' style='color:red; display:none;'></label>"+
+            "</div></div><div class='col-lg-5 col-md-10'><div class='form-group'>"+
+            "<label class='control-label ' style='font-size:15px;;'>Distance From Property (Km)</label>"+
+            "</label><input type='text' name='name' onkeypress='return validateFloatKeyPress(this,event);' data-required='1' class='form-control ner_schd' /><label class='error font-12 font-regular' style='color:red; display:none;'></label></div></div>"+
+             "<div class='col-lg-2 col-md-2' style='padding-left: 25px !important;'><div class='form-group'><a class='fa fa-times-circle  fa-lg' onclick='remove_school("+s_index+");' style='margin-top:35px; font-size: 1.5em;'></a>"+                                      
+              "</div></div></div></div></div>";
+            
             $(nearschool).appendTo('#near-school');
+            s_index++;
         });
 
-        var nearhospital  ="<div class='col-lg-5 col-md-10'><div class='form-group'>"+
-            "<label class='control-label ' style='font-size:15px;;'>Nearest Hospital"+
-            "</label><input type='text' name='name'  class='form-control ner_hos' /><label class='error font-12 font-regular' style='color:red; display:none;'></label>"+
-            "</div></div><div class='col-lg-5 col-md-10'><div class='form-group'>"+
-            "<label class='control-label ' style='font-size:15px;;'>Distance From Property</label>"+
-            "</label><input type='text' name='name' onkeypress='return validateFloatKeyPress(this,event);' class='form-control ner_hosd' /><label class='error font-12 font-regular' style='color:red; display:none;'></label></div>"
 
+      		var t_index = 1;
+        
         $(".near_hospitals").click(function(){
+		
+				var nearhospital  ="<div class='col-lg-12'> <div class='row'> <div  id='hospital"+ t_index +"'><div class='col-lg-5 col-md-10'><div class='form-group'>"+
+            "<label class='control-label ' style='font-size:15px;;'>Name "+
+            "</label><p></p><input type='text' name='name'  class='form-control ner_hos' /><label class='error font-12 font-regular' style='color:red; display:none;'></label>"+
+            "</div></div><div class='col-lg-5 col-md-10'><div class='form-group'>"+
+            "<label class='control-label ' style='font-size:15px;;'>Distance From Property (Km)</label>"+
+            "</label><input type='text' name='name' onkeypress='return validateFloatKeyPress(this,event);' class='form-control ner_hosd' /><label class='error font-12 font-regular' style='color:red; display:none;'></label></div></div>"+
+        		"<div class='col-lg-2 col-md-2' style='padding-left: 25px !important;'><div class='form-group'><a class='fa fa-times-circle  fa-lg' onclick='remove_hospital("+t_index+");' style='margin-top:35px;font-size: 1.5em;'></a>"+                                      
+              "</div></div></div></div></div>";
+        
             $(nearhospital).appendTo('#near-hospital');
+            t_index++;
         });
     });
 
@@ -3462,12 +3731,12 @@ function preview_model(){
         var end = $(".time_end").kendoTimePicker().data("kendoTimePicker");
 
         //define min/max range
-        start.min("8:00 AM");
-        start.max("6:00 PM");
+        start.min("12:00 AM");
+        start.max("12:00 AM");
 
         //define min/max range
-        end.min("8:00 AM");
-        end.max("7:30 AM");
+        end.min("12:00 AM");
+        end.max("12:00 AM");
 
         function startChange() {
             var startTime = start.value();
@@ -3507,13 +3776,12 @@ function preview_model(){
 
     var i = 1;
     function add_working() {
-
+        day_flag = 0;
         var arr = document.getElementsByClassName("opening_day")
         if(arr.length >= 7){
             return false;
         }
 
-        i = i + 1;
         if($("#day").val() == "All"){
             $("#wrk_hrs_label").css("display","block");
             $("#wrk_hrs_label").text("Cannot add specific day as All is selected");
@@ -3522,6 +3790,30 @@ function preview_model(){
         else{
             $("#wrk_hrs_label").css("display","none");
         }
+        list = []
+        $(".opening_day option:selected").each(function() {
+            if($(this).val() != ""){
+                if($(this).val() == "Mon-Sat"){
+                    list = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+                    day_flag = 1;
+                }
+                else{
+                    list.push($(this).val());
+                }
+            }
+        });
+
+        if(day_flag == 1){
+            if(arr.length >= 2){
+                return false;
+            }
+        }
+
+        if(list.length > 6){
+            return false;
+        }
+
+        i = i + 1;
 
         $("#working_hours").append(
             "<div id='hours_div_"+i+"' class='row'><div class='col-lg-4'><div class='form-group'><label class='control-label '>Day</label>"+
@@ -3529,23 +3821,19 @@ function preview_model(){
             "<option value='Tuesday'>Tuesday</option><option value='Wednesday'>Wednesday</option><option value='Thursday'>Thursday</option>"+
             "<option value='Friday'>Friday</option><option value='Saturday'>Saturday</option> <option value='Sunday'>Sunday</option></select><label class='error' style='color:red; display:none;'></label>"+
             "</div></div><div class='form-group col-lg-4'><label class='control-label '>Start Time </label>"+
-            "<input class='starttime time_start strt_wrk' id='start"+i+"' value='8.00 AM' style='width: 100%;' placeholder='Select Start Time' /><label class='error' style='color:red; display:none;'></label></div><div class='form-group col-lg-4'>"+
+            "<input class='starttime time_start strt_wrk' id='start"+i+"' value='12:00 AM' style='width: 100%;' placeholder='Select Start Time' /><label class='error' style='color:red; display:none;'></label></div><div class='form-group col-lg-4'>"+
             "<label class='control-label '>End Time</label><a class='fa fa-times-circle remove_btn' onclick='remove_working("+i+")' style='margin-left:10px;'></a>"+
-            "<input class='endtime time_end end_wrk' id='end"+i+"' value='8.30 AM' style='width: 100%;' placeholder='Select End Time'/></div>"+
+            "<input class='endtime time_end end_wrk' id='end"+i+"' value='12:00 AM' style='width: 100%;' placeholder='Select End Time'/></div>"+
             "</div>"
         );
-        day_change();
         var start = $("#start"+i).kendoTimePicker({
             change: startChange
         }).data("kendoTimePicker");
-        //init end timepicker
         var end = $("#end"+i).kendoTimePicker().data("kendoTimePicker");
-        //define min/max range
-        start.min("8:00 AM");
-        start.max("6:00 PM");
-        //define min/max range
-        end.min("8:00 AM");
-        end.max("7:30 AM");
+        start.min("12:00 AM");
+        start.max("12:00 AM");
+        end.min("12:00 AM");
+        end.max("12:00 AM");
         function startChange() {
             var startTime = start.value();
             if (startTime) {
@@ -3559,49 +3847,119 @@ function preview_model(){
         $(".sel2").select2({
             width: '100%'
         });
+        day_change()
     }
 
-    $(".opening_day").change(function() {
-        var selected = $("option:selected", $(this)).val();
-        if(selected == "All"){
-            list = [];
-            list.push("All");
+    function day_change(){
+        day_list = ["All","Mon-Sat","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+        list = []
+        if($("#day").val() == 'All' ){
             $("#working_hours").html('');
-            $("#wrk_hrs_label").css("display","none");
-            $(".opening_day option").each(function() {
-                $(this).prop("disabled", false);
-            });
             return false;
         }
-        day_change();
-    });
 
-
-
-    function day_change(){
-        list = []
-        $(".opening_day option").each(function() {
-            $(this).attr("disabled", false);
-        });
         $(".opening_day").each(function() {
-            if($(this).val() != ""){
-                list.push($(this).val());
+            if($("#day").val() == 'Mon-Sat' ){
+
+                if($(this)[0].value != '' ){
+                    if($(this)[0].value != 'Mon-Sat'){
+                        if($(this)[0].value != 'Sunday' ){
+                            this_id = $(this)[0].id;
+                            this_id = this_id.split('_');
+                            document.getElementById("hours_div_"+this_id[1]).remove();
+                        }
+                    }
+                }
             }
         });
+
+        v = 0;
+        $(".opening_day").each(function() {
+            if($("#day").val() == 'Mon-Sat' ){
+                if($(this)[0].value != '' ){
+                    if($(this)[0].value != 'Mon-Sat'){
+                        if($(this)[0].value != 'Sunday' ){
+                            alert($(this)[0].value);
+                            this.parentElement.removeChild(this);
+                        }
+                    }
+                }
+            }
+            v = v + 1;
+            day_val = $(this)[0].value;
+            if(day_val == 'Mon-Sat'){
+                list = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+            }
+            else if(day_val != ''){
+                list.push(day_val)
+            }
+            $(this).html('');
+            $(this).append('<option selected value="">Select Day</option>');
+            if(v == 1){
+                $(this).append('<option value="All">All</option>');
+                if(day_val == "Mon-Sat"){
+                    $(this).append('<option selected value="Mon-Sat">Mon-Sat</option>');
+                }
+                else{
+                    $(this).append('<option value="Mon-Sat">Mon-Sat</option>');
+                }
+            }
+            if(day_val == "Monday"){
+                $(this).append('<option selected value="Monday">Monday</option>');
+            }
+            else{
+                $(this).append('<option value="Monday">Monday</option>');
+            }
+            if(day_val == "Tuesday"){
+                $(this).append('<option selected value="Tuesday">Tuesday</option>');
+            }
+            else{
+                $(this).append('<option value="Tuesday">Tuesday</option>');
+            }
+            if(day_val == "Wednesday"){
+                $(this).append('<option selected value="Wednesday">Wednesday</option>');
+            }
+            else{
+                $(this).append('<option value="Wednesday">Wednesday</option>');
+            }
+            if(day_val == "Thursday"){
+                $(this).append('<option selected value="Thursday">Thursday</option>');
+            }
+            else{
+                $(this).append('<option value="Thursday">Thursday</option>');
+            }
+            if(day_val == "Friday"){
+                $(this).append('<option selected value="Friday">Friday</option>');
+            }
+            else{
+                $(this).append('<option value="Friday">Friday</option>');
+            }
+            if(day_val == "Saturday"){
+                $(this).append('<option selected value="Saturday">Saturday</option>');
+            }
+            else{
+                $(this).append('<option value="Saturday">Saturday</option>');
+            }
+            if(day_val == "Sunday"){
+                $(this).append('<option selected value="Sunday">Sunday</option>');
+            }
+            else{
+                $(this).append('<option value="Sunday">Sunday</option>');
+            }
+        });
+        list = jQuery.unique(list);
+        
         $.each(list, function (index, item) {
             $(".opening_day").each(function() {
                 $("option[value='"+item+"']", $(this)).attr("disabled", true);
             });
         });
-
     }
 
     function remove_working(id){
         $('#hours_div_'+id).remove();
         day_change();
     }
-
-
 
     function getPincode(){
         city_id = $('#city :selected').val();
@@ -3615,7 +3973,6 @@ function preview_model(){
                     $.each(response.pincode_list, function (index, item) {
                         $('#pincode').append(item);
                     });
-                    $('#pincode').val("");
                 },
                 error: function (response) {
                     alert("Error!");
@@ -3639,7 +3996,6 @@ function preview_model(){
                     $.each(response.state_list, function (index, item) {
                         $('#statec').append(item);
                     });
-                    $('#statec').val("");
                     $('#currency').val(response.currency)
                 },
                 error: function (response) {
@@ -3665,7 +4021,6 @@ function preview_model(){
                     $.each(response.city_list, function (index, item) {
                         $('#city').append(item);
                     });
-                    $('#city').val("");
                 },
                 error: function (response) {
                     alert("Error!");
@@ -3678,11 +4033,7 @@ function preview_model(){
     }
 
     $('#categ').change(function () {
-        if($('#categ :selected').text().trim()=="Real Estate"){
-            $("#property_desc").show();
-            $("#cat_desc").hide();
-        }
-        else if(
+       if(
             $('#categ :selected').text().trim()=="Lifestyle" || $('#categ :selected').text().trim()=="Travel" || $('#categ :selected').text().trim()=="Electronics"
         ){
             $("#cat_desc").show();
@@ -3724,7 +4075,6 @@ function preview_model(){
             $("#academics_textarea").hide();
         }
     });
-
     function clear_subcat(){
         for(i=1;i<=5;i++){
             $('#lvl'+i+'_row').hide();
@@ -3738,7 +4088,7 @@ function preview_model(){
         }
         $.ajax({
             type    : "POST",
-            url : '/check-category/',
+            url : '/subscriber-portal/check-category/',
             data : {'category_id':$(this_val).val(),'cat_level':lvl},
             success: function (response) {
                 if(response.success=='true'){
@@ -3755,7 +4105,7 @@ function preview_model(){
                     $('#lvl'+lvl).attr('required','required');
                 }
                 if (response.success == "Expired") {
-							location.href = '/subscriber-portal/'
+							location.href = '/subscriber-portal/?status=Expired'
 	       			}	
             },
             error : function(response){
@@ -3813,7 +4163,7 @@ function preview_model(){
                 $("#display_image_error").css("display", "none");
             }
         }
-        if(checkCateg("#categ") & checkAdverttitle("#advert_title") & checkShortDesc('#short_discription') & checkProductName('.product_name_cls') &  checkContactName('.contact_name') & checkPhoneNumber('.phone_number') & checkEmail('#email_primary') & checkaddress('#address_line1') & checkArea('#area') & checkLandmark('#landmark')
+        if(checkCateg("#categ") & check_date_range() & checkAdverttitle("#advert_title") & checkShortDesc('#short_discription') & checkProductName('.product_name_cls') &  checkContactName('.contact_name') & checkPhoneNumber('.phone_number')  & checkaddress('#address_line1') & checkArea('#area') & checkLandmark('#landmark')
             & checkCountry("#country") & checkState("#statec") &  checkCity("#city") & checkPincode("#pincode") & check_ex_am('#any_other_amenity'))
         {
             return true;
@@ -3838,8 +4188,9 @@ function preview_model(){
     }
 
     $("#save_advert").click(function(){
-
+	 
         if(validateData()){
+       		$("#save_advert").attr("disabled", true)
             if($('#categ option:selected').text().trim()== "Restaurants" || $('#categ option:selected').text().trim()== "Health" ||
             $('#categ option:selected').text().trim()== "Lifestyle" || $('#categ option:selected').text().trim()== "Travel" || $('#categ  option:selected').text().trim()== "Electronics"
             ){
@@ -3911,8 +4262,8 @@ function preview_model(){
             }).get();
 
             var opening_day_list = []
-            opening_day_list = $('.opening_day').map(function() {
-                return $(this).val();
+            opening_day_list = $('.opening_day option:selected').map(function() {
+                return $(this)[0].value;
             }).get();
 
 
@@ -3999,7 +4350,26 @@ function preview_model(){
             if($("#lvl5").val() != "" && $("#lvl5").val() != undefined){
                 subcat_list.push($("#lvl5").val())
             }
-
+            
+                var checkedValue = $('.discount:checked').val();
+            if (checkedValue == 0){
+                startDate = $("#s1").val();
+                endDate = $("#e1").val();
+            
+            }else if($("#startDate").val() !="" && $("#endDate").val() !="" ){
+                    startDate = $('#startDate').val();
+                    endDate   = $('#endDate').val();
+            }else if(checkedValue == undefined && $("#startDate").val() =="" && $("#endDate").val() ==""){
+                    startDate = ""
+                    endDate  =""
+            }
+            
+            Website = $('#website').val();
+            Website = Website.replace(/\s/g,'');
+            
+            formData.append("startDate",startDate);  
+            formData.append("endDate",endDate);
+            formData.append("website",$('#website').val());
             formData.append("title",$('#title').val());
             advert_keywords = $("#advert_keywords").val();
             formData.append("any_other_amenity",$('#any_other_amenity').val());
@@ -4027,7 +4397,7 @@ function preview_model(){
             formData.append("country",$('#country').val());
             formData.append("city",$('#city').val());
             formData.append("pincode",$('#pincode').val());
-            formData.append("opening_day_list",list);
+            formData.append("opening_day_list",opening_day_list);
             formData.append("start_time_list",res);
             formData.append("end_time_list",res1);
             formData.append("any_other_details",$('#other_details').val());
@@ -4076,7 +4446,7 @@ function preview_model(){
                         $("#error-modal").modal('show');
                     }
                     if (response.success == "Expired") {
-							location.href = '/subscriber-portal/'
+							location.href = '/subscriber-portal/?status=Expired'
 	       			}	
                 },
                 beforeSend: function () {
@@ -4152,8 +4522,9 @@ function preview_model(){
     }
 
     function checkWebsite(website){
-        Website = $(website).val()
-        var namePattern = /(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/;
+        Website = $(website).val();
+        Website = Website.replace(/\s/g, '');
+        var namePattern = /^(http:\/\/|www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
         if(Website==''){
             return true;
         }
@@ -4166,6 +4537,7 @@ function preview_model(){
             return false;
         }
     }
+    
 
     function validateIntKeyPress(el, evt) {
         var charCode = (evt.which) ? evt.which : event.keyCode;
@@ -4346,20 +4718,22 @@ function preview_model(){
     */
 
     function checkPhoneNumber(phone_number){
-        var phoneNumberPattern = /^[789]\d{9}$/;
-        contact_number = $(phone_number).val()
-        if (contact_number == ""){
-            $(phone_number).parent().children('.error').css("display", "block");
-            $(phone_number).parent().children('.error').text("Please enter Mobile Number ");
-            return false;
+        var phoneNumberPattern = /^\d{9-15}$/;
+        contact_number = $(phone_number).val();
+        if (contact_number != ""){
+            if(contact_number.length < 10){
+                $(phone_number).parent().children('.error').css("display", "block");
+                $(phone_number).parent().children('.error').text("Please enter valid Number ");
+                return false;
+            }
+            else{
+                $(phone_number).parent().children('.error').css("display", "none");
+                return true;
+            }
         }
-        else if(phoneNumberPattern.test(contact_number)){
+        else{
             $(phone_number).parent().children('.error').css("display", "none");
             return true;
-        }else{
-            $(phone_number).parent().children('.error').css("display", "block");
-            $(phone_number).parent().children('.error').text("Please enter valid Mobile Number ");
-            return false;
         }
     }
 
@@ -4608,7 +4982,7 @@ function preview_model(){
                     isValid = true;
                }else if($.isNumeric($(this).val())){
                 $(this).parent().children('.error').css("display", "block");
-                    $(this).parent().children('.error').text("Please enter valid Amenity");
+                    $(this).parent().children('.error').text("Please enter valid Attraction");
                     isValid = false;
                }
                else{
@@ -4618,50 +4992,40 @@ function preview_model(){
               });
             return isValid;
         }
+        
 
-        function checkNearShoping(near_shop_mal){
+            
+     function checkNearShoping(near_shop_mal){
 
-                var isValid = false;
+        var isValid = true;
+        $(near_shop_mal).each(function( index ) {
+            var near_shop_mal = $(this).val();
+            var parentvalue = $(this).parent().parent().next('div').find('.near_shop_d').val() ;
 
-           $('.near_shop_mal').each(function( index ) {
-
-                if(index==0){
-
-                  if($(this).val()=="")
-               {
+            if( parentvalue != "") {
+                if(near_shop_mal ==''){
                     $(this).parent().children('.error').css("display", "block");
-                    $(this).parent().children('.error').text("Please enter Shopping Mall/Market");
+                    $(this).parent().children('.error').text("Please enter Shopping Mall/Market ");
                     isValid = false;
-               }else if($.isNumeric($(this).val())){
+                    return false ;
+                }
+                else if($.isNumeric($(this).val())){
                 $(this).parent().children('.error').css("display", "block");
                     $(this).parent().children('.error').text("Please enter valid Shopping Mall/Market");
                     isValid = false;
                }
                else{
-                $(this).parent().children('.error').css("display", "none");
-                isValid = true;
-               }
-            }
-             else{
-                    if($(this).val()=="")
-                {
                     $(this).parent().children('.error').css("display", "none");
-             //     $(this).parent().children('.error').text("Please enter Shopping Mall/Market");
                     isValid = true;
-               }else if($.isNumeric($(this).val())){
-                $(this).parent().children('.error').css("display", "block");
-                    $(this).parent().children('.error').text("Please enter valid Shopping Mall/Market");
-                    isValid = false;
-               }
-               else{
-                $(this).parent().children('.error').css("display", "none");
-                isValid = true;
-               }
-
-               }
-                });
-              return isValid;
+                    return true ;
+                }
             }
+        });
+        return isValid;
+    }
+
+
+
 
         function checkNearShopingD(near_shop_d){
                 var isValid = false;
@@ -4694,49 +5058,36 @@ function preview_model(){
                return isValid;
             }
 
-      function checkNearSchool(ner_sch){
-                var isValid = false;
+     function checkNearSchool(ner_sch){
 
-               $('.ner_sch').each(function( index ) {
-               if(index==0){
-                  if($(this).val()=='')
-               {
+        var isValid = true;
+        $(ner_sch).each(function( index ) {
+            var ner_sch = $(this).val();
+            var parentvalue = $(this).parent().parent().next('div').find('.ner_schd').val() ;
+
+            if( parentvalue != "") {
+                if(ner_sch ==''){
                     $(this).parent().children('.error').css("display", "block");
-                    $(this).parent().children('.error').text("Please enter School Name");
+                    $(this).parent().children('.error').text("Please enter School Name ");
                     isValid = false;
-
-               }else if($.isNumeric($(this).val())){
+                    return false ;
+                }
+                else if($.isNumeric($(this).val())){
                 $(this).parent().children('.error').css("display", "block");
                     $(this).parent().children('.error').text("Please enter valid School Name");
                     isValid = false;
                }
                else{
-                $(this).parent().children('.error').css("display", "none");
-                isValid = true;
-               }
-              }else{
-               if($(this).val()=='')
-               {
                     $(this).parent().children('.error').css("display", "none");
-                //  $(this).parent().children('.error').text("Please enter School Name");
                     isValid = true;
-
-               }else if($.isNumeric($(this).val())){
-                $(this).parent().children('.error').css("display", "block");
-                    $(this).parent().children('.error').text("Please enter valid School Name");
-                    isValid = false;
-               }
-               else{
-                $(this).parent().children('.error').css("display", "none");
-                isValid = true;
-               }
-
-
-              }
-                });
-                return isValid;
-
+                    return true ;
+                }
             }
+        });
+        return isValid;
+    }
+    
+    
 
         function checkNearSchoold(ner_schd){
                 var isValid = false;
@@ -4770,15 +5121,14 @@ function preview_model(){
 
             }
 
-            function checkNearHospital(ner_hos){
+            function checkNearHospital_old(ner_hos){
                 var isValid = false;
                $('.ner_hos').each(function( index ) {
                if(index==0){
                 if($(this).val()=='')
                {
-                    $(this).parent().children('.error').css("display", "block");
-                    $(this).parent().children('.error').text("Please enter Hospital");
-                    isValid = false;
+                $(this).parent().children('.error').css("display", "none");
+                isValid = true;
 
                }else if($.isNumeric($(this).val())){
                 $(this).parent().children('.error').css("display", "block");
@@ -4811,7 +5161,38 @@ function preview_model(){
                 return isValid;
 
             }
+            
+            
+    function checkNearHospital(ner_hos){
 
+        var isValid = true;
+        $(ner_hos).each(function( index ) {
+            var ner_hos = $(this).val();
+            var parentvalue = $(this).parent().parent().next('div').find('.ner_hosd').val() ;
+
+            if( parentvalue != "") {
+                if(ner_hos ==''){
+                    $(this).parent().children('.error').css("display", "block");
+                    $(this).parent().children('.error').text("Please enter Shopping Mall/Market ");
+                    isValid = false;
+                    return false ;
+                }
+                else if($.isNumeric($(this).val())){
+                $(this).parent().children('.error').css("display", "block");
+                    $(this).parent().children('.error').text("Please enter valid Shopping Mall/Market");
+                    isValid = false;
+               }
+               else{
+                    $(this).parent().children('.error').css("display", "none");
+                    isValid = true;
+                    return true ;
+                }
+            }
+        });
+        return isValid;
+    }
+    
+    
             function checkNearHospitald(ner_hosd){
                 var isValid = false;
                $('.ner_hosd').each(function( index ) {
@@ -4889,7 +5270,7 @@ function preview_model(){
     }
 
     function validateproperty(){
-        if(check_market_rate() & check_poss_status() & check_comp_date()  & check_ner('.near_by_attr') &  checkNearShoping('.near_shop_mal') & checkNearShopingD('.near_shop_d')  & checkNearSchool('.ner_sch') & checkNearSchoold('.ner_schd') & checkNearHospital('.ner_hos') & checkNearHospitald('.ner_hosd') & railwaystation() & airport()){
+        if(check_ner('.near_by_attr') &  checkNearShoping('.near_shop_mal')  & checkNearSchool('.ner_sch') & checkNearHospital('.ner_hos') ){
             return true;
         }
         else{
@@ -4934,6 +5315,101 @@ function preview_model(){
 
     //-----------------------------------end-------------------------//
 
+
+function same_sub_check(){
+
+var checkedValue = $('.discount:checked').val();
+if(checkedValue == 0){
+$("#s1").show();
+$("#e1").show();
+$("#startDate").hide();
+$("#endDate").hide();
+}else{
+$("#s1").hide();
+$("#e1").hide();
+$("#startDate").show();
+$("#endDate").show();
+}
+}
+
+
+function check_date_range(){
+text_length = $("#discount_discription").val().trim().length;
+ if (text_length > "0"){
+        var checkedValue = $('.discount:checked').val();
+        
+        if (checkedValue == undefined && $("#startDate").val() == ""  && $("#endDate").val()== ""){
+        
+                    $("#dis_error").css("display", "block");
+            $("#dis_error").text("Please select Discount Validity Dates");
+            return false;
+        
+        }
+        else if(checkedValue != 0){
+
+                $("#dis_error").css("display","none");
+            
+                if(check_start_date() & check_end_date() )
+        {
+            return true;
+        }else{
+     
+                return false;
+            }
+            
+
+        }else if(checkedValue == 0){
+           
+        $("#dis_error").css("display","none");
+         $("#startDate").parent().children('.error').css("display", "none");
+         $("#endDate").parent().children('.error').css("display", "none");
+                return true;
+        }
+        else{
+            $("#dis_error").css("display","none");
+                return true;
+        }
+ }else{
+ return true;
+ }
+
+}
+
+function check_start_date(){
+            var isValid = false;
+                if($("#startDate").val() ==""  || $("#startDate").val()== null)
+                {
+                                    
+                    $("#startDate").parent().children('.error').css("display", "block");
+                    $("#startDate").parent().children('.error').text("Please select Start Date ");
+                  isValid = false;
+               }else{
+
+                    $("#startDate").parent().children('.error').css("display", "none");
+                isValid =  true;
+               }
+               return isValid;
+
+        }
+        
+ function check_end_date(){
+            var isValid = false;
+                if($("#endDate").val() ==""  || $("#endDate").val()== null)
+                {
+                                
+                    $("#endDate").parent().children('.error').css("display", "block");
+                    $("#endDate").parent().children('.error').text("Please select End Date ");
+                  isValid = false;
+               }else{
+
+                    $("#endDate").parent().children('.error').css("display", "none");
+                isValid =  true;
+               }
+               return isValid;
+
+        }
+        
+        
 
 
 </script>

@@ -48,22 +48,29 @@ from datetime import date
 
 import string
 import random
-
+from dateutil import parser as date_parser
 class AutoLogout:
   def process_request(self, request):
     if not request.user.is_authenticated():
       #Can't log out if not logged in
-      print 'SSSSSSSSSSSSSSSSSSS',request.user.is_authenticated()
+      print '......request.user.is_authenticated..CHECKING....',request.user.is_authenticated()
 
     try:
-      print '...........NEWWWWWW.........',request.session['last_touch']
+      last_touch = request.GET.get('last_touch')
+      last_touch = str(last_touch)
+      #print 'AAAAAAAA',last_touch
+      #request.session['last_touch'] = datetime.now()
+      #last_touch = last_touch.strftime("%d/%m/%Y")
+      #print date_parser.parse(last_touch)
+      #print 'SSSSCCCXXXXXXX...............XXXXXXXXXXXSSSSSSSSSSSSSS',last_touch
+      #print '...........NEWWWWWW.........',request.session['last_touch']
       if datetime.now() - request.session['last_touch'] > timedelta( 0, settings.AUTO_LOGOUT_DELAY * 60, 0):
         auth.logout(request)
-        print '....after auth logout..........'
+        print '##........after auth logout..........##'
         del request.session['last_touch']
         form = CaptchaForm()
         return render_to_response('Subscriber/user_login.html', dict(
-            form=form, message_logout='You have successfully logged out.'
+            form=form, message_logout='Your session has been expired'
         ), context_instance=RequestContext(request))
     except KeyError:
       pass

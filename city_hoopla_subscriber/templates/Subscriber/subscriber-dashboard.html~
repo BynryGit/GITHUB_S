@@ -850,7 +850,7 @@ display: none;
                                 </div>
 
                                 <div class="col-lg-3" id="week" style="font-size: 12px;">
-                                    <select class="form-control sel2" onchange="change_data();">
+                                    <select class="form-control sel2" onchange="change_data1();">
                                        
                                         <option value="week">Current Week</option>
                                         <option value="month">Current Month</option>
@@ -859,7 +859,7 @@ display: none;
                                 </div>
                                 
                                 <div class="col-lg-3" id="" style="font-size: 12px;">
-                                   <select style="" onchange="change_data()"  id="advert" class="form-control sel2">
+                                   <select style="" onchange="change_data1()"  id="advert" class="form-control sel2">
 					                     	 <option value="">All Adverts</option>
 					                     	 {% for country in advert_list1 %}
 					                     	 <option value="{{ country.advert_id }}"> {{ country.advert_name }}</option>
@@ -954,7 +954,7 @@ display: none;
                                             </div>
                                             <div class="portlet-body">
                                                 <div class="portlet-body">
-                                                    <div id="highchart_1" style="height:290px;"></div>
+                                                    <div id="linechart_material" style="height:290px;"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -975,13 +975,13 @@ display: none;
 
                                             </div>
                                             <div class="portlet-body">
-                                                <div id="Payment_Collection1" style="height: 300px;"></div>
+                                                <div id="total_views" style="height: 300px;"></div>
                                             </div>
                                         </div>
 
                                     </div>
                                     
-                                    <div id="chartdiv"></div>	
+                                 	
 
                                 </div>
                             </div>
@@ -1078,456 +1078,134 @@ display: none;
     <script src="{% static 'assets/global/plugins/highcharts/js/highcharts-3d.js'%}" type="text/javascript"></script>
     <script src="{% static 'assets/global/plugins/highcharts/js/highcharts-more.js'%}" type="text/javascript"></script>
     <script src="{% static 'assets/global/plugins/select2/js/select2.full.min.js' %}" type="text/javascript"></script>
-    <!-- END THEME LAYOUT SCRIPTS -->
+    
+	 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<!-- END THEME LAYOUT SCRIPTS -->	
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
  $(".sel2").select2({
      width: '100%'
  });
 
-function change_data(){
 
-  week_var = $('#week :selected').val();
-  advert_var = $('#advert :selected').val();
-
-if(week_var == ''){
-    return false;
-}
-var supplier_id={{request.session.supplier_id}};
-
-	$.ajax({
-  	  	  type	: "GET",
-		  url 	: '/subscriber-portal/get-filter/',
-		  data : {'week_var':week_var,'supplier_id':supplier_id,'advert_var':advert_var},                       
-		  
-
-	     success: function (response) {
- 		  console.log(response);
- 		  		if (response.success == 'Expired') {
-
- 		  			location.href = '/subscriber-portal/'
- 		  		}
-	     		if(response.var1=='month'){
-	     		    $('#disc1').text(response.avail_discount_count);
-	     		    $('#disc2').text(response.avail_callbacks_count);
-	     		    $('#disc3').text(response.avail_callsmade_count);
-	     		    $('#disc4').text(response.avail_shares_count);
-
-
-					     		  	//for bookings		
-				  			$("#highchart_1").highcharts({
-				                chart:{
-				                    style:{
-				                        fontFamily:"Open Sans"
-				                    }
-				                },
-				                title:{
-				                    text:"",
-				                    x:-20
-				                },
-				                //subtitle:{text:"Source: WorldClimate.com",x:-20},
-				                xAxis:{
-				                    title:{
-				                        text:""
-				                    },
-				                    categories:["Week 1","Week 2","Week 3","Week 4","Week 5"]
-				                },
-				                yAxis:{
-				                    tickInterval: 2,
-				                    title:{
-				                        text:""
-				                    },
-				                    plotLines:[{value:0,width:1,color:"#808080"}]
-				                },
-				                tooltip:{
-				                    valueSuffix:""
-				                },
-				                legend:{
-				                    layout:"vertical",
-				                    align:"right",
-				                    verticalAlign:"middle",
-				                    borderWidth:0
-				                },
-				                series:[
-				                    {name: "Bookings",data:[response.coupon_code_count1,response.coupon_code_count2,response.coupon_code_count3,response.coupon_code_count4,response.coupon_code_count5]},
-				                ]
-				            });
-				            
-				           //for total view
-							var chart = AmCharts.makeChart( "Payment_Collection1", {
-							  "fontFamily":"Open Sans",							  
-							  "type": "serial",
-							  "theme": "light",
-							  "dataProvider": [ {
-							    "day": "Week 1",
-							    "visits": response.advert_total_count1
-							  }, {
-							    "day": "Week 2",
-							    "visits": response.advert_total_count2
-							  }, {
-							    "day": "Week 3",
-							    "visits": response.advert_total_count3
-							  }, {
-							    "day": "Week 4",
-							    "visits":response.advert_total_count4
-							  }, {
-							    "day": "Week 5",
-							    "visits":response.advert_total_count5
-							  }
-							  ],
-							  "valueAxes": [ {
-							    "gridColor": "#FFFFFF",
-							    "gridAlpha": 0.2,
-							    "dashLength": 0
-							  } ],
-							  "gridAboveGraphs": true,
-							  "startDuration": 1,
-							  "graphs": [ {
-							    "balloonText": "[[category]]: <b>[[value]]</b>",
-							    "fillAlphas": 0.8,
-							    "lineAlpha": 0.2,
-							    "type": "column",
-							    "autoColor": true,
-							    "valueField": "visits"
-							  } ],
-							  "chartCursor": {
-							    "categoryBalloonEnabled": false,
-							    "cursorAlpha": 0,
-							    "zoomable": false
-							  },
-							  "categoryField": "day",
-							  "categoryAxis": {
-							    "gridPosition": "start",
-							    "gridAlpha": 0,
-							    "tickPosition": "start",
-							    "tickLength": 20
-							  },
-							  "export": {
-							    "enabled": true
-							  }
-							
-							} ); 
-	     		
-	     		}
-	     		
-	     		else if (response.var1=='week') {
-	     		 	 $('#disc1').text(response.avail_discount_count);
-	     		    $('#disc2').text(response.avail_callbacks_count);
-	     		    $('#disc3').text(response.avail_callsmade_count);
-	     		    $('#disc4').text(response.avail_shares_count);
-	     		  			
-	     		  			$("#highchart_1").highcharts({
-				                chart:{
-				                    style:{
-				                        fontFamily:"Open Sans"
-				                    }
-				                },
-				                title:{
-				                    text:"",
-				                    x:-20
-				                },
-				                //subtitle:{text:"Source: WorldClimate.com",x:-20},
-				                xAxis:{
-				                    title:{
-				                        text:""
-				                    },
-				                    categories:["MON","TUE","WED","THU","FRI","SAT","SUN"]
-				                },
-				                yAxis:{
-				                    tickInterval: 2,
-				                    title:{
-				                        text:""
-				                    },
-				                    plotLines:[{value:0,width:1,color:"#808080"}]
-				                },
-				                tooltip:{
-				                    valueSuffix:""
-				                },
-				                legend:{
-				                    layout:"vertical",
-				                    align:"right",
-				                    verticalAlign:"middle",
-				                    borderWidth:0
-				                },
-				                series:[
-				                    {name: "Bookings",data:[response.mon1,response.tue1,response.wen1,response.thus1,response.fri1,response.sat1,response.sun1]},
-				                ]
-				            });
-				            
-				           
-							var chart = AmCharts.makeChart( "Payment_Collection1", {
-							  "fontFamily":"Open Sans",							  
-							  "type": "serial",
-							  "theme": "light",
-							  "dataProvider": [ {
-							    "day": "MON",
-							    "visits": response.mon2
-							  }, {
-							    "day": "TUE",
-							    "visits": response.tue2
-							  }, {
-							    "day": "WED",
-							    "visits": response.wen2
-							  }, {
-							    "day": "THU",
-							    "visits":response.thus2
-							  }, {
-							    "day": "FRI",
-							    "visits":response.fri2
-							  }, {
-							    "day": "SAT",
-							    "visits":response.sat2
-							  }, {
-							    "day": "SUN",
-							    "visits":response.sun2
-							  }
-							  ],
-							  "valueAxes": [ {
-							    "gridColor": "#FFFFFF",
-							    "gridAlpha": 0.2,
-							    "dashLength": 0
-							  } ],
-							  "gridAboveGraphs": true,
-							  "startDuration": 1,
-							  "graphs": [ {
-							    "balloonText": "[[category]]: <b>[[value]]</b>",
-							    "fillAlphas": 0.8,
-							    "lineAlpha": 0.2,
-							    "type": "column",
-							    "autoColor": true,
-							    "valueField": "visits"
-							  } ],
-							  "chartCursor": {
-							    "categoryBalloonEnabled": false,
-							    "cursorAlpha": 0,
-							    "zoomable": false
-							  },
-							  "categoryField": "day",
-							  "categoryAxis": {
-							    "gridPosition": "start",
-							    "gridAlpha": 0,
-							    "tickPosition": "start",
-							    "tickLength": 20
-							  },
-							  "export": {
-							    "enabled": true
-							  }
-							
-							} ); 
-	     		
-	     		
-	     		}
-	     		else {
-	     			$("#error-modal").modal('show');
-	     		}
-	      },
-	      error : function(response){
-	         	alert("_Error");
-	   	},
-	   		complete: function() {
-           		$("#job-post-form").show();
-   			   $("#processing").css('display','none');
-   	    }               
-	  });
-
-}
-	
-	
-  $("#highchart_1").highcharts({
-                chart:{
-                    style:{
-                        fontFamily:"Open Sans"
-                    }
-                },
-                title:{
-                    text:"",
-                    x:-20
-                },
-                //subtitle:{text:"Source: WorldClimate.com",x:-20},
-                xAxis:{
-                    title:{
-                        text:""
-                    },
-                    categories:["MON","TUE","WED","THU","FRI","SAT","SUN"]
-                },
-                yAxis:{
-                    tickInterval: 2,
-                    title:{
-                        text:""
-                    },
-                    plotLines:[{value:0,width:1,color:"#808080"}]
-                },
-                tooltip:{
-                    valueSuffix:""
-                },
-                legend:{
-                    layout:"vertical",
-                    align:"right",
-                    verticalAlign:"middle",
-                    borderWidth:0
-                },
-                series:[
-                    {name: "Bookings",data:[{{mon11}},{{tue11}},{{wen11}},{{thus11}},{{fri11}},{{sat11}},{{sun11}}]},
-                ]
-            }) 
-            
-          
-
-var chart = AmCharts.makeChart( "Payment_Collection1", {
-	
-
-  "fontFamily":"Open Sans",
-  "type": "serial",
-  "theme": "light",
-  "integersOnly":"true",
-  "dataProvider": [ {
-    "day": "MON",
-    "visits": {{mon22}}
-  }, {
-    "day": "TUE",
-    "visits": {{tue22}}
-  }, {
-    "day": "WED",
-    "visits": {{wen22}}
-  }, {
-    "day": "THU",
-    "visits":{{thus22}}
-  }, {
-    "day": "FRI",
-    "visits":{{fri22}}
-  }, {
-    "day": "SAT",
-    "visits":{{sat22}}
-  }, {
-    "day": "SUN",
-    "visits":{{sun22}}
-  }],	
-  "valueAxes": [ {
-
-   //"autoMargins":"false", 
-  //"marginRight":"5",
-
-
-    "gridColor": "#FFFFFF",
-    "gridAlpha": 0.2,
-    "dashLength": 0
-  } ],
-  "gridAboveGraphs": true,
-  "startDuration": 1,
-  "graphs": [ {
-    "balloonText": "[[category]]: <b>[[value]]</b>",
-    "fillAlphas": 0.8,
-    "lineAlpha": 0.2,
-    "type": "column",
-    "autoColor": true,
-    "valueField": "visits"
-  } ],
-  "chartCursor": {
-    "categoryBalloonEnabled": false,
-    "cursorAlpha": 0,
-    "zoomable": false
-  },
-  "categoryField": "day",
-  "categoryAxis": {
-    "gridPosition": "start",
-    "gridAlpha": 0,
-    "tickPosition": "start",
-    "tickLength": 20
-  },
-  "export": {
-    "enabled": true
-  }
-
-} );
-
-<!-- SSSSSSSSSSSSSSSSSSSSS -->
-
-var chart = AmCharts.makeChart("chartdiv", {
-    "type": "serial",
-    "theme": "light",
-    "marginTop":0,
-    "marginRight": 80,
-    "dataProvider": [{
-        "year": "1950",
-        "value": 1
-    }, {
-        "year": "1951",
-        "value": 2
-    }, {
-        "year": "1952",
-        "value": 12
-    }, {
-        "year": "1953",
-        "value": 6
-    }, {
-        "year": "1954",
-        "value": 20
-    }, {
-        "year": "1955",
-        "value": 21
-    }, {
-        "year": "1956",
-        "value": 14
-    }, {
-        "year": "1957",
-        "value": 20
-    }],
-    "valueAxes": [{
-        "axisAlpha": 0,
-        "position": "left"
-    }],
-    "graphs": [{
-        "id":"g1",
-        "balloonText": "[[category]]<br><b><span style='font-size:14px;'>[[value]]</span></b>",
-        "bullet": "round",
-        "bulletSize": 8,
-        "lineColor": "#d1655d",
-        "lineThickness": 2,
-        "negativeLineColor": "#637bb6",
-        "type": "smoothedLine",
-        "valueField": "value"
-    }],
-    "chartScrollbar": {
-        "graph":"g1",
-        "gridAlpha":0,
-        "color":"#888888",
-        "scrollbarHeight":55,
-        "backgroundAlpha":0,
-        "selectedBackgroundAlpha":0.1,
-        "selectedBackgroundColor":"#888888",
-        "graphFillAlpha":0,
-        "autoGridCount":true,
-        "selectedGraphFillAlpha":0,
-        "graphLineAlpha":0.2,
-        "graphLineColor":"#c2c2c2",
-        "selectedGraphLineColor":"#888888",
-        "selectedGraphLineAlpha":1
-
-    },
-    "chartCursor": {
-        "categoryBalloonDateFormat": "YYYY",
-        "cursorAlpha": 0,
-        "valueLineEnabled":true,
-        "valueLineBalloonEnabled":true,
-        "valueLineAlpha":0.5,
-        "fullWidth":true
-    },
-    "dataDateFormat": "YYYY",
-    "categoryField": "year",
-    "categoryAxis": {
-        "minPeriod": "YYYY",
-        "parseDates": true,
-        "minorGridAlpha": 0.1,
-        "minorGridEnabled": true
-    },
-    "export": {
-        "enabled": true
-    }
+$( document ).ready(function() {
+		 booking_fun();
+		  	setTimeout(function(){ 
+            views_fun();
+       	}, 500);
+		 
+  		      
 });
 
+function change_data1(){
+		 booking_fun();
+		  	setTimeout(function(){ 
+            views_fun();
+       	}, 500);
+}
+function booking_fun() {	
+					
+		  week_var = $('#week :selected').val();
+        advert_var = $('#advert :selected').val();
+        var supplier_id={{request.session.supplier_id}};
+        $.ajax({
+            type  : "GET",
+            url   : '/subscriber-portal/get-booking-graph-data/',
+            data : {'week_var':week_var,'supplier_id':supplier_id,'advert_var':advert_var},
+            success: function (response) {
+		 		  	 if (response.success == 'Expired') {		
+		 		  			location.href = '/subscriber-portal/?status=Expired'
+		 		  		}
+ 		  		// ALL STAT
+  		 	 $('#disc1').text(response.avail_discount_count);
+  		    $('#disc2').text(response.avail_callbacks_count);
+  		    $('#disc3').text(response.avail_callsmade_count);
+  		    $('#disc4').text(response.avail_shares_count);
+			
+ 
+  	       //  Total Bookings graph  
 
+       google.charts.load('current', {'packages':['line']});
+       google.charts.setOnLoadCallback(drawChart);
 
+       function drawChart() {
+       
+           var data1 = new google.visualization.DataTable();
+           data1.addColumn('string', '');
+           data1.addColumn('number', '');
+           data1.addRows(response.list);
+           var options = {
+               chart: {
+                   //title: 'Box Office Earnings in First Two Weeks of Opening',
+                   //subtitle: 'in millions of dollars (USD)'
+               },
+               //width: 500,
+               //height: 500
+               //axes: {
+                 //x: {
+                   //0: {side: 'top'}
+                 //}
+               //}
+           };
+           var chart = new google.charts.Line(document.getElementById('linechart_material'));
+           chart.draw(data1, options);
+          }
+         },
+        error : function(response){
+          alert("_Error");
+         },
+        });
+       }
+               
+   function views_fun() {
+
+		  week_var = $('#week :selected').val();
+        advert_var = $('#advert :selected').val();
+        var supplier_id={{request.session.supplier_id}};
+        $.ajax({
+            type  : "GET",
+            url   : '/subscriber-portal/get-booking-graph-data/',
+            data : {'week_var':week_var,'supplier_id':supplier_id,'advert_var':advert_var},
+            success: function (response) {
+		 		  	 if (response.success == 'Expired') {		
+		 		  			location.href = '/subscriber-portal/?status=Expired'
+		 		  		}  		                    
+ 		  		// ALL STAT
+  		 	 $('#disc1').text(response.avail_discount_count);
+  		    $('#disc2').text(response.avail_callbacks_count);
+  		    $('#disc3').text(response.avail_callsmade_count);
+  		    $('#disc4').text(response.avail_shares_count);
+
+      google.charts.load('current', {'packages':['bar']});
+      google.charts.setOnLoadCallback(drawStuff);
+
+      function drawStuff() {
+        var data = new google.visualization.arrayToDataTable(response.list2);
+
+        var options = {
+
+          legend: { position: 'none' },
+          chart: { 
+          
+                 },
+          bars: 'vertical', // Required for Material Bar Charts.
+      
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('total_views'));
+        chart.draw(data, options);
+      };
+      
+      				    
+           },
+        error : function(response){
+          alert("_Error");
+         },
+        });				    
+  }
+
+          
 </script>
 </body>
 </html>

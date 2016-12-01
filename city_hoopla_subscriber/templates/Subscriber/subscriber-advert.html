@@ -700,7 +700,7 @@ hr {
 
 <!-- END HEAD -->
 
-<body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid" onmousemove="move()">
 <!-- BEGIN HEADER -->
 <div id="processing" style="display:none;">
     <div id="loading">
@@ -839,7 +839,7 @@ hr {
 
                     <div class="col-lg-12">
                         <p>
-                            <span> Advert </span>
+                            <span> Advert   </span>
                         </p>
                     </div>
                 </div>
@@ -890,7 +890,7 @@ hr {
                             <div class="pull-right " style="color: #797979;">
                                 <a style="font-size: 16px; " type="button"
                                    href="/subscriber-portal/add-advert/?subscriber_id={{request.session.supplier_id}}"
-                                   class="btn done_btn ">Buy New Subscription
+                                   class="btn done_btn ">Buy New Subscription  
                                 </a>
                             </div>
                         </div>
@@ -1022,16 +1022,48 @@ hr {
                                                 </div>
                                             {% endif %}
                                         </div>
-                                                    <br>
+                                             <br>
+                                                <div  class="basic_div1" >
+                                                
+                                                     {% if advert.transaction_code %}
+		                                                    	<div class="row" style="" >
+		                                                        <div class="col-lg-8">
+		                                                            <p class="font-14 font-bold" style="margin-bottom: 8px;">
+						                                                    Transaction ID :</p>
+						                                             <p class="font-12 font-regular"
+						                                                   style="color:{{advert.subscriber_color}}; margin-bottom:0px;">
+						                                                    {{advert.transaction_code}}</p>
+						                                            </div>
+						                                           </div>
+		                                                  
+		                                                {% endif %}
+		                                                <br>
+		                                                {% if advert.payment_code %}
+		                                                    <div class="row" style="">
+		                                                        <div class="col-lg-8">
+		                                                            <p class="font-14 font-bold" style="margin-bottom: 8px;">
+						                                                    Payment ID :</p>
+						                                             <p class="font-12 font-regular"
+						                                                   style="color:{{advert.subscriber_color}}; margin-bottom:0px;">
+						                                                    {{advert.payment_code}}</p>
+						                                            </div>
+		                                                     </div>
+		                                                {% endif %}
+
+                                                
+                                                 </div>
+                                                    
+                                                    <br> 
+                                                    
                                                     <div class="row" style="">
                                                         <div class="col-lg-8">
                                                             <p class="font-14 font-bold" style="margin-bottom: 8px;">
-                                                    Created On :</p>
-                                             <p class="font-12 font-regular"
-                                                   style="color:{{advert.subscriber_color}}; margin-bottom:0px;">
-                                                    {{advert.advert_creation_date}}</p>
-                                           </div>
-                                                    </div>                                            
+				                                                    Created On :</p>
+				                                             <p class="font-12 font-regular"
+				                                                   style="color:{{advert.subscriber_color}}; margin-bottom:0px;">
+				                                                    {{advert.advert_creation_date}}</p>
+				                                            </div>
+                                                    </div>                                             
                                                         
                                                     <br>    
                                         <div class="row basic_div avail_date" style="margin-top:10px">
@@ -1268,10 +1300,16 @@ hr {
                                 <div class="form-group col-md-5 " >
                                     <div class="input-append date form_datetime">
                                         <input type="text"
-                                            readonly
                                             name="startDate"
                                             id="startDate"
                                             class="form-control date-picker"
+                                            style="display:none"
+                                        >
+                                        <input type="text"
+                                            readonly
+                                            name="startDate1"
+                                            id="startDate1"
+                                            class="form-control"
                                         >
                                     </div>
                                 </div>
@@ -1282,17 +1320,23 @@ hr {
                                 <div class="form-group col-md-5 " >
                                     <div class="input-append date form_datetime">
                                         <input type="text"
-                                            readonly
                                             name="endDate"
                                             id="endDate"
                                             class="form-control date-picker"
+                                             style="display:none"
+                                        >
+                                         <input type="text"
+                                            readonly
+                                            name="endDate1"
+                                            id="endDate1"
+                                            class="form-control "
                                         >
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-group col-md-12 ">
-                                <label> <b>Status </b> </label>
+                                <label style="font-size: 16px;"> Status  </label>
                             </div>
 
                             <div class="form-group col-lg-12">
@@ -1314,7 +1358,7 @@ hr {
                                     <label class="font-15 font-regular">
                                     <input type="radio"
                                            id="Show_All" name="stat"
-                                           value=""
+                                           value="all"
                                            class="telephone_radio"/>Show All</label>
                                 </div>
                             </div>
@@ -1331,7 +1375,7 @@ hr {
             </div>
         </div>
     </div>
-
+</div>
  <!-- END CONTAINER -->
 
 <!-- BEGIN FOOTER -->
@@ -1343,7 +1387,7 @@ hr {
             <i class="icon-arrow-up"></i>
         </div>
     </div>
-</div>
+
 <!-- END FOOTER -->
 
 <!-- BEGIN CORE PLUGINS -->
@@ -1412,10 +1456,17 @@ hr {
 <!-- END THEME LAYOUT SCRIPTS -->
 
     <script type="text/javascript">
+var last_touch = 0;
+
+function move() {
+var now = new Date()
+last_touch = now
+}
 
 var advert_id = '';
 
 $(document).ready(function(){
+
     var maxHeight = 0;
     var maxHeader = 0;
     var maxImage = 0;
@@ -1452,22 +1503,33 @@ $(document).ready(function(){
 
     });
 
+    $('.basic_div1').each(function() {
+     maxBasic = Math.max(maxBasic, $(this).height());
+    }).height(maxBasic);    	
+
 });
 
 
 function filter_advert() {
+	if ($('#startDate').val() !='' & $('#endDate').val() !='') {
+		  startDate_var = $('#startDate').val()
+        endDate_var = $('#endDate').val()			
+	}
+	else {
+		  startDate_var = $('#startDate1').val()
+        endDate_var = $('#endDate1').val()
+	}
 
-    startDate_var = $('#startDate').val()
-    endDate_var = $('#endDate').val()
     category_name_var = $('#category_id').val()
 
     stat_var = $("input[name='stat']:checked").val()
+
     if(stat_var == undefined){
         stat_var = '';
     }
     var supplier_id={{request.session.supplier_id}};
 
-    location.href = '/subscriber-portal/subscriber-advert/?supplier_id='+supplier_id+'&start_date_var='+startDate_var+'&end_date_var='+endDate_var+'&status_var='+stat_var+'&category_var='+category_name_var+''
+    location.href = '/subscriber-portal/subscriber-advert/?supplier_id='+supplier_id+'&start_date_var='+startDate_var+'&end_date_var='+endDate_var+'&status_var='+stat_var+'&category_var='+category_name_var+'&last_touch='+last_touch+''
 }
 
 function sort_by(){
@@ -1490,6 +1552,11 @@ function sort_by(){
     }
 
     $("#One_week").click(function() {
+        	$("#startDate").hide();
+	    	$("#endDate").hide();
+	    	$("#startDate1").show();
+	    	$("#endDate1").show();
+	    	
         date_init();
         var date = new Date();
         date.setDate(date.getDate() - 7 );
@@ -1497,15 +1564,20 @@ function sort_by(){
         var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
         var dd  = date.getDate().toString();
         newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        $("#startDate").val(newdate);
+        $("#startDate1").val(newdate);
         var date = new Date();
         var yyyy = date.getFullYear().toString();
         var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
         var dd  = date.getDate().toString();
         newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        $("#endDate").val(newdate);
+        $("#endDate1").val(newdate);
     });
     $("#One_month").click(function() {
+        	$("#startDate").hide();
+	    	$("#endDate").hide();
+	    	$("#startDate1").show();
+	    	$("#endDate1").show();
+	    	    
         date_init();
         var date = new Date();
         date.setDate(date.getDate() - 30 );
@@ -1513,15 +1585,20 @@ function sort_by(){
         var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
         var dd  = date.getDate().toString();
         newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        $("#startDate").val(newdate);
+        $("#startDate1").val(newdate);
         var date = new Date();
         var yyyy = date.getFullYear().toString();
         var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
         var dd  = date.getDate().toString();
         newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        $("#endDate").val(newdate);
+        $("#endDate1").val(newdate);
     });
     $("#Three_month").click(function() {
+        	$("#startDate").hide();
+	    	$("#endDate").hide();
+	    	$("#startDate1").show();
+	    	$("#endDate1").show();
+	    	    
         date_init();
         var date = new Date();
         date.setDate(date.getDate() - 90 );
@@ -1529,15 +1606,20 @@ function sort_by(){
         var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
         var dd  = date.getDate().toString();
         newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        $("#startDate").val(newdate);
+        $("#startDate1").val(newdate);
         var date = new Date();
         var yyyy = date.getFullYear().toString();
         var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
         var dd  = date.getDate().toString();
         newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        $("#endDate").val(newdate);
+        $("#endDate1").val(newdate);
     });
     $("#Six_month").click(function() {
+        	$("#startDate").hide();
+	    	$("#endDate").hide();
+	    	$("#startDate1").show();
+	    	$("#endDate1").show();
+	    	    
         date_init();
         var date = new Date();
         date.setDate(date.getDate() - 180 );
@@ -1545,15 +1627,21 @@ function sort_by(){
         var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
         var dd  = date.getDate().toString();
         newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        $("#startDate").val(newdate);
+        $("#startDate1").val(newdate);
         var date = new Date();
         var yyyy = date.getFullYear().toString();
         var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
         var dd  = date.getDate().toString();
         newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
-        $("#endDate").val(newdate);
+        $("#endDate1").val(newdate);
     });
     $("#date_range").click(function() {
+    
+       	$("#startDate").show();
+	    	$("#endDate").show();
+	    	$("#startDate1").hide();
+	    	$("#endDate1").hide();
+	    	
         $("#startDate").val(null);
         $("#startDate").datepicker( "destroy" );
         $("#startDate").datepicker({
@@ -1598,7 +1686,7 @@ function delete_advert(){
             //location.reload();
             if (response.success == 'Expired') {
 
- 		  			location.href = '/subscriber-portal/'
+ 		  			location.href = '/subscriber-portal/?status=Expired'
  		  		}
         },
         beforeSend: function () {
@@ -1621,6 +1709,10 @@ function activateAdvert1(){
         data : {'advert_id':advert_id},
         success: function (response) {
             //location.reload();
+           if (response.success == 'Expired') {
+
+ 		  			location.href = '/subscriber-portal/?status=Expired'
+ 		  		}
         },
         beforeSend: function () {
             $("#processing").css('display','block');

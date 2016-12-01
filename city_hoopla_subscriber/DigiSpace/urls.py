@@ -288,6 +288,10 @@ urlpatterns = patterns('',
     url(r'^regenerate-password/', 'Admin.supplier.regenerate_password',name='regenerate_password'), 
     url(r'^set-new-password/', 'Admin.supplier.set_new_password',name='set_new_password'),  
     url(r'^password-changed/', 'Admin.supplier.password_changed',name='password_changed'),
-    url(r'^advert-stat/', 'Admin.advert.advert_stat',name='advert_stat'),   
+    url(r'^advert-stat/', 'Admin.advert.advert_stat',name='advert_stat'),
+
+
+
+    url(r'^get-categories/', 'Admin.advert.get_categories',name='get_categories'),   
 
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

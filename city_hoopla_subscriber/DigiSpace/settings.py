@@ -126,6 +126,6 @@ CRONJOBS = [
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
 # Auto logout delay in minutes
-AUTO_LOGOUT_DELAY = 30 #equivalent to 30 minutes
+AUTO_LOGOUT_DELAY = 40 #equivalent to 30 minutes
 
 #SESSION_EXPIRE_AT_BROWSER_CLOSE= True

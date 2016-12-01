@@ -644,7 +644,7 @@ input[type="file"]{
                                                             <input name="new_poi" hidden value="new_poi"
                                                                    class="poi_status"></input>
                                                             <input type="hidden" class="interest_place_id"
-                                                                   value="0"> </input>
+                                                                   value="0"></input>
 
                                                             <label class="error"
                                                                    style="color:red; display:none;"></label>
@@ -667,7 +667,7 @@ input[type="file"]{
                                                                             onclick="callChangeImage({{int.image_id}});"
                                                                             id="canvas_poi{{int.image_id}}"></canvas>
 
-                                                                    <script>
+                                                                     <script>
                                                                           var canvas{{int.place_id}} = document.getElementById('canvas_poi{{int.image_id}}');
                                                                           var context{{int.place_id}} = canvas{{int.place_id}}.getContext('2d');
                                                                           var imageObj{{int.place_id}} = new Image();
