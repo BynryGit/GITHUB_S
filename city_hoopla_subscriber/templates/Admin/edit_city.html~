@@ -21,7 +21,7 @@ License: You must have a valid license purchased only from themeforest(the above
 {% load staticfiles %}
 <head>
     <meta charset="utf-8"/>
-    <title>City Hoopla | Edit City</title>
+    <title>CityHoopla | Edit City</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
     <meta content="" name="description"/>
@@ -394,10 +394,10 @@ input[type="file"]{
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-default">
-                            <!--  <li>
-                                 <a href="page_user_profile_1.html">
-                                     <i class="icon-user"></i> My Profile </a>
-                             </li> -->
+                           <li>
+                                <a href="/edit-profile/?user_id={{request.session.login_user}}">
+                                    <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
+                            </li>
                             <li>
                                 <a href="/log-out/">
                                     <i class="icon-key"></i> Log Out </a>
@@ -480,7 +480,7 @@ input[type="file"]{
                                             <div class="row">
                                                 <div class="col-lg-12 col-md-12 ">
                                                     <label class="control-label " style="font-size:15px; ">
-                                                        Display Image
+                                                        Display Image <span class="required"> * </span>
                                                     </label>
                                                     <div class="canvas_holder" style="background : white;width: 100% !important;height: 140px !important;">
                                                         <canvas class="canvas_block" style="cursor:pointer;"
@@ -575,6 +575,7 @@ input[type="file"]{
                                                 <div class="form-group col-lg-12">
                                                     <label class="control-label"
                                                            style="font-size:15px;">Language </label>
+                                                           <span class="required"> * </span>
 
 
                                                     <input type="text" name="name"
@@ -590,8 +591,8 @@ input[type="file"]{
                                                 <div class="col-lg-12">
                                                     <div class="form-group">
                                                         <label class="control-label " style="font-size:15px;">Climate
-
                                                         </label>
+                                                        <span class="required"> * </span>
                                                         <input type="text" name="name"
                                                                value="{{ city.climate}}" id="climate"
                                                                class="form-control"/>
@@ -600,6 +601,122 @@ input[type="file"]{
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label class="control-label " style="font-size:15px;">Population (In million)
+                                                        </label>
+                                                        <span class="required"> * </span>
+                                                        <input type="text" name="name" id="population1"
+                                                               class="form-control" value="{{city.population}}"/>
+                                                        <label class="error"
+                                                               style="color:red; display:none;"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label class="control-label " style="font-size:15px;">Time Zone
+                                                        </label>
+                                                        <span class="required"> * </span>
+                                                        
+                                          <select id="timezone" name="timezone"  class="form-control">
+                                            <option value="">Select Time Zone</option>
+                                                            
+															                                                       
+																<option value="(GMT-12:00) International Date Line West">(GMT-12:00) International Date Line West</option>
+																<option value="(GMT-11:00) Midway Island, Samoa">(GMT-11:00) Midway Island, Samoa</option>
+																<option value="(GMT-10:00) Hawaii">(GMT-10:00) Hawaii</option>
+																<option value="(GMT-09:00) Alaska">(GMT-09:00) Alaska</option>
+																<option value="(GMT-08:00) Pacific Time (US & Canada)">(GMT-08:00) Pacific Time (US & Canada)</option>
+																<option value="(GMT-08:00) Tijuana, Baja California">(GMT-08:00) Tijuana, Baja California</option>
+																<option value="(GMT-07:00) Arizona">(GMT-07:00) Arizona</option>
+																<option value="(GMT-07:00) Chihuahua, La Paz, Mazatlan">(GMT-07:00) Chihuahua, La Paz, Mazatlan</option>
+																<option value="(GMT-07:00) Mountain Time (US & Canada)">(GMT-07:00) Mountain Time (US & Canada)</option>
+																<option value="(GMT-06:00) Central America">(GMT-06:00) Central America</option>
+																<option value="(GMT-06:00) Central Time (US & Canada)">(GMT-06:00) Central Time (US & Canada)</option>
+																<option value="(GMT-06:00) Guadalajara, Mexico City, Monterrey">(GMT-06:00) Guadalajara, Mexico City, Monterrey</option>
+																<option value="(GMT-06:00) Saskatchewan">(GMT-06:00) Saskatchewan</option>
+																<option value="(GMT-05:00) Bogota, Lima, Quito, Rio Branco">(GMT-05:00) Bogota, Lima, Quito, Rio Branco</option>
+																<option value="(GMT-05:00) Eastern Time (US & Canada)">(GMT-05:00) Eastern Time (US & Canada)</option>
+																<option value="(GMT-05:00) Indiana (East)">(GMT-05:00) Indiana (East)</option>
+																<option value="(GMT-04:00) Atlantic Time (Canada)">(GMT-04:00) Atlantic Time (Canada)</option>
+																<option value="(GMT-04:00) Caracas, La Paz">(GMT-04:00) Caracas, La Paz</option>
+																<option value="(GMT-04:00) Manaus">(GMT-04:00) Manaus</option>
+																<option value="(GMT-04:00) Santiago">(GMT-04:00) Santiago</option>
+																<option value="(GMT-03:30) Newfoundland">(GMT-03:30) Newfoundland</option>
+																<option value="(GMT-03:00) Brasilia">(GMT-03:00) Brasilia</option>
+																<option value="(GMT-03:00) Buenos Aires, Georgetown">(GMT-03:00) Buenos Aires, Georgetown</option>
+																<option value="(GMT-03:00) Greenland">(GMT-03:00) Greenland</option>
+																<option value="(GMT-03:00) Montevideo">(GMT-03:00) Montevideo</option>
+																<option value="(GMT-02:00) Mid-Atlantic">(GMT-02:00) Mid-Atlantic</option>
+																<option value="(GMT-01:00) Cape Verde Is.">(GMT-01:00) Cape Verde Is.</option>
+																<option value="(GMT-01:00) Azores">(GMT-01:00) Azores</option>
+																<option value="(GMT+00:00) Casablanca, Monrovia, Reykjavik">(GMT+00:00) Casablanca, Monrovia, Reykjavik</option>
+																<option value="(GMT+00:00) Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London">(GMT+00:00) Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London</option>
+																<option value="(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna">(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna</option>
+																<option value="(GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague">(GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague</option>
+																<option value="(GMT+01:00) Brussels, Copenhagen, Madrid, Paris">(GMT+01:00) Brussels, Copenhagen, Madrid, Paris</option>
+																<option value="(GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb">(GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb</option>
+																<option value="(GMT+01:00) West Central Africa">(GMT+01:00) West Central Africa</option>
+																<option value="(GMT+02:00) Amman">(GMT+02:00) Amman</option>
+																<option value="(GMT+02:00) Athens, Bucharest, Istanbul">(GMT+02:00) Athens, Bucharest, Istanbul</option>
+																<option value="(GMT+02:00) Beirut">(GMT+02:00) Beirut</option>
+																<option value="(GMT+02:00) Cairo">(GMT+02:00) Cairo</option>
+																<option value="(GMT+02:00) Harare, Pretoria">(GMT+02:00) Harare, Pretoria</option>
+																<option value="(GMT+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius">(GMT+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius</option>
+																<option value="(GMT+02:00) Jerusalem">(GMT+02:00) Jerusalem</option>
+																<option value="(GMT+02:00) Minsk">(GMT+02:00) Minsk</option>
+																<option value="(GMT+02:00) Windhoek">(GMT+02:00) Windhoek</option>
+																<option value="(GMT+03:00) Kuwait, Riyadh, Baghdad">(GMT+03:00) Kuwait, Riyadh, Baghdad</option>
+																<option value="(GMT+03:00) Moscow, St. Petersburg, Volgograd">(GMT+03:00) Moscow, St. Petersburg, Volgograd</option>
+																<option value="(GMT+03:00) Nairobi">(GMT+03:00) Nairobi</option>
+																<option value="(GMT+03:00) Tbilisi">(GMT+03:00) Tbilisi</option>
+																<option value="(GMT+03:30) Tehran">(GMT+03:30) Tehran</option>
+																<option value="(GMT+04:00) Abu Dhabi, Muscat">(GMT+04:00) Abu Dhabi, Muscat</option>
+																<option value="(GMT+04:00) Baku">(GMT+04:00) Baku</option>
+																<option value="(GMT+04:00) Yerevan">(GMT+04:00) Yerevan</option>
+																<option value="(GMT+04:30) Kabul">(GMT+04:30) Kabul</option>
+																<option value="(GMT+05:00) Yekaterinburg">(GMT+05:00) Yekaterinburg</option>
+																<option value="(GMT+05:00) Islamabad, Karachi, Tashkent">(GMT+05:00) Islamabad, Karachi, Tashkent</option>
+																<option value="(GMT+05:30) Sri Jayawardenapura">(GMT+05:30) Sri Jayawardenapura</option>
+																<option value="(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi">(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi</option>
+																<option value="(GMT+05:45) Kathmandu">(GMT+05:45) Kathmandu</option>
+																<option value="(GMT+06:00) Almaty, Novosibirsk">(GMT+06:00) Almaty, Novosibirsk</option>
+																<option value="(GMT+06:00) Astana, Dhaka">(GMT+06:00) Astana, Dhaka</option>
+																<option value="(GMT+06:30) Yangon (Rangoon)">(GMT+06:30) Yangon (Rangoon)</option>
+																<option value="(GMT+07:00) Bangkok, Hanoi, Jakarta">(GMT+07:00) Bangkok, Hanoi, Jakarta</option>
+																<option value="(GMT+07:00) Krasnoyarsk">(GMT+07:00) Krasnoyarsk</option>
+																<option value="(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi">(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi</option>
+																<option value="(GMT+08:00) Kuala Lumpur, Singapore">(GMT+08:00) Kuala Lumpur, Singapore</option>
+																<option value="(GMT+08:00) Irkutsk, Ulaan Bataar">(GMT+08:00) Irkutsk, Ulaan Bataar</option>
+																<option value="(GMT+08:00) Perth">(GMT+08:00) Perth</option>
+																<option value="(GMT+08:00) Taipei">(GMT+08:00) Taipei</option>
+																<option value="(GMT+09:00) Osaka, Sapporo, Tokyo">(GMT+09:00) Osaka, Sapporo, Tokyo</option>
+																<option value="(GMT+09:00) Seoul">(GMT+09:00) Seoul</option>
+																<option value="(GMT+09:00) Yakutsk">(GMT+09:00) Yakutsk</option>
+																<option value="(GMT+09:30) Adelaide">(GMT+09:30) Adelaide</option>
+																<option value="(GMT+09:30) Darwin">(GMT+09:30) Darwin</option>
+																<option value="(GMT+10:00) Brisbane">(GMT+10:00) Brisbane</option>
+																<option value="(GMT+10:00) Canberra, Melbourne, Sydney">(GMT+10:00) Canberra, Melbourne, Sydney</option>
+																<option value="(GMT+10:00) Hobart">(GMT+10:00) Hobart</option>
+																<option value="(GMT+10:00) Guam, Port Moresby">(GMT+10:00) Guam, Port Moresby</option>
+																<option value="(GMT+10:00) Vladivostok">(GMT+10:00) Vladivostok</option>
+																<option value="(GMT+11:00) Magadan, Solomon Is., New Caledonia">(GMT+11:00) Magadan, Solomon Is., New Caledonia</option>
+																<option value="(GMT+12:00) Auckland, Wellington">(GMT+12:00) Auckland, Wellington</option>
+																<option value="(GMT+12:00) Fiji, Kamchatka, Marshall Is.">(GMT+12:00) Fiji, Kamchatka, Marshall Is.</option>
+																<option value="(GMT+13:00) Nuku'alofa">(GMT+13:00) Nuku'alofa</option>
+															   </select>
+																
+
+
+                                                <label class="error"
+                                                               style="color:red; display:none;"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
                                         </div>
 
                                         <div class="col-md-9 "
@@ -644,7 +761,7 @@ input[type="file"]{
                                                             <input name="new_poi" hidden value="new_poi"
                                                                    class="poi_status"></input>
                                                             <input type="hidden" class="interest_place_id"
-                                                                   value="0"></input>
+                                                                   value="0"> </input>
 
                                                             <label class="error"
                                                                    style="color:red; display:none;"></label>
@@ -667,7 +784,7 @@ input[type="file"]{
                                                                             onclick="callChangeImage({{int.image_id}});"
                                                                             id="canvas_poi{{int.image_id}}"></canvas>
 
-                                                                     <script>
+                                                                    <script>
                                                                           var canvas{{int.place_id}} = document.getElementById('canvas_poi{{int.image_id}}');
                                                                           var context{{int.place_id}} = canvas{{int.place_id}}.getContext('2d');
                                                                           var imageObj{{int.place_id}} = new Image();
@@ -1236,7 +1353,13 @@ var poi_index;
 var shop_index;
 var hospital_index;
 var college_index;
+
 $(document).ready(function(){
+
+	//console.log({{city.timezone}});
+
+   $('#timezone').val('{{city.timezone}}');
+
     $("#shopname").val('');
     poi_index = {{poi_index}} + 1;
     shop_index = {{shop_index}} + 1;
@@ -1496,94 +1619,88 @@ ctx_c.fillText("Image Preview",90,80);
 
 
 
-function checkClimate(climate){
-            
-            Climate = $(climate).val()
-           var namePattern = /^[0-9]*$/;  
-             if(Climate=='')
-            {
-            return true;    
-            } 
-           else if(namePattern.test(Climate)){
-            
+    function checkClimate(climate){
+        Climate = $(climate).val()
+        var namePattern = /^[0-9]*$/;
+       // if(Climate=='')
+       // {
+       //     return true;
+       // }
+       // else 
+       if(namePattern.test(Climate)){
             $(climate).parent().children('.error').css("display", "block");
-                $(climate).parent().children('.error').text("Please enter valid Climate");
-              
-           return false;
-           }else{
+            $(climate).parent().children('.error').text("Please enter valid Climate");
+            return false;
+        }else{
             $(climate).parent().children('.error').css("display", "none");
-           return true; 
-           }
-        } 
-
-
-function checkLanguage(language){
-
-    var namePattern = /^[0-9]*$/;  
-    lang = $(language).val()
-    
-    
-    if(lang==""){
-    
-        $(language).parent().children('.error').css("display", "none");
-    return true;
-   
+            return true;
+        }
     }
-   else {
-   if(namePattern.test(lang))
-   { 
-  
-            $(language).parent().children('.error').css("display", "block");
-    $(language).parent().children('.error').text("Please enter valid Language");
-      
-   
-        return false;  
-   }
-     
-   else {
-  
-     $(language).parent().children('.error').css("display", "none");  
-           return true; 
-   }
-   }  
- }  
-   
-function checkPopulation(population){
-
-    popu = $(population).val()
-    var namePattern = /[0-9]/;  
+    function checktimezone(timezone){
+        if($(timezone).val()!='' && $(timezone).val()!=null){
+            $(timezone).parent().children('.error').css("display", "none");
+            return true;
+        }else{
+            $(timezone).parent().children('.error').css("display", "block");
+            $(timezone).parent().children('.error').text("Please select Time Zone");
+            return false;
+        }
+    }
     
-    
-     if(popu=='')
-    {
-            return true;    
-    } 
-    else
-   { 
-            if(namePattern.test(popu)){
-            
-                $(population).parent().children('.error').css("display", "none");           
-            
-            
-           return true;
-                }else{
-            
-                $(population).parent().children('.error').css("display", "block");
-                $(population).parent().children('.error').text("Please enter valid Population");
-              
-            return false; 
-               }
-           
-   }
-} 
+        function checkPopulation(population1){
+        population = $(population1).val()
 
-function checkLogo(city_image){
+        var namePattern = /^[0-9]+\.?[0-9]*$/;
+        if(population=='')
+        {
+            $(population1).parent().children('.error').css("display", "block");
+            $(population1).parent().children('.error').text("Please enter Population");
+            return false;
+        }
+        else if(namePattern.test(population)){
+
+            $(population1).parent().children('.error').css("display", "none");
+            return true;
+
+        }else{
+
+            $(population1).parent().children('.error').css("display", "block");
+            $(population1).parent().children('.error').text("Please enter valid Population");
+            return false;
+            
+        }
+    }
+
+
+    function checkLanguage(language){
+        var namePattern = /^[0-9]*$/;
+        lang = $(language).val()
+        //if(lang==""){
+        //    $(language).parent().children('.error').css("display", "none");
+        //    return true;
+        //}
+        //else {
+            if(namePattern.test(lang)){
+                $(language).parent().children('.error').css("display", "block");
+                $(language).parent().children('.error').text("Please enter valid Language");
+                return false;
+            }
+            else{
+                $(language).parent().children('.error').css("display", "none");
+                return true;
+            }
+        //}
+    }
+   
+
+function checkLogo1(city_image){
     resume = $(city_image).val()
-   
+   alert(resume)
     if(resume=='')
     {
-        $(city_image).parent().children('.error').css("display", "none");   
-        return true;
+            $(city_image).parent().children('.error').css("display", "block");
+            $(city_image).parent().children('.error').text("Please upload an image");
+             return false;
     }   
     else 
     {
@@ -1599,8 +1716,8 @@ function checkLogo(city_image){
              $(city_image).parent().children('.error').css("display", "none");
              return true;
                 }
-}    
-}   
+   }    
+  }   
 /*
     function showSelectsd(){
          var categ = [];
@@ -1706,7 +1823,7 @@ function checkCollege(college_and_universities){
             
 
 function validateCityData(){
-    if(checkLanguage("#language")&checkClimate("#climate")&checkLogo("#city_image"))
+    if(checkLanguage("#language")&checkClimate("#climate")&checkPopulation("#population1")&checktimezone("#timezone"))
     {
         return true;    
     }
@@ -1862,7 +1979,7 @@ $("#save_city").click(function(event) {
          formData.append("about_city", $('#about_city').val());
          formData.append("climate", $('#climate').val());
          formData.append("language", $('#language').val());
-         formData.append("population", $('#population').val());
+         formData.append("population", $('#population1').val());
          formData.append("timezone", $('#timezone').val());
          formData.append("category", $('#selCat').val());
          formData.append("check_image", check_image);

@@ -609,6 +609,9 @@ hr {
     .font-14{
         font-size:14px;
     }
+    .font-13{
+        font-size:13px;
+    }    
 
     .font-12{
         font-size:12px;
@@ -911,48 +914,56 @@ hr {
                                                     border-top-right-radius: 15px !important;
                                                     background-color:#f3f2f2;
                                                     display: flex;
-                                                ">
+                                                   ">
                                                     <div class="col-lg-2" style="color: white;
                                                             background:{{advert.advert_color}};
                                                             font-size: 20px;
                                                             color:#fff;
                                                             font-weight:700;
+                                                            padding-left: 6px;
                                                             border-top-left-radius: 15px !important;
                                                             ">
                                                         <label class="text_center">{{advert.advert_id}}</label>
                                                     </div>
-                                                    <div class="col-lg-6"
+                                                    <div class="col-md-10 col-sm-10">
+                                                     <div class="row">
+                                                     			 <div class="col-md-12 col-sm-12"
+			                                                         style="background-color: #f3f2f2; border-top-right-radius: 15px !important;">
+			                                                        {% if advert.is_active == '1' %}
+			                                                            <div class="pull-right vertical_center1">
+			
+			                                                                <a class="fa fa-pencil "
+			                                                                   href="/subscriber-portal/edit-advert/?advert_id={{advert.advert_id}}"
+			                                                                   style="color:#3eb199; font-size:17px;"
+			                                                                   title="Edit"></a>
+			                                                                <span style="font-size:17px;">|</span>
+			                                                                <a title="Deactivate" class="fa fa-trash-o" onclick="deleteModalCall({{advert.advert_id}})" style="color:#3eb199; font-size:17px; "></a>
+			                                                            <!--<a class="fa fa-trash-o" style="color:#3eb199; font-size:20px; "-->
+			                                                               <!--data-toggle="modal" data-target="#delete-modal"></a>-->
+			                                                            </div>
+			                                                        {% else %}
+			                                                            <div class="vertical_center" style="text-align: center; margin-top: 13px;">
+			                                                                <a class="fa fa-refresh" onclick="activateAdvert({{advert.advert_id}})" style="color:#3eb199; font-size:20px; " title="Reactivate"></a>
+			                                                            </div> 
+			                                                        {% endif %}
+			                                                    </div>
+                                                     </div>
+                                                     <div class="row">
+                                                      <div class="col-lg-12"
                                                          style="background-color: #f3f2f2; ">
-                                                        <p class="font-15 advert-title font-bold"
-                                                           style="margin-bottom: 8px; margin-top: 2px;">
+                                                        <p class="font-14 advert-title font-bold"
+                                                           style="margin-bottom: 2px;">
                                                             <span class="name">{{advert.advert_name}}</span> </p>
-                                                        <p class="font-14 font-regular" style="margin-bottom: 0px;">
+                                                        <p class="font-13 font-regular" style="margin-bottom: 0px;">
                                                             <span class="area">{{advert.advert_area}}</span>,
                                                             <span class="city">{{advert.advert_city}}</span>
                                                         </p>
-                                                        <p class="font-14 font-regular" style="margin-bottom: 10px;">
+                                                        <p class="font-13 font-regular">
                                                             <span class="category_name">{{advert.category_name}}</span></p>
                                                     </div>
-                                                    <div class="col-md-4 col-sm-4"
-                                                         style="background-color: #f3f2f2; border-top-right-radius: 15px !important;">
-                                                        {% if advert.is_active == '1' %}
-                                                            <div class="pull-right vertical_center">
-
-                                                                <a class="fa fa-pencil "
-                                                                   href="/subscriber-portal/edit-advert/?advert_id={{advert.advert_id}}"
-                                                                   style="color:#3eb199; font-size:20px;"
-                                                                   title="Edit"></a>
-                                                                <span style="font-size:20px;">|</span>
-                                                                <a title="Deactivate" class="fa fa-trash-o" onclick="deleteModalCall({{advert.advert_id}})" style="color:#3eb199; font-size:20px; "></a>
-                                                            <!--<a class="fa fa-trash-o" style="color:#3eb199; font-size:20px; "-->
-                                                               <!--data-toggle="modal" data-target="#delete-modal"></a>-->
-                                                            </div>
-                                                        {% else %}
-                                                            <div class="vertical_center" style="text-align: center; margin-top: 13px;">
-                                                                <a class="fa fa-refresh" onclick="activateAdvert({{advert.advert_id}})" style="color:#3eb199; font-size:20px; " title="Reactivate"></a>
-                                                            </div> 
-                                                        {% endif %}
                                                     </div>
+                                                   
+                                                   </div>
                                                 </div>
                                             {% else %}
                                                 <div class="row header_div" style="
@@ -1028,9 +1039,9 @@ hr {
                                                      {% if advert.transaction_code %}
 		                                                    	<div class="row" style="" >
 		                                                        <div class="col-lg-8">
-		                                                            <p class="font-14 font-bold" style="margin-bottom: 8px;">
+		                                                            <p class="font-13 font-bold" style="margin-bottom: 8px;">
 						                                                    Transaction ID :</p>
-						                                             <p class="font-12 font-regular"
+						                                                <p class="font-12 font-regular transaction_id"
 						                                                   style="color:{{advert.subscriber_color}}; margin-bottom:0px;">
 						                                                    {{advert.transaction_code}}</p>
 						                                            </div>
@@ -1041,9 +1052,9 @@ hr {
 		                                                {% if advert.payment_code %}
 		                                                    <div class="row" style="">
 		                                                        <div class="col-lg-8">
-		                                                            <p class="font-14 font-bold" style="margin-bottom: 8px;">
+		                                                            <p class="font-13 font-bold" style="margin-bottom: 8px;">
 						                                                    Payment ID :</p>
-						                                             <p class="font-12 font-regular"
+						                                             <p class="font-12 font-regular payment_id"
 						                                                   style="color:{{advert.subscriber_color}}; margin-bottom:0px;">
 						                                                    {{advert.payment_code}}</p>
 						                                            </div>
@@ -1057,7 +1068,7 @@ hr {
                                                     
                                                     <div class="row" style="">
                                                         <div class="col-lg-8">
-                                                            <p class="font-14 font-bold" style="margin-bottom: 8px;">
+                                                            <p class="font-13 font-bold" style="margin-bottom: 8px;">
 				                                                    Created On :</p>
 				                                             <p class="font-12 font-regular"
 				                                                   style="color:{{advert.subscriber_color}}; margin-bottom:0px;">
@@ -1068,7 +1079,7 @@ hr {
                                                     <br>    
                                         <div class="row basic_div avail_date" style="margin-top:10px">
                                             <div class="col-lg-8">
-                                                <p class="font-14 font-bold" style="margin-bottom: 8px;">Basic
+                                                <p class="font-13 font-bold" style="margin-bottom: 8px;">Basic
                                                     Subscription :</p>
                                                 <p class="font-12 font-regular"
                                                    style="color:{{advert.subscriber_color}}; margin-bottom:0px;">
@@ -1081,7 +1092,7 @@ hr {
                                                {% if advert.date_gap < 7 %}
                                                   <div class="col-lg-4">
                                                     <a href="/subscriber-portal/renew-subscription/?advert_id={{advert.advert_id}}"
-                                                       class="font-14 font-regular">
+                                                       class="font-13 font-regular">
                                                         <i class="fa fa-repeat" aria-hidden="true"></i>
                                                         Renew
                                                     </a>
@@ -1095,7 +1106,7 @@ hr {
                                             {% else %}
                                                 <div class="col-lg-4">
                                                     <a href="/subscriber-portal/edit-subscription/?business_id={{advert.business_id}}"
-                                                       class="font-14 font-regular">
+                                                       class="font-13 font-regular">
                                                         <i class="fa fa-pencil" aria-hidden="true"></i>
                                                         Edit
                                                     </a>
@@ -1105,7 +1116,7 @@ hr {
                                         <div class="row prem_div avail_date" style="margin-top:10px">
                                             {% if advert.premium_service_list %}
                                             <div class="col-lg-8 ">
-                                                <label class="font-14 font-bold">Premium Services :</label>
+                                                <label class="font-13 font-bold">Premium Services :</label>
                                                 {%for premium in advert.premium_service_list%}
                                                 <p class="font-12 expire font-regular" style="margin-bottom: 8px;">
                                                     {{premium.premium_service_name}}
@@ -1122,39 +1133,43 @@ hr {
                                             {% endif %}
                                         </div>
                                         {% if advert.advert_id %}
-                                            <div class="row no_child avail_date" style="background-color: {{advert.advert_color}}; height: 60px;">
-                                                <div class="col-lg-12 ">
-                                                    <div class="col-lg-9" style=" padding-left: 0px;    padding-top: 5px;">
-                                                        <div class="col-lg-12" style=" font-size: 16px;color: #fff; ">
-		                                                           <span  style="
-		                                                            font-style: normal;
-		                                                            font-size: 30px;
-		                                                            color: #fff;">
-	                                                                 {{advert.advert_bookings}}
-	                                                               </span>
+                                            <div class="row no_child avail_date" style="background-color: {{advert.advert_color}}; height: 42px;">
+                                               
+                                                    <div class="col-lg-9" style=" padding-left: 0px;">
+                                                    
+                                                    <div class="col-lg-1" style="
+                                                            font-style: normal;
+                                                            font-size: 24px;
+                                                            color: #fff;">
+                                                            {{advert.advert_bookings}}
+                                                        </div>
+                                                        <div class="col-lg-8"
+                                                             style=" font-size: 16px;margin-top: 8px; color: #fff;	">
 	                                                         {% if advert.advert_bookings > 1 %}
 		                                                         <span> Coupons </span>
 		                                                       
 	                                                         {% else %}
 	                                                        	   <span> Coupon </span>
-		                                                       
-		                                                      {% endif %} 
-	                                                     </div>  
-                                                     </div>
+	                                                        	  {% endif %} 
+                                                        </div>
+                                                    </div>
                                                      <div class="col-lg-3"
-                                                         style=" font-size: 16px;margin-top: 22px; color: #fff;">
+                                                         style=" font-size: 16px;margin-top: 9px; color: #fff;">
                                                         <a href="/subscriber-portal/advert-bookings/?advert_id={{advert.advert_id}}"
                                                            style="color: #fff;"> View</a>
                                                     </div>
-                                                </div>
+                                                    
+                                                    
+                                                     
+                                               
                                             </div>
                                         {% else %}
-                                            <div class="row no_child avail_date" style="background-color: lightgrey; height: 60px;">
-                                                <div class="col-lg-12 ">
+                                            <div class="row no_child avail_date" style="background-color: lightgrey; height: 42px;">
+                                               
                                                     <div class="col-lg-9" style=" padding-left: 0px;">
                                                         <div class="col-lg-1" style="
                                                             font-style: normal;
-                                                            font-size: 30px;
+                                                            font-size: 17px;
                                                             color: #fff;">
                                                         </div>
                                                         <div class="col-lg-8"
@@ -1163,11 +1178,11 @@ hr {
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-3"
-                                                         style=" font-size: 16px;margin-top: 14px; color: #fff;">
+                                                         style=" font-size: 16px;margin-top: 11px; color: #fff;">
                                                         <a href="/subscriber-portal/advert-bookings/?advert_id={{advert.advert_id}}"
                                                            style="color: #fff;"> </a>
                                                     </div>
-                                                </div>
+                                              
                                             </div>
                                         {% endif %}
                                     </div>
@@ -1478,6 +1493,7 @@ $(document).ready(function(){
 
     $('.header_div').each(function() {
         maxHeader = Math.max(maxHeader, $(this).height());
+        maxHeader = maxHeader -12;
     }).height(maxHeader);
 
     $('.image_div').each(function() {
@@ -1559,7 +1575,7 @@ function sort_by(){
 	    	
         date_init();
         var date = new Date();
-        date.setDate(date.getDate() - 7 );
+        date.setDate(date.getDate() - 6 );
         var yyyy = date.getFullYear().toString();
         var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
         var dd  = date.getDate().toString();
@@ -1580,7 +1596,7 @@ function sort_by(){
 	    	    
         date_init();
         var date = new Date();
-        date.setDate(date.getDate() - 30 );
+        date.setDate(date.getDate() - 29 );
         var yyyy = date.getFullYear().toString();
         var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
         var dd  = date.getDate().toString();
@@ -1601,7 +1617,7 @@ function sort_by(){
 	    	    
         date_init();
         var date = new Date();
-        date.setDate(date.getDate() - 90 );
+        date.setDate(date.getDate() - 89 );
         var yyyy = date.getFullYear().toString();
         var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
         var dd  = date.getDate().toString();
@@ -1622,7 +1638,7 @@ function sort_by(){
 	    	    
         date_init();
         var date = new Date();
-        date.setDate(date.getDate() - 180 );
+        date.setDate(date.getDate() - 179 );
         var yyyy = date.getFullYear().toString();
         var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
         var dd  = date.getDate().toString();
@@ -1745,6 +1761,7 @@ document.getElementById("txtSearch").oninput=function(){
 }*/
 
     $('#txtSearch').keyup(function(){
+
         var valThis = $(this).val().toLowerCase();
         if(valThis == ""){
             $('.connect-cat').show();
@@ -1767,6 +1784,15 @@ document.getElementById("txtSearch").oninput=function(){
                                 if (text.indexOf(valThis) < 0){
                                     var text = $(this).find(".expire").text().toLowerCase();
                                     (text.indexOf(valThis) >= 0) ? $(this).show() : $(this).hide();
+	                                if (text.indexOf(valThis) < 0){
+	                                    var text = $(this).find(".transaction_id").text().toLowerCase();
+	                                    (text.indexOf(valThis) >= 0) ? $(this).show() : $(this).hide();
+			                               if (text.indexOf(valThis) < 0){
+			                                    var text = $(this).find(".payment_id").text().toLowerCase();
+			                                    (text.indexOf(valThis) >= 0) ? $(this).show() : $(this).hide();
+			                                }
+	                                }
+	                                                                    
                                 }
                             }
                         }

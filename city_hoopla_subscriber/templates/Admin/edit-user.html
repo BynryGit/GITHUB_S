@@ -6,7 +6,7 @@
 {% load staticfiles %}
     <head>
     <meta charset="utf-8"/>
-    <title>City Hoopla | Edit User </title>
+    <title>CityHoopla | Edit User </title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
     <meta content="" name="description"/>
@@ -588,6 +588,10 @@ hr {
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-default">
+                        <li>
+                                <a href="/edit-profile/?user_id={{request.session.login_user}}">
+                                    <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
+                            </li>
                             <li>
                                 <a href="/log-out/">
                                     <i class="icon-key"></i> Log Out </a>
@@ -702,8 +706,7 @@ hr {
                                                           	</div>
                                                           	
                                                           	 <div class="row">
-                                                        	 		
-                                                          		
+
                                                           		<div class="col-xs-6">
 		                                                            <label class="control-label"> <br>Contact Number
 		                                                                <span class="required"> * </span>
@@ -712,17 +715,39 @@ hr {
 	                                                          		<label class="error" style="color:red; display:none;"></label>                                                          	
 	                                                          	</div>
 	                                                          	
-	                                                         <div class="col-xs-6" >
+	                                     								<div class="col-xs-6">
+
+ 																				 		<label  class="control-label"> <br> City
+	                                                                <span class="required"> * </span>
+	                                                               </label>
+	                                                           
+	                                                                <select   name="city" id="city" class="form-control sel2" required="">
+															                     	 <option value="">Select City</option>
+															                     	{% for city  in city_places_list %}
+																	                		 <option value="{{city.city_place_id}}">
+						                                                           {{city.city}}
+						                                                       </option>
+						                                                       {% endfor %}
+																																                       	
+															                     </select>
+															                     <label class="error" style="color:red; display:none;"></label>
+
+ 																				  </div>
+	                                                          	
+	                                                         
+                                                          		
+                                                          	</div>
+                                                          	
+ 																				 <div class="row">
+ 																				 
+ 																				 <div class="col-xs-6" >
  																				 		<label class="control-label"><br>Old Password
 
 	                                                            </label>
 	                                                                <input  value="" type="password" maxlength="10" id="oldpassword" class="form-control"  name="contact_no" />
  																				 		<label class="error" style="color:red; display:none;"></label>
+ 																				 		<label id="oldpas_err" class="error" style="color:red; display:none;"></label> 
  																				 </div>
-                                                          		
-                                                          	</div>
-                                                          	
- 																				 <div class="row">
  																				 <div class="col-xs-6" >
  																				 		<label class="control-label"><br>New Password
 
@@ -730,7 +755,8 @@ hr {
 	                                                                <input  value="" type="password" maxlength="10" id="newpassword" class="form-control"  name="contact_no" />
  																				 		<label class="error" style="color:red; display:none;"></label>
  																				 </div>
- 																				 
+ 																			</div>	 
+ 																			<div class="row">	 
  																				 <div class="col-xs-6" >
  																				 		<label  class="control-label"><br>Confirm New Password
 
@@ -926,9 +952,11 @@ hr {
 <!-- END THEME LAYOUT SCRIPTS -->  
   <script type="text/javascript">
 
+        $(document).ready(function(){
 $(".sel2").select2({
             width: '100%'
         })
+  });
         
   $("#administration_anchor").addClass("tab-active");
 		$("#admin_nav").addClass("active");
@@ -937,10 +965,11 @@ $(".sel2").select2({
         $("#admin_nav").addClass("active");
 
  $('#role').val({{role_id}}).change();
+  $('#city').val({{city_id}}).change();
  
 function validateData(){
 
-	if(checkFirst_name("#First_name")&checkLast_name("#Last_name")&checkNumber("#phone_no")&checkrole("#role")&checkpassword("#newpassword"))
+	if(checkFirst_name("#First_name")&checkLast_name("#Last_name")&checkNumber("#phone_no")&checkrole("#role")&checkpassword("#newpassword")&check_repassword())
 	{
 		return true;	
 	}
@@ -962,14 +991,6 @@ $("#save-continue").click(function(event)  {
 
   if(validateData()){		
 
-		var password = $('#newpassword').val();
- 		var re_password = $('#re-newpassword').val();
-	   if (password != re_password) {
-
-				 $('#confirmpas_err').css("display", "block");
-             $('#confirmpas_err').text("Password don't match");
- 				return false;	
-	 		}
 	
 	   var formData= new FormData();
 
@@ -977,6 +998,7 @@ $("#save-continue").click(function(event)  {
 		formData.append("Last_name",$('#Last_name').val());
 		formData.append("phone_no",$('#phone_no').val());    
 		formData.append("role",$('#role').val()); 
+		formData.append("city",$('#city').val()); 
 		formData.append("oldpassword",$('#oldpassword').val());
 		formData.append("newpassword",$('#newpassword').val());
    	formData.append("Username",$('#Username').val());    
@@ -994,7 +1016,8 @@ $("#save-continue").click(function(event)  {
 	           	  		$("#success_modal").modal('show');
 	              	}
 	      			if (response.success == "false") {
-							$("#error-modal").modal('show');                    
+							$('#oldpas_err').css("display", "block");
+							$('#oldpas_err').text("Please enter valid Old Password");                    
 	       			}							                        		                      		                       		
                },
                	beforeSend: function () {
@@ -1021,7 +1044,8 @@ $("#save-continue").click(function(event)  {
 		formData.append("Last_name",$('#Last_name').val());
 		formData.append("phone_no",$('#phone_no').val());    
 		formData.append("role",$('#role').val()); 
-		formData.append("Username",$('#Username').val()); 
+		formData.append("Username",$('#Username').val());
+		formData.append("city",$('#city').val());  
 	
   			$.ajax({
   				  
@@ -1137,6 +1161,23 @@ function checkpassword(newpassword){
    return false; 
    }
 }
+
+
+   function check_repassword(){
+    		
+    	var password = $('#newpassword').val();
+ 		var re_password = $('#re-newpassword').val();
+	   if (password != re_password) {
+
+				 $('#confirmpas_err').css("display", "block");
+             $('#confirmpas_err').text("Password don't match");
+ 				return false;	
+	 		}else if(password == re_password){
+	 		$('#confirmpas_err').css("display", "none");
+	 		return true;	
+	 		}
+    
+    }
 
     function validateIntKeyPress(el, evt) {
         var charCode = (evt.which) ? evt.which : event.keyCode;

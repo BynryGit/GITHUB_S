@@ -21,7 +21,7 @@ License: You must have a valid license purchased only from themeforest(the above
 {% load staticfiles %}
 <head>
     <meta charset="utf-8"/>
-    <title>City Hoopla | Edit Subscriber</title>
+    <title>CityHoopla | Edit Subscriber</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
     <meta content="" name="description"/>
@@ -584,6 +584,10 @@ hr {
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-default">
+                        <li>
+                                <a href="/edit-profile/?user_id={{request.session.login_user}}">
+                                    <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
+                            </li>
                             <li>
                               <a href="/log-out/">
                                     <i class="icon-key"></i> Log Out </a>
@@ -1164,33 +1168,24 @@ hr {
                                                                                          </label>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-lg-12 col-md-12">
-                                                                                <div class="form-group">
-                                                                                    <label class="control-label "
-                                                                                           style="font-size:15px; ">Name
-                                                                                        <span class="required"> * </span>
-                                                                                    </label>
-                                                                                    <select class="form-control sel2 select2-hidden-accessible"
-
-                                                                                            id="sale_person_name"
-                                                                                            name="user_name">
-{% for sale in sales_person_list %}
-                                                                                                {% if sale.sales_person_id == sales_person_name %}
-                                                                                                        <option value="{{ sale.sales_person_id  }}" selected>
-                                                                                                                {{sale.sales_person_name  }}
+                                        													<div class="col-lg-12 col-md-12">
+													                                        		<div class="form-group">
+														                                             <label class="control-label " style="font-size:15px; ">Name
+														                                        				<span class="required"> * </span>
+														                                             </label>
+														                    									<select class="form-control sel2 select2-hidden-accessible"
+														                                                        id="sale_person_name"	name="user_name">
+																													  {% for countr in sales_person_list %}
+                                                                                                        <option value="{{ countr.user_id }}">
+                                                                                                                {{countr.user_first_name }}&nbsp;{{ countr.user_last_name }}
                                                                                                         </option>
-                                                                                                        {% else %}
-                                                                                                        <option value="{{ sale.sales_person_id  }}" >
-                                                                                                                {{sale.sales_person_name  }}
-                                                                                                        </option>
-                                                                                                        {% endif %}
                                                                                                   {% endfor %}
-
-                                                                                    </select>
-                                                                                    <label class="error"
-                                                                                           style="color:red; display:none;"></label>
+														                                   					
+														                                              </select>
+														                                               <label class="error"
+	                                                                                               style="color:red; display:none;"></label>
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
                                                                             <!-- <div class="col-lg-6 col-md-6">
                                                                                 <div class="form-group">
                                                                                     <label class="control-label "
@@ -1257,131 +1252,194 @@ hr {
                                                                 <hr>
 
                                                                 <form id="subscription_form" method="POST">
-                                                                    <label class="control-label font-18 font-bold font-blue">Select
-                                                                        Business Category </label>
-
-                                                                    <div class="row">
-                                                                        <div class="col-lg-4 col-md-6">
+                                                                <label class="control-label font-18 font-bold font-blue">Select
+                                                                        City  </label>
+                                                                        
+                                                                       <div class="row">
+                                                                       		<div class="col-lg-4">
                                                                             <div class="form-group">
-                                                                                <label style="font-size:15px; ">Category </label>
-                                                                                <input type="hidden" name="user_id"
-                                                                                       value="2"/>
-                                                                                <input type="hidden"
-                                                                                       value="{{ supplier_id  }}"
-                                                                                       name="supplier_id"
-                                                                                       id="supplier_id_hidden">
-                                                                                <span class="required"> * </span>
-                                                                                <select data-level="0"
-                                                                                        onchange="check_cat(1,this)"
-                                                                                        class="form-control subcat_select sel2"
-                                                                                        id="sub_category"
-                                                                                        name="sub_category">
+                                                                                <label class="control-label "
+                                                                                       style="font-size:15px; "> Country
+                                                                                    <span class="required"> * </span>
+                                                                                </label>
+                                                                                <select class="form-control sel2"
+                                                                                        id="country1"
+                                                                                        name="country1">
                                                                                     <option value="">Select
-                                                                                        Category
+                                                                                        Country
                                                                                     </option>
-                                                                                    {% for cat in category_list %}
-                                                                                    <option value="{{ cat.category_id }}">
-                                                                                        {{ cat.category }}
+                                                                                    {% for country in country_list %}
+                                                                                    <option value="{{ country.country_id }}">
+                                                                                        {{ country.country_name }}
                                                                                     </option>
                                                                                     {% endfor %}
                                                                                 </select>
-                                                                                <label id="sub_category_lebel"
+                                                                                <label id="country_lebel"
+                                                                                       class="error font-12 font-regular"
+                                                                                       style="color:red; display:none;"></label>
+                                                                            </div>
+                                                                       		</div>
+                                                                       		
+                                                                       		<div class="col-lg-4 ">
+                                                                            <div class="form-group form-height">
+                                                                                <label class="control-label "
+                                                                                       style="font-size:15px; ">State
+                                                                                    <span class="required"> * </span>
+                                                                                </label>
+                                                                                <select class="form-control sel2"
+                                                                                        
+                                                                                        id="statec1"
+                                                                                        name="statec1">
+                                                                                        <option value="">
+                                                                                        Select State
+                                                                                    </option>
+                                                                                </select>
+                                                                                <label id="state_lebel"
                                                                                        class="error font-12 font-regular"
                                                                                        style="color:red; display:none;"></label>
                                                                             </div>
                                                                         </div>
-
-                                                                        <div class="col-lg-4 col-md-6" id="lvl1_row"
-                                                                             style="display:none;">
-                                                                            <div class="form-group">
-                                                                                <label style="font-size:15px; ">Sub
-                                                                                    Category(Level 1) </label>
-                                                                                <span class="required"> * </span>
-                                                                                <select class="form-control subcat_select sel2"
-                                                                                        onchange="check_cat(2,this)"
-                                                                                        id="lvl1" name="lvl1">
-                                                                                    <option value="">Select Sub
-                                                                                        Category
+                                                                        <div class="col-lg-4">
+                                                                            <div class="form-group form-height">
+                                                                                <label class="control-label "
+                                                                                       style="font-size:15px; ">City
+                                                                                    <span class="required"> * </span>
+                                                                                </label>
+                                                                                <select class="form-control sel2"
+                                                                                        id="city1"
+                                                                                        name="city1">
+                                                                                    <option value="">
+                                                                                        Select City
                                                                                     </option>
                                                                                 </select>
-                                                                                <label class="error font-12 font-regular"
+                                                                                <label id="city_lebel"
+                                                                                       class="error font-12 font-regular"
                                                                                        style="color:red; display:none;"></label>
                                                                             </div>
                                                                         </div>
+                                                                      </div>
+                                                                    <div id="select_category_div">
+                                                                        <label class="control-label font-18 font-bold font-blue">Select
+                                                                            Business Category </label>
+
+                                                                        <div class="row">
+                                                                            <div class="col-lg-4 col-md-6">
+                                                                                <div class="form-group">
+                                                                                    <label style="font-size:15px; ">Category </label>
+                                                                                    <input type="hidden" name="user_id"
+                                                                                           value="2"/>
+                                                                                    <input type="hidden"
+                                                                                           value="{{ supplier_id  }}"
+                                                                                           name="supplier_id"
+                                                                                           id="supplier_id_hidden">
+                                                                                    <span class="required"> * </span>
+                                                                                    <select data-level="0"
+                                                                                            onchange="check_cat(1,this)"
+                                                                                            class="form-control subcat_select sel2"
+                                                                                            id="sub_category"
+                                                                                            name="sub_category">
+                                                                                        <option value="">Select
+                                                                                            Category
+                                                                                        </option>
+                                                                                       
+                                                                                    </select>
+                                                                                    <label id="sub_category_lebel"
+                                                                                           class="error font-12 font-regular"
+                                                                                           style="color:red; display:none;"></label>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-lg-4 col-md-6" id="lvl1_row"
+                                                                                 style="display:none;">
+                                                                                <div class="form-group">
+                                                                                    <label style="font-size:15px; ">Sub
+                                                                                        Category(Level 1) </label>
+                                                                                    <span class="required"> * </span>
+                                                                                    <select class="form-control subcat_select sel2"
+                                                                                            onchange="check_cat(2,this)"
+                                                                                            id="lvl1" name="lvl1">
+                                                                                        <option value="">Select Sub
+                                                                                            Category
+                                                                                        </option>
+                                                                                    </select>
+                                                                                    <label class="error font-12 font-regular"
+                                                                                           style="color:red; display:none;"></label>
+                                                                                </div>
+                                                                            </div>
 
 
-                                                                        <div class="col-lg-4 col-md-6" id="lvl2_row"
-                                                                             style="display:none;">
-                                                                            <div class="form-group">
-                                                                                <label style="font-size:15px; ">Sub
-                                                                                    Category(Level 2) </label>
-                                                                                <span class="required"> * </span>
-                                                                                <select class="form-control subcat_select sel2"
-                                                                                        onchange="check_cat(3,this)"
-                                                                                        id="lvl2" name="lvl2">
-                                                                                    <option value="">Select Sub
-                                                                                        Category
-                                                                                    </option>
-                                                                                </select>
-                                                                                <label class="error font-12 font-regular"
-                                                                                       style="color:red; display:none;"></label>
+                                                                            <div class="col-lg-4 col-md-6" id="lvl2_row"
+                                                                                 style="display:none;">
+                                                                                <div class="form-group">
+                                                                                    <label style="font-size:15px; ">Sub
+                                                                                        Category(Level 2) </label>
+                                                                                    <span class="required"> * </span>
+                                                                                    <select class="form-control subcat_select sel2"
+                                                                                            onchange="check_cat(3,this)"
+                                                                                            id="lvl2" name="lvl2">
+                                                                                        <option value="">Select Sub
+                                                                                            Category
+                                                                                        </option>
+                                                                                    </select>
+                                                                                    <label class="error font-12 font-regular"
+                                                                                           style="color:red; display:none;"></label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-lg-4 col-md-6" id="lvl3_row"
+                                                                                 style="display:none;">
+                                                                                <div class="form-group">
+                                                                                    <label style="font-size:15px; ">Sub
+                                                                                        Category(Level 3) </label>
+                                                                                    <span class="required"> * </span>
+                                                                                    <select class="form-control subcat_select sel2"
+                                                                                            onchange="check_cat(4,this)"
+                                                                                            id="lvl3" name="lvl3">
+                                                                                        <option value="">Select Sub
+                                                                                            Category
+                                                                                        </option>
+                                                                                    </select>
+                                                                                    <label class="error font-12 font-regular"
+                                                                                           style="color:red; display:none;"></label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-lg-4 col-md-6" id="lvl4_row"
+                                                                                 style="display:none;">
+                                                                                <div class="form-group">
+                                                                                    <label style="font-size:15px; ">Sub
+                                                                                        Category(Level 4) </label>
+                                                                                    <span class="required"> * </span>
+                                                                                    <select class="form-control subcat_select sel2"
+                                                                                            onchange="check_cat(5,this)"
+                                                                                            id="lvl4" name="lvl4">
+                                                                                        <option value="">Select Sub
+                                                                                            Category
+                                                                                        </option>
+                                                                                    </select>
+                                                                                    <label class="error font-12 font-regular"
+                                                                                           style="color:red; display:none;"></label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-lg-4 col-md-6" id="lvl5_row"
+                                                                                 style="display:none;">
+                                                                                <div class="form-group">
+                                                                                    <label style="font-size:15px; ">Sub
+                                                                                        Category(Level 5) </label>
+                                                                                    <span class="required"> * </span>
+                                                                                    <select class="form-control subcat_select sel2"
+                                                                                            onchange="check_cat(6,this)"
+                                                                                            id="lvl5" name="lvl5">
+                                                                                        <option value="">Select Sub
+                                                                                            Category
+                                                                                        </option>
+                                                                                    </select>
+                                                                                    <label class="error font-12 font-regular"
+                                                                                           style="color:red; display:none;"></label>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="row">
-                                                                        <div class="col-lg-4 col-md-6" id="lvl3_row"
-                                                                             style="display:none;">
-                                                                            <div class="form-group">
-                                                                                <label style="font-size:15px; ">Sub
-                                                                                    Category(Level 3) </label>
-                                                                                <span class="required"> * </span>
-                                                                                <select class="form-control subcat_select sel2"
-                                                                                        onchange="check_cat(4,this)"
-                                                                                        id="lvl3" name="lvl3">
-                                                                                    <option value="">Select Sub
-                                                                                        Category
-                                                                                    </option>
-                                                                                </select>
-                                                                                <label class="error font-12 font-regular"
-                                                                                       style="color:red; display:none;"></label>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-lg-4 col-md-6" id="lvl4_row"
-                                                                             style="display:none;">
-                                                                            <div class="form-group">
-                                                                                <label style="font-size:15px; ">Sub
-                                                                                    Category(Level 4) </label>
-                                                                                <span class="required"> * </span>
-                                                                                <select class="form-control subcat_select sel2"
-                                                                                        onchange="check_cat(5,this)"
-                                                                                        id="lvl4" name="lvl4">
-                                                                                    <option value="">Select Sub
-                                                                                        Category
-                                                                                    </option>
-                                                                                </select>
-                                                                                <label class="error font-12 font-regular"
-                                                                                       style="color:red; display:none;"></label>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-lg-4 col-md-6" id="lvl5_row"
-                                                                             style="display:none;">
-                                                                            <div class="form-group">
-                                                                                <label style="font-size:15px; ">Sub
-                                                                                    Category(Level 5) </label>
-                                                                                <span class="required"> * </span>
-                                                                                <select class="form-control subcat_select sel2"
-                                                                                        onchange="check_cat(6,this)"
-                                                                                        id="lvl5" name="lvl5">
-                                                                                    <option value="">Select Sub
-                                                                                        Category
-                                                                                    </option>
-                                                                                </select>
-                                                                                <label class="error font-12 font-regular"
-                                                                                       style="color:red; display:none;"></label>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
                                                                     <div id="subscription_div" style="display:none;">
                                                                         <div class="col-lg-10 col-md-10"
                                                                              style="padding-top:16px; padding-left: 0px; border-right: 1px solid #6B6B6B;">
@@ -2375,7 +2433,7 @@ hr {
             <div class="modal-body">
 
                 <div class="form-body">
-                    <h4 class="text-center">Subscriber added successfully</h4>
+                    <h4 class="text-center">Subscriber updated successfully</h4>
                 </div>
                 <div style="text-align:center !important;" class="modal-footer">
                     <a href="/view-subscriber-list/"> <input type="submit" value="OK"
@@ -2531,6 +2589,55 @@ hr {
     </div>
 </div>
 
+<div style="overflow-y:hidden;" id="poc-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;"
+                     src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+            </div>
+            <div class="modal-body">
+                <div class="form-body">
+                    <h4 class="text-center">Email ID for Primary Contact already exists. Do you still want to assign the same Email ID to this Subscriber?</h4>
+                </div>
+                <div style="text-align:center !important;" class="modal-footer">
+                    <a type="button" onclick="update_subscriber()" data-dismiss="modal"
+                       class="btn btn-outline done_btn"> Yes </a>
+                    <a type="button"
+                       data-dismiss="modal"
+                       class="btn btn-outline grey_color"> No </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div style="overflow-y:hidden;" id="poc-continue-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;"
+                     src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+            </div>
+            <div class="modal-body">
+                <div class="form-body">
+                    <h4 class="text-center">Email ID for Primary Contact already exists. Do you still want to assign the same Email ID to this Subscriber?</h4>
+                </div>
+                <div style="text-align:center !important;" class="modal-footer">
+                    <a type="button" onclick="update_continue_subscriber()" data-dismiss="modal"
+                       class="btn btn-outline done_btn"> Yes </a>
+                    <a type="button"
+                       data-dismiss="modal"
+                       class="btn btn-outline grey_color"> No </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- End -->
 <!--[if lt IE 9]>
 <script src="../assets/global/plugins/respond.min.js"></script>
@@ -2591,6 +2698,7 @@ hr {
     $("#supplier_icon").addClass("icon-active");
     $("#supplier_active").css("display","block");
     $(document).ready(function(){
+    $("#sale_person_name").val("{{sales_person_name}}").change();
         $(".sel2").select2({
             width: '100%'
         });
@@ -2684,6 +2792,44 @@ hr {
     }
         
         /* End */
+
+                        $("#city").change(function(){
+
+        getSalesperson();
+    });
+        
+                                     /* Get Sales Person */
+
+    function getSalesperson() {
+            
+             city_id = $('#city :selected').val();
+            if (city_id) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/get-salesperson/',
+                    data: {'city_id': city_id},
+            success: function (response) {
+                $("#sale_person_name").html("");
+                $("#sale_person_name").append("<option value=''>Select Sales Person</option>");
+ 
+                $.each(response.sales_staff_list, function (index, item) {
+                    data = '<option value="'+ item.user_id +'">'+ item.sales_person_name +'</option>'
+                    $("#sale_person_name").append(data);
+                });
+                $("#sale_person_name").val("").change();
+            },
+                    error: function (response) {
+                        alert("Error!");
+                    },
+        
+                });
+            }
+            else {
+                $('#city').val("");
+            }
+    }
+    
+    /* End */
         
         /* Get Pincode */
         
@@ -2713,6 +2859,116 @@ hr {
                 }
         
         /* End */
+        
+            //-----------------------------------end-------------------------//
+    
+    		/  For Select Subscription /  
+    		
+    	      $("#country1").change(function () {
+        getState1();
+    });
+    $("#statec1").change(function () {
+        getCity1();
+    });
+        $("#city1").change(function () {
+        getCategory1();
+    });
+  
+    
+    function getState1() {
+        $("#select_category_div").css("display","none");
+        $("#sub_category").val("").change();
+        clear_subcat();
+        country_id = $('#country1 :selected').val();
+        if (country_id) {
+            $.ajax({
+                type: 'GET',
+                url: '/get-state/',
+                data: {'country_id': country_id},
+                success: function (response) {
+                    $('#statec1').html('');
+                    $('#statec1').append("<option value=''>Select State</option>");
+                    $('#statec1').val("").change();
+                    $.each(response.state_list, function (index, item) {
+                        $('#statec1').append(item);
+                    });
+                    //$('#statec1').val("").change();
+                    $('#currency').val(response.currency)
+                },
+                error: function (response) {
+                    alert("Error!");
+                },
+            });
+        }
+        else {
+            $('#statec1').html('');
+            $('#statec1').append("<option value=''>Select State</option>");
+            $('#statec1').val("").change();
+        }
+    }
+
+    function getCity1() {
+        $("#select_category_div").css("display","none");
+        $("#sub_category").val("").change();
+        clear_subcat();
+        state_id = $('#statec1 :selected').val();
+        if (state_id) {
+            $.ajax({
+                type: 'GET',
+                url: '/get-city-place/',
+                data: {'state_id': state_id},
+                success: function (response) {
+                    //alert('success');
+                    $('#city1').html('');
+                    $('#city1').append("<option value=''>Select City</option>");
+                    $('#city1').val("").change();
+                    $.each(response.city_list, function (index, item) {
+                        $('#city1').append(item);
+                    });
+                },
+                error: function (response) {
+                    alert("Error!");
+                },
+            });
+        }
+        else {
+            $('#city1').html('');
+            $('#city1').append("<option value=''>Select City</option>");
+            $('#city1').val("").change();
+        }
+    }
+
+
+    function getCategory1() {
+        $("#select_category_div").css("display","none");
+        city_place_id = $('#city1 :selected').val();
+        if (city_place_id) {
+            $.ajax({
+                type: 'GET',
+                url: '/get-categories/',
+                data: {'city_place_id': city_place_id},
+                success: function (response) {
+                    //alert('success');
+                    $('#sub_category').html('');
+                    $("#sub_category").append("<option value=''>Select Category</option>")
+                    $.each(response.cat_list, function (index, item) {
+                        $('#sub_category').append(item);
+                    });
+                    $('#sub_category').val("").change();
+                    $("#select_category_div").css("display","block");
+                    clear_subcat();
+                },
+                error: function (response) {
+                    alert("Error!");
+                },
+            });
+        }
+        else {
+            $('#sub_category').val("").change();
+        }
+    }
+
+/ End For Subscription /
         
         
         /*  Textarea Length Count */
@@ -3022,133 +3278,203 @@ function validateData(){
         
         
             /*  Save Business Details on Save-Quit Button */
-        
-    $("#save-quit").click(function(event)  {
-        event.preventDefault();
-        if(validateData()){
-            var input = document.getElementById("display_image");
-            file = input.files[0];
-            var formData= new FormData();
-            formData.append("logo",file);
-            formData.append("supplier_id",$('#supplier_id').val());
-            formData.append("business_name",$('#business_name').val());
-            formData.append("phone_no",$('#phone_no').val());
-            formData.append("sec_phone_no",$('#sec_phone_no').val());
-            formData.append("email",$('#pri_email').val());
-            formData.append("sec_email",$('#sec_email').val());
-            formData.append("address1",$('#address1').val());
-            formData.append("address2",$('#address2').val());
-            formData.append("country",$('#country').val());
-            formData.append("state",$('#state').val());
-            formData.append("city",$('#city').val());
-            formData.append("pincode",$('#pincode').val());
-            formData.append("business",$('#business').val());
-            formData.append("user_name",$('#user_name').val());
-            formData.append("user_email",$('#user_email').val());
-            formData.append("user_contact_no",$('#user_contact_no').val());
-            formData.append("sale_person_name",$('#sale_person_name').val());
-            formData.append("sale_person_contact_no",$('#sale_person_contact_no').val());
-            formData.append("sale_person_email",$('#sale_person_email').val());
-            formData.append("title",$('#title').val());
 
-            $.ajax({
-
-                type    : "POST",
-                url : '/update-subscriber/',
-                data : formData,
-                cache: false,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    if(response.success=='true'){
-                        $("#affiliate-modal").modal('show');
-                    }
-                    if (response.success == "false") {
-                        $("#error-modal").modal('show');
-                    }
-                },
-                beforeSend: function () {
-                    $("#processing").css('display','block');
-                },
-                complete: function () {
-                    $("#processing").css('display','none');
-                },
-                error : function(response){
-                    alert("_Error");
+$("#save-quit").click(function(event)  {
+    event.preventDefault();
+    if(validateData()){
+        var formData= new FormData();
+        formData.append("supplier_id",$('#supplier_id').val());
+        formData.append("user_email",$('#user_email').val());
+        $.ajax({
+            type  : "POST",
+            url : '/check-update-poc/',
+            data : formData,
+            cache: false,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if(response.success=='true'){
+                    $("#poc-modal").modal('show');
                 }
-            });
+                if (response.success == "false") {
+                    update_subscriber()
+                }
+            },
+            beforeSend: function () {
+                $("#processing").css('display','block');
+            },
+            complete: function () {
+                $("#processing").css('display','none');
+            },
+            error : function(response){
+                alert("_Error");
+            }
+        });
+    }
+});
+        
+function update_subscriber()  {
+    var input = document.getElementById("display_image");
+    file = input.files[0];
+    var formData= new FormData();
+    formData.append("logo",file);
+    formData.append("supplier_id",$('#supplier_id').val());
+    formData.append("business_name",$('#business_name').val());
+    formData.append("phone_no",$('#phone_no').val());
+    formData.append("sec_phone_no",$('#sec_phone_no').val());
+    formData.append("email",$('#pri_email').val());
+    formData.append("sec_email",$('#sec_email').val());
+    formData.append("address1",$('#address1').val());
+    formData.append("address2",$('#address2').val());
+    formData.append("country",$('#country').val());
+    formData.append("state",$('#state').val());
+    formData.append("city",$('#city').val());
+    formData.append("pincode",$('#pincode').val());
+    formData.append("business",$('#business').val());
+    formData.append("user_name",$('#user_name').val());
+    formData.append("user_email",$('#user_email').val());
+    formData.append("user_contact_no",$('#user_contact_no').val());
+    formData.append("sale_person_name",$('#sale_person_name').val());
+    formData.append("sale_person_contact_no",$('#sale_person_contact_no').val());
+    formData.append("sale_person_email",$('#sale_person_email').val());
+    formData.append("title",$('#title').val());
+
+    $.ajax({
+
+        type    : "POST",
+        url : '/update-subscriber/',
+        data : formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            if(response.success=='true'){
+                $("#affiliate-modal").modal('show');
+            }
+            if (response.success == "false") {
+                $("#error-modal").modal('show');
+            }
+        },
+        beforeSend: function () {
+            $("#processing").css('display','block');
+        },
+        complete: function () {
+            $("#processing").css('display','none');
+        },
+        error : function(response){
+            alert("_Error");
         }
     });
+};
     
     /*  End  */
     
     /*--------------------Save Business Details on Save and Continue Button*/
-    
-    $("#save-continue").click(function(event)  {
-        event.preventDefault();
-        if(validateData()){
-            var input = document.getElementById("display_image");
-            file = input.files[0];
-            var formData= new FormData();
-            formData.append("logo",file);
-            formData.append("supplier_id",$('#supplier_id').val());
-            formData.append("business_name",$('#business_name').val());
-            formData.append("phone_no",$('#phone_no').val());
-            formData.append("sec_phone_no",$('#sec_phone_no').val());
-            formData.append("email",$('#pri_email').val());
-            formData.append("sec_email",$('#sec_email').val());
-            formData.append("address1",$('#address1').val());
-            formData.append("address2",$('#address2').val());
-            formData.append("country",$('#country').val());
-            formData.append("state",$('#state').val());
-            formData.append("city",$('#city').val());
-            formData.append("pincode",$('#pincode').val());
-            formData.append("business",$('#business').val());
-            formData.append("user_name",$('#user_name').val());
-            formData.append("user_email",$('#user_email').val());
-            formData.append("user_contact_no",$('#user_contact_no').val());
-            formData.append("sale_person_name",$('#sale_person_name').val());
-            formData.append("sale_person_contact_no",$('#sale_person_contact_no').val());
-            formData.append("sale_person_email",$('#sale_person_email').val());
-            formData.append("title",$('#title').val());
 
-            $.ajax({
-                type    : "POST",
-                url : '/update-subscriber/',
-                data : formData,
-                cache: false,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    if(response.success=='true'){
-                        $("#tab_1").removeClass("active");
-                        $("#number_1").text("");
-                        $("#number_1").addClass("fa fa-check");
-                        $("#number_1").addClass("done");
-                        $("#number_1").css("padding-top","15px");
-                        $("#number_1").css("padding-left","13px");
-                        $("#number_1").css("font-size","18px");
-                        $("#desc_1").addClass("desc_done");
-                        $("#tab_2").addClass("active");
-                        $("#tab1").removeClass("active");
-                        $("#tab2").addClass("active");
-                    }
-                    if (response.success == "false") {
-                        $("#error-modal").modal('show');
-                    }
-                },
-                beforeSend: function () {
-                    $("#processing").css('display','block');
-                },
-                complete: function () {
-                    $("#processing").css('display','none');
-                },
-                error : function(response){
-                    alert("_Error");
+$("#save-continue").click(function(event)  {
+    event.preventDefault();
+    if(validateData()){
+        var formData= new FormData();
+        formData.append("supplier_id",$('#supplier_id').val());
+        formData.append("user_email",$('#user_email').val());
+        $.ajax({
+            type  : "POST",
+            url : '/check-update-poc/',
+            data : formData,
+            cache: false,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if(response.success=='true'){
+                    $("#poc-continue-modal").modal('show');
                 }
-           });
+                if (response.success == "false") {
+                    update_continue_subscriber()
+                }
+            },
+            beforeSend: function () {
+                $("#processing").css('display','block');
+            },
+            complete: function () {
+                $("#processing").css('display','none');
+            },
+            error : function(response){
+                alert("_Error");
+            }
+        });
+    }
+});
+    
+function update_continue_subscriber()  {
+    $("#country1").val($("#country").val()).change();
+    setTimeout(function(){
+        $("#statec1").val($("#state").val()).change();
+    }, 1000);
+    setTimeout(function(){
+        $("#city1").val($("#city").val()).change();
+    }, 2000);
+
+    var input = document.getElementById("display_image");
+    file = input.files[0];
+    var formData= new FormData();
+    formData.append("logo",file);
+    formData.append("supplier_id",$('#supplier_id').val());
+    formData.append("business_name",$('#business_name').val());
+    formData.append("phone_no",$('#phone_no').val());
+    formData.append("sec_phone_no",$('#sec_phone_no').val());
+    formData.append("email",$('#pri_email').val());
+    formData.append("sec_email",$('#sec_email').val());
+    formData.append("address1",$('#address1').val());
+    formData.append("address2",$('#address2').val());
+    formData.append("country",$('#country').val());
+    formData.append("state",$('#state').val());
+    formData.append("city",$('#city').val());
+    formData.append("pincode",$('#pincode').val());
+    formData.append("business",$('#business').val());
+    formData.append("user_name",$('#user_name').val());
+    formData.append("user_email",$('#user_email').val());
+    formData.append("user_contact_no",$('#user_contact_no').val());
+    formData.append("sale_person_name",$('#sale_person_name').val());
+    formData.append("sale_person_contact_no",$('#sale_person_contact_no').val());
+    formData.append("sale_person_email",$('#sale_person_email').val());
+    formData.append("title",$('#title').val());
+
+    $.ajax({
+        type    : "POST",
+        url : '/update-subscriber/',
+        data : formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            if(response.success=='true'){
+                $("#tab_1").removeClass("active");
+                $("#number_1").text("");
+                $("#number_1").addClass("fa fa-check");
+                $("#number_1").addClass("done");
+                $("#number_1").css("padding-top","15px");
+                $("#number_1").css("padding-left","13px");
+                $("#number_1").css("font-size","18px");
+                $("#desc_1").addClass("desc_done");
+                $("#tab_2").addClass("active");
+                $("#tab1").removeClass("active");
+                $("#tab2").addClass("active");
+            }
+            if (response.success == "false") {
+                $("#error-modal").modal('show');
+            }
+        },
+        beforeSend: function () {
+            $("#processing").css('display','block');
+        },
+        complete: function () {
+            $("#processing").css('display','none');
+        },
+        error : function(response){
+            alert("_Error");
         }
     });
+}
     
     /*  End  */
     
@@ -3173,8 +3499,9 @@ function validateData(){
     var has_value = ''
 
     function check_cat(lvl,this_val){
-
         supplier_id=$("#supplier_id_hidden").val();
+        $("#subscription_div").css("display","none");
+        $("#duration_list").val("").change();
         if($(this_val).attr('data-level')=="0"){
             clear_subcat();
         }
@@ -3183,15 +3510,17 @@ function validateData(){
             $("#subscription_div").css("display","none");
             return false;
         }
+        $('#sub_category_lebel_'+lvl).css('display','none');
         $.ajax({
             type    : "POST",
             url : '/check-category-supplier/',
-            data : {'category_id':$(this_val).val(),'cat_level':lvl,'supplier_id':supplier_id,'city_place_id':$("#city").val()},
+            data : {'category_id':$(this_val).val(),'cat_level':lvl,'supplier_id':supplier_id,'city_place_id':$("#city1").val()},
             success: function (response) {
                 if(response.success!='false'){
                     $('#lvl'+lvl).html('');
                     $('.subcat_select').select2();
                     $('.subcat_selects').select2();
+                    
                     $('.select2').css("width","100%");
                     $('#lvl'+lvl).append('<option value="">Select SubCategory</option>');
                     $.each(response.category_list, function (index, item) {
@@ -3206,12 +3535,16 @@ function validateData(){
                     if(response.has_rate_card == 'true'){
                         cat_lvl = parseInt(lvl) - 1;
                         cat_id = $(this_val).val();
+                        $('#lvl'+lvl+'_row').hide();
+                        $('#lvl'+lvl).css("display",'none');
                         $("#subscription_div").css("display","block");
                         $("#selectedDuration").css("display","none");
                     }
                     else{
                         cat_lvl = '';
                         cat_id = '';
+                        //$("#subscription_div").css("display","none");
+                        $('#lvl'+lvl+'_row').hide();
                         $("#subscription_div").css("display","none");
                     }
 
@@ -3985,6 +4318,21 @@ function validateData(){
     }
     
     $("#save-service-detail ").click(function(e){
+    
+    	        	valid_coun = validate_subscription("#country1","#country_lebel","Please select Country");
+        if(valid_coun == false){
+            return false;
+        }
+        		
+        	valid_stat = validate_subscription("#statec1","#state_lebel","Please select State");
+        if(valid_stat == false){
+            return false;
+        }
+				 
+		   valid_cit = validate_subscription("#city1","#city_lebel","Please select City");
+        if(valid_cit == false){
+            return false;
+        }
 
         valid_cat = validate_subscription("#sub_category","#sub_category_lebel","Please select Category");
         if(valid_cat == false){
@@ -4048,7 +4396,7 @@ function validateData(){
     });
 
     function validate_subscription(id,lebel,msg){
-        if($(id).val() == ""){
+        if($(id).val() == "" || $(id).val() == null ){
             $(lebel).css("display", "block");
             $(lebel).text(msg);
             return false;
@@ -4190,6 +4538,21 @@ function validateData(){
     
         $("#continue-service-detail ").click(function(e){
         //e.preventDefault();
+        
+                	valid_coun = validate_subscription("#country1","#country_lebel","Please select Country");
+        if(valid_coun == false){
+            return false;
+        }
+        		
+        	valid_stat = validate_subscription("#statec1","#state_lebel","Please select State");
+        if(valid_stat == false){
+            return false;
+        }
+				 
+		   valid_cit = validate_subscription("#city1","#city_lebel","Please select City");
+        if(valid_cit == false){
+            return false;
+        }
 
         valid_cat = validate_subscription("#sub_category","#sub_category_lebel","Please select Category");
         if(valid_cat == false){

@@ -44,10 +44,23 @@ from django.core.files.base import ContentFile
 
 # Push Notifications
 from push_notifications.models import APNSDevice, GCMDevice
+
+from helper import dd2dms
+import geocoder
+
+from geopy.distance import vincenty
+
 import operator
 
+from PIL import Image
+from PIL import ImageFont
+from PIL import ImageDraw
+import textwrap
+import StringIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
 # SERVER_URL = "http://192.168.0.151:9090"
-SERVER_URL = "http://52.66.169.65"
+SERVER_URL = "http://52.66.133.35"
 
 # Constants
 earth_radius = 6371.0
@@ -58,7 +71,6 @@ radians_to_degrees = 180.0 / math.pi
 @csrf_exempt
 def get_about_city(request):
     json_obj = json.loads(request.body)
-    
     city_id = json_obj['city_id']
     try:
         advert_list = []
@@ -313,13 +325,13 @@ def check_otp(request):
     # print request.session["OTP"]
     # session_otp = request.session['OTP']
     user_id = json_obj['user_id']
-    contact_no = json_obj['contact_no']
+    #contact_no = json_obj['contact_no']
     msg_otp = json_obj['OTP']
     consumer_obj = ConsumerProfile.objects.get(consumer_id=str(user_id))
     session_otp = str(consumer_obj.consumer_otp)
     if session_otp == msg_otp:
         consumer_obj.user_verified = 'true'
-        consumer_obj.consumer_contact_no = str(contact_no)
+        #consumer_obj.consumer_contact_no = str(contact_no)
         consumer_obj.save()
         data = {'success': 'true', 'message': 'OPT match'}
     else:
@@ -540,6 +552,74 @@ def get_city_list(request):
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
+def save_advert_slider_image(advert_obj):
+    try:
+        os_path = '/home/ec2-user/DigiSpace'
+        # os_path = '/home/admin1/Prod_backup/DigiSpace'
+        discount_description = advert_obj.discount_description
+        advert_tilte = advert_obj.advert_name
+        contact_no = advert_obj.contact_no
+        address = advert_obj.address_line_1
+        if advert_obj.address_line_2:
+            address = address + ', ' + advert_obj.address_line_2
+        if advert_obj.area:
+            address = address + ', ' + advert_obj.area
+            landmark = advert_obj.area
+        if advert_obj.city_place_id:
+            address = address + ', ' + advert_obj.city_place_id.city_id.city_name
+            landmark = landmark + ' ' + advert_obj.city_place_id.city_id.city_name
+        if advert_obj.state_id:
+            address = address + ', ' + advert_obj.state_id.state_name
+        if advert_obj.pincode_id:
+            address = address + '-' + advert_obj.pincode_id.pincode
+        advert_address = address
+        
+        font = ImageFont.truetype("/home/ec2-user/DigiSpace/static/Khula-SemiBold.ttf", 15)
+        bold_font = ImageFont.truetype("/home/ec2-user/DigiSpace/static/Khula-Bold.ttf", 18)
+        #semi_bold_font = ImageFont.truetype("/home/ec2-user/DigiSpace/static/Khula-SemiBold.ttf", 20)
+        if advert_obj.display_image:
+            display_image = advert_obj.display_image.url
+        else:
+            display_image = "/static/assets/layouts/layout2/img/City_Hoopla_Logo.png"
+
+
+        dis_img = Image.open(os_path + display_image)
+
+        dis_img = dis_img.resize((200, 100), Image.ANTIALIAS)
+
+        title_txt = Image.new('RGBA', (400,100), (255,255,255,255))
+        draw = ImageDraw.Draw(title_txt)
+
+        current_h, pad = 0, 4
+        MAX_W, MAX_H = 355, 100
+        for line in textwrap.wrap(advert_tilte, width=30):
+            w, h = draw.textsize(line, font=font)   
+            draw.text(((MAX_W - w) / 2, current_h), line, font=bold_font, fill="#00448b")
+            current_h += h + pad
+
+        current_h, pad = 40, 2
+        MAX_W, MAX_H = 400, 100
+        for line in textwrap.wrap(advert_address, width=35):
+            w, h = draw.textsize(line, font=font)   
+            draw.text(((MAX_W - w) / 2, current_h), line, font=font, fill="#00448b")
+            current_h += h + pad
+
+
+        image_name = "new_advert_slider_" + str(advert_obj.advert_id) + ".jpg"
+        blank_image = Image.new('RGBA', (600,100), (255,255,255,255))
+        draw = ImageDraw.Draw(blank_image)
+        blank_image.paste(dis_img, (0,0))
+        blank_image.paste(title_txt, (200,0))
+        tempfile = blank_image
+        tempfile_io = StringIO.StringIO()
+        tempfile.save(tempfile_io, format='JPEG')
+        image_file = InMemoryUploadedFile(tempfile_io, None, image_name, 'image/jpeg', tempfile_io.len, None)
+        advert_obj.advert_slider_image.save(image_name, image_file)
+        advert_obj.save()
+    except Exception as e:
+        print "advert slider image", e
+    return 1
+
 @csrf_exempt
 def get_bottom_advert_list(request):
     json_obj = json.loads(request.body)
@@ -549,6 +629,7 @@ def get_bottom_advert_list(request):
         advert_list = []
         advert_obj_list = Advert.objects.filter(city_place_id=city_id,status =1)
         for advert_obj in advert_obj_list:
+            save_advert_slider_image(advert_obj)
             advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=str(advert_obj.advert_id))
             pre_ser_obj_list = PremiumService.objects.filter(business_id=str(advert_sub_obj.business_id))
             pre_date = datetime.now().strftime("%d/%m/%Y")
@@ -558,12 +639,11 @@ def get_bottom_advert_list(request):
             if start_date <= pre_date:
                 end_date = datetime.strptime(end_date, "%d/%m/%Y")
                 date_gap = end_date - pre_date
-                print pre_date,end_date,date_gap
                 if int(date_gap.days) >= 0:
                     for pre_ser_obj in pre_ser_obj_list:
                         if pre_ser_obj.premium_service_name == "Advert Slider":
-                            if advert_obj.display_image:
-                                advert_image = advert_obj.display_image.url
+                            if advert_obj.advert_slider_image:
+                                advert_image = advert_obj.advert_slider_image.url
                             else:
                                 advert_image = "/static/assets/layouts/layout2/img/City_Hoopla_Logo.png"
                             discount_description = advert_obj.discount_description
@@ -600,6 +680,105 @@ def get_bottom_advert_list(request):
         data = {'success': 'false', 'message': 'Something went wrong', 'advert_list': []}
     return HttpResponse(json.dumps(data), content_type='application/json')
 
+def save_advert_image(advert_obj):
+    os_path = '/home/ec2-user/DigiSpace'
+
+    discount_description = advert_obj.discount_description
+    advert_tilte = advert_obj.advert_name.strip()
+    contact_no = advert_obj.contact_no
+    address = advert_obj.address_line_1
+    if advert_obj.address_line_2:
+        address = address + ', ' + advert_obj.address_line_2
+    if advert_obj.area:
+        address = address + ', ' + advert_obj.area
+        landmark = advert_obj.area
+    if advert_obj.city_place_id:
+        address = address + ', ' + advert_obj.city_place_id.city_id.city_name
+        landmark = landmark + ' ' + advert_obj.city_place_id.city_id.city_name
+    if advert_obj.state_id:
+        address = address + ', ' + advert_obj.state_id.state_name
+    if advert_obj.pincode_id:
+        address = address + '-' + advert_obj.pincode_id.pincode
+    advert_address = address
+
+    font = ImageFont.truetype("/home/ec2-user/DigiSpace/static/Khula-Regular.ttf",  24)
+    bold_font = ImageFont.truetype("/home/ec2-user/DigiSpace/static/Khula-Bold.ttf", 30)
+    semi_bold_font = ImageFont.truetype("/home/ec2-user/DigiSpace/static/Khula-SemiBold.ttf", 28)
+
+    imageA = Image.open(os_path + advert_obj.display_image.url)
+    image_width = imageA.size[0]
+    image_height = imageA.size[1]
+    width = 556
+    offset = 0
+    height = 810
+    margin = 0
+
+    if image_width < 556:
+        width = image_width
+        offset = 556 - int(image_width)
+        offset = offset/2
+
+    if image_height < 810:
+        height = image_height
+        margin = 810 - int(image_height)
+        margin = margin/2
+
+    crop_width = 556
+    crop_height = 810
+
+    if image_width < 556:
+        crop_width = image_width
+
+    if image_height < 810:
+        crop_height = image_height
+
+    image = imageA.crop((0, 0, crop_width, crop_height))
+    imageA = Image.open(os_path + "/static/Ad_background-image2.png")
+    imageA = imageA.resize((556, 810), Image.ANTIALIAS)
+    imageA.paste(image, (offset,margin))
+
+    imageB = Image.open (os_path + "/static/Black-gradient.png")
+    imageB = imageB.resize((556, 810), Image.ANTIALIAS)
+    imageA.paste(imageB, (0, 0), imageB.convert('RGBA'))
+
+    imgsize = (566, 820) #The size of the image
+    image = Image.open (os_path + "/static/Ad_background-image2.png")
+    image = image.resize((566, 820), Image.ANTIALIAS)
+
+    image.paste(imageA, (5,5))
+    draw = ImageDraw.Draw(image)
+
+    margin = 20
+    offset = 20
+    i = 0
+    for line in textwrap.wrap(advert_tilte, width=25):
+        draw.text((margin, offset), line, font=bold_font, fill="#ffffff")
+        offset += font.getsize(line)[1] + 15
+        i = i + 1
+
+    i = 0
+    offset = offset + 15
+    for line in textwrap.wrap(discount_description, width=50):
+        draw.text((margin, offset), line, font=font, fill="#ffffff")
+        offset += font.getsize(line)[1] + 5
+        i = i + 1
+
+    margin = 20
+    offset = 700
+    i = 0
+    for line in textwrap.wrap(advert_address, width=30):
+        draw.text((margin, offset), line, font=semi_bold_font, fill="#ffffff")
+        offset += font.getsize(line)[1] + 10
+        i = i + 1
+
+    image_name = "new_top_advert_" + str(advert_obj.advert_id) + ".jpg"
+    tempfile = image
+    tempfile_io = StringIO.StringIO()
+    tempfile.save(tempfile_io, format='JPEG')
+    image_file = InMemoryUploadedFile(tempfile_io, None, image_name, 'image/jpeg', tempfile_io.len, None)
+    advert_obj.advert_image.save(image_name, image_file)
+    advert_obj.save()
+    return 1
 
 @csrf_exempt
 def get_top_advert(request):
@@ -612,23 +791,26 @@ def get_top_advert(request):
         advert_obj_list = Advert.objects.filter(city_place_id=city_id,status = 1)
         if advert_obj_list:
             for advert_obj in advert_obj_list:
+
                 advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=str(advert_obj.advert_id))
                 pre_ser_obj_list = PremiumService.objects.filter(business_id=str(advert_sub_obj.business_id))
-                pre_date = datetime.now().strftime("%d/%m/%Y")
-                pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
-                end_date = advert_sub_obj.business_id.end_date
-                start_date = datetime.strptime(advert_sub_obj.business_id.start_date, "%d/%m/%Y")
-                if start_date <= pre_date:
-                    end_date = datetime.strptime(end_date, "%d/%m/%Y")
-                    date_gap = end_date - pre_date
-                    print pre_date,end_date,date_gap
-                    if int(date_gap.days) >= 0:
-                        if advert_obj.advert_image:
-                            advert_image = advert_obj.advert_image.url
-                        else:
-                            advert_image = "/static/assets/layouts/layout2/img/City_Hoopla_Logo.png"
-                        for pre_ser_obj in pre_ser_obj_list:
-                            if pre_ser_obj.premium_service_name == "Top Advert":
+                for pre_ser_obj in pre_ser_obj_list:
+                    if pre_ser_obj.premium_service_name == "Top Advert":
+                        pre_date = datetime.now().strftime("%d/%m/%Y")
+                        pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
+                        end_date = pre_ser_obj.end_date
+                        start_date = datetime.strptime(pre_ser_obj.start_date, "%d/%m/%Y")
+                        if start_date <= pre_date:
+                            end_date = datetime.strptime(end_date, "%d/%m/%Y")
+                            date_gap = end_date - pre_date
+                            print pre_date,end_date,date_gap
+                            if int(date_gap.days) >= 0:
+                        
+                                save_advert_image(advert_obj)
+                                if advert_obj.advert_image:
+                                    advert_image = advert_obj.advert_image.url
+                                else:
+                                    advert_image = "/static/assets/layouts/layout2/img/City_Hoopla_Logo.png"
                                 advert_data = {
                                     "advert_id": str(advert_obj.advert_id),
                                     "advert_image": advert_image,
@@ -715,13 +897,46 @@ def get_category_subcategory_list(request):
                 if cat_obj.category_name == "Ticket Resell":
                     cat_id = str(cat_obj.category_id)
                     #advert_count, like_count, subcat_list = get_cat_data(cat_id, city_id)
-                    like_count = SellTicketLike.objects.all().count()
-                    advert_count = SellTicket.objects.all().count()
+                    status = ["unread","appropriate"]
+                    sell_ticket_obj = SellTicket.objects.filter(city_id=json_obj['city_id'], status__in=status)#.count()
+
+                    sellticket_id_list = []
+                    if sell_ticket_obj:
+                        for ticket in sell_ticket_obj:
+                            pre_date = datetime.now().strftime("%d/%m/%Y")
+                            pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
+                            if ticket.start_date:
+                                try:
+                                    event_start_date = datetime.strptime(ticket.start_date, "%Y-%m-%d")
+                                except:
+                                    try:
+                                        event_start_date = datetime.strptime(ticket.start_date, "%d %b %Y")
+                                    except:
+                                        event_start_date = datetime.strptime(ticket.start_date, "%d-%m-%Y")
+                                if event_start_date >= pre_date:
+                                    sellticket_id_list.append(ticket.sellticket_id)
+
+                            if ticket.select_activation_date:
+                                try:
+                                    event_activation_date = datetime.strptime(ticket.select_activation_date, "%Y-%m-%d")
+                                except:
+                                    try:
+                                        event_activation_date = datetime.strptime(ticket.select_activation_date, "%d %b %Y")
+                                    except:
+                                        event_activation_date = datetime.strptime(ticket.select_activation_date, "%d-%m-%Y")
+                                if event_activation_date >= pre_date:                
+                                    sellticket_id_list.append(ticket.sellticket_id)
+
+                        selltckt_id_list = set(sellticket_id_list)
+                        sellticket_id_list = list(selltckt_id_list)
+
+                    like_count = SellTicketLike.objects.filter(sellticket_id__in = sellticket_id_list).count()
+
                     cat_obj_data = {
                         "category_id": str(cat_id),
                         "category_name": cat_obj.category_name,
                         "category_img": cat_obj.category_image.url,
-                        "total_adverts_count": str(advert_count),
+                        "total_adverts_count": str(len(sellticket_id_list)),
                         "total_likes": str(like_count),
                         "favorite": "0",
                         "category": [],
@@ -1192,17 +1407,8 @@ def get_advert_list(request):
         
 
         if sort_by == "location":
-            if consumer_latitude:
-                advert_list2.sort(key=operator.itemgetter('distance'))
-                list_dict = advert_list2
-                list_dict.sort(key=operator.itemgetter("area"))
-                advert_list2 = list_dict
-            else:
-                advert_list2.sort(key=operator.itemgetter('advert_name'))
-                list_dict = advert_list2
-                list_dict.sort(key=operator.itemgetter("area"))
-                advert_list2 = list_dict
-
+            advert_list2.sort(key=operator.itemgetter('distance'))
+            
         advert_list.extend(advert_list1)
         advert_list.extend(advert_list2)
 
@@ -1212,14 +1418,44 @@ def get_advert_list(request):
             else:
                 advert_list = [d for d in advert_list if d['distance'] > 10]
 
-        if rating_range == "range_1":
-            advert_list = [d for d in advert_list if d['ratings'] < 2]
-        if rating_range == "range_2":
-            advert_list = [d for d in advert_list if d['ratings'] >= 2 and d['ratings'] < 3.5 ]
-        if rating_range == "range_3":
-            advert_list = [d for d in advert_list if d['ratings'] >= 3.5]
+        top_advert_list = [d for d in advert_list if d['ratings'] >= 4.5]
+        top_count = len(top_advert_list)
+        good_advert_list = [d for d in advert_list if d['ratings'] >= 3.0 and d['ratings'] < 4.5]
+        good_count = len(good_advert_list)
+        avg_advert_list = [d for d in advert_list if d['ratings'] >= 1.5 and d['ratings'] < 3.0]
+        avg_count = len(avg_advert_list)
+        poor_advert_list = [d for d in advert_list if d['ratings'] > 0 and d['ratings'] < 1.5]
+        poor_count = len(poor_advert_list)
+        nry_advert_list = [d for d in advert_list if d['ratings'] == 0]
+        nry_count = len(nry_advert_list)
 
-        data = {'success': 'true', 'message': '', 'advert_list': advert_list, 'category_id': category_id}
+        if rating_range:
+            new_list = []
+            for ranges in rating_range:
+                if ranges == "Top":
+                    new_list.extend(top_advert_list)
+                if ranges == "Good":
+                    new_list.extend(good_advert_list)
+                if ranges == "Average":
+                    new_list.extend(avg_advert_list)
+                if ranges == "Poor":
+                    new_list.extend(poor_advert_list)
+                if ranges == "Not Rated Yet":
+                    new_list.extend(nry_advert_list)
+            new_list.sort(key=operator.itemgetter("ratings"))
+            advert_list = new_list
+
+        data = {
+            'success': 'true', 
+            'message': '', 
+            'advert_list': advert_list, 
+            'category_id': category_id,
+            'top_count':str(top_count),
+            'good_count':str(good_count),
+            'avg_count':str(avg_count),
+            'poor_count':str(poor_count),
+            'nry_count':str(nry_count),
+            }
     except Exception, ke:
         print ke
         data = {'success': 'false', 'message': 'Something went wrong', 'advert_list': [], 'category_id': category_id}
@@ -1366,6 +1602,19 @@ def get_advert_data(advert_sub_obj,advert_sequence,pre_date,advert_id,user_id, l
                 start_date = ''
                 end_date = ''
 
+            discount_start_date = ''
+            discount_end_date = ''
+            if advert_obj.discount_description:
+                discount_description = advert_obj.discount_description
+                if advert_obj.discount_start_date:
+                    discount_start_date = datetime.strptime(advert_obj.discount_start_date, "%d/%m/%Y")
+                    discount_start_date = discount_start_date.strftime("%d %b %Y")
+                if advert_obj.discount_end_date:
+                    discount_end_date = datetime.strptime(advert_obj.discount_end_date, "%d/%m/%Y")
+                    discount_end_date = discount_end_date.strftime("%d %b %Y")
+            else:
+                discount_description = ''
+
             advert_data = {
                 "advert_id": str(advert_obj.advert_id),
                 "advert_img": image_url,
@@ -1391,7 +1640,8 @@ def get_advert_data(advert_sub_obj,advert_sequence,pre_date,advert_id,user_id, l
                 "opening_closing_time": time_list,
                 "category_color": str(advert_obj.category_id.category_color),
                 "category_name": advert_obj.category_id.category_name,
-                "area":advert_obj.area
+                "discount_end_date":discount_end_date,
+                "discount_start_date":discount_start_date
             }
             #print "=============11==============",advert_data['name']
     return advert_data
@@ -1506,10 +1756,18 @@ def get_advert_details(request):
         else:
             product_description = ''
 
+        discount_start_date = ''
+        discount_end_date = ''
         if advert_obj.discount_description:
             discount_description = advert_obj.discount_description
+            if advert_obj.discount_start_date:
+                discount_start_date = datetime.strptime(advert_obj.discount_start_date, "%d/%m/%Y")
+                discount_start_date = discount_start_date.strftime("%d %b %Y")
+            if advert_obj.discount_end_date:
+                discount_end_date = datetime.strptime(advert_obj.discount_end_date, "%d/%m/%Y")
+                discount_end_date = discount_end_date.strftime("%d %b %Y")
         else:
-            discount_description = ''
+            discount_description = ''     
 
         hours_obj = WorkingHours.objects.filter(advert_id=advert_id)
         for hours in hours_obj:
@@ -1572,7 +1830,7 @@ def get_advert_details(request):
         try:
             aminity_obj = Amenities.objects.filter(advert_id = advert_id)
             for aminity in aminity_obj:
-                amenity_list.append(aminity.categorywise_amenity_id.amenity)
+                amenity_list.append(aminity.categorywise_amenity_id.amenity.strip())
         except:
             pass
 
@@ -1581,7 +1839,10 @@ def get_advert_details(request):
             other_amenity = advert_obj.other_amenity
 
         if advert_obj.date_of_delivery:
-            date_of_delivery = datetime.strptime(advert_obj.date_of_delivery,'%m/%d/%Y')
+            try:
+                date_of_delivery = datetime.strptime(advert_obj.date_of_delivery,'%d/%m/%Y')
+            except:
+                date_of_delivery = datetime.strptime(advert_obj.date_of_delivery,'%m/%d/%Y')
             date_of_delivery = date_of_delivery.strftime("%d %b %Y")
         else:
             date_of_delivery = ''
@@ -1589,6 +1850,11 @@ def get_advert_details(request):
         any_other_details = ''
         if advert_obj.any_other_details:
             any_other_details = advert_obj.any_other_details
+
+        if advert_obj.website:
+            website = advert_obj.website
+        else:
+            website = ''
 
         advert_data = {
             "advert_id": str(advert_obj.advert_id),
@@ -1635,7 +1901,10 @@ def get_advert_details(request):
             'distance_from_railway_station':advert_obj.distance_frm_railway_station,
             'distance_from_airport':advert_obj.distance_frm_railway_airport,
             "category_color":str(advert_obj.category_id.category_color),
-            "category_name":advert_obj.category_id.category_name
+            "category_name":advert_obj.category_id.category_name,
+            "website":website,
+            "discount_end_date":discount_end_date,
+            "discount_start_date":discount_start_date
         }
         advert_list.append(advert_data)
         product_list = []
@@ -1649,12 +1918,72 @@ def get_advert_details(request):
                     }
                     product_list.append(product_data)
 
-        data = {'success': 'true', 'message': '', 'advert_list': advert_list, 'product_list':product_list,'category_id': category_id,
-                'level': level}
+
+        attraction_list = []
+        attraction_obj = NearByAttraction.objects.filter(advert_id = advert_id)
+        if attraction_obj:
+            for attraction in attraction_obj:
+                if attraction.attraction:
+                    attraction_data = {
+                        'name':attraction.attraction
+                    }
+                    attraction_list.append(attraction_data)
+        shopping_list = []
+        #NearestShopping
+        shopping_obj = NearestShopping.objects.filter(advert_id = advert_id)
+        if shopping_obj:
+            for shopping in shopping_obj:
+                if shopping.shop_name:
+                    shopping_data = {
+                        'name':shopping.shop_name,
+                        'distance':shopping.distance_frm_property,
+                    }
+                    shopping_list.append(shopping_data)
+        school_list = []
+        school_obj = NearestSchool.objects.filter(advert_id = advert_id)
+        if school_obj:
+            for school in school_obj:
+                if school.school_name:
+                    school_data = {
+                        'name':school.school_name,
+                        'distance':school.distance_frm_property,
+                    }
+                    school_list.append(school_data)
+        hospital_list = []
+        hospital_obj = NearestHospital.objects.filter(advert_id = advert_id)
+        if hospital_obj:
+            for hospital in hospital_obj:
+                if hospital.hospital_name:
+                    hospital_data = {
+                        'name':hospital.hospital_name,
+                        'distance':hospital.distance_frm_property,
+                    }
+                    hospital_list.append(hospital_data)
+
+        data = {
+                    'success': 'true', 'message': '', 
+                    'advert_list': advert_list, 
+                    'product_list':product_list,
+                    'category_id': category_id,
+                    'level': level,
+                    'hospital_list':hospital_list,
+                    'school_list':school_list,
+                    'shopping_list':shopping_list,
+                    'attraction_list':attraction_list
+                }
     except Exception, ke:
         print ke
-        data = {'success': 'false', 'message': 'Something went wrong', 'advert_list': [], 'product_list':[], 'category_id': category_id,
-                'level': level}
+        data = {
+                    'success': 'false', 'message': 'Something went wrong', 
+                    'advert_list': [], 
+                    'product_list':[],
+                    'category_id': [],
+                    'level': [],
+                    'hospital_list':[],
+                    'school_list':[],
+                    'shopping_list':[],
+                    'attraction_list':[]
+                }
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
@@ -1744,6 +2073,9 @@ def get_discount_details(request):
             pre_date = datetime.now().strftime("%d/%m/%Y")
             pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
 
+            coupon_code = coupons.coupon_code
+            discount_description = ''
+
             date_gap = end_date - pre_date
             if int(date_gap.days) >= 0:
                 status = 'Active'
@@ -1753,9 +2085,23 @@ def get_discount_details(request):
             if advert_obj.discount_description:
                 start_date = start_date.strftime("%d %b %Y")
                 end_date = end_date.strftime("%d %b %Y")
+                discount_description = advert_obj.discount_description
             else:
                 start_date = ''
                 end_date = ''
+
+            discount_start_date = ''
+            discount_end_date = ''
+            if advert_obj.discount_description:
+                discount_description = advert_obj.discount_description
+                if advert_obj.discount_start_date:
+                    discount_start_date = datetime.strptime(advert_obj.discount_start_date, "%d/%m/%Y")
+                    discount_start_date = discount_start_date.strftime("%d %b %Y")
+                if advert_obj.discount_end_date:
+                    discount_end_date = datetime.strptime(advert_obj.discount_end_date, "%d/%m/%Y")
+                    discount_end_date = discount_end_date.strftime("%d %b %Y")
+            else:
+                discount_description = ''
 
             address = ''
             if advert_obj.area:
@@ -1828,7 +2174,11 @@ def get_discount_details(request):
                 'email_list':email_list,
                 'distance':distance,
                 "category_color":str(advert_obj.category_id.category_color),
-                "category_name":advert_obj.category_id.category_name
+                "category_name":advert_obj.category_id.category_name,
+                "coupon_code":coupon_code,
+                "discount_description":discount_description,
+                "discount_end_date":discount_end_date,
+                "discount_start_date":discount_start_date
             }
             discount_detail.append(advert_data)
         data = {'success': 'true', 'message': '', 'count': len(discount_detail), 'discount_detail': discount_detail}
@@ -1964,6 +2314,19 @@ def get_favourite_details(request):
                 start_date = ''
                 end_date = ''
 
+            discount_start_date = ''
+            discount_end_date = ''
+            if advert_obj.discount_description:
+                discount_description = advert_obj.discount_description
+                if advert_obj.discount_start_date:
+                    discount_start_date = datetime.strptime(advert_obj.discount_start_date, "%d/%m/%Y")
+                    discount_start_date = discount_start_date.strftime("%d %b %Y")
+                if advert_obj.discount_end_date:
+                    discount_end_date = datetime.strptime(advert_obj.discount_end_date, "%d/%m/%Y")
+                    discount_end_date = discount_end_date.strftime("%d %b %Y")
+            else:
+                discount_description = ''
+
             advert_data = {
                 "advert_id": str(advert_obj.advert_id),
                 "name": advert_obj.advert_name,
@@ -1988,7 +2351,9 @@ def get_favourite_details(request):
                 'advert_address':advert_address,
                 "opening_closing_time": time_list,
                 "category_color":str(advert_obj.category_id.category_color),
-                "category_name":advert_obj.category_id.category_name
+                "category_name":advert_obj.category_id.category_name,
+                "discount_end_date":discount_end_date,
+                "discount_start_date":discount_start_date
             }
             discount_detail.append(advert_data)
         data = {'success': 'true', 'message': '', 'count': len(discount_detail), 'favourite_detail': discount_detail}
@@ -2094,12 +2459,29 @@ def get_active_discount_details(request):
                 else:
                     distance = ''
 
+                coupon_code = coupons.coupon_code
+                discount_description = ''
+
                 if advert_obj.discount_description:
                     start_date = start_date.strftime("%d %b %Y")
                     end_date = end_date.strftime("%d %b %Y")
+                    discount_description = advert_obj.discount_description
                 else:
                     start_date = ''
                     end_date = ''
+
+                discount_start_date = ''
+                discount_end_date = ''
+                if advert_obj.discount_description:
+                    discount_description = advert_obj.discount_description
+                    if advert_obj.discount_start_date:
+                        discount_start_date = datetime.strptime(advert_obj.discount_start_date, "%d/%m/%Y")
+                        discount_start_date = discount_start_date.strftime("%d %b %Y")
+                    if advert_obj.discount_end_date:
+                        discount_end_date = datetime.strptime(advert_obj.discount_end_date, "%d/%m/%Y")
+                        discount_end_date = discount_end_date.strftime("%d %b %Y")
+                else:
+                    discount_description = ''
 
                 advert_data = {
                     "advert_id": str(advert_obj.advert_id),
@@ -2119,7 +2501,11 @@ def get_active_discount_details(request):
                     'email_list':email_list,
                     'distance':distance,
                     "category_color":str(advert_obj.category_id.category_color),
-                    "category_name":advert_obj.category_id.category_name
+                    "category_name":advert_obj.category_id.category_name,
+                    "discount_description":discount_description,
+                    "coupon_code":coupon_code,
+                    "discount_end_date":discount_end_date,
+                    "discount_start_date":discount_start_date
                 }
                 discount_detail.append(advert_data)
         data = {'success': 'true', 'message': '', 'count': len(discount_detail), 'discount_detail': discount_detail}
@@ -2423,6 +2809,7 @@ def save_sellticket(request):
         print 'JSON OBJECT : ', json_obj['start_date']
 
         user_id = json_obj['user_id']
+        city_id = json_obj['city_id']
         sellticket_obj = SellTicket(
             user_id=ConsumerProfile.objects.get(consumer_id=user_id),
             event_name=json_obj['event_name'],
@@ -2432,7 +2819,8 @@ def save_sellticket(request):
             select_activation_date=json_obj['select_activation_date'],
             other_comments=json_obj['other_comments'],
             contact_number=json_obj['contact_number'],
-            sellticket_views = 0
+            sellticket_views = 0,
+            city_id = City_Place.objects.get(city_place_id = city_id)
         )
         sellticket_obj.save()
         if json_obj['image_one']:
@@ -2470,9 +2858,44 @@ def view_list_sellticket(request):
         # pdb.set_trace()
         json_obj = json.loads(request.body)
         user_id = json_obj['user_id']
+        city_id = json_obj['city_id']
         sell_ticket_list = []
-        sell_ticket_obj = SellTicket.objects.filter()
+        status = ["unread","appropriate"]
+        sell_ticket_obj = SellTicket.objects.filter(city_id = city_id,status__in=status)
         ratings = ''
+
+        sellticket_id_list = []
+
+        if sell_ticket_obj:
+            for ticket in sell_ticket_obj:
+                pre_date = datetime.now().strftime("%d/%m/%Y")
+                pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
+                if ticket.start_date:
+                    try:
+                        event_start_date = datetime.strptime(ticket.start_date, "%Y-%m-%d")
+                    except:
+                        try:
+                            event_start_date = datetime.strptime(ticket.start_date, "%d %b %Y")
+                        except:
+                            event_start_date = datetime.strptime(ticket.start_date, "%d-%m-%Y")
+                    if event_start_date >= pre_date:
+                        sellticket_id_list.append(ticket.sellticket_id)
+
+                if ticket.select_activation_date:
+                    try:
+                        event_activation_date = datetime.strptime(ticket.select_activation_date, "%Y-%m-%d")
+                    except:
+                        try:
+                            event_activation_date = datetime.strptime(ticket.select_activation_date, "%d %b %Y")
+                        except:
+                            event_activation_date = datetime.strptime(ticket.select_activation_date, "%d-%m-%Y")
+                    if event_activation_date >= pre_date:                
+                        sellticket_id_list.append(ticket.sellticket_id)
+
+        selltckt_id_list = set(sellticket_id_list)
+
+
+        sell_ticket_obj = SellTicket.objects.filter(sellticket_id__in = list(selltckt_id_list))
         if sell_ticket_obj:
             for ticket in sell_ticket_obj:
                 user_id1 = str(ticket.user_id)
@@ -2484,27 +2907,33 @@ def view_list_sellticket(request):
                     image_one = ticket.image_one.url
                 else:
                     try:
-                        category_obj = Category.objects.get(category_name = "Ticket Resell")
-                        image_one = category_obj.category_image.url
+                        cat_city_map = CategoryCityMap.objects.filter(city_place_id = city_id)
+                        for cat in cat_city_map:
+                            if cat.category_id.category_name == "Ticket Resell":
+                                image_one = cat.category_id.category_image.url
                     except:
+                        image_one = ''
                         pass
 
                 sellticket_review_count = str(SellTicketReview.objects.filter(sellticket_id=sellticket_id).count())
 
+                rating_count = 0
                 sellticket_rating = SellTicketReview.objects.filter(sellticket_id=sellticket_id)
                 sum_rating = 0
                 for sellticket in sellticket_rating:
-                    if sellticket.ratings:
+                    if sellticket.ratings > 0:
                         ratings = sellticket.ratings
+                        rating_count = rating_count + 1
                     else:
                         ratings = 0
                     sum_rating = float(ratings) + float(sum_rating)
 
-                if sellticket_rating.count() == 0:
-                    avg_rating = "0.0"
-                else:
-                    avg_rating = sum_rating / sellticket_rating.count()
+                if rating_count > 0:
+                    avg_rating = sum_rating / rating_count
                     avg_rating = str(round(avg_rating, 1))
+                else:
+                    avg_rating = "0.0"
+                
 
                 try:
                     sellticket_like_obj = SellTicketLike.objects.get(sellticket_id=sellticket_id, user_id=str(user_id))
@@ -2520,11 +2949,15 @@ def view_list_sellticket(request):
                     is_favourite = "false"
 
                 if ticket.sellticket_views:
-                    views_count = str(ticket.sellticket_views)
+                    views_count = str(SellTicketView.objects.filter(sellticket_id=sellticket_id).count())
                 else:
                     views_count = "0"
 
                 like_count = str(SellTicketLike.objects.filter(sellticket_id=sellticket_id).count())
+
+                if ticket.contact_number:
+                    phone_no = ticket.contact_number
+                    
                 tkt_data = {
                     "sellticket_id": str(ticket.sellticket_id),
                     "event_name": ticket.event_name,
@@ -2629,6 +3062,7 @@ def view_sellticket_detail(request):
         # pdb.set_trace()
         json_obj = json.loads(request.body)
         user_id = json_obj['user_id']
+        city_id = json_obj['city_id']
         sellticket_id = json_obj['sellticket_id']
         sell_ticket_detail = []
         review_list = []
@@ -2646,18 +3080,27 @@ def view_sellticket_detail(request):
                 phone_no = consumer_object.consumer_contact_no
                 email = consumer_object.consumer_email_id
 
-                if ticket_object.sellticket_views:
-                    views_count = int(ticket_object.sellticket_views) + 1
-                else:
-                    views_count = 1
-                    ticket_object.sellticket_views = views_count
-                    ticket_object.save()
+                #SellTicketView
+                if user_id:
+                    try:
+                        st_view_obj = SellTicketView.objects.get(sellticket_id=sellticket_id, user_id=user_id)
+                    except:
+                        st_view_obj = SellTicketView()
+                        st_view_obj.sellticket_id = ticket_object
+                        st_view_obj.user_id = ConsumerProfile.objects.get(consumer_id=user_id)
+                        st_view_obj.creation_date = datetime.now()
+                        st_view_obj.save()
+
+                
+                views_count = 0
+                views_count = SellTicketView.objects.filter(sellticket_id=sellticket_id).count()
+                #ticket_object.save()
 
                 sellticket_review_count = SellTicketReview.objects.filter(sellticket_id=sellticket_id).count()
 
-                sellticket_rating = SellTicketReview.objects.filter(sellticket_id=sellticket_id)
-                avg_rating = 0
                 rating_count = 0
+                sellticket_rating = SellTicketReview.objects.filter(sellticket_id=sellticket_id)
+                sum_rating = 0
                 for sellticket in sellticket_rating:
                     if sellticket.ratings > 0:
                         ratings = sellticket.ratings
@@ -2666,11 +3109,11 @@ def view_sellticket_detail(request):
                         ratings = 0
                     sum_rating = float(ratings) + float(sum_rating)
 
-                if rating_count == 0:
-                    avg_rating = "0.0"
-                else:
+                if rating_count > 0:
                     avg_rating = sum_rating / rating_count
-                    avg_rating = str(round(avg_rating,1))
+                    avg_rating = str(round(avg_rating, 1))
+                else:
+                    avg_rating = "0.0"
 
                 try:
                     sellticket_like_obj = SellTicketLike.objects.get(sellticket_id=sellticket_id, user_id=str(user_id))
@@ -2710,8 +3153,10 @@ def view_sellticket_detail(request):
 
                 if not image_list:
                     try:
-                        category_obj = Category.objects.get(category_name = "Ticket Resell")
-                        image_one = category_obj.category_image.url
+                        cat_city_map = CategoryCityMap.objects.filter(city_place_id = city_id)
+                        for cat in cat_city_map:
+                            if cat.category_id.category_name == "Ticket Resell":
+                                image_one = cat.category_id.category_image.url
                         image_list.append(image_one)
                     except:
                         pass
@@ -2747,7 +3192,8 @@ def view_sellticket_detail(request):
                     }
                     ticket_details.append(sell_ticket_data)
 
-
+                if ticket_object.contact_number:
+                    phone_no = ticket_object.contact_number
                 ticket_data = {
                     'event_name': ticket_object.event_name,
                     'event_venue': ticket_object.event_venue,
@@ -2757,10 +3203,10 @@ def view_sellticket_detail(request):
                     'phone_no': phone_no,
                     'email': email,
                     'other_comments': ticket_object.other_comments,
-                    'likes': like_count,
+                    'likes': str(like_count),
                     'is_like': is_like,
                     'is_favourite': is_favourite,
-                    'views': views_count,
+                    'views': str(views_count),
                     'review_list': review_list,
                     'reviews': sellticket_review_count,
                     'avg_rating': avg_rating
@@ -2774,6 +3220,22 @@ def view_sellticket_detail(request):
         data = {'success': 'false'}
     return HttpResponse(json.dumps(data), content_type='application/json')
 
+@csrf_exempt
+def share_sell_ticket(request):
+    json_obj = json.loads(request.body)
+    try:
+        sell_ticket_obj = SellTicket.objects.get(sellticket_id=json_obj['sellticket_id'])
+        user_obj  = ConsumerProfile.objects.get(consumer_id=json_obj['user_id'])
+        share_obj = SellTicketShares()
+        share_obj.sellticket_id = sell_ticket_obj
+        share_obj.user_id = user_obj
+        share_obj.creation_date = datetime.now()
+        share_obj.save()
+        data = {'success': 'true', 'message': ''}
+    except Exception, ke:
+        print ke
+        data = {'success': 'false', 'message': 'Oops! Something went wrong'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 @csrf_exempt
 def get_map_advert_list(request):
@@ -2783,29 +3245,37 @@ def get_map_advert_list(request):
     consumer_latitude = json_obj['consumer_latitude']
     consumer_longitude = json_obj['consumer_longitude']
     rating_range = json_obj['filter_parameter']['rating_range']
+    radius = ''
+    if not city_id:
+        radius = 10
+        lon_max, lon_min, lat_max, lat_min = bounding_box(
+            float(json_obj['consumer_latitude']),
+            float(json_obj['consumer_longitude']),
+            float(radius)
+        )
     if json_obj['filter_parameter']['radius']:
         radius = json_obj['filter_parameter']['radius']
-    else:
-        radius = 5
-    lon_max, lon_min, lat_max, lat_min = bounding_box(
-        float(json_obj['consumer_latitude']),
-        float(json_obj['consumer_longitude']),
-        float(radius)
-    )
+        lon_max, lon_min, lat_max, lat_min = bounding_box(
+            float(json_obj['consumer_latitude']),
+            float(json_obj['consumer_longitude']),
+            float(radius)
+        )
     advert_list = []
     try:
-        if int(radius) < 15:
+        if city_id:
             advert_map_obj = Advert.objects.filter(
                 city_place_id=city_id,
-                latitude__range=[lat_min, lat_max],
-                longitude__range=[lon_min, lon_max],
                 status='1'
             )
-        else:
+        if city_id and json_obj['filter_parameter']['radius'] and int(radius) < 15:
+            advert_map_obj = advert_map_obj.filter(
+                latitude__range=[lat_min, lat_max],
+                longitude__range=[lon_min, lon_max],
+            )
+        if not city_id:
             advert_map_obj = Advert.objects.filter(
-                city_place_id=city_id,
-                #latitude__range=[lat_min, lat_max],
-                #longitude__range=[lon_min, lon_max],
+                latitude__range=[lat_min, lat_max],
+                longitude__range=[lon_min, lon_max],
                 status='1'
             )
         for advert_map in advert_map_obj:
@@ -2919,6 +3389,19 @@ def get_map_advert_list(request):
                         start_date = ''
                         end_date = ''
 
+                    discount_start_date = ''
+                    discount_end_date = ''
+                    if advert_obj.discount_description:
+                        discount_description = advert_obj.discount_description
+                        if advert_obj.discount_start_date:
+                            discount_start_date = datetime.strptime(advert_obj.discount_start_date, "%d/%m/%Y")
+                            discount_start_date = discount_start_date.strftime("%d %b %Y")
+                        if advert_obj.discount_end_date:
+                            discount_end_date = datetime.strptime(advert_obj.discount_end_date, "%d/%m/%Y")
+                            discount_end_date = discount_end_date.strftime("%d %b %Y")
+                    else:
+                        discount_description = ''
+
                     advert_data = {
                         "advert_id": str(advert_obj.advert_id),
                         "advert_img": image_url,
@@ -2942,23 +3425,55 @@ def get_map_advert_list(request):
                         "opening_closing_time":time_list,
                         "distance":str(distance),
                         "category_color":str(category_color),
-                        "category_name":category_name
+                        "category_name":category_name,
+                        "discount_end_date":discount_end_date,
+                        "discount_start_date":discount_start_date
                     }
                     advert_list.append(advert_data)
         if radius:
             if int(radius) < 15:
                 advert_list = [d for d in advert_list if float(d['distance']) < int(radius)]
-                print "<15"
             else:
                 advert_list = [d for d in advert_list if float(d['distance']) > 10]
-                
-        if rating_range == "range_1":
-            advert_list = [d for d in advert_list if d['ratings'] < 2]
-        if rating_range == "range_2":
-            advert_list = [d for d in advert_list if d['ratings'] >= 2 and d['ratings'] < 3.5]
-        if rating_range == "range_3":
-            advert_list = [d for d in advert_list if d['ratings'] >= 3.5]
-        data = {"success": "true", "message": "", "advert_list": advert_list}
+        
+        top_advert_list = [d for d in advert_list if d['ratings'] >= 4.5]
+        top_count = len(top_advert_list)
+        good_advert_list = [d for d in advert_list if d['ratings'] >= 3.0 and d['ratings'] < 4.5]
+        good_count = len(good_advert_list)
+        avg_advert_list = [d for d in advert_list if d['ratings'] >= 1.5 and d['ratings'] < 3.0]
+        avg_count = len(avg_advert_list)
+        poor_advert_list = [d for d in advert_list if d['ratings'] > 0 and d['ratings'] < 1.5]
+        poor_count = len(poor_advert_list)
+        nry_advert_list = [d for d in advert_list if d['ratings'] == 0]
+        nry_count = len(nry_advert_list)
+
+        if rating_range:
+            new_list = []
+            for ranges in rating_range:
+                if ranges == "Top":
+                    new_list.extend(top_advert_list)
+                if ranges == "Good":
+                    new_list.extend(good_advert_list)
+                if ranges == "Average":
+                    new_list.extend(avg_advert_list)
+                if ranges == "Poor":
+                    new_list.extend(poor_advert_list)
+                if ranges == "Not Rated Yet":
+                    new_list.extend(nry_advert_list)
+            new_list.sort(key=operator.itemgetter("ratings"))
+            advert_list = new_list
+
+        data = {
+            'success': 'true', 
+            'message': '', 
+            'advert_list': advert_list, 
+            #'category_id': category_id,
+            'top_count':str(top_count),
+            'good_count':str(good_count),
+            'avg_count':str(avg_count),
+            'poor_count':str(poor_count),
+            'nry_count':str(nry_count),
+            }
 
     except Exception, e:
         print "Exception", e
@@ -3170,11 +3685,11 @@ def search_sellticket(request):
         search_keyword = json_obj['search_keyword']
         list = []
         sellticket_list = []
-
-        sellticket_obj = SellTicket.objects.filter(event_name__icontains=search_keyword)
+        status = ["unread","appropriate"]
+        sellticket_obj = SellTicket.objects.filter(event_name__icontains=search_keyword, status__in =status)
         list.extend(sellticket_obj)
 
-        sellticket_obj = SellTicket.objects.filter(event_venue__icontains=search_keyword)
+        sellticket_obj = SellTicket.objects.filter(event_venue__icontains=search_keyword, status__in =status)
         list.extend(sellticket_obj)
 
         list = set(list)
@@ -3195,271 +3710,1456 @@ def search_sellticket(request):
         data = {'success': 'false'}
     return HttpResponse(json.dumps(data), content_type='application/json')
 
+@csrf_exempt
+def get_citylife_category_list(request):
+    ##    pdb.set_trace()
+    category_list = []
+    json_obj = json.loads(request.body)
+    try:
+        category_objs = citylife_category.objects.filter(status=1,city_id=json_obj['city_id'])
+        for category in category_objs:
+            category_id = str(category.category_id)
+            category_name = str(category.category_name)
+            category_data = {'category_id': category_id, 'category_name': category_name}
+            category_list.append(category_data)
+        data = {'category_list': category_list, 'success': 'true'}
+    except Exception, ke:
+        print ke
+        data = {'category_list': category_list, 'success': 'true'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
-# @csrf_exempt
-# def get_citylife_category_list(request):
-#     ##    pdb.set_trace()
-#     category_list = []
-#     json_obj = json.loads(request.body)
-#     try:
-#         category_objs = citylife_category.objects.filter(status=1,city_id=json_obj['city_id'])
-#         for category in category_objs:
-#             category_id = str(category.category_id)
-#             category_name = str(category.category_name)
-#             category_data = {'category_id': category_id, 'category_name': category_name}
-#             category_list.append(category_data)
-#         data = {'category_list': category_list, 'success': 'true'}
-#     except Exception, ke:
-#         print ke
-#         data = {'category_list': category_list, 'success': 'true'}
-#     return HttpResponse(json.dumps(data), content_type='application/json')
+@csrf_exempt
+def save_citylife_post(request):
+    json_obj = json.loads(request.body)
+    try:
+        category_obj = citylife_category.objects.get(category_id=json_obj['category_id'])
+        city_obj = City_Place.objects.get(city_place_id=json_obj['city_id'])
+        country_id = city_obj.city_id.state_id.country_id
+        consumer_obj = ConsumerProfile.objects.get(consumer_id=json_obj['user_id'])
+        post_obj = PostDetails()
+        post_obj.city_id = city_obj
+        post_obj.country_id = country_id
+        post_obj.citylife_category = category_obj
+        post_obj.user_id = consumer_obj
+        post_obj.creation_date = datetime.now()
+        post_obj.mood = json_obj['mood']
+        post_obj.area = json_obj['area']
+        post_obj.title = json_obj['title']
+        post_obj.description = json_obj['description']
+        post_obj.status = "unread"
+        post_obj.save()
+        #post_add_mail(category_obj.category_name,consumer_obj.consumer_full_name,city_obj.city_id.city_name)
 
-# @csrf_exempt
-# def save_citylife_post(request):
-#     ##    pdb.set_trace()
-#     category_list = []
-#     json_obj = json.loads(request.body)
-#     try:
-#         category_obj = citylife_category.objects.get(category_id=json_obj['category_id'])
-#         city_obj = City_Place.objects.get(city_place_id=json_obj['city_id'])
-#         country_id = city_obj.city_id.state_id.country_id
-#         consumer_obj = ConsumerProfile.objects.get(consumer_id=json_obj['user_id'])
-#         post_obj = PostDetails()
-#         post_obj.city_id = city_obj
-#         post_obj.country_id = country_id
-#         post_obj.citylife_category = category_obj
-#         post_obj.user_id = consumer_obj
-#         post_obj.creation_date = datetime.now()
-#         post_obj.mood = json_obj['mood']
-#         post_obj.area = json_obj['area']
-#         post_obj.title = json_obj['title']
-#         post_obj.description = json_obj['description']
-#         post_obj.save()
-#         image_video_list = json_obj['image_video_list']
-#         for image_video in image_video_list:
-#             post_file_obj = PostFile()
-#             post_file_obj.creation_date = datetime.now()
-#             post_file_obj.post_file = image_video
-#             post_file_obj.post_id = post_obj
-#             post_file_obj.save()
+        # if consumer_obj.consumer_contact_no:
+        #     sms_post(consumer_obj.consumer_contact_no,consumer_obj.consumer_full_name)
+        # if consumer_obj.consumer_email_id:
+        #     post_user_mail(consumer_obj.consumer_full_name, str(consumer_obj.consumer_email_id))
 
-#         data = {'message': "Post saved successfully", 'success': 'true'}
-#     except Exception, ke:
-#         print ke
-#         data = {'message': "Oops! Something went wrong.", 'success': 'false'}
-#     return HttpResponse(json.dumps(data), content_type='application/json')
+        data = {'message': "Post saved successfully", 'success': 'true','post_id' : str(post_obj.post_id)}
+    except Exception, ke:
+        print ke
+        data = {'message': "Oops! Something went wrong.", 'success': 'false'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
-# @csrf_exempt
-# def view_citylife_post(request):
-#     ##    pdb.set_trace()
-#     post_list = []
-#     json_obj = json.loads(request.body)
-#     try:
-#         post_obj = PostDetails.objects.filter(city_id=json_obj['city_id']).order_by('-post_id')
-#         for post in post_obj:
-#             post_file_obj = PostFile.objects.filter(post_id=post.post_id)
-#             post_image = ''
-#             if post_file_obj:
-#                 first_obj = post_file_obj.first()
-#                 post_image = first_obj.post_file
-#             post_like_count = PostMood.objects.filter(status = "like",post_id=post.post_id).count()
-#             post_dislike_count = PostMood.objects.filter(status = "dislike",post_id=post.post_id).count()
-#             if post_dislike_count == 0 and post_like_count == 0:
-#                 dislike_like_percentage = 50
-#             else:
-#                 dislike_like_percentage = (float(post_like_count)/float(PostMood.objects.filter(post_id=post.post_id).count()))*100
+@csrf_exempt
+def save_citylife_files(request):
+    try:
+        post_obj = PostDetails.objects.get(post_id = request.POST['post_id'])
+        post_file_obj = PostFile()
+        post_file_obj.creation_date = datetime.now()
+        post_file_obj.post_file = request.FILES['file']
+        post_file_obj.post_id = post_obj
+        post_file_obj.save()
 
-#             mood = ""
-#             if dislike_like_percentage >= 0 and dislike_like_percentage < 20:
-#                 mood = "Miserable"
-#             elif dislike_like_percentage > 20 and dislike_like_percentage < 50:
-#                 mood = "Heartbroken"
-#             elif dislike_like_percentage == 50:
-#                 mood = "Neutral"
-#             elif dislike_like_percentage > 50 and dislike_like_percentage < 80:
-#                 mood = "Thrilled"
-#             elif dislike_like_percentage > 80:
-#                 mood = "Awesome"
+        if request.POST['file_width']:
+            post_file_obj.file_width = request.POST['file_width']
+        if request.POST['file_height']:
+            post_file_obj.file_height = request.POST['file_height']
+        post_file_obj.save()
 
-#             from django.utils.timezone import localtime
-#             posted_time = post.creation_date
+        data = {'message': "Post file saved successfully", 'success': 'true'}
+    except Exception, ke:
+        print ke
+        data = {'message': "Oops! Something went wrong.", 'success': 'false'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
+@csrf_exempt
+def view_citylife_post(request):
+    post_list = []
+    json_obj = json.loads(request.body)
+    try:
+        status = ["unread","appropriate"]
+        post_obj = PostDetails.objects.filter(city_id=json_obj['city_id'],status__in=status).order_by('-post_id')
 
-#             pre_date = datetime.now().strftime("%d/%m/%Y")
-#             pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
-#             start_date = posted_time.strftime("%d/%m/%Y")
-#             start_date = datetime.strptime(start_date, "%d/%m/%Y")
+        if json_obj['filter_parameter']['day_range'] == 'today':
+            dt = datetime.now()
+            start = dt
+            start = start.strftime("%Y-%m-%d")
+            start = datetime.strptime(start,"%Y-%m-%d")
+            end = dt
+            # print "\n\n\n\n\n\n===========\n\n\n\n\n\n"
+            # print start,end
+            # print "\n\n\n\n\n\n===========\n\n\n\n\n\n"
+            post_obj = post_obj.filter(creation_date__range=[start, end])
 
-#             if start_date == pre_date:
-#                 posted_time = posted_time.strftime("%I.%M%P") + " - Today"
-#             else:
-#                 posted_time = posted_time.strftime("%I.%M%P - %d %b.%y")
+        if json_obj['filter_parameter']['day_range'] == 'week':
+            dt = datetime.now()
+            start = dt - timedelta(days=dt.weekday()) - timedelta(days=1)
+            end = start + timedelta(days=6)
+            start = start.strftime("%Y-%m-%d")
+            start = datetime.strptime(start,"%Y-%m-%d")
+            
+            post_obj = post_obj.filter(creation_date__range=[start, end])
 
-#             post_data = {
-#                 'post_id': post.post_id,
-#                 'description':post.description,
-#                 'category_name':post.citylife_category.category_name,
-#                 'posted_date':posted_time,
-#                 'mood':mood,
-#                 'dislike_like_percentage':str(float(dislike_like_percentage)),
-#                 'like_count':str(PostMood.objects.filter(status = "like",post_id=post.post_id).count()),
-#                 'view_count':str(PostView.objects.filter(post_id=post.post_id).count()),
-#                 'review_count':str(PostReview.objects.filter(post_id=post.post_id).count()),
-#                 'post_image':post_image,
-#             }
-#             post_list.append(post_data)
-#         data = {'post_list': post_list, 'success': 'true'}
-#     except Exception, ke:
-#         print ke
-#         data = {'message': "Oops! Something went wrong.", 'success': 'false'}
-#     return HttpResponse(json.dumps(data), content_type='application/json')
+        if json_obj['filter_parameter']['day_range'] == 'month':
+            import calendar
+            dt = datetime.now()
+            month = dt.month
+            year = dt.year
+            _, num_days = calendar.monthrange(year, month)
+            first_day = date(year, month, 1) - timedelta(days=1)
+            last_day = date(year, month, num_days) + timedelta(days=1)
+            post_obj = post_obj.filter(creation_date__range=[first_day, last_day])
 
-# @csrf_exempt
-# def view_citylife_post_details(request):
-#     ##    pdb.set_trace()
-#     post_file_list = []
-#     json_obj = json.loads(request.body)
-#     try:
-#         post = PostDetails.objects.get(post_id=json_obj['post_id'])
-#         user_id = ConsumerProfile.objects.get(consumer_id=json_obj['user_id'])
+        if json_obj['filter_parameter']['category']:
+            post_obj = post_obj.filter(citylife_category__in = json_obj['filter_parameter']['category'])
 
-#         try:
-#             view_obj = PostView.objects.get(user_id=user_id,post_id=json_obj['post_id'])
-#         except:
-#             view_obj = CityStar_View()
-#             view_obj.user_id = user_id
-#             view_obj.post_id = post
-#             view_obj.creation_date = datetime.now()
-#             view_obj.save()
-#             pass
+        os_path = '/home/ec2-user/DigiSpace'
+        #os_path = '/home/admin1/Prod_backup/DigiSpace_25/'
+        for post in post_obj:
+            post_file_obj = PostFile.objects.filter(post_id=post.post_id)
+            post_image = ''
+            file_width = ''
+            file_height = ''
+            if post_file_obj:
+                for files in post_file_obj:
+                    #Image.open
+                    try:
+                        image = Image.open(os_path + files.post_file.url)
+                        post_image = files.post_file.url
+                        file_width = files.file_width
+                        file_height = files.file_height
+                        break
+                    except Exception as e:
+                        print e
+                        pass
 
-#         post_file_obj = PostFile.objects.filter(post_id=post.post_id)
-#         for file in post_file_obj:
-#             post_file_list.append(file.post_file)
-#         post_like_count = PostMood.objects.filter(status = "like",post_id=post.post_id).count()
-#         post_dislike_count = PostMood.objects.filter(status = "dislike",post_id=post.post_id).count()
-#         if post_dislike_count == 0 and post_like_count == 0:
-#             dislike_like_percentage = 50
-#         else:
-#             dislike_like_percentage = (float(post_like_count)/float(PostMood.objects.filter(post_id=post.post_id).count()))*100
-#         mood = ""
-#         if dislike_like_percentage >= 0 and dislike_like_percentage < 20:
-#             mood = "Miserable"
-#         elif dislike_like_percentage > 20 and dislike_like_percentage < 50:
-#             mood = "Heartbroken"
-#         elif dislike_like_percentage == 50:
-#             mood = "Neutral"
-#         elif dislike_like_percentage > 50 and dislike_like_percentage < 80:
-#             mood = "Thrilled"
-#         elif dislike_like_percentage > 80:
-#             mood = "Awesome"
+            post_like_count = PostMood.objects.filter(status = "like",post_id=post.post_id).count()
+            post_dislike_count = PostMood.objects.filter(status = "dislike",post_id=post.post_id).count()
+            if post_dislike_count == 0 and post_like_count == 0:
+                dislike_like_percentage = 50
+            else:
+                dislike_like_percentage = (float(post_like_count)/float(PostMood.objects.filter(post_id=post.post_id).count()))*100
 
-#         from django.utils.timezone import localtime
-#         posted_time = post.creation_date
-#         pre_date = datetime.now().strftime("%d/%m/%Y")
-#         pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
-#         start_date = posted_time.strftime("%d/%m/%Y")
-#         start_date = datetime.strptime(start_date, "%d/%m/%Y")
+            mood = ""
+            if dislike_like_percentage >= 0 and dislike_like_percentage < 20:
+                mood = "Miserable"
+            elif dislike_like_percentage > 20 and dislike_like_percentage < 50:
+                mood = "Heartbroken"
+            elif dislike_like_percentage == 50:
+                mood = "Neutral"
+            elif dislike_like_percentage > 50 and dislike_like_percentage < 80:
+                mood = "Thrilled"
+            elif dislike_like_percentage > 80:
+                mood = "Awesome"
 
-#         if start_date == pre_date:
-#             posted_time = posted_time.strftime("%I.%M%P") + " - Today"
-#         else:
-#             posted_time = posted_time.strftime("%I.%M%P - %d %b.%y")
-#         post_data = {
-#             'post_id': post.post_id,
-#             'description':post.description,
-#             'title':post.title if post.title else '',
-#             'category_name':post.citylife_category.category_name,
-#             'posted_date':posted_time,
-#             'mood':mood,
-#             'posted_by':user_id.consumer_full_name,
-#             'dislike_like_percentage':str(float(dislike_like_percentage)),
-#             'like_count':str(PostMood.objects.filter(status = "like",post_id=post.post_id).count()),
-#             'view_count':str(PostView.objects.filter(post_id=post.post_id).count()),
-#             'review_count':str(PostReview.objects.filter(post_id=post.post_id).count()),
-#             'post_file_list':post_file_list,
-#         }
-#         data = {'post_data': post_data, 'success': 'true'}
-#     except Exception, ke:
-#         print ke
-#         data = {'message': "Oops! Something went wrong.", 'success': 'false'}
-#     return HttpResponse(json.dumps(data), content_type='application/json')
-
-# @csrf_exempt
-# def like_dislike_post(request):
-#     json_obj = json.loads(request.body)
-#     try:
-
-#         if json_obj['mood_status'] == 'like':
-#             post_like_obj = PostMood.objects.filter(post_id=json_obj['post_id'], user_id=json_obj['user_id'], status = "like")
-#             if post_like_obj:
-#                 PostMood.objects.filter(post_id=json_obj['post_id'], user_id=json_obj['user_id']).delete()
-#             else:
-#                 PostMood.objects.filter(post_id=json_obj['post_id'], user_id=json_obj['user_id'], status = "dislike").delete()
-#                 post_like_obj = PostMood.objects.create()
-#                 post_like_obj.user_id = ConsumerProfile.objects.get(consumer_id=json_obj['user_id'])
-#                 post_like_obj.post_id = PostDetails.objects.get(post_id=json_obj['post_id'])
-#                 post_like_obj.creation_date = datetime.now()
-#                 post_like_obj.status = "like"
-#                 post_like_obj.save()
-#         elif json_obj['mood_status'] == 'dislike':
-#             post_like_obj = PostMood.objects.filter(post_id=json_obj['post_id'], user_id=json_obj['user_id'],
-#                                                     status="dislike")
-#             if post_like_obj:
-#                 PostMood.objects.filter(post_id=json_obj['post_id'], user_id=json_obj['user_id']).delete()
-#             else:
-#                 PostMood.objects.filter(post_id=json_obj['post_id'], user_id=json_obj['user_id'],
-#                                         status="like").delete()
-#                 post_like_obj = PostMood.objects.create()
-#                 post_like_obj.user_id = ConsumerProfile.objects.get(consumer_id=json_obj['user_id'])
-#                 post_like_obj.post_id = PostDetails.objects.get(post_id=json_obj['post_id'])
-#                 post_like_obj.creation_date = datetime.now()
-#                 post_like_obj.status = "dislike"
-#                 post_like_obj.save()
-#         data = {'success': 'true', 'message': ''}
-#     except Exception, ke:
-#         print ke
-#         data = {'success': 'false', 'message': 'Oops! Something went wrong'}
-#     return HttpResponse(json.dumps(data), content_type='application/json')
+            if post_dislike_count == 0 and post_like_count == 0:
+                mood = "NA"
+            posted_time = post.creation_date
 
 
-# @csrf_exempt
-# def favourite_post(request):
-#     json_obj = json.loads(request.body)
-#     try:
-#         post_fav_obj = PostFavourite.objects.filter(post_id=json_obj['post_id'], user_id=json_obj['user_id'])
-#         if post_fav_obj:
-#             post_fav_obj.delete()
-#         else:
-#             post_fav_obj = PostFavourite.objects.create()
-#             post_fav_obj.user_id = ConsumerProfile.objects.get(consumer_id=json_obj['user_id'])
-#             post_fav_obj.post_id = PostDetails.objects.get(post_id=json_obj['post_id'])
-#             post_fav_obj.creation_date = datetime.now()
-#             post_fav_obj.save()
-#         data = {'success': 'true', 'message': ''}
-#     except Exception, ke:
-#         print ke
-#         data = {'success': 'false', 'message': 'Oops! Something went wrong'}
-#     return HttpResponse(json.dumps(data), content_type='application/json')
+            pre_date = datetime.now().strftime("%d/%m/%Y")
+            pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
+            start_date = posted_time.strftime("%d/%m/%Y")
+            start_date = datetime.strptime(start_date, "%d/%m/%Y")
 
-# @csrf_exempt
-# def post_citylife_review(request):
-#     json_obj = json.loads(request.body)
-#     user_id = json_obj['user_id']
-#     sellticket_id = json_obj['sellticket_id']
-#     review = json_obj['review']
-#     ratings = json_obj['ratings']
-#     try:
-#         review_obj = SellTicketReview()
-#         review_obj.user_id = ConsumerProfile.objects.get(consumer_id=user_id)
-#         review_obj.sellticket_id = SellTicket.objects.get(sellticket_id=sellticket_id)
-#         review_obj.review = review
-#         review_obj.ratings = ratings
-#         review_obj.creation_date = datetime.now()
-#         review_obj.save()
-#         data = {"success": "true", "message": "Review published successfully."}
+            if start_date == pre_date:
+                posted_time = posted_time.strftime("%I.%M%P") + " - Today"
+            else:
+                posted_time = posted_time.strftime("%I.%M%P - %d %b.%y")
 
-#     except Exception, e:
-#         print "Exception", e
-#         data = {"success": "false", "message": "Something went wrong"}
-#     return HttpResponse(json.dumps(data), content_type='application/json')
+            is_like = 'false'
+            is_dislike = 'false'
+            is_favorite = 'false'
+
+            try:
+                post_mood_obj = PostMood.objects.get(user_id = json_obj['user_id'],post_id=post.post_id)
+                if post_mood_obj.status == "like":
+                    is_like = "true"
+                if post_mood_obj.status == "dislike":
+                    is_dislike = "true"
+            except:
+                pass
+
+            try:
+                post_fav_obj = PostFavourite.objects.get(user_id=json_obj['user_id'],post_id=post.post_id)
+                is_favorite = "true"
+            except:
+                pass
+
+            post_data = {
+                'post_id': post.post_id,
+                'description':post.description,
+                'category_name':post.citylife_category.category_name,
+                'posted_date':posted_time,
+                'mood':mood,
+                'dislike_like_percentage':str(float(dislike_like_percentage)),
+                'like_count':str(PostMood.objects.filter(status = "like",post_id=post.post_id).count()),
+                'dislike_count':str(PostMood.objects.filter(status = "dislike",post_id=post.post_id).count()),
+                'view_count':str(PostView.objects.filter(post_id=post.post_id).count()),
+                'comment_count': str(PostComments.objects.filter(post_id=post.post_id, status='1').count()),
+                'post_image':post_image,
+                'is_like':is_like,
+                'is_dislike':is_dislike,
+                'is_favorite':is_favorite,
+                'file_width':file_width,
+                'file_height':file_height,
+                'share_count':str(post.share)
+            }
+            post_list.append(post_data)
+        if json_obj['filter_parameter']['mood_ranges']:
+            new_list = []
+            for ranges in json_obj['filter_parameter']['mood_ranges']:
+                new_post_list = []
+                if ranges == "0":
+                    new_post_list = [d for d in post_list if float(d['dislike_like_percentage']) >= 0 and float(d['dislike_like_percentage']) <= 20]
+                if ranges == "20":
+                    new_post_list = [d for d in post_list if float(d['dislike_like_percentage']) > 20 and float(d['dislike_like_percentage']) < 50]
+                if ranges == "50":
+                    new_post_list = [d for d in post_list if float(d['dislike_like_percentage']) == 50 and float(d['dislike_count']) > 0 and float(d['like_count']) > 0]
+                if ranges == "na":
+                    new_post_list = [d for d in post_list if float(d['dislike_like_percentage']) == 50 and float(d['dislike_count']) == 0 and float(d['like_count']) == 0]
+                if ranges == "80":
+                    new_post_list = [d for d in post_list if float(d['dislike_like_percentage']) > 50 and float(d['dislike_like_percentage']) <= 80]
+                if ranges == "100":
+                    new_post_list = [d for d in post_list if float(d['dislike_like_percentage']) > 80]
+                new_list.extend(new_post_list)
+            post_list = new_list
+        data = {'post_list': post_list, 'success': 'true'}
+    except Exception, ke:
+        print ke
+        data = {'message': "Oops! Something went wrong.", 'success': 'false'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def view_citylife_post_details(request):
+    ##    pdb.set_trace()
+    post_file_list = []
+    json_obj = json.loads(request.body)
+    try:
+        post = PostDetails.objects.get(post_id=json_obj['post_id'])
+        user_id = ConsumerProfile.objects.get(consumer_id=json_obj['user_id'])
+
+        try:
+            view_obj = PostView.objects.get(user_id=json_obj['user_id'],post_id=json_obj['post_id'])
+        except:
+            view_obj = PostView()
+            view_obj.user_id = user_id
+            view_obj.post_id = post
+            view_obj.creation_date = datetime.now()
+            view_obj.save()
+            pass
+
+        print "view_obj",view_obj
+
+        post_file_obj = PostFile.objects.filter(post_id=post.post_id)
+        for file in post_file_obj:
+            image_data = {
+                'file_url' : file.post_file.url,
+                'file_id' : str(file.post_file_id),
+                'file_width' : str(file.file_width),
+                'file_height' : str(file.file_height)
+            }
+            post_file_list.append(image_data)
+        post_like_count = PostMood.objects.filter(status = "like",post_id=post.post_id).count()
+        post_dislike_count = PostMood.objects.filter(status = "dislike",post_id=post.post_id).count()
+        if post_dislike_count == 0 and post_like_count == 0:
+            dislike_like_percentage = 50
+        else:
+            dislike_like_percentage = (float(post_like_count)/float(PostMood.objects.filter(post_id=post.post_id).count()))*100
+        mood = ""
+        if dislike_like_percentage >= 0 and dislike_like_percentage < 20:
+            mood = "Miserable"
+        elif dislike_like_percentage > 20 and dislike_like_percentage < 50:
+            mood = "Heartbroken"
+        elif dislike_like_percentage == 50:
+            mood = "Neutral"
+        elif dislike_like_percentage > 50 and dislike_like_percentage < 80:
+            mood = "Thrilled"
+        elif dislike_like_percentage > 80:
+            mood = "Awesome"
+
+        if post_dislike_count == 0 and post_like_count == 0:
+            mood = "NA"
+
+        
+        posted_time = post.creation_date
+        pre_date = datetime.now().strftime("%d/%m/%Y")
+        pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
+        start_date = posted_time.strftime("%d/%m/%Y")
+        start_date = datetime.strptime(start_date, "%d/%m/%Y")
+
+        if start_date == pre_date:
+            posted_time = posted_time.strftime("%I.%M%P") + " - Today"
+        else:
+            posted_time = posted_time.strftime("%I.%M%P - %d %b.%y")
+
+        is_like = 'false'
+        is_dislike = 'false'
+        is_favorite = 'false'
+
+        try:
+            post_mood_obj = PostMood.objects.get(user_id=json_obj['user_id'],post_id=post.post_id)
+            if post_mood_obj.status == "like":
+                is_like = "true"
+            if post_mood_obj.status == "dislike":
+                is_dislike = "true"
+        except:
+            pass
+
+        try:
+            post_fav_obj = PostFavourite.objects.get(user_id=json_obj['user_id'],post_id=post.post_id)
+            is_favorite = "true"
+        except:
+            pass
+
+        comment_list = []
+        post_comment_obj = PostComments.objects.filter(post_id=post.post_id,status='1')
+        for comments in post_comment_obj:
+            post_reply_obj = PostReplys.objects.filter(comment_id=str(comments.comment_id), status='1')
+
+            com_like = "false"
+            com_dislike = "false"
+            try:
+                post_mood_obj = LikeDislikeComment.objects.get(user_id=json_obj['user_id'], comment_id=comments.comment_id)
+                if post_mood_obj.status == "like":
+                    com_like = "true"
+                if post_mood_obj.status == "dislike":
+                    com_dislike = "true"
+            except:
+                pass
+
+            profile_pic = ''
+            if comments.user_id.consumer_profile_pic:
+                profile_pic = comments.user_id.consumer_profile_pic.url
+
+            comment_time = comments.creation_date
+            pre_date = datetime.now().strftime("%d/%m/%Y")
+            pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
+            start_date = comment_time.strftime("%d/%m/%Y")
+            start_date = datetime.strptime(start_date, "%d/%m/%Y")
+
+            if start_date == pre_date:
+                comment_time = comment_time.strftime("%I.%M%P") + " - Today"
+            else:
+                comment_time = comment_time.strftime("%I.%M%P - %d %b.%y")
+
+            reply_list = []
+            for reply in post_reply_obj:
+                re_like = "false"
+                re_dislike = "false"
+                try:
+                    post_mood_obj = LikeDislikeReply.objects.get(user_id=json_obj['user_id'],reply_id=reply.reply_id)
+                    if post_mood_obj.status == "like":
+                        re_like = "true"
+                    if post_mood_obj.status == "dislike":
+                        re_dislike = "true"
+                except:
+                    pass
+
+                profile_pic = ''
+                if reply.user_id.consumer_profile_pic:
+                    profile_pic = reply.user_id.consumer_profile_pic.url
+
+                reply_time = reply.creation_date
+                pre_date = datetime.now().strftime("%d/%m/%Y")
+                pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
+                start_date = reply_time.strftime("%d/%m/%Y")
+                start_date = datetime.strptime(start_date, "%d/%m/%Y")
+
+                if start_date == pre_date:
+                    reply_time = reply_time.strftime("%I.%M%P") + " - Today"
+                else:
+                    reply_time = reply_time.strftime("%I.%M%P - %d %b.%y")
+
+                reply_data = {
+                    "name":reply.user_id.consumer_full_name,
+                    "reply_id":str(reply.reply_id),
+                    "user_id":reply.user_id.consumer_id,
+                    "profile_pic":profile_pic,
+                    "date":reply_time,
+                    "comment":reply.reply,
+                    "is_like":re_like,
+                    "is_dislike":re_dislike,
+                    "like_count":str(LikeDislikeReply.objects.filter(reply_id=reply.reply_id,status ="like").count()),
+                    "dislike_count":str(LikeDislikeReply.objects.filter(reply_id=reply.reply_id,status ="dislike").count()),
+                }
+                reply_list.append(reply_data)
+            comment_data = {
+                "name":comments.user_id.consumer_full_name,
+                "comment_id":str(comments.comment_id),
+                "user_id":comments.user_id.consumer_id,
+                "profile_pic":profile_pic,
+                "date":comment_time,
+                "comment":comments.comment,
+                "is_like": com_like,
+                "is_dislike": com_dislike,
+                "like_count":str(LikeDislikeComment.objects.filter(comment_id=comments.comment_id,status ="like").count()),
+                "dislike_count":str(LikeDislikeComment.objects.filter(comment_id=comments.comment_id,status ="dislike").count()),
+                'reply_list':reply_list
+            }
+            comment_list.append(comment_data)
+        user_image = ''
+        if post.user_id.consumer_profile_pic:
+            user_image = post.user_id.consumer_profile_pic.url
+        post_data = {
+            'post_id': post.post_id,
+            'description':post.description,
+            'title':post.title if post.title else '',
+            'category_name':post.citylife_category.category_name,
+            'posted_date':posted_time,
+            'mood':mood,
+            #'posted_by':user_id.consumer_full_name,
+            'dislike_like_percentage':str(float(dislike_like_percentage)),
+            'like_count':str(PostMood.objects.filter(status = "like",post_id=post.post_id).count()),
+            'dislike_count':str(PostMood.objects.filter(status = "dislike",post_id=post.post_id).count()),
+            'view_count':str(PostView.objects.filter(post_id=post.post_id).count()),
+            'comment_count':str(PostComments.objects.filter(post_id=post.post_id,status='1').count()),
+            'post_file_list':post_file_list,
+            'is_like': is_like,
+            'is_dislike': is_dislike,
+            'is_favorite': is_favorite,
+            'comment_list':comment_list,
+            'user_id': post.user_id.consumer_id,
+            'user_image':user_image,
+            'posted_by':post.user_id.consumer_full_name
+        }
+        data = {'post_data': post_data, 'success': 'true'}
+    except Exception, ke:
+        print ke
+        data = {'message': "Oops! Something went wrong.", 'success': 'false'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def like_dislike_post(request):
+    json_obj = json.loads(request.body)
+    try:
+
+        if json_obj['mood_status'] == 'like':
+            post_like_obj = PostMood.objects.filter(post_id=json_obj['post_id'], user_id=json_obj['user_id'], status = "like")
+            if post_like_obj:
+                PostMood.objects.filter(post_id=json_obj['post_id'], user_id=json_obj['user_id']).delete()
+            else:
+                PostMood.objects.filter(post_id=json_obj['post_id'], user_id=json_obj['user_id'], status = "dislike").delete()
+                post_like_obj = PostMood.objects.create()
+                post_like_obj.user_id = ConsumerProfile.objects.get(consumer_id=json_obj['user_id'])
+                post_like_obj.post_id = PostDetails.objects.get(post_id=json_obj['post_id'])
+                post_like_obj.creation_date = datetime.now()
+                post_like_obj.status = "like"
+                post_like_obj.save()
+        elif json_obj['mood_status'] == 'dislike':
+            post_like_obj = PostMood.objects.filter(post_id=json_obj['post_id'], user_id=json_obj['user_id'],
+                                                    status="dislike")
+            if post_like_obj:
+                PostMood.objects.filter(post_id=json_obj['post_id'], user_id=json_obj['user_id']).delete()
+            else:
+                PostMood.objects.filter(post_id=json_obj['post_id'], user_id=json_obj['user_id'],
+                                        status="like").delete()
+                post_like_obj = PostMood.objects.create()
+                post_like_obj.user_id = ConsumerProfile.objects.get(consumer_id=json_obj['user_id'])
+                post_like_obj.post_id = PostDetails.objects.get(post_id=json_obj['post_id'])
+                post_like_obj.creation_date = datetime.now()
+                post_like_obj.status = "dislike"
+                post_like_obj.save()
+        data = {
+            'success': 'true', 
+            'message': '', 
+            'like_count': str(PostMood.objects.filter(post_id=json_obj['post_id'], status = "like").count()),
+            'dislike_count': str(PostMood.objects.filter(post_id=json_obj['post_id'], status = "dislike").count())
+            }
+    except Exception, ke:
+        print ke
+        data = {'success': 'false', 'message': 'Oops! Something went wrong'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+@csrf_exempt
+def favourite_post(request):
+    json_obj = json.loads(request.body)
+    try:
+        post_fav_obj = PostFavourite.objects.filter(post_id=json_obj['post_id'], user_id=json_obj['user_id'])
+        if json_obj['status'] == "unfavorite":
+            post_fav_obj.delete()
+        if json_obj['status'] == "favorite":
+            if post_fav_obj:
+                post_fav_obj.delete()
+            post_fav_obj = PostFavourite.objects.create()
+            post_fav_obj.user_id = ConsumerProfile.objects.get(consumer_id=json_obj['user_id'])
+            post_fav_obj.post_id = PostDetails.objects.get(post_id=json_obj['post_id'])
+            post_fav_obj.creation_date = datetime.now()
+            post_fav_obj.save()
+        data = {'success': 'true', 'message': ''}
+    except Exception, ke:
+        print ke
+        data = {'success': 'false', 'message': 'Oops! Something went wrong'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def post_comment(request):
+    json_obj = json.loads(request.body)
+    user_id = json_obj['user_id']
+    post_id = json_obj['post_id']
+    comment = json_obj['comment']
+    try:
+        post_comment_obj = PostComments()
+        post_comment_obj.user_id = ConsumerProfile.objects.get(consumer_id=user_id)
+        post_comment_obj.post_id = PostDetails.objects.get(post_id=post_id)
+        post_comment_obj.comment = comment
+        post_comment_obj.comment_status = "unread"
+        post_comment_obj.status = "1"
+        post_comment_obj.creation_date = datetime.now()
+        post_comment_obj.save()
+        post = post_comment_obj.post_id.description
+        cat_name = post_comment_obj.post_id.citylife_category.category_name
+        username = post_comment_obj.user_id.consumer_full_name
+        city = post_comment_obj.post_id.city_id.city_id.city_name
+        #comment_add_mail(post, cat_name, username,city)
+        data = {"success": "true", "message": "Comment posted successfully."}
+    except Exception, e:
+        print "Exception", e
+        data = {"success": "false", "message": "Something went wrong"}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def edit_comment(request):
+    json_obj = json.loads(request.body)
+    comment = json_obj['comment']
+    comment_id = json_obj['comment_id']
+    try:
+        post_comment_obj = PostComments.objects.get(comment_id=comment_id)
+        post_comment_obj.comment = comment
+        post_comment_obj.updated_date = datetime.now()
+        post_comment_obj.comment_status = "unread"
+        post_comment_obj.status = "1"
+        post_comment_obj.save()
+        post = post_comment_obj.post_id.description
+        cat_name = post_comment_obj.post_id.citylife_category.category_name
+        username = post_comment_obj.user_id.consumer_full_name
+        city = post_comment_obj.post_id.city_id.city_id.city_name
+        #comment_update_mail(post, cat_name, username,city)
+        data = {"success": "true", "message": "Comment updated successfully."}
+    except Exception, e:
+        print "Exception", e
+        data = {"success": "false", "message": "Something went wrong"}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def delete_comment(request):
+    json_obj = json.loads(request.body)
+    comment_id = json_obj['comment_id']
+    try:
+        post_comment_obj = PostComments.objects.get(comment_id=comment_id)
+        post_comment_obj.status = '0'
+        post_comment_obj.deleted_date = datetime.now()
+        post_comment_obj.save()
+        data = {"success": "true", "message": "Comment deleted successfully."}
+    except Exception, e:
+        print "Exception", e
+        data = {"success": "false", "message": "Something went wrong"}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def like_dislike_comment(request):
+    json_obj = json.loads(request.body)
+    try:
+
+        if json_obj['mood_status'] == 'like':
+            post_like_obj = LikeDislikeComment.objects.filter(comment_id=json_obj['comment_id'], user_id=json_obj['user_id'], status = "like")
+            if post_like_obj:
+                LikeDislikeComment.objects.filter(comment_id=json_obj['comment_id'], user_id=json_obj['user_id']).delete()
+            else:
+                LikeDislikeComment.objects.filter(comment_id=json_obj['comment_id'], user_id=json_obj['user_id'], status = "dislike").delete()
+                post_like_obj = LikeDislikeComment.objects.create()
+                post_like_obj.user_id = ConsumerProfile.objects.get(consumer_id=json_obj['user_id'])
+                post_like_obj.comment_id = PostComments.objects.get(comment_id=json_obj['comment_id'])
+                post_like_obj.creation_date = datetime.now()
+                post_like_obj.status = "like"
+                post_like_obj.save()
+        elif json_obj['mood_status'] == 'dislike':
+            post_like_obj = LikeDislikeComment.objects.filter(comment_id=json_obj['comment_id'], user_id=json_obj['user_id'],
+                                                    status="dislike")
+            if post_like_obj:
+                LikeDislikeComment.objects.filter(comment_id=json_obj['comment_id'], user_id=json_obj['user_id']).delete()
+            else:
+                LikeDislikeComment.objects.filter(comment_id=json_obj['comment_id'], user_id=json_obj['user_id'],
+                                        status="like").delete()
+                post_like_obj = LikeDislikeComment.objects.create()
+                post_like_obj.user_id = ConsumerProfile.objects.get(consumer_id=json_obj['user_id'])
+                post_like_obj.comment_id = PostComments.objects.get(comment_id=json_obj['comment_id'])
+                post_like_obj.creation_date = datetime.now()
+                post_like_obj.status = "dislike"
+                post_like_obj.save()
+        data = {'success': 'true', 'message': ''}
+    except Exception, ke:
+        print ke
+        data = {'success': 'false', 'message': 'Oops! Something went wrong'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def post_reply(request):
+    json_obj = json.loads(request.body)
+    user_id = json_obj['user_id']
+    comment_id = json_obj['comment_id']
+    reply = json_obj['reply']
+    try:
+        post_reply_obj = PostReplys()
+        post_reply_obj.user_id = ConsumerProfile.objects.get(consumer_id=user_id)
+        post_reply_obj.comment_id = PostComments.objects.get(comment_id=comment_id)
+        post_reply_obj.reply = reply
+        post_reply_obj.status = "1"
+        post_reply_obj.creation_date = datetime.now()
+        post_reply_obj.save()
+
+        post = post_reply_obj.comment_id.post_id.description
+        cat_name = post_reply_obj.comment_id.post_id.citylife_category.category_name
+        username = post_reply_obj.user_id.consumer_full_name
+        city = post_reply_obj.comment_id.post_id.city_id.city_id.city_name
+        
+        #reply_add_mail(post, cat_name, username,city)
+        data = {"success": "true", "message": "Reply posted successfully."}
+    except Exception, e:
+        print "Exception", e
+        data = {"success": "false", "message": "Something went wrong"}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def edit_reply(request):
+    json_obj = json.loads(request.body)
+    reply = json_obj['reply']
+    reply_id = json_obj['reply_id']
+    try:
+        post_reply_obj = PostReplys.objects.get(reply_id=reply_id)
+        post_reply_obj.reply = reply
+        post_reply_obj.updated_date = datetime.now()
+        post_reply_obj.save()
+        data = {"success": "true", "message": "Reply updated successfully."}
+    except Exception, e:
+        print "Exception", e
+        data = {"success": "false", "message": "Something went wrong"}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def delete_reply(request):
+    json_obj = json.loads(request.body)
+    reply_id = json_obj['reply_id']
+    try:
+        post_reply_obj = PostReplys.objects.get(reply_id=reply_id)
+        post_reply_obj.status = '0'
+        post_reply_obj.deleted_date = datetime.now()
+        post_reply_obj.save()
+        data = {"success": "true", "message": "Reply deleted successfully."}
+    except Exception, e:
+        print "Exception", e
+        data = {"success": "false", "message": "Something went wrong"}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def like_dislike_reply(request):
+    json_obj = json.loads(request.body)
+    try:
+
+        if json_obj['mood_status'] == 'like':
+            post_like_obj = LikeDislikeReply.objects.filter(reply_id=json_obj['reply_id'], user_id=json_obj['user_id'], status = "like")
+            if post_like_obj:
+                LikeDislikeReply.objects.filter(reply_id=json_obj['reply_id'], user_id=json_obj['user_id']).delete()
+            else:
+                LikeDislikeReply.objects.filter(reply_id=json_obj['reply_id'], user_id=json_obj['user_id'], status = "dislike").delete()
+                post_like_obj = LikeDislikeReply.objects.create()
+                post_like_obj.user_id = ConsumerProfile.objects.get(consumer_id=json_obj['user_id'])
+                post_like_obj.reply_id = PostReplys.objects.get(reply_id=json_obj['reply_id'])
+                post_like_obj.creation_date = datetime.now()
+                post_like_obj.status = "like"
+                post_like_obj.save()
+        elif json_obj['mood_status'] == 'dislike':
+            post_like_obj = LikeDislikeReply.objects.filter(reply_id=json_obj['reply_id'], user_id=json_obj['user_id'],
+                                                    status="dislike")
+            if post_like_obj:
+                LikeDislikeReply.objects.filter(reply_id=json_obj['reply_id'], user_id=json_obj['user_id']).delete()
+            else:
+                LikeDislikeReply.objects.filter(reply_id=json_obj['reply_id'], user_id=json_obj['user_id'],
+                                        status="like").delete()
+                post_like_obj = LikeDislikeReply.objects.create()
+                post_like_obj.user_id = ConsumerProfile.objects.get(consumer_id=json_obj['user_id'])
+                post_like_obj.reply_id = PostReplys.objects.get(reply_id=json_obj['reply_id'])
+                post_like_obj.creation_date = datetime.now()
+                post_like_obj.status = "dislike"
+                post_like_obj.save()
+        data = {'success': 'true', 'message': ''}
+    except Exception, ke:
+        print ke
+        data = {'success': 'false', 'message': 'Oops! Something went wrong'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def share_citylife(request):
+    json_obj = json.loads(request.body)
+    try:
+        post_obj = PostDetails.objects.get(post_id=json_obj['post_id'])
+        share_count = int(post_obj.share) + 1
+        post_obj.share = share_count
+        post_obj.save()
+        data = {'success': 'true', 'message': '','share_count':str(post_obj.share)}
+    except Exception, ke:
+        print ke
+        data = {'success': 'false', 'message': 'Oops! Something went wrong'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def update_post(request):
+    json_obj = json.loads(request.body)
+    try:
+        category_obj = citylife_category.objects.get(category_id=json_obj['category_id'])
+        post_obj = PostDetails.objects.get(post_id=json_obj['post_id'])
+        post_obj.citylife_category = category_obj
+        post_obj.updation_date = datetime.now()
+        post_obj.mood = json_obj['mood']
+        post_obj.area = json_obj['area']
+        post_obj.title = json_obj['title']
+        post_obj.description = json_obj['description']
+        post_obj.status = "unread"
+        post_obj.save()
+        #post_update_mail(category_obj.category_name,post_obj.user_id.consumer_full_name,post_obj.city_id.city_id.city_name)
+        #PostFile.objects.filter(post_id=json_obj['post_id']).delete()
+        data = {'message': "Post updated successfully", 'success': 'true','post_id' : str(post_obj.post_id)}
+    except Exception, ke:
+        print ke
+        data = {'message': "Oops! Something went wrong.", 'success': 'false'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def delete_post(request):
+    json_obj = json.loads(request.body)
+    post_id = json_obj['post_id']
+    try:
+        post_obj = PostDetails.objects.get(post_id=post_id)
+        post_obj.status = 'deleted'
+        post_obj.deleted_date = datetime.now()
+        post_obj.save()
+        data = {"success": "true", "message": "Post deleted successfully."}
+    except Exception, e:
+        print "Exception", e
+        data = {"success": "false", "message": "Something went wrong"}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+@csrf_exempt
+def view_favorite_post(request):
+    post_list = []
+    json_obj = json.loads(request.body)
+    try:
+        favourite_post_obj = PostFavourite.objects.filter(user_id = json_obj['user_id'])#.order_by('-id')
+        post_id_list = []
+        for favourite_post in favourite_post_obj:
+            post_id_list.append(str(favourite_post.post_id.post_id))
+        post_obj = PostDetails.objects.filter(post_id__in = post_id_list,status__in=["unread","appropriate"])
+
+        os_path = '/home/ec2-user/DigiSpace'
+        #os_path = '/home/admin1/Prod_backup/DigiSpace_25/'
+        for post in post_obj:
+            post_file_obj = PostFile.objects.filter(post_id=post.post_id)
+            post_image = ''
+            file_width = ''
+            file_height = ''
+            if post_file_obj:
+                for files in post_file_obj:
+                    #Image.open
+                    try:
+                        image = Image.open(os_path + files.post_file.url)
+                        post_image = files.post_file.url
+                        file_width = files.file_width
+                        file_height = files.file_height
+                        break
+                    except Exception as e:
+                        print e
+                        pass
+
+            post_like_count = PostMood.objects.filter(status = "like",post_id=post.post_id).count()
+            post_dislike_count = PostMood.objects.filter(status = "dislike",post_id=post.post_id).count()
+            if post_dislike_count == 0 and post_like_count == 0:
+                dislike_like_percentage = 50
+            else:
+                dislike_like_percentage = (float(post_like_count)/float(PostMood.objects.filter(post_id=post.post_id).count()))*100
+
+            mood = ""
+            if dislike_like_percentage >= 0 and dislike_like_percentage < 20:
+                mood = "Miserable"
+            elif dislike_like_percentage > 20 and dislike_like_percentage < 50:
+                mood = "Heartbroken"
+            elif dislike_like_percentage == 50:
+                mood = "Neutral"
+            elif dislike_like_percentage > 50 and dislike_like_percentage < 80:
+                mood = "Thrilled"
+            elif dislike_like_percentage > 80:
+                mood = "Awesome"
+
+            if post_dislike_count == 0 and post_like_count == 0:
+                mood = "NA"
+
+            
+            posted_time = post.creation_date
+
+
+            pre_date = datetime.now().strftime("%d/%m/%Y")
+            pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
+            start_date = posted_time.strftime("%d/%m/%Y")
+            start_date = datetime.strptime(start_date, "%d/%m/%Y")
+
+            if start_date == pre_date:
+                posted_time = posted_time.strftime("%I.%M%P") + " - Today"
+            else:
+                posted_time = posted_time.strftime("%I.%M%P - %d %b.%y")
+
+            is_like = 'false'
+            is_dislike = 'false'
+            is_favorite = 'false'
+
+            try:
+                post_mood_obj = PostMood.objects.get(user_id = json_obj['user_id'],post_id=post.post_id)
+                if post_mood_obj.status == "like":
+                    is_like = "true"
+                if post_mood_obj.status == "dislike":
+                    is_dislike = "true"
+            except:
+                pass
+
+            try:
+                post_fav_obj = PostFavourite.objects.get(user_id=json_obj['user_id'],post_id=post.post_id)
+                is_favorite = "true"
+            except:
+                pass
+
+            post_data = {
+                'post_id': str(post.post_id),
+                'description':post.description,
+                'category_name':post.citylife_category.category_name,
+                'posted_date':posted_time,
+                'mood':mood,
+                'dislike_like_percentage':str(float(dislike_like_percentage)),
+                'like_count':str(PostMood.objects.filter(status = "like",post_id=post.post_id).count()),
+                'dislike_count':str(PostMood.objects.filter(status = "dislike",post_id=post.post_id).count()),
+                'view_count':str(PostView.objects.filter(post_id=post.post_id).count()),
+                'comment_count': str(PostComments.objects.filter(post_id=post.post_id, status='1').count()),
+                'post_image':post_image,
+                'is_like':is_like,
+                'is_dislike':is_dislike,
+                'is_favorite':is_favorite,
+                'file_width':file_width,
+                'file_height':file_height,
+                'share_count':str(post.share)
+            }
+            post_list.append(post_data)
+        data = {'post_list': post_list, 'success': 'true'}
+    except Exception, ke:
+        print ke
+        data = {'message': "Oops! Something went wrong.", 'success': 'false'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def view_active_post(request):
+    post_list = []
+    json_obj = json.loads(request.body)
+    try:
+        status = ["unread","appropriate"]
+        post_obj = PostDetails.objects.filter(user_id = json_obj['user_id'],status__in=status).order_by('-post_id')
+
+        os_path = '/home/ec2-user/DigiSpace'
+        #os_path = '/home/admin1/Prod_backup/DigiSpace_25/'
+        for post in post_obj:
+            post_file_obj = PostFile.objects.filter(post_id=post.post_id)
+            post_image = ''
+            file_width = ''
+            file_height = ''
+            if post_file_obj:
+                for files in post_file_obj:
+                    #Image.open
+                    try:
+                        image = Image.open(os_path + files.post_file.url)
+                        post_image = files.post_file.url
+                        file_width = files.file_width
+                        file_height = files.file_height
+                        break
+                    except Exception as e:
+                        print e
+                        pass
+
+            post_like_count = PostMood.objects.filter(status = "like",post_id=post.post_id).count()
+            post_dislike_count = PostMood.objects.filter(status = "dislike",post_id=post.post_id).count()
+            if post_dislike_count == 0 and post_like_count == 0:
+                dislike_like_percentage = 50
+            else:
+                dislike_like_percentage = (float(post_like_count)/float(PostMood.objects.filter(post_id=post.post_id).count()))*100
+
+            mood = ""
+            if dislike_like_percentage >= 0 and dislike_like_percentage < 20:
+                mood = "Miserable"
+            elif dislike_like_percentage > 20 and dislike_like_percentage < 50:
+                mood = "Heartbroken"
+            elif dislike_like_percentage == 50:
+                mood = "Neutral"
+            elif dislike_like_percentage > 50 and dislike_like_percentage < 80:
+                mood = "Thrilled"
+            elif dislike_like_percentage > 80:
+                mood = "Awesome"
+
+            if post_dislike_count == 0 and post_like_count == 0:
+                mood = "NA"
+
+            
+            posted_time = post.creation_date
+
+
+            pre_date = datetime.now().strftime("%d/%m/%Y")
+            pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
+            start_date = posted_time.strftime("%d/%m/%Y")
+            start_date = datetime.strptime(start_date, "%d/%m/%Y")
+
+            if start_date == pre_date:
+                posted_time = posted_time.strftime("%I.%M%P") + " - Today"
+            else:
+                posted_time = posted_time.strftime("%I.%M%P - %d %b.%y")
+
+            is_like = 'false'
+            is_dislike = 'false'
+            is_favorite = 'false'
+
+            try:
+                post_mood_obj = PostMood.objects.get(user_id = json_obj['user_id'],post_id=post.post_id)
+                if post_mood_obj.status == "like":
+                    is_like = "true"
+                if post_mood_obj.status == "dislike":
+                    is_dislike = "true"
+            except:
+                pass
+
+            try:
+                post_fav_obj = PostFavourite.objects.get(user_id=json_obj['user_id'],post_id=post.post_id)
+                is_favorite = "true"
+            except:
+                pass
+
+            post_data = {
+                'post_id': post.post_id,
+                'description':post.description,
+                'category_name':post.citylife_category.category_name,
+                'posted_date':posted_time,
+                'mood':mood,
+                'dislike_like_percentage':str(float(dislike_like_percentage)),
+                'like_count':str(PostMood.objects.filter(status = "like",post_id=post.post_id).count()),
+                'dislike_count':str(PostMood.objects.filter(status = "dislike",post_id=post.post_id).count()),
+                'view_count':str(PostView.objects.filter(post_id=post.post_id).count()),
+                'comment_count': str(PostComments.objects.filter(post_id=post.post_id, status='1').count()),
+                'post_image':post_image,
+                'is_like':is_like,
+                'is_dislike':is_dislike,
+                'is_favorite':is_favorite,
+                'file_width':file_width,
+                'file_height':file_height,
+                'share_count':str(post.share)
+            }
+            post_list.append(post_data)
+        data = {'post_list': post_list, 'success': 'true'}
+    except Exception, ke:
+        print ke
+        data = {'message': "Oops! Something went wrong.", 'success': 'false'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def view_all_post(request):
+    post_list = []
+    json_obj = json.loads(request.body)
+    try:
+        post_obj = PostDetails.objects.filter(user_id = json_obj['user_id']).order_by('-post_id')
+
+        os_path = '/home/ec2-user/DigiSpace'
+        #os_path = '/home/admin1/Prod_backup/DigiSpace_25/'
+        for post in post_obj:
+            post_file_obj = PostFile.objects.filter(post_id=post.post_id)
+            post_image = ''
+            file_width = ''
+            file_height = ''
+            if post_file_obj:
+                for files in post_file_obj:
+                    #Image.open
+                    try:
+                        image = Image.open(os_path + files.post_file.url)
+                        post_image = files.post_file.url
+                        file_width = files.file_width
+                        file_height = files.file_height
+                        break
+                    except Exception as e:
+                        print e
+                        pass
+
+            post_like_count = PostMood.objects.filter(status = "like",post_id=post.post_id).count()
+            post_dislike_count = PostMood.objects.filter(status = "dislike",post_id=post.post_id).count()
+            if post_dislike_count == 0 and post_like_count == 0:
+                dislike_like_percentage = 50
+            else:
+                dislike_like_percentage = (float(post_like_count)/float(PostMood.objects.filter(post_id=post.post_id).count()))*100
+
+            mood = ""
+            if dislike_like_percentage >= 0 and dislike_like_percentage < 20:
+                mood = "Miserable"
+            elif dislike_like_percentage > 20 and dislike_like_percentage < 50:
+                mood = "Heartbroken"
+            elif dislike_like_percentage == 50:
+                mood = "Neutral"
+            elif dislike_like_percentage > 50 and dislike_like_percentage < 80:
+                mood = "Thrilled"
+            elif dislike_like_percentage > 80:
+                mood = "Awesome"
+
+            if post_dislike_count == 0 and post_like_count == 0:
+                mood = "NA"
+
+            
+            posted_time = post.creation_date
+
+
+            pre_date = datetime.now().strftime("%d/%m/%Y")
+            pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
+            start_date = posted_time.strftime("%d/%m/%Y")
+            start_date = datetime.strptime(start_date, "%d/%m/%Y")
+
+            if start_date == pre_date:
+                posted_time = posted_time.strftime("%I.%M%P") + " - Today"
+            else:
+                posted_time = posted_time.strftime("%I.%M%P - %d %b.%y")
+
+            is_like = 'false'
+            is_dislike = 'false'
+            is_favorite = 'false'
+
+            try:
+                post_mood_obj = PostMood.objects.get(user_id = json_obj['user_id'],post_id=post.post_id)
+                if post_mood_obj.status == "like":
+                    is_like = "true"
+                if post_mood_obj.status == "dislike":
+                    is_dislike = "true"
+            except:
+                pass
+
+            try:
+                post_fav_obj = PostFavourite.objects.get(user_id=json_obj['user_id'],post_id=post.post_id)
+                is_favorite = "true"
+            except:
+                pass
+
+            post_data = {
+                'post_id': post.post_id,
+                'description':post.description,
+                'category_name':post.citylife_category.category_name,
+                'posted_date':posted_time,
+                'mood':mood,
+                'dislike_like_percentage':str(float(dislike_like_percentage)),
+                'like_count':str(PostMood.objects.filter(status = "like",post_id=post.post_id).count()),
+                'dislike_count':str(PostMood.objects.filter(status = "dislike",post_id=post.post_id).count()),
+                'view_count':str(PostView.objects.filter(post_id=post.post_id).count()),
+                'comment_count': str(PostComments.objects.filter(post_id=post.post_id, status='1').count()),
+                'post_image':post_image,
+                'is_like':is_like,
+                'is_dislike':is_dislike,
+                'is_favorite':is_favorite,
+                'file_width':file_width,
+                'file_height':file_height,
+                'share_count':str(post.share),
+                'post_status':post.status
+            }
+            post_list.append(post_data)
+        data = {'post_list': post_list, 'success': 'true'}
+    except Exception, ke:
+        print ke
+        data = {'message': "Oops! Something went wrong.", 'success': 'false'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+@csrf_exempt
+def search_post(request):
+    post_id_list = []
+    post_list = []
+    json_obj = json.loads(request.body)
+    try:
+        search_keyword = json_obj['search_keyword']
+        status = ["unread","appropriate"]
+        category_obj = citylife_category.objects.filter(category_name__icontains = search_keyword)
+        post_obj = PostDetails.objects.filter(status__in=status).order_by('-post_id')
+        post_new_list = []
+        for post in post_obj:
+
+            post_like_count = PostMood.objects.filter(status = "like",post_id=post.post_id).count()
+            post_dislike_count = PostMood.objects.filter(status = "dislike",post_id=post.post_id).count()
+            if post_dislike_count == 0 and post_like_count == 0:
+                dislike_like_percentage = 50
+            else:
+                dislike_like_percentage = (float(post_like_count)/float(PostMood.objects.filter(post_id=post.post_id).count()))*100
+
+            if dislike_like_percentage >= 0 and dislike_like_percentage < 20:
+                mood = "miserable"
+            elif dislike_like_percentage > 20 and dislike_like_percentage < 50:
+                mood = "heartbroken"
+            elif dislike_like_percentage == 50:
+                mood = "neutral"
+            elif dislike_like_percentage > 50 and dislike_like_percentage < 80:
+                mood = "thrilled"
+            elif dislike_like_percentage > 80:
+                mood = "awesome"
+            if post_dislike_count == 0 and post_like_count == 0:
+                mood = "NA"
+            post_data = {
+                'post_id': str(post.post_id),
+                'description':post.description,
+                'category_name':post.citylife_category.category_name,
+                'mood':mood
+            }
+            post_new_list.append(post_data)
+
+        
+        post_new_list = [d for d in post_new_list if search_keyword.lower() in d['mood']]
+
+        for post in post_new_list:
+            post_id_list.append(post['post_id'])
+
+        post_obj = post_obj.filter(citylife_category__in = category_obj)
+        for post in post_obj:
+            post_id_list.append(post.post_id)
+        
+        post_obj = PostDetails.objects.filter(status__in=status).order_by('-post_id')
+        post_obj = post_obj.filter(description__icontains = search_keyword)
+
+        for post in post_obj:
+            post_id_list.append(post.post_id)
+
+        unique_list = set(post_id_list)        
+        unique_list = list(unique_list)
+
+        post_obj = PostDetails.objects.filter(post_id__in = unique_list)
+
+        for post in post_obj:
+
+            post_like_count = PostMood.objects.filter(status = "like",post_id=post.post_id).count()
+            post_dislike_count = PostMood.objects.filter(status = "dislike",post_id=post.post_id).count()
+            if post_dislike_count == 0 and post_like_count == 0:
+                dislike_like_percentage = 50
+            else:
+                dislike_like_percentage = (float(post_like_count)/float(PostMood.objects.filter(post_id=post.post_id).count()))*100
+
+            mood = ""
+            if dislike_like_percentage >= 0 and dislike_like_percentage < 20:
+                mood = "Miserable"
+            elif dislike_like_percentage > 20 and dislike_like_percentage < 50:
+                mood = "Heartbroken"
+            elif dislike_like_percentage == 50:
+                mood = "Neutral"
+            elif dislike_like_percentage > 50 and dislike_like_percentage < 80:
+                mood = "Thrilled"
+            elif dislike_like_percentage > 80:
+                mood = "Awesome"
+
+            if post_dislike_count == 0 and post_like_count == 0:
+                mood = "NA"
+
+            post_data = {
+                'post_id': str(post.post_id),
+                'description':post.description,
+                'category_name':post.citylife_category.category_name,
+                'mood':mood
+            }
+            post_list.append(post_data)
+
+            #avg_advert_list = [d for d in advert_list if d['ratings'] >= 1.5 and d['ratings'] < 3.0]
+
+        data = {'post_list': post_list, 'success': 'true','result_count':len(post_list)}
+    except Exception, ke:
+        print ke
+        data = {'message': "Oops! Something went wrong.", 'success': 'false'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@csrf_exempt
+def remove_post_file(request):
+    json_obj = json.loads(request.body)
+    try:
+        PostFile.objects.get(post_file_id = json_obj['file_id']).delete()
+        data = {'message':'File removed successfully','success': 'true'}
+    except Exception, ke:
+        print ke
+        data = {'message': "Oops! Something went wrong.", 'success': 'false'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+@csrf_exempt 
+def post_add_mail(category_name, username, city):
+    try:
+        subject = "New CityLife Post"
+        description = "Dear Admin,"
+        description = description + '\n\n' + 'A new post under the category of ' + category_name + ' has been added by the user ' + username + ' for the city ' + city
+        description = description + ' in the CityLife feature of the CityHoopla mobile application. Kindly review the same and if it violates the Listing policy, please mark it as inappropriate.'
+        description = description + '\n\n' + 'Best Wishes,\nTeam CityHoopla'
+
+        gmail_user = "donotreply@city-hoopla.com" # "cityhoopla2016"
+        gmail_pwd = "Hoopla123#" #"cityhoopla@2016"
+        FROM = 'Team CityHoopla<donotreply@city-hoopla.com>' #'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+        cc = ['cityhoopla2016@gmail.com']
+        TO = ["info@city-hoopla.com"]
+        
+        TEXT = description
+        SUBJECT = subject
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        server.ehlo()
+        #server.starttls()
+
+        server.login(gmail_user, gmail_pwd)
+        message = """From: %s\nTo: %s\ncc: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO),", ".join(cc), SUBJECT, TEXT)
+        toaddrs = TO + cc 
+
+        server.sendmail(FROM, toaddrs, message)
+        server.quit()
+    except SMTPException, e:
+        print e
+    except Exception, e:
+        print 'exception', e
+    return 1
+
+@csrf_exempt 
+def post_update_mail(category_name, username, city):
+    try:
+        subject = "CityLife Post Updated"
+        description = "Dear Admin,"
+        description = description + '\n\n' + 'A post under the category of ' + category_name + ' has been updated by the user ' + username + ' for the city ' + city
+        description = description + ' in the CityLife feature of the CityHoopla mobile application. Kindly review the same and if it violates the Listing policy, please mark it as inappropriate.'
+        description = description + '\n\n' + 'Best Wishes,\nTeam CityHoopla'
+
+        gmail_user = "donotreply@city-hoopla.com" # "cityhoopla2016"
+        gmail_pwd = "Hoopla123#" #"cityhoopla@2016"
+        FROM = 'Team CityHoopla<donotreply@city-hoopla.com>' #'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+        cc = ['cityhoopla2016@gmail.com']
+        TO = ["info@city-hoopla.com"]
+        
+        TEXT = description
+        SUBJECT = subject
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        server.ehlo()
+        #server.starttls()
+
+        server.login(gmail_user, gmail_pwd)
+        message = """From: %s\nTo: %s\ncc: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO),", ".join(cc), SUBJECT, TEXT)
+        toaddrs = TO + cc 
+
+        server.sendmail(FROM, toaddrs, message)
+        server.quit()
+    except SMTPException, e:
+        print e
+    except Exception, e:
+        print 'exception', e
+    return 1
+
+
+@csrf_exempt 
+def comment_add_mail(post, category_name, username, city):
+    try:
+        subject = "New CityLife Comment"
+        description = "Dear Admin,"
+        description = description + '\n\n' + 'A new comment for the post \"'+ post +'\" under the category of ' + category_name + ' has been added by the user ' + username + ' for the city ' + city
+        description = description + ' in the CityLife feature of the CityHoopla mobile application. Kindly review the same and if it violates the Listing policy, please mark it as inappropriate.'
+        description = description + '\n\n' + 'Best Wishes,\nTeam CityHoopla'
+
+        gmail_user = "donotreply@city-hoopla.com" # "cityhoopla2016"
+        gmail_pwd = "Hoopla123#" #"cityhoopla@2016"
+        FROM = 'Team CityHoopla<donotreply@city-hoopla.com>' #'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+        cc = ['cityhoopla2016@gmail.com']
+        TO = ["info@city-hoopla.com"]
+        #TO = ["vikas@bynry.com"]
+        
+        TEXT = description
+        SUBJECT = subject
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        server.ehlo()
+        #server.starttls()
+
+        server.login(gmail_user, gmail_pwd)
+        message = """From: %s\nTo: %s\ncc: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO),", ".join(cc), SUBJECT, TEXT)
+        toaddrs = TO + cc 
+
+        server.sendmail(FROM, toaddrs, message)
+        server.quit()
+    except SMTPException, e:
+        print e
+    except Exception, e:
+        print 'exception', e
+    return 1
+
+@csrf_exempt 
+def comment_update_mail(post, category_name, username, city):
+    try:
+        subject = "CityLife Comment Updated"
+        description = "Dear Admin,"
+        description = description + '\n\n' + 'A comment for the post \"'+ post +'\" under the category of ' + category_name + ' has been updated by the user ' + username + ' for the city ' + city
+        description = description + ' in the CityLife feature of the CityHoopla mobile application. Kindly review the same and if it violates the Listing policy, please mark it as inappropriate.'
+        description = description + '\n\n' + 'Best Wishes,\nTeam CityHoopla'
+
+        gmail_user = "donotreply@city-hoopla.com" # "cityhoopla2016"
+        gmail_pwd = "Hoopla123#" #"cityhoopla@2016"
+        FROM = 'Team CityHoopla<donotreply@city-hoopla.com>' #'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+        cc = ['cityhoopla2016@gmail.com']
+        TO = ["info@city-hoopla.com"]
+        #TO = ["vikas@bynry.com"]
+        
+        TEXT = description
+        SUBJECT = subject
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        server.ehlo()
+        #server.starttls()
+
+        server.login(gmail_user, gmail_pwd)
+        message = """From: %s\nTo: %s\ncc: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO),", ".join(cc), SUBJECT, TEXT)
+        toaddrs = TO + cc 
+
+        server.sendmail(FROM, toaddrs, message)
+        server.quit()
+    except SMTPException, e:
+        print e
+    except Exception, e:
+        print 'exception', e
+    return 1
+
+@csrf_exempt 
+def reply_add_mail(post, category_name, username, city):
+    try:
+        subject = "New CityLife Reply"
+        description = "Dear Admin,"
+        description = description + '\n\n' + 'A new reply for the post \"'+ post +'\" under the category of ' + category_name + ' has been added by the user ' + username + ' for the city ' + city
+        description = description + ' in the CityLife feature of the CityHoopla mobile application. Kindly review the same and if it violates the Listing policy, please mark it as inappropriate.'
+        description = description + '\n\n' + 'Best Wishes,\nTeam CityHoopla'
+
+        gmail_user = "donotreply@city-hoopla.com" # "cityhoopla2016"
+        gmail_pwd = "Hoopla123#" #"cityhoopla@2016"
+        FROM = 'Team CityHoopla<donotreply@city-hoopla.com>' #'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+        cc = ['cityhoopla2016@gmail.com']
+        TO = ["info@city-hoopla.com"]
+        #TO = ["vikas@bynry.com"]
+        
+        TEXT = description
+        SUBJECT = subject
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        server.ehlo()
+        #server.starttls()
+
+        server.login(gmail_user, gmail_pwd)
+        message = """From: %s\nTo: %s\ncc: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO),", ".join(cc), SUBJECT, TEXT)
+        toaddrs = TO + cc 
+
+        server.sendmail(FROM, toaddrs, message)
+        server.quit()
+    except SMTPException, e:
+        print e
+    except Exception, e:
+        print 'exception', e
+    return 1
+
+@csrf_exempt 
+def reply_update_mail(post, category_name, username, city):
+    try:
+        subject = "CityLife Reply Updated"
+        description = "Dear Admin,"
+        description = description + '\n\n' + 'A reply for the post \"'+ post +'\" under the category of ' + category_name + ' has been updated by the user ' + username + ' for the city ' + city
+        description = description + ' in the CityLife feature of the CityHoopla mobile application. Kindly review the same and if it violates the Listing policy, please mark it as inappropriate.'
+        description = description + '\n\n' + 'Best Wishes,\nTeam CityHoopla'
+
+        gmail_user = "donotreply@city-hoopla.com" # "cityhoopla2016"
+        gmail_pwd = "Hoopla123#" #"cityhoopla@2016"
+        FROM = 'Team CityHoopla<donotreply@city-hoopla.com>' #'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+        cc = ['cityhoopla2016@gmail.com']
+        TO = ["info@city-hoopla.com"]
+        #TO = ["vikas@bynry.com"]
+        
+        TEXT = description
+        SUBJECT = subject
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        server.ehlo()
+        #server.starttls()
+
+        server.login(gmail_user, gmail_pwd)
+        message = """From: %s\nTo: %s\ncc: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO),", ".join(cc), SUBJECT, TEXT)
+        toaddrs = TO + cc 
+
+        server.sendmail(FROM, toaddrs, message)
+        server.quit()
+    except SMTPException, e:
+        print e
+    except Exception, e:
+        print 'exception', e
+    return 1
+
+@csrf_exempt 
+def post_user_mail(username, email_id):
+    try:
+        subject = "CityLife Post"
+        description = "Dear "+username+","
+        description = description + '\n\n' + 'Thank you for posting in our CityLife feature. As per our listing policy, the post will be reviewed by our internal team and if deemed inappropriate, will be deleted from the feed.'
+        description = description + '\n' + 'The CityHoopla listing policy can be viewed under the settings, MyProfile section of the CityHoopla mobile app.'
+        description = description + '\n' + 'Please write to us at info@city-hoopla.com in case you would like to discuss further.'
+        description = description + '\n\n' + 'Best Wishes,\nTeam CityHoopla'
+
+        gmail_user = "donotreply@city-hoopla.com" # "cityhoopla2016"
+        gmail_pwd = "Hoopla123#" #"cityhoopla@2016"
+        FROM = 'Team CityHoopla<donotreply@city-hoopla.com>' #'CityHoopla Admin: <cityhoopla2016@gmail.com>'
+        cc = ['cityhoopla2016@gmail.com']
+        TO = [email_id]
+        #TO = ["vikas@bynry.com"]
+        
+        TEXT = description
+        SUBJECT = subject
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        server.ehlo()
+        #server.starttls()
+
+        server.login(gmail_user, gmail_pwd)
+        message = """From: %s\nTo: %s\ncc: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO),", ".join(cc), SUBJECT, TEXT)
+        toaddrs = TO + cc 
+
+        server.sendmail(FROM, toaddrs, message)
+        server.quit()
+    except SMTPException, e:
+        print e
+    except Exception, e:
+        print 'exception', e
+    return 1
+
+def sms_post(consumer_number,username):
+    authkey = "118994AIG5vJOpg157989f23"
+    mobiles = str(consumer_number)
+
+    message = "Dear "+username+","
+    message = message + '\n\n' + 'Thank you for posting in our CityLife feature. As per our listing policy, the post will be reviewed by our internal team and if deemed inappropriate, will be deleted from the feed.'
+    message = message + '\n' + 'The CityHoopla listing policy can be viewed under the settings, MyProfile section of the CityHoopla mobile app.'
+    message = message + '\n' + 'Please write to us at info@city-hoopla.com in case you would like to discuss further.'
+    message = message + '\n\n' + 'Best Wishes,\nTeam CityHoopla'
+    print message
+    sender = "CTHPLA"
+    route = "4"
+    country = "91"
+
+    values = {
+        'authkey': authkey,
+        'mobiles': mobiles,
+        'message': message,
+        'sender': sender,
+        'route': route,
+        'country': country
+    }
+
+    url = "http://api.msg91.com/api/sendhttp.php"
+    postdata = urllib.urlencode(values)
+    req = urllib2.Request(url, postdata)
+    response = urllib2.urlopen(req)
+    output = response.read()
+    print output

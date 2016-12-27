@@ -41,9 +41,10 @@ from django.db.models import Count
 from datetime import date
 import calendar
 import urllib2
+import random
 
-SERVER_URL = "http://52.66.169.65"   
-#SERVER_URL = "http://127.0.0.1:8000"
+#SERVER_URL = "http://52.66.133.35"   
+SERVER_URL = "http://192.168.0.4:8088"
 
 
 def about_us(request):
@@ -75,7 +76,25 @@ def rate_card(request):
         city_name_list = []
         telephone_rate_card_list = []
         for city in city_list:
+            rate_card_status = '0'
+            active_business_advert = 'false'
             rate_card_obj = RateCard.objects.filter(city_place_id=str(city.city_place_id), rate_card_status='1')
+            if rate_card_obj:
+                rate_card_status = '1'
+            if not rate_card_obj:
+                rate_card_obj = RateCard.objects.filter(city_place_id=str(city.city_place_id), rate_card_status='0')
+                rate_card_status = '0'
+            business_obj = Business.objects.filter(city_place_id=str(city.city_place_id))
+            pre_date = datetime.now().strftime("%d/%m/%Y")
+            pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
+
+            for business in business_obj:
+                end_date = business.end_date
+                end_date = datetime.strptime(end_date, "%d/%m/%Y")
+                date_gap = (end_date - pre_date).days
+                if int(date_gap) >= 0:
+                    active_business_advert = 'true'
+
             if rate_card_obj:
                 has_rate_card = 'true'
             else:
@@ -83,14 +102,16 @@ def rate_card(request):
             city_data = {
                 'city_id':str(city.city_place_id),
                 'city_name':str(city.city_id.city_name),
-                'has_rate_card':has_rate_card
+                'has_rate_card':has_rate_card,
+                'rate_card_status':rate_card_status,
+                'active_business_advert':active_business_advert
             }
             city_name_list.append(city_data)
 
         cat_city_obj = CategoryCityMap.objects.filter(city_place_id=str(first_city))
         for objs in cat_city_obj:
             cat_obj = Category.objects.get(category_id=str(objs.category_id))
-            if cat_obj.category_name != 'Ticket Resell':
+            if cat_obj.category_name != 'Event Ticket Resale':
                 cat_data = {'cat_id': str(cat_obj.category_id), 'cat_name': cat_obj.category_name}
                 cat_list.append(cat_data)
         rate_card_list=[]
@@ -160,6 +181,7 @@ def rate_card(request):
                     'cost_for_180days': "0.00",
                 }
                 telephone_rate_card_list.append(telephone_rate_card_data)
+        print "city_name_list",city_name_list
         data = {
             'username':request.session['login_user'],'telephone_rate_card_list':telephone_rate_card_list,
             'city_list':city_name_list, 'cat_list':cat_list,'rate_card_list':rate_card_list,
@@ -171,12 +193,14 @@ def login_open(request):
     if request.user.is_authenticated():
         return redirect('/index/')
     else:
+        logout(request)
         form = CaptchaForm()
         return render_to_response('Admin/user_login.html', dict(
             form=form
         ), context_instance=RequestContext(request))
 
 def backoffice(request):
+    logout(request)
     form = CaptchaForm()
 ##    if request.user.is_authenticated():
 ##        return redirect('/dashboard/')
@@ -335,7 +359,7 @@ def dashboard(request):
             else:
                 hour = ' '+ str(hour) + ':'
 
-            consumer_obj_list = PaymentDetail.objects.filter(payment_created_date__contains = str((datetime.now()).strftime("%Y-%m-%d")),payment_created_date__regex= hour)
+            consumer_obj_list = PaymentDetail.objects.filter(advert_name__contains = str((datetime.now()).strftime("%Y-%m-%d")),payment_created_date__regex= hour)
             
             if consumer_obj_list:
                 for consumer_obj in consumer_obj_list:
@@ -462,22 +486,22 @@ def category(request):
             print '----------ids------',request.GET.get('city_id')
             if request.GET.get('city_id'):
                 city_obj = City_Place.objects.get(city_place_id=request.GET.get('city_id'))
-                print '------------city obj--------',city_obj
+                #print '------------city obj--------',city_obj
                 state = city_obj.state_id
                 country = city_obj.country_id
                 cat_obj = CategoryCityMap.objects.filter(city_place_id=request.GET.get('city_id'))
-                print '-------cat_obj----',cat_obj
+                #print '-------cat_obj----',cat_obj
                 for c in cat_obj:
-                    print c.category_id
+                    #print c.category_id
                     category_list.append(Category.objects.get(category_id = str(c.category_id)))
-                    print '----------category list------',category_list
+                    #print '----------category list------',category_list
             else:
                 #category_list = Category.objects.all()
                 category_list = ''
             country_list = Country.objects.filter(country_status='1')
             state_list = State.objects.filter(state_status='1')
             city_list = City_Place.objects.filter(city_status='1')
-            print '------country list-----',city_list
+            #print '------country list-----',city_list
 
             for cat_obj in category_list:
                 #print '---------state-----',state
@@ -494,6 +518,7 @@ def category(request):
                     else:
                         for advert_obj in advert_obj_list:
                             advert_id = str(advert_obj.advert_id)
+                            print "advert_id================",advert_id
                             pre_date = datetime.now().strftime("%m/%d/%Y")
                             pre_date = datetime.strptime(pre_date, "%m/%d/%Y")
                             advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=advert_id)
@@ -552,7 +577,111 @@ def category(request):
             data = {'username':request.session['login_user'],'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
             print '----------data------',data
         #data = {'username':request.session['login_user']}
-        return render(request,'Admin/category.html',data)  
+        return render(request,'Admin/category.html',data)
+
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# def category(request):
+#     if not request.user.is_authenticated():
+#         return redirect('backoffice')
+#     else:
+#         data = {}
+#         final_list = []
+#         try:
+#             category_list =[]
+#             print '----------ids------',request.GET.get('city_id')
+#             if request.GET.get('city_id'):
+#                 city_obj = City_Place.objects.get(city_place_id=request.GET.get('city_id'))
+#                 print '------------city obj--------',city_obj
+#                 state = city_obj.state_id
+#                 country = city_obj.country_id
+#                 cat_obj = CategoryCityMap.objects.filter(city_place_id=request.GET.get('city_id'))
+#                 print '-------cat_obj----',cat_obj
+#                 for c in cat_obj:
+#                     print c.category_id
+#                     category_list.append(Category.objects.get(category_id = str(c.category_id)))
+#                     print '----------category list------',category_list
+#             else:
+#                 #category_list = Category.objects.all()
+#                 category_list = ''
+#             country_list = Country.objects.filter(country_status='1')
+#             state_list = State.objects.filter(state_status='1')
+#             city_list = City_Place.objects.filter(city_status='1')
+#             print '------country list-----',city_list
+
+#             for cat_obj in category_list:
+#                 #print '---------state-----',state
+#                 #print '---------country-----',country
+#                 category_id = str(cat_obj.category_id)
+#                 active_advert = 'No'
+#                 cat_color = cat_obj.category_color
+#                 advert_obj_list = Advert.objects.filter(category_id=category_id)
+#                 obj_count = Advert.objects.filter(category_id=category_id).count()
+#                 inactive_count = Advert.objects.filter(category_id=category_id,status='0').count()
+#                 if advert_obj_list:
+#                     if obj_count == inactive_count:
+#                         active_advert = 'No'
+#                     else:
+#                         for advert_obj in advert_obj_list:
+#                             advert_id = str(advert_obj.advert_id)
+#                             pre_date = datetime.now().strftime("%m/%d/%Y")
+#                             pre_date = datetime.strptime(pre_date, "%m/%d/%Y")
+#                             advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=advert_id)
+#                             end_date = advert_sub_obj.business_id.end_date
+#                             end_date = datetime.strptime(end_date, "%d/%m/%Y")
+#                             date_gap = end_date - pre_date
+#                             if int(date_gap.days) >= 0:
+#                                 active_advert = 'Yes'
+
+#                 category_name = cat_obj.category_name
+#                 city_name = CategoryCityMap.objects.filter(category_id=cat_obj)
+#                 city_list = ''
+#                 if city_name:
+#                     for city in city_name:
+#                         city_list = str(city.city_place_id.city_id.city_name) + ',' + city_list
+#                     city_list = city_list[:-1]
+#                 if not city_list:
+#                     city_list = 'All'
+
+#                 category_created_by = str(cat_obj.category_created_by)
+#                 category_updated_by = str(cat_obj.category_updated_by)
+#                 creation_date = str(cat_obj.category_created_date).split()[0]
+#                 updation_date = str(cat_obj.category_updated_date).split()[0]
+#                 if creation_date:
+#                     creation_date = datetime.strptime(creation_date, "%Y-%m-%d")
+#                     #creation_date = creation_date.strftime("%d/%m/%Y")
+#                     creation_date = creation_date.strftime('%b %d,%Y')
+#                 #print '---------creation date------',creation_date.strftime('%b %d,%Y')
+#                 if updation_date :
+#                     updation_date = datetime.strptime(updation_date, "%Y-%m-%d")
+#                     #updation_date = updation_date.strftime("%d/%m/%Y")
+#                     updation_date = updation_date.strftime('%b %d,%Y')
+
+#                 if (cat_obj.category_status == '1'):
+#                     status = 'Active'
+#                     if active_advert == 'No':
+#                         delete = '<a id="' + str(
+#                             category_id) + '" onclick="delete_category(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Delete"  ><i class="fa fa-trash"></i></a>'
+#                     else:
+#                         delete = ''
+#                     edit = '<a  id="' + str(category_id) + '" href="/edit-category/?category_id=' + str(
+#                         category_id) + '" style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit" class="edit" data-toggle="modal" href="#edit_subscription"><i class="fa fa-pencil"></i></a>'
+#                     actions = edit + delete
+#                 else:
+#                     status = 'Inactive'
+#                     active = '<a class="col-md-2" id="' + str(
+#                         cat_obj) + '" onclick="active_service(this.id);" style="text-align: center;letter-spacing: 5px;width:15%;margin-left: 36px !important;" title="Activate" class="edit" data-toggle="modal" href="#edit_subscription"><i class="fa fa-repeat"></i></a>'
+#                     actions = active
+#                 list = {'active_advert':active_advert,'category_id':category_id,'status': status,'cat_color':cat_color, 'category_name': category_name, 'actions': actions, 'city_name': city_list,
+#                         'creation_date': creation_date,'category_updated_by':category_updated_by,'category_created_by':category_created_by, 'updation_date': updation_date, 'updated_by':cat_obj.category_updated_by}
+#                 final_list.append(list)
+#             data = {'country_list':country_list,'username':request.session['login_user'],'success': 'true', 'data': final_list}
+#             #print '----------data------',data
+#         except IntegrityError as e:
+#             print e
+#             data = {'username':request.session['login_user'],'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
+#             print '----------data------',data
+#         #data = {'username':request.session['login_user']}
+#         return render(request,'Admin/category.html',data)  
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def user_role(request):
@@ -580,6 +709,9 @@ def add_advert(request):
         print 'user_id',user_id
         supplier_id=request.GET.get('user_id')
         supplier_obj = Supplier.objects.get(supplier_id = user_id)
+        country_id= str(supplier_obj.country_id.country_id)
+        state_id= str(supplier_obj.state.state_id) 
+        city_place_id= str(supplier_obj.city_place_id.city_place_id)
         supplier_name = supplier_obj.business_name
         user_id=supplier_obj.contact_email
         business_id = request.GET.get('business_id')
@@ -598,12 +730,17 @@ def add_advert(request):
 
         advert_service_list = AdvertRateCard.objects.filter(advert_rate_card_id__in=advert_service_list)
 
-        data = {'tax_list': tax_list,'supplier_name':supplier_name, 'advert_service_list': advert_service_list, 'service_list': service_list,
+        data = {'country_id':country_id,'state_id':state_id,'city_place_id':city_place_id,'supplier_name':supplier_name,'tax_list': tax_list, 'advert_service_list': advert_service_list, 'service_list': service_list,
                 'username': request.session['login_user'],'supplier_id':supplier_id, 'user_id': user_id, 'category_list': get_category(request),
                 'country_list': get_country(request), 'phone_category': get_phone_category(request), 'business_id':business_id,
                 'state_list': get_states(request),'city_place_id':city_place_id}
         if business_id:
             business_obj = Business.objects.get(business_id = business_id)
+            country_id= str(business_obj.country_id.country_id)
+            state_id= str(business_obj.state_id.state_id)
+            city_place_id= str(business_obj.city_place_id.city_place_id)
+            start_date = business_obj.start_date
+            end_date = business_obj.end_date
             advert_flag = 'false'
             premium_obj = PremiumService.objects.filter(business_id=business_id)
             if premium_obj:
@@ -672,10 +809,10 @@ def add_advert(request):
                         }
                         cat_amenities.append(temp_data)
 
-            data = {'supplier_name':supplier_name,'cat_amenities':cat_amenities,'tax_list': tax_list, 'advert_service_list': advert_service_list, 'service_list': service_list,
+            data = {'country_id':country_id,'state_id':state_id,'city_place_id':city_place_id,'supplier_name':supplier_name,'cat_amenities':cat_amenities,'tax_list': tax_list, 'advert_service_list': advert_service_list, 'service_list': service_list,
                     'username': request.session['login_user'],'supplier_id':supplier_id, 'user_id': user_id,'advert_flag':advert_flag,
                     'category_list': get_category(request), 'category_id':str(business_obj.category.category_id),
-                    'country_list': get_country(request), 'phone_category': get_phone_category(request),
+                    'country_list': get_country(request), 'phone_category': get_phone_category(request),'start_date':start_date,'end_date':end_date,
                     'business_id': business_id,'category_level_1':category_level_1,'category_level_2':category_level_2,
                     'category_level_3': category_level_3,'category_level_4': category_level_4,'category_level_5': category_level_5,
                     'state_list': get_states(request),'city_place_id':city_place_id}
@@ -700,6 +837,7 @@ def deal_detail(request):
 def signin(request):
     data = {}
     try:
+
         if request.POST:
             form = CaptchaForm(request.POST)
             print 'logs: login request with: ', request.POST
@@ -709,6 +847,7 @@ def signin(request):
             if form.is_valid():
                 try:
                     user_obj = UserProfile.objects.get(username=username)
+                    request.session['login_user'] = ''
 
                     try:
                         user = authenticate(username=username, password=password)
@@ -729,64 +868,75 @@ def signin(request):
                                 print request.session['privileges']
                                 if user_profile_obj.user_status == "1":
                                     try:
+                                        print 'SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS',request.session['login_user']
                                         request.session['login_user'] = user_profile_obj.username
-                                        request.session['first_name'] = user_profile_obj.user_first_name + '' + user_profile_obj.user_last_name
+                                        print '#########################################',request.session['login_user']
+                                        request.session['first_name'] = user_profile_obj.user_first_name #+ '' + user_profile_obj.user_last_name
                                         login(request, user)
-                                        if 'All' in privilege_list:
+                                        if 'All' in request.session['privileges']:
                                             redirect_url = '/dashboard/'
-                                        elif 'View Dashboard Details' in privilege_list:
+                                        elif 'View Dashboard Details' in request.session['privileges']:
                                             redirect_url = '/dashboard/'
-                                        elif 'Consumer Management' in privilege_list:
+                                        elif 'Consumer Management' in request.session['privileges']:
                                             redirect_url = '/consumer-list/'
-                                        elif 'Subscription Management' in privilege_list:
+                                        elif 'Subscription Management' in request.session['privileges']:
                                             redirect_url = '/view-subscriber-list/'
-                                        elif 'View Financial Details' in privilege_list:
+                                        elif 'View Financial Details' in request.session['privileges']:
                                             redirect_url = '/admin-report/'
-                                        elif 'View Advert Performance' in privilege_list:
+                                        elif 'View Advert Performance' in request.session['privileges']:
                                             redirect_url = '/admin-report/'
-                                        elif 'View Selected Subscriber Details' in privilege_list:
+                                        elif 'View Selected Subscriber Details' in request.session['privileges']:
                                             redirect_url = '/admin-report/'
-                                        elif 'View List of TID with Details' in privilege_list:
+                                        elif 'View List of TID with Details' in request.session['privileges']:
                                             redirect_url = '/admin-report/'
-                                        elif 'Record Payment Module' in privilege_list:
+                                        elif 'Record Payment Module' in request.session['privileges']:
                                             redirect_url = '/admin-report/'
                                         print "=======================================",redirect_url
+                                        print '#########################################',request.session['login_user']
                                     except Exception as e:
+                                        print '......ssssssssssssssss...1111..'
                                         print e
                                     print "USERNAME====000", request.session['login_user']
-                                    data= { 'success' : 'true','username':request.session['first_name'],'redirect_url':redirect_url}
+                                    data= {'success' : 'true','username':request.session['first_name'],'redirect_url':redirect_url}
                                 else:
+                                    print '...........222..........'
                                     data= { 'success' : 'false1', 'message' :'Invalid Username'}
                                     return HttpResponse(json.dumps(data), content_type='application/json') 
                             else:
+                                print '.............3333.........'
                                 data= { 'success' : 'false', 'message':'User Is Not Active'}
                                 print 'SSSSSSSSSSSSSSSSSSS',data
                                 return HttpResponse(json.dumps(data), content_type='application/json')
                         else:
-                                data= { 'success' : 'Invalid Password', 'message' :'Invalid Password'}
-                                print "====USERNAME====",data
-                                return HttpResponse(json.dumps(data), content_type='application/json')
-                    except Exception as e:
-                        print e
+                            print '.........444.....'
+                            data= { 'success' : 'Invalid Password', 'message' :'Invalid Password'}
+                            print "====USERNAME====",data
+                            return HttpResponse(json.dumps(data), content_type='application/json')
+                    except:
+                        print '.......5555.......'
                         data= { 'success' : 'false1', 'message' :'Invalid Username'}
                         return HttpResponse(json.dumps(data), content_type='application/json') 
 
-                except Exception as e:
-                    print e
+                except:
+                    print '.........666........'
                     data= { 'success' : 'false', 'message' :'Invalid Username'}
                     return HttpResponse(json.dumps(data), content_type='application/json')            
             else:
+                print '.......7777.....'
                 form = CaptchaForm()
                 data= { 'success' : 'Invalid Captcha', 'message' :'Invalid Captcha'} 
                 print "INVALID CAPTCHA"       
                 return HttpResponse(json.dumps(data), content_type='application/json')
     except MySQLdb.OperationalError, e:
+        print '........8888.......'
         print e
         data= {'success' : 'false', 'message':'Internal server'}
         return HttpResponse(json.dumps(data), content_type='application/json')
     except Exception, e:
+        print '......9999........'
         print 'Exception ', e
         data= { 'success' : 'false', 'message':'Invalid Username or Password'}
+    print 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',data
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
@@ -798,6 +948,195 @@ def signing_out(request):
     return render_to_response('Admin/user_login.html', dict(
         form=form, message_logout='You have successfully logged out.'
     ), context_instance=RequestContext(request))
+
+
+@csrf_exempt
+def forgot_password(request):
+    # pdb.set_trace()
+    username = request.POST.get("email")
+    try:
+        if request.POST:
+            try:
+                user_obj = UserProfile.objects.get(username=username)
+                print "user_obj",user_obj
+                if user_obj:
+                    print '.........username......', user_obj.username
+                    print '.........user_id......', user_obj.user_id
+                    ret = u''
+                    ret=''.join(random.choice('0123456789ABCDEF') for i in range(6))
+                    OTP = ret
+                    print "OTP",OTP
+                    user_reset_password_mail(user_obj,OTP)
+                    user_reset_password_sms(user_obj,OTP)
+                    data = {'success': 'true', 'message': 'Login Successfully'}
+                else:
+                    data = {'success': 'true', 'message': 'Invalid Username'}
+
+
+            except Exception as e:
+                print e
+                data = {'success': 'Invalid Username', 'message': 'Invalid Username'}
+                print "INvalid",data
+
+    except Exception as e:
+        print e
+        data = {'success': 'false', 'message': 'Invalid Username'}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    except Exception, e:
+        print 'Exception|view_py|forgot_pwd', e
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def user_reset_password_mail(user_obj,OTP):
+    poc =str(user_obj.usre_email_id)
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
+    TO = [poc]
+    try:
+        TEXT = "Dear " + str(user_obj.user_first_name) + ", \n\n"+ "Greetings from CityHoopla !!! \n\n"+  "Click on the link below to reset your password!!!" + "\n"+SERVER_URL+"/reset-password/?user_id="+str(user_obj.user_id)+ "\n\n"+ "Best Wishes," + '\n' + "Team CityHoopla "
+        SUBJECT = "Reset Password Link!"
+        #server = smtplib.SMTP_SSL()
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
+        server.ehlo()
+        #server.starttls()
+        server.login(gmail_user, gmail_pwd)
+        message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
+        server.sendmail(FROM, TO, message)
+        server.quit()
+    except SMTPException, e:
+        print e
+    return 1
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def reset_password(request):
+    user_id =request.GET.get('user_id')
+    print user_id
+    data={'user_id':user_id }
+    return render(request,'Admin/reset_password.html',data)
+
+
+def user_reset_password_sms(user_obj,OTP):
+    # pdb.set_trace()
+
+    authkey = "118994AIG5vJOpg157989f23"
+
+    mobiles = str(user_obj.user_contact_no)
+
+    message = "Dear " + str(user_obj.user_first_name) + ", \n\n"+ "Greetings from CityHoopla !!! \n\n"+ "Click on the link below to reset your password!!!" + "\n"+SERVER_URL+"/reset-password/?user_id="+str(user_obj.user_id)+ "\n\n"+ "Best Wishes," + '\n' + "Team CityHoopla "
+    sender = "CTHPLA"
+    route = "4"
+    country = "91"
+    values = {
+        'authkey': authkey,
+        'mobiles': mobiles,
+        'message': message,
+        'sender': sender,
+        'route': route,
+        'country': country
+    }
+
+    url = "http://api.msg91.com/api/sendhttp.php"
+    postdata = urllib.urlencode(values)
+    req = urllib2.Request(url, postdata)
+    response = urllib2.urlopen(req)
+    output = response.read()
+    print output
+
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def reset_new_password(request):
+    try:
+        # pdb.set_trace()
+        print 'in login'
+        if request.POST:
+            user_id = request.POST.get('user_id')
+            try:
+                print "user_id",user_id
+                user_obj1=UserProfile.objects.get(user_id=user_id)
+                username = user_obj1.usre_email_id
+
+                user_obj = UserProfile.objects.get(usre_email_id=username)
+                new_password = request.POST.get('confirm_password')
+                user_obj.set_password(request.POST.get('confirm_password'));
+                user_obj.save();
+                reset_password_mail(user_obj,new_password)
+                reset_password_sms(user_obj,new_password)
+
+                data={
+                    'success':'true',
+                    'message':'Password Updated Successfully.'
+                }
+                print "DATA",data
+
+            except Exception, e:
+                print 'Exception',e
+                data={
+                    'success':'false',
+                    'message':'Password Updated Successfully.'
+                }
+
+
+    except Exception, e:
+        data={
+            'success':'false',
+            'message':str(e)
+        }
+    print data
+    return HttpResponse(json.dumps(data),content_type='application/json')
+
+def reset_password_mail(user_obj,OTP):
+    poc = str(user_obj.usre_email_id)    
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
+    TO = [poc]
+    try:
+        TEXT = "Dear " + str(user_obj.user_first_name) + ", \n\n"+ "Greetings from CityHoopla !!! \n\n"+ "Your password has been successfully chnaged. Please find below your login credentials to manage your Account. \n\n"+ "Username: "+ str(user_obj.usre_email_id)+ "\n"+ "Password: "+  str(OTP)+ '\n\n' + "Click on the link below to configure your account!!!" + "\n"+SERVER_URL+"/backoffice/"+"\n\n"+"Best Wishes," + '\n' + "Team CityHoopla "
+        SUBJECT = "Your CityHoopla Password has been changed!"
+        #server = smtplib.SMTP_SSL()
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
+        server.ehlo()
+        #server.starttls()
+        server.login(gmail_user, gmail_pwd)
+        message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
+        server.sendmail(FROM, TO, message)
+        server.quit()
+    except SMTPException, e:
+        print e
+    return 1
+
+
+def reset_password_sms(user_obj,OTP):
+    # pdb.set_trace()
+
+    authkey = "118994AIG5vJOpg157989f23"
+
+    mobiles = str(user_obj.user_contact_no)
+
+    message = "Dear " + str(user_obj.user_first_name) + ", \n\n"+ "Greetings from CityHoopla !!! \n\n"+ "Your password has been successfully chnaged. Please find below your login credentials to manage your Account. \n\n"+ "Username: "+ str(user_obj.usre_email_id)+ "\n"+ "Password: "+  str(OTP)+ '\n\n' + "Click on the link below to configure your account!!!" + "\n"+SERVER_URL+"/backoffice/"+"\n\n"+"Best Wishes," + '\n' + "Team CityHoopla "
+    sender = "CTHPLA"
+    route = "4"
+    country = "91"
+    values = {
+        'authkey': authkey,
+        'mobiles': mobiles,
+        'message': message,
+        'sender': sender,
+        'route': route,
+        'country': country
+    }
+
+    url = "http://api.msg91.com/api/sendhttp.php"
+    postdata = urllib.urlencode(values)
+    req = urllib2.Request(url, postdata)
+    response = urllib2.urlopen(req)
+    output = response.read()
+    print output
+
 
 @csrf_exempt
 def add_user(request):
@@ -926,6 +1265,7 @@ def get_states(request):
 
             }
             state_list.append(options_data)
+            #print state_list
         return  state_list
     except Exception, e:
         print 'Exception ', e
@@ -936,6 +1276,7 @@ def get_states(request):
 def get_state(request):
 ##    pdb.set_trace()
     country_id=request.GET.get('country_id')
+    print '>>>>>>>>>>>country ID',country_id
     currency = Currency.objects.get(country_id=country_id)
     state_list = []
     try:
@@ -957,7 +1298,7 @@ def get_category(request):
     try:
         category = Category.objects.filter(category_status='1').order_by('category_name')
         for cat in category:
-            if cat.category_name !="Ticket Resell":
+            if cat.category_name !="Event Ticket Resale":
                 cat_list.append(
                     {'category_id': cat.category_id, 'category': cat.category_name})
 
@@ -1014,7 +1355,7 @@ def get_city_places(request):
       city_objs=City_Place.objects.filter(city_status='1')
       for city in city_objs:
          city_list.append({'city_place_id': city.city_place_id,'city': city.city_id.city_name})
-         print city_list
+         #print city_list
       data =  city_list
       return data
 
@@ -1034,7 +1375,7 @@ def get_city(request):
          options_data = '<option value=' + str(
                    city.city_id) + '>' + city.city_name + '</option>'
          city_list.append(options_data)
-         print city_list
+         #print city_list
       data = {'city_list': city_list}
 
    except Exception, ke:
@@ -1052,11 +1393,11 @@ def get_pincode(request):
       city_id = request.GET.get('city_id')
       pincode_list1=Pincode.objects.filter(city_id=city_id).order_by('pincode')
       pincode_objs = pincode_list1.values('pincode').distinct()
-      print pincode_objs
+      #print pincode_objs
       for pincode in pincode_objs:
          options_data = '<option>' +pincode['pincode']+ '</option>'
          pincode_list.append(options_data)
-         print pincode_list
+         #print pincode_list
       data = {'pincode_list': pincode_list}
 
    except Exception, ke:
@@ -1157,19 +1498,20 @@ def save_privilege(prv_list,user_role_obj):
 
 
 def user_role_add(user_role_obj):
-    gmail_user =  "cityhoopla2016"
-    gmail_pwd =  "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = ['cityhoopla2016@gmail.com']
     #pdb.set_trace()
     try:
         TEXT = "Hi Admin,\nUser Role " + str(user_role_obj.role_name) + " " +"has been added successfully.\nTo view complete details visit portal and follow - Reference Data -> User Role\n\n Thank You,"+'\n'+"CityHoopla Team"
         SUBJECT = "User Role Added Successfully!"
         #server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587) 
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
         server.sendmail(FROM, TO, message)
@@ -1364,19 +1706,20 @@ def update_user_role(request):
 
 
 def user_role_edit(role_object):
-    gmail_user =  "cityhoopla2016"
-    gmail_pwd =  "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = ['cityhoopla2016@gmail.com']
     #pdb.set_trace()
     try:
         TEXT = "Hi Admin,\nUser Role " + str(role_object.role_name) + " " +" has been updated successfully.\nTo view complete details visit portal and follow - Reference Data -> User Role\n\n Thank You,"+'\n'+"CityHoopla Team"
         SUBJECT = "User Role Added Successfully!"
         #server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587) 
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
         server.sendmail(FROM, TO, message)
@@ -1453,19 +1796,20 @@ def add_new_role(request):
 
 
 def user_role_active(role_obj):
-    gmail_user =  "cityhoopla2016"
-    gmail_pwd =  "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = ['cityhoopla2016@gmail.com']
     #pdb.set_trace()
     try:
         TEXT = "Hi Admin,\nUser Role " + str(role_obj.role_name) + " " +" has been activated successfully.\nTo view complete details visit portal and follow - Reference Data -> User Role\n\n Thank You,"+'\n'+"CityHoopla Team"
         SUBJECT = "User Role Activated Successfully!"
         #server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587) 
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
         server.sendmail(FROM, TO, message)
@@ -1475,19 +1819,20 @@ def user_role_active(role_obj):
     return 1 
 
 def user_role_delete(role_obj):
-    gmail_user =  "cityhoopla2016"
-    gmail_pwd =  "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = ['cityhoopla2016@gmail.com']
     #pdb.set_trace()
     try:
         TEXT = "Hi Admin,\nUser Role " + str(role_obj.role_name) + " " +" has been updated successfully.\nTo view complete details visit portal and follow - Reference Data -> User Role\n\n Thank You,"+'\n'+"CityHoopla Team"
         SUBJECT = "User Role Added Successfully!"
         #server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587) 
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
         server.sendmail(FROM, TO, message)
@@ -1991,19 +2336,20 @@ def active_city(request):
 
 
 def city_activate_mail(city_obj):
-    gmail_user =  "cityhoopla2016"
-    gmail_pwd =  "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = ['cityhoopla2016@gmail.com']
     #pdb.set_trace()
     try:
         TEXT = "Hi Admin,\nCity " + str(city_obj.city_id.city_name) + " " +"has been activated successfully.\nTo view complete details visit portal and follow - Reference Data -> City\n\n Thank You,"+'\n'+"CityHoopla Team"
         SUBJECT = "City Activated Successfully!"
         #server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587) 
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
         server.sendmail(FROM, TO, message)
@@ -2045,15 +2391,13 @@ def edit_city(request):
                 'about_city': city_obj.about_city or '',
                 'language': city_obj.language or '',
                 'population': city_obj.population or '',
-                'timezone': city_obj.time_zone,
+                'timezone': str(city_obj.time_zone) ,
                 'cityimage': city_image,
                 'filename': file_name,
                 'country': city_obj.country_id.country_id,
                 'country_name': city_obj.country_id.country_name,
                 'currency': city_obj.currency
             }
-
-
 
             city_list = City.objects.filter(state_id=city_obj.state_id.state_id)
 
@@ -2409,19 +2753,20 @@ def update_city_data(request):
     return HttpResponse(json.dumps(data), content_type='application/json')
  
 def city_update(city_obj):
-    gmail_user =  "cityhoopla2016"
-    gmail_pwd =  "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = ['cityhoopla2016@gmail.com']
     #pdb.set_trace()
     try:
         TEXT = "Hi Admin,\nCity " + str(city_obj.city_id.city_name) + " " +"has been updated successfully.\nTo view complete details visit portal and follow - Reference Data -> City\n\nThank You,"+'\n'+"CityHoopla Team"
         SUBJECT = "City Updated Successfully!"
         #server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587) 
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
         server.sendmail(FROM, TO, message)
@@ -2431,19 +2776,20 @@ def city_update(city_obj):
     return 1
  
 def city_delete(adv_obj):
-    gmail_user =  "cityhoopla2016"
-    gmail_pwd =  "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = ['cityhoopla2016@gmail.com']
     #pdb.set_trace()
     try:
         TEXT = "Hi Admin,\nCity " + str(adv_obj.city_id.city_name) + " " +"has been deactivated successfully.\nTo view complete details visit portal and follow - Reference Data -> City\n\nThank You,"+'\n'+"CityHoopla Team"
         SUBJECT = "City Deactivated Successfully!"
         #server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587) 
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
         server.sendmail(FROM, TO, message)
@@ -2453,19 +2799,20 @@ def city_delete(adv_obj):
     return 1
 
 def city_add(city_obj):
-    gmail_user =  "cityhoopla2016"
-    gmail_pwd =  "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = ['cityhoopla2016@gmail.com']
     #pdb.set_trace()
     try:
         TEXT = "Hi Admin,\nCity " + str(city_obj.city_id.city_name) + " " +"has been added successfully.\nTo view complete details visit portal and follow - Reference Data -> City\n\nThank You,"+'\n'+"CityHoopla Team"
         SUBJECT = "City Added Successfully!"
         #server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587) 
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
         server.sendmail(FROM, TO, message)
@@ -2497,7 +2844,7 @@ def admin_add_user(request):
     try:
         try:
             user_role_list = UserRole.objects.filter(role_status='1')
-            data = {'success':'true','user_role_list':user_role_list}
+            data = {'success':'true','user_role_list':user_role_list,'city_places_list':get_city_places(request)}
             #data = {,'username':request.session['login_user']}
 
         except IntegrityError as e:
@@ -2522,6 +2869,8 @@ def add_new_user(request):
             user_contact_no=request.POST.get('phone_no'),
             usre_email_id=request.POST.get('Username'),
             user_role=role_id,
+            city_place_id=City_Place.objects.get(city_place_id=request.POST.get('city')) if request.POST.get(
+                    'city') else None,
             user_created_date = datetime.now(),
             user_status = '1',
             #user_created_by = request.session['login_user']
@@ -2556,6 +2905,38 @@ def edit_user_detail(request):
                 user_role_list = UserRole.objects.filter(role_status='1')
                 role_id = str(user_obj.user_role.role_id)
                 role_name = user_obj.user_role.role_name
+                city_id = str(user_obj.city_place_id)
+                user_first_name = user_obj.user_first_name
+                user_last_name = user_obj.user_last_name
+                user_email_id = user_obj.usre_email_id
+                user_contact_no = user_obj.user_contact_no
+                data = {'success':'true','city_id':city_id,'city_places_list':get_city_places(request),'user_role_list':user_role_list,'role_name':role_name,'role_id':role_id,'user_first_name':user_first_name,'user_last_name':user_last_name,'user_email_id':user_email_id,'user_contact_no':user_contact_no}
+        except IntegrityError as e:
+            print e
+            data = {'success':'false','message':'Error in  loading page. Please try after some time'}
+
+    except MySQLdb.OperationalError, e:
+        print e
+
+    except Exception,e:
+        print 'Exception ',e
+    print data
+    return render(request,'Admin/edit-user.html',data)
+
+
+def edit_profile(request):
+    print request.method
+    try:
+        data = {}
+        final_list = []
+        #print 'User ID: ',request.GET.get('user_id')
+        try:
+            if request.method == "GET":
+                user_obj = UserProfile.objects.get(usre_email_id=request.GET.get('user_id'))
+                print user_obj
+                user_role_list = UserRole.objects.filter(role_status='1')
+                role_id = str(user_obj.user_role.role_id)
+                role_name = user_obj.user_role.role_name
                 user_first_name = user_obj.user_first_name
                 user_last_name = user_obj.user_last_name
                 user_email_id = user_obj.usre_email_id
@@ -2571,7 +2952,9 @@ def edit_user_detail(request):
     except Exception,e:
         print 'Exception ',e
     print data
-    return render(request,'Admin/edit-user.html',data)
+    return render(request,'Admin/edit_profile.html',data)
+
+    
 
 @csrf_exempt
 def save_user(request):
@@ -2591,6 +2974,8 @@ def save_user(request):
                     user_obj.user_last_name = request.POST.get('Last_name')
                     user_obj.user_contact_no = request.POST.get('phone_no')
                     user_obj.user_role = role_id
+                    user_obj.city_place_id=City_Place.objects.get(city_place_id=request.POST.get('city')) if request.POST.get(
+                    'city') else None
                     user_obj.user_updated_date = datetime.now()
                     user_obj.user_status = '1'
 
@@ -2632,6 +3017,8 @@ def save_user1(request):
             user_obj.user_last_name = request.POST.get('Last_name')
             user_obj.user_contact_no = request.POST.get('phone_no')
             user_obj.user_role = role_id
+            user_obj.city_place_id=City_Place.objects.get(city_place_id=request.POST.get('city')) if request.POST.get(
+            'city') else None
             user_obj.user_updated_date = datetime.now()
             user_obj.user_status = '1'
 
@@ -2727,6 +3114,7 @@ def view_user_list(request):
             for user_obj in user_list:
                 if user_obj.user_role:
                     role_id = user_obj.user_role.role_name
+                    city =user_obj.city_place_id.city_id.city_name
                     user_first_name = str(user_obj.user_first_name)
                     user_last_name = str(user_obj.user_last_name)
                     user_name = user_first_name +" "+ user_last_name
@@ -2742,7 +3130,7 @@ def view_user_list(request):
                         print "else"
                         status = 'Inactive'
                         actions = '<a id="'+str(user_obj)+'" onclick="reactivate_user(this.id)" style="text-align: center;letter-spacing: 5px;width:15%;" title="Reactivate"><i class="fa fa-undo"></i></a>'
-                    list = {'user_name':user_name,'actions':actions,'role_id':role_id,'usre_email_id':usre_email_id,'user_contact_no':user_contact_no,'status':status}
+                    list = {'city':city,'user_name':user_name,'actions':actions,'role_id':role_id,'usre_email_id':usre_email_id,'user_contact_no':user_contact_no,'status':status}
                     final_list.append(list)
                 data = {'success':'true','data':final_list}
         except IntegrityError as e:

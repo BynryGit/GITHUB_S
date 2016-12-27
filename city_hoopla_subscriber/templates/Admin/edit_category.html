@@ -21,7 +21,7 @@ License: You must have a valid license purchased only from themeforest(the above
 {% load staticfiles %}
 <head>
     <meta charset="utf-8"/>
-    <title>City Hoopla | Edit Category</title>
+    <title>CityHoopla | Edit Category</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
     <meta content="" name="description"/>
@@ -321,6 +321,10 @@ width: 100% !important;
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-default">
+                        <li>
+                                <a href="/edit-profile/?user_id={{request.session.login_user}}">
+                                    <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
+                            </li>
                             <li>
                                 <a href="/log-out/">
                                     <i class="icon-key"></i> Log Out </a>
@@ -345,10 +349,10 @@ width: 100% !important;
                 <div class="col-lg-12">
                 <div class="col-md-6" style="margin-top: 3px;">
                 <br>
-					<a class="brad-crum-1" href="/category/">Category</a>  <i class="fa fa-angle-right"></i>  <span class="brad-crum-2">Edit Category</span>  </h4>			
+					<a class="brad-crum-1" href="/category/?city_id={{ct_id}}">Category</a>  <i class="fa fa-angle-right"></i>  <span class="brad-crum-2">Edit Category</span>  </h4>			
 				</div>    
 				<div class="col-md-offset-4 col-md-2" style="margin-top: 13px;">
-					<a href="/category/"> <input type="button" style="margin-top: 9px;padding: 2px 12px;" class="btn grey_color" data-dismiss="modal" value="Cancel"></input></a>
+					<a href="/category/?city_id={{ct_id}}"> <input type="button" style="margin-top: 9px;padding: 2px 12px;" class="btn grey_color"  value="Cancel"></input></a>
 	             <button id="add_category" style="margin-top: 9px;padding: 2px 12px;color: #FFF;
 							border-radius: 20px !important;
 							background: transparent -moz-linear-gradient(left center , #0D67E6, #11CA9A) repeat scroll 0% 0% !important;" id="add_category" class="btn btn-outline done_btn">Save	</button>		
@@ -589,9 +593,13 @@ width: 100% !important;
                                                                                         <a name='sub_cat_level-collapse_btn_'
                                                                                            onclick='add_sub_cats(this);'
                                                                                            class='fa fa-plus-circle fa-lg'></a>&nbsp;
-                                                                                        {% if active_advert == 'No'%}
+                                                                                        {% if category1.active_advert == 'No'%}
                                                                                             <a name='level_1' style="color:red;"
                                                                                                onclick='remove_sub_cats(this,{{category1.category_id}},this.name)'
+                                                                                               class='fa fa-times-circle fa-lg'></a>
+                                                                                        {% else %}
+                                                                                            <a name='level_1' style="color:red;"
+                                                                                               onclick='remove_sub_cats_alert()'
                                                                                                class='fa fa-times-circle fa-lg'></a>
                                                                                         {% endif %}
                                                                                     </div>
@@ -637,9 +645,13 @@ width: 100% !important;
                                                                                                            onclick='add_sub_cats(this);'
                                                                                                            class='fa fa-plus-circle fa-lg'></a>&nbsp;
 
-                                                                                                        {% if active_advert == 'No'%}
+                                                                                                        {% if category2.active_advert == 'No'%}
                                                                                                             <a name='level_2' style="color:red;"
                                                                                                                onclick='remove_sub_cats(this,{{category2.category_id}},this.name)'
+                                                                                                               class='fa fa-times-circle fa-lg'></a>
+                                                                                                        {% else %}
+                                                                                                            <a name='level_2' style="color:red;"
+                                                                                                               onclick='remove_sub_cats_alert()'
                                                                                                                class='fa fa-times-circle fa-lg'></a>
                                                                                                         {% endif %}
 
@@ -686,9 +698,13 @@ width: 100% !important;
                                                                                                                            onclick='add_sub_cats(this);'
                                                                                                                            class='fa fa-plus-circle fa-lg'></a>&nbsp;
 
-                                                                                                                        {% if active_advert == 'No'%}
+                                                                                                                        {% if category3.active_advert == 'No'%}
                                                                                                                             <a name='level_3' style="color:red;"
                                                                                                                                onclick='remove_sub_cats(this,{{category3.category_id}},this.name)'
+                                                                                                                               class='fa fa-times-circle fa-lg'></a>
+                                                                                                                        {% else %}
+                                                                                                                            <a name='level_3' style="color:red;"
+                                                                                                                               onclick='remove_sub_cats_alert()'
                                                                                                                                class='fa fa-times-circle fa-lg'></a>
                                                                                                                         {% endif %}
 
@@ -736,9 +752,13 @@ width: 100% !important;
                                                                                                                                            onclick='add_sub_cats(this);'
                                                                                                                                            class='fa fa-plus-circle fa-lg'></a>&nbsp;
 
-                                                                                                                                        {% if active_advert == 'No'%}
+                                                                                                                                        {% if category4.active_advert == 'No'%}
                                                                                                                                             <a name='level_4' style="color:red;"
                                                                                                                                                onclick='remove_sub_cats(this,{{category4.category_id}},this.name)'
+                                                                                                                                               class='fa fa-times-circle fa-lg'></a>
+                                                                                                                                        {% else %}
+                                                                                                                                            <a name='level_4' style="color:red;"
+                                                                                                                                               onclick='remove_sub_cats_alert()'
                                                                                                                                                class='fa fa-times-circle fa-lg'></a>
                                                                                                                                         {% endif %}
 
@@ -771,9 +791,13 @@ width: 100% !important;
                                                                                                                                                     <div class='col-lg-1'
                                                                                                                                                          style='margin-top: 7px; margin-left:15px; padding:0px;'>
 
-                                                                                                                                                        {% if active_advert == 'No'%}
+                                                                                                                                                        {% if category5.active_advert == 'No'%}
                                                                                                                                                             <a name='level_5' style="color:red;"
                                                                                                                                                                onclick='remove_sub_cats(this,{{category5.category_id}},this.name)'
+                                                                                                                                                               class='fa fa-times-circle fa-lg'></a>
+                                                                                                                                                        {% else %}
+                                                                                                                                                            <a name='level_5' style="color:red;"
+                                                                                                                                                               onclick='remove_sub_cats_alert()'
                                                                                                                                                                class='fa fa-times-circle fa-lg'></a>
                                                                                                                                                         {% endif %}
 
@@ -828,6 +852,32 @@ width: 100% !important;
     </div>
 </div>
 
+<div style="overflow-y:hidden;" id="remove-alert-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width:400px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 139px;"
+                     src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h4 style="text-align:center"> This category cannot be deleted as there are active adverts present under it</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-offset-5 col-md-2">
+                        <input data-dismiss="modal" type="submit" value="OK"
+                               class="btn btn-primary" id="btn-close">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div style="overflow-y:hidden;" id="affiliate-modal" class="modal fade" role="dialog">
     <div class="modal-dialog" style="width:400px;">
@@ -846,7 +896,7 @@ width: 100% !important;
             <div class="modal-footer">
                 <div class="row">
                     <div class="col-md-offset-5 col-md-2">
-                        <a href="/category/"> <input type="submit" value="OK"
+                        <a href="/category/?city_id={{ct_id}}"> <input type="submit" value="OK"
                                                      class="btn btn-primary" id="btn-loading-demo"></a>
                     </div>
                 </div>
@@ -1042,6 +1092,10 @@ width: 100% !important;
 				cgetCity();
 			});
     });
+
+    function remove_sub_cats_alert(){
+        $("#remove-alert-modal").modal('show');
+    }
 
 	function getState() {
         country_id = $('#country').val();

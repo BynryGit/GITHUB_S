@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<!-- 
+Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.6
+Version: 4.5.3
+Author: KeenThemes
+Website: http://www.keenthemes.com/
+Contact: support@keenthemes.com
+Follow: www.twitter.com/keenthemes
+Like: www.facebook.com/keenthemes
+Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes
+License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project.
+-->
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+    <!--<![endif]-->
+    <!-- BEGIN HEAD -->
+{% load staticfiles %}
+     <head>
+        <meta charset="utf-8" />
+        <title>CityHoopla | Subscriber</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <meta content="" name="description" />
+        <meta content="" name="author" />
+        <!-- BEGIN GLOBAL MANDATORY STYLES -->
+            <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet"
+          type="text/css"/>
+    <link href="{% static 'assets/global/plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <link href="{% static 'assets/global/plugins/simple-line-icons/simple-line-icons.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <link href="{% static 'assets/global/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/global/plugins/uniform/css/uniform.default.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/global/plugins/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/global/plugins/select2/css/select2-bootstrap.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <!-- <link href="{% static 'assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css' %}" rel="stylesheet" type="text/css" /> -->
+    <link href="{% static 'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <link href="{% static 'assets/global/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <!-- END PAGE LEVEL PLUGINS -->
+    <!-- BEGIN THEME GLOBAL STYLES -->
+    <link href="{% static 'assets/global/css/components.min.css' %}" rel="stylesheet" id="style_components"
+          type="text/css"/>
+    <link href="{% static 'assets/global/css/plugins.min.css' %}" rel="stylesheet" type="text/css"/>
+    <!-- END THEME GLOBAL STYLES -->
+    <!-- BEGIN THEME LAYOUT STYLES -->
+    <link href="{% static 'assets/layouts/layout2/css/layout.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/layouts/layout2/css/themes/blue.min.css' %}" rel="stylesheet" type="text/css"
+          id="style_color"/>
+    <link href="{% static 'assets/layouts/layout2/css/custom.min.css' %}" rel="stylesheet" type="text/css"/>
+
+    <link href="{% static 'vendor/bootstrap-fileinput/jasny-bootstrap.min.css' %}" rel="stylesheet" media="screen">
+
+
+    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2016.2.504/styles/kendo.common-material.min.css"/>
+    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2016.2.504/styles/kendo.material.min.css"/>
+
+    <link href="{% static 'assets/pages/css/dropzone.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/bootstrap-tagsinput.css' %}" rel="stylesheet" type="text/css"/>
+
+        <!-- END THEME LAYOUT STYLES -->
+
+    <!-- END HEAD -->
+
+    <style type="text/css">
+
+.border_s{
+
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+.fa-lg {
+    font-size: 2.333333em;
+    line-height: .75em;
+    vertical-align: -15%;
+}
+
+div.checker span {
+    display: -moz-inline-box;
+    display: inline-block;
+    zoom: 1;
+    text-align: center;
+    background-position: 0 -260px;
+
+}
+
+#processing{
+    height: 100vh;
+    position: fixed;
+    width: 100%;
+    margin: 0px auto;
+    z-index: 9999;
+    background-color: #FFF;
+    background-image: none;
+    background-attachment: scroll;
+    background-position: 0% 0%;
+    background-clip: border-box;
+    background-origin: padding-box;
+    background-repeat: repeat;
+    background-size: inherit;
+    opacity: 0.5;
+}
+
+#loading{
+    width: 36%;
+    height: 22px;
+    position: absolute;
+    top: 26%;
+    left: 32%;
+    margin: -28px 0px 0px -25px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: #000;
+}
+
+.done_btn{
+    color: rgb(255, 255, 255);
+    border-radius: 20px !important;
+    background-color: #0d67e6;
+    background-image: url(images/linear_bg_1.png);
+    background-repeat: repeat-y;
+
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* IE 10 */
+    background: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+}
+
+.form-height{
+height: 65px;
+}
+
+.user-image img {
+    max-width: 100%;
+}
+
+.fileinput .thumbnail>img {
+    height: 178px !important;
+}
+
+.fileinput-preview.thumbnail {
+    max-width: 278px;
+}
+
+.bootstrap-tagsinput {
+    line-height: 35px;
+    width: 980px;
+}
+
+.error{
+    font-weight: 400;
+    font-style: normal;
+    font-size: 12px;
+}
+
+.portlet.light {
+    <!--padding: 0px 0px 4px;-->
+    <!--background-color: #eef1f5;-->
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #6B6B6B;
+    border-bottom: 0;
+}
+
+.div-border-top{
+    border: 1px solid #cccccc;
+    border-bottom: none;
+}
+
+.div-border-bottom{
+    border: 1px solid #cccccc;
+    border-top: none;
+}
+
+.div-border-left-right{
+    border: 1px solid #cccccc;
+    border-top: none;
+    border-bottom: none;
+}
+
+.div-border{
+    border: 1px solid #cccccc;
+}
+
+.div-color{
+    background-color: rgb(243, 242, 242);
+    border: 2px solid rgb(204, 204, 204) !important;
+    border-radius: 10px !important;
+    margin-right: 0.5%;
+    margin-left: 0.5%;
+    margin-bottom: 1%;
+}
+
+
+@media (min-width:992px) {
+    .col-md-3 {
+        width:24% !important;
+    }
+    /*.col-xs-6 {
+        width: 46% !important;
+    }*/
+}
+
+.page-sidebar .page-sidebar-menu > li > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li > a {
+    min-height: 74px;
+}
+
+.form-control {
+    border: 1px solid #c0c0c0;
+}
+
+.brad-crum-1{
+    font-size:16px;
+    color: #3eb199;
+}
+
+.brad-crum-2{
+    font-size:16px;
+    color: #00448b;
+}
+
+.brad-crum-3{
+    font-size:16px;
+    color: #00448b;
+    font-weight:700;
+}
+
+.grey_color{
+    border: 1px solid rgb(72, 72, 72);
+    color: rgb(255, 255, 255);
+    background: rgb(72, 72, 72) none repeat scroll 0% 0%;
+    border-radius: 20px !important;
+}
+
+
+.page-header.navbar .menu-toggler {
+    background-image: url(/static/assets/layouts/layout2/img/sidebar_toggler_icon_blue.png);
+}
+
+.fa-filter{
+color: #3eb199;
+}
+.fa-search{
+color: #3eb199;
+}
+
+a {
+    color: #3eb199;
+}
+
+
+.btn-default-add {
+    color: #ffffff;
+    font-size: 16px;
+    border-radius: 19px !important;
+  background-color: #0d67e6;
+      /* Safari 4-5, Chrome 1-9 */
+  background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a));
+
+  /* Safari 5.1, Chrome 10+ */
+  background: -webkit-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* Firefox 3.6+ */
+  background: -moz-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* IE 10 */
+  background: -ms-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* Opera 11.10+ */
+  background: -o-linear-gradient(left, #0d67e6, #11ca9a);
+    
+}
+
+.fa-plus{
+color: #ffffff;
+}
+
+.fa-plus:hover{
+color: #ffffff;
+}
+
+.fa-pencil:hover {
+    color: #3eb199;
+}
+
+.fa-trash-o:hover {
+    color: #3eb199;
+}
+
+.fa-lg {
+    font-size: 1.83333em;
+    line-height: 0.75em;
+    vertical-align: -112%;
+}
+.center-align{
+color:#ffffff;
+font-size: 16px; 
+font-weight:500;
+vertical-align: -moz-middle-with-baseline;
+vertical-align: -webkit-baseline-middle;
+}   
+
+
+.center-align-active{
+
+vertical-align: -moz-middle-with-baseline;
+vertical-align: -webkit-baseline-middle;
+} 
+
+.fa-lg-p {
+    font-size: 1.2em;
+
+    vertical-align: -100%;
+}
+[class*=" fa-"]:not(.fa-stack), [class*=" glyphicon-"], [class*=" icon-"], [class^=fa-]:not(.fa-stack), [class^=glyphicon-], [class^=icon-] {
+    display: inline-block;
+    line-height: 9px;
+    -webkit-font-smoothing: antialiased;
+}
+
+.font-18{
+    font-size:18px;
+    font-weight:700;
+}
+.font-blue{
+    color: #00448b !important;
+}
+    </style>
+
+
+     <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
+        <!-- <div id="processing" style="display:none;">
+            <div id="loading">
+                <img src="../assets/loading-bars.gif" style="height : 100px;">
+        
+            </div>
+        </div> -->
+        <!-- BEGIN HEADER -->
+        <div id="processing" style="display:none;">
+                <div id="loading">
+                    <img  src="{% static 'assets/loading-bars.gif' %}" style="height : 100px;">
+                    
+                </div>  
+            </div>
+        <div class="page-header navbar navbar-fixed-top">
+                 <!-- BEGIN HEADER INNER -->
+            <div class="page-header-inner ">
+                <!-- BEGIN LOGO -->
+                <div class="page-logo">
+                    <a href="index.html">
+                         <img src="{% static 'assets/layouts/layout2/img/City_Hoopla_Logo.png' %}" alt="logo" class="logo-default" /> </a>
+                    <div class="menu-toggler sidebar-toggler">
+                        <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
+                    </div>
+                </div>
+                <!-- END LOGO -->
+                <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+                <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"> </a>
+                <!-- END RESPONSIVE MENU TOGGLER -->
+                <!-- BEGIN PAGE TOP -->
+                <div class="page-top">
+                    <!-- BEGIN TOP NAVIGATION MENU -->
+                  <!--  <div class="input-group form-group" style="width: 257px;float: left; padding-left: 10px; padding-top: 17px;">
+                             <span class="input-group-btn">
+                                        <span style="border: none !important;"  class="btn btn btn-default">
+                                            <span class="fa fa-search"></span>
+                                        </span>
+                                    </span>
+                             <input style="border: none !important; padding-left: 0px ; font-family: 'Roboto Light', 'Roboto';" type="text" class="form-control " id="txtSearch"
+                                    placeholder="Search " name="s">
+                                    
+                         </div> -->
+                    <div class="top-menu">
+                        <ul class="nav navbar-nav pull-right">
+                           <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                                   <!--  <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+                                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
+                                           data-close-others="true">
+                                            <i class="icon-bell"></i>
+                                            <span class="badge badge-default" style="    background-color: #d22917;"> 7 </span>
+                                        </a>
+                                    </li> -->
+                                <!-- END NOTIFICATION DROPDOWN -->
+                            <!-- BEGIN USER LOGIN DROPDOWN -->
+                            <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                            <li class="dropdown dropdown-user">
+                                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                    <!-- <img alt="" style="width: 40px;" alt="" class="img-circle" src="{% static 'assets/layouts/layout2/img/avatar3_small.jpg' %}" /> -->
+                                    <span class="username username-hide-on-mobile"> {{ username }} </span>
+                                    <i class="fa fa-angle-down"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-default">
+                                <li>
+                                <a href="/edit-profile/?user_id={{request.session.login_user}}">
+                                    <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
+                            </li>
+                                    <li>
+                                        <a href="/log-out/">
+                                        <i class="icon-key"></i> Log Out </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- END USER LOGIN DROPDOWN -->
+                        </ul>
+                    </div>
+                    <!-- END TOP NAVIGATION MENU -->
+                </div>
+                <!-- END PAGE TOP -->
+            </div>
+            <!-- END HEADER INNER -->
+        </div>
+        <!-- END HEADER -->
+        <!-- BEGIN HEADER & CONTENT DIVIDER -->
+        <div class="clearfix"> </div>
+        <!-- END HEADER & CONTENT DIVIDER -->
+        <!-- BEGIN CONTAINER -->
+        <div class="page-container">
+            <!-- BEGIN SIDEBAR -->
+             <div class="page-sidebar-wrapper">
+                <div class="page-sidebar navbar-collapse collapse">
+                    {% include 'Admin/side-panel.html' %}
+                </div>
+            </div>
+            <!-- END SIDEBAR -->
+            <!-- BEGIN CONTENT -->
+            <div class="page-content-wrapper">
+        <!-- BEGIN CONTENT BODY -->
+        <div class="page-content">
+
+            <!-- END PAGE HEADER-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="portlet light  ">
+                        <div class="portlet-body form">
+                          
+                          	<label class="control-label font-18 font-bold font-blue">Select
+                                                                        Subscriber  </label>
+
+                              <div class="row">
+                                  <div class="col-lg-4">
+                                  <div class="form-group">
+                                      <label class="control-label "
+                                             style="font-size:15px; "> Country
+                                          <span class="required"> * </span>
+
+                                      </label>
+                                      <select class="form-control sel2"
+                                              id="country1"
+                                              name="country1" >
+                                          <option value="">Select
+                                              Country
+                                          </option>
+                                          {% for country in country_list %}
+                                          
+                                              {% if country_var == country.country_id %}
+                                              
+                                                  <option selected value="{{ country.country_id }}">
+                                                      {{ country.country_name }}
+                                                  </option>
+                                              {% else %}
+                                                  <option value="{{ country.country_id }}">
+                                                      {{ country.country_name }}
+                                                  </option>
+                                              {% endif %}
+                                          {% endfor %}
+                                      </select>
+                                      <label id="country_lebel"
+                                             class="error font-12 font-regular"
+                                             style="color:red; display:none;"></label>
+                                  </div>
+                                  </div>
+
+                                  <div class="col-lg-4 ">
+                                  <div class="form-group form-height">
+                                      <label class="control-label "
+                                             style="font-size:15px; ">State
+                                          <span class="required"> * </span>
+                                      </label>
+                                      <select class="form-control sel2"
+                                              id="statec1"
+                                              name="statec1">
+                                          <option value="">
+                                              Select State
+                                          </option>
+                                          {% for state in state_list %}
+                                              {% if state_var == state.state_id %}
+                                                  <option selected value="{{ state.state_id }}">
+                                                      {{ state.state_name }}
+                                                  </option>
+                                              {% else %}
+                                                  <option value="{{ state.state_id }}">
+                                                      {{ state.state_name }}
+                                                  </option>
+                                              {% endif %}
+                                          {% endfor %}
+                                      </select>
+                                      <label id="state_lebel"
+                                             class="error font-12 font-regular"
+                                             style="color:red; display:none;"></label>
+                                  </div>
+                              </div>
+                              <div class="col-lg-4">
+                                  <div class="form-group form-height">
+                                      <label class="control-label "
+                                             style="font-size:15px; ">City
+                                          <span class="required"> * </span>
+                                      </label>
+                                      <select class="form-control sel2"
+                                              id="city1"
+                                              name="city1" onchange="sort_by();">
+                                          <option value="">
+                                              Select City
+                                          </option>
+                                          {% for city in city_list1 %}
+                                              {% if city_var == city.city_place_id %}
+                                                  <option selected value="{{ city.city_place_id }}">
+                                                      {{ city.city_id.city_name }}
+                                                  </option>
+                                              {% else %}
+                                                  <option value="{{ city.city_place_id }}">
+                                                      {{ city.city_id.city_name }}
+                                                  </option>
+                                              {% endif %}
+                                          {% endfor %}
+                                      </select>
+                                      <label id="city_lebel"
+                                             class="error font-12 font-regular"
+                                             style="color:red; display:none;"></label>
+                                  </div>
+                              </div>
+                            </div>
+                       	<div id="no_data" style="display:none">
+                       		<label style=" font-size: 16px;margin-left: 435px !important;"> <b>No Data Available</b> </label>
+                       	</div>                    
+                                                                      
+                       	<div id="subscriber_div" style="display:none">                                               
+                            <!-- BEGIN FORM-->
+                             <div class="row">
+                                <div class="col-lg-12 ">
+                                             <div class="pull-right">
+                                                   <a data-toggle="modal" href="/search-advert/" type="submit"> Advert Search</a>
+                                             </div>
+                                                                                       
+                                </div>
+                             </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                  
+                                    <span class="brad-crum-2">Subscriber</span>
+                                    <div class="portlet-body">
+                                        <div class="row " >
+                                            <div class="col-lg-3 col-md-3 form-group" >
+                                                <div class="input-group form-group" style="width: 244px;;margin-top: 0px;">
+                                                     <span class="input-group-btn">
+                                                         <span style=" height: 34px;"
+                                                               class="btn btn btn-default">
+                                                             <span class="fa fa-search"></span>
+                                                         </span>
+                                                     </span>
+                                                     <input style=" font-size: 14px; " type="text"
+                                                            class="form-control " id="txtSearch"
+                                                            placeholder="Search Subscriber" name="s">
+                                                 </div>  
+                                            </div>
+                                            
+                                            <div class="col-lg-2"
+                                                     style="border: none !important;  margin-top: 7px;font-size: 16px; padding: 0px;padding-left:103px !important">
+                                                    <span>Sort By:  </span>
+                                            </div>
+                                        
+                                            <div class="form-group col-lg-2 col-md-2" style="padding-left: 0px;">
+                                                <select id="sortby" onchange="sort_by()" class="form-control sel2" style="color: #797979;">
+                                                			
+                                                        {% if sort_by != "oldest_first"%}
+                                                        <option style="font-size: 14px" selected value="newest_first">Newest First</option>
+                                                        
+                                                        {% else %}
+                                                        <option style="font-size: 14px" value="newest_first">Newest First</option>
+                                                        {% endif %}
+                                                        {% if sort_by == "oldest_first"%}
+                                                            <option style="font-size: 14px" selected value="oldest_first">Oldest First</option>
+                                                        {% else %}
+                                                            <option style="font-size: 14px" value="oldest_first">Oldest First</option>
+                                                        {% endif %}
+                                                    </select>
+                                            </div> 
+                                            
+                                            <div class="col-lg-1 col-md-1 form-group" style="margin-top: 0.5% ! important;">
+                                               <span >
+                                                  <i class="fa fa-filter "   aria-hidden="true" ></i>
+                                                   <a data-toggle="modal" onclick="refresh_data();"  data-target="#createNew" type="submit">Filters</a>
+                                               </span>  
+                                            </div>
+                                            
+                                            
+                                             
+                                            <div class=" col-lg-1 form-group" style="margin-top: 1px;padding: 0px;">
+                                                  <a type="button" href="/view-subscriber-list/" class="btn btn-outline grey_color" data-toggle="modal" href="/add-category/"> Clear Results</a>
+                                            </div>
+                                                
+                                             <div class=" col-lg-3 col-md-3 form-group" style="padding: 0px;">
+                                                 <div class="pull-right">
+                                                     <a class="btn btn-default-add"  href="/add-subscriber/" > Add Subscriber</a>
+                                                 </div>
+                                             </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                            {% if subscriber_list  %}
+                                           
+                                            {% for subscriber in subscriber_list %}
+                                                <div class="col-md-3 col-sm-3  div-color connect-cat">    
+                                                    <div class="row">
+                                                                {% if subscriber.status == '0' %}
+                                                                    <div class="col-md-2 col-sm-2 prem_div" style="background-color:red;border-top-left-radius: 9px !important;padding-top: 32px !important; padding-left: 6px;">
+                                                                {% else %}
+                                                                    <div class="col-md-2 col-sm-2 prem_div" style="background-color:green;border-top-left-radius: 9px !important;padding-top: 32px !important; padding-left: 6px;">
+                                                                {% endif %}
+                                                                    <span style="color:#ffffff;font-size: 14px;font-weight:700; " class="id prem_div">{{ subscriber.subscriber_id }}</span>
+                                                                </div>
+                                                                <div class="col-md-10 col-sm-10 prem_div" > <!-- style="padding-top: 8px !important;" -->
+                                                                    <div class="row">
+                                                                    		   {% if subscriber.status == '0' %}
+                                                                           <div class="col-md-12 col-sm-12 " style=" padding-top: 5px !important;">
+                                                                                <div class="pull-right">
+                                                                                    <a class="fa fa fa-repeat" onclick="active_subscriber({{subscriber.subscriber_id}})" style="color:#3eb199; font-size:15px;"
+                                                                                         ></a>
+                                                                                </div>
+                                                                           </div>                            
+                                                                         {% else %}
+                                                                         <div class="col-md-12 col-sm-12 ">
+                                                                            <div class="pull-right">
+                                                                                <a class="fa fa-pencil" href="/edit-subscriber/?subscriber_id= {{subscriber.subscriber_id}}" style="color:#3eb199; font-size:17px;"
+                                                                                                       ></a>
+                                                                                <span style="font-size:17px;">|</span>
+                                                                                {%if subscriber.advert_count > 0 %}
+                                                                                <a class="fa fa-trash-o" onclick="delete_users_detail({{subscriber.subscriber_id}})" style="color:#3eb199; font-size:17px;"
+                                                                                                       ></a>
+                                                                                {% else %}
+                                                                                <a class="fa fa-trash-o" onclick="delete_user_detail({{subscriber.subscriber_id}})" style="color:#3eb199; font-size:17px;"
+                                                                                                       ></a>
+                                                                                {% endif %}
+                                                                          </div>    
+                                                                          </div>                             
+                                                                          {% endif %} 
+                                                                    	</div>
+                                                                    	
+                                                                    	 <div class="row">
+                                                                    	 	 <span style="color:#00448b;font-size: 13px;font-weight:700;     padding-left: 5px;" class="bname">{{ subscriber.business_name }}</span><br>
+                                                                         <span style="font-weight:500; padding-left: 5px; font-size: 12px;" class="city_name">{{ subscriber.subscriber_city }}
+                                                                         </span>
+                                                                    	 </div>
+                                                                    
+                                                                  </div>
+                                                                  </div>
+                                                                
+                                                    <div class="row">
+                                                        <div class="col-md-12 col-xs-12" >
+                                                            <!-- <div class="row"
+                                                                style="text-align:center">
+                                                                <b> <span> Coupon ID - </span><span class="coupon_code">{{coupons.coupon_code}}</span> </b>
+                                                            </div> -->
+
+                                                            <div class="row"
+                                                                 style="text-align:center">
+                                                                <div class="item_image" style="text-align:center">
+                                                                    <img src="{{ subscriber.logo }}"
+                                                                         style="width: 100%; height: 180px !important;"
+                                                                         class="img-responsive"> </img>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div  style="font-size: 13px; font-weight:500;margin-top: -12px !important;">
+                                                            <br><span style="font-weight:700;" class="user_name">{{ subscriber.subscriber_name }}</span> 
+                                                        </div>
+                                                    </div>
+                                                    <div class="row header_div">
+                                                            <div class="col-md-12">
+                                                                <span style="font-size: 13px; font-weight:500" class="user_contact">{{ subscriber.user_contact_no }}
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <span style="font-size: 13px; font-weight:500" class="user_email header_div">{{ subscriber.user_email_id }}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        {% if subscriber.status == '1' %}
+                                                        <div class="row"  style="background-color:#3eb199;border-bottom-right-radius: 8px !important;border-bottom-left-radius: 8px !important;height:36px !important;margin-top: 10px !important;">
+                                                            <div class="col-md-2 col-sm-2 col-xs-2" style="padding-top: 2px;">
+                                                                <span class="center-align-active" style="color:#ffffff;font-size: 16px; font-weight:900">{{ subscriber.advert_count }}</span>
+                                                            </div>
+                                                            <div class="col-md-8 col-sm-8 col-xs-8" style="padding-top: 2px;">
+                                                               <center> <span class="center-align">Active Adverts</span> </center>
+                                                            </div>
+                                                            <div class="col-md-2 col-sm-2 col-xs-2">        
+                                                            <a class="fa  fa-plus fa-lg-p" href ="/advert-management/?subscriber_id={{subscriber.subscriber_id}}"></a>
+                                                            </div>
+                                                        </div>
+                                                        {% else %}
+                                                        <div class="row"  style="background-color:lightgrey;border-bottom-right-radius: 8px !important;border-bottom-left-radius: 8px !important;height:36px !important;margin-top: 10px !important;">
+                                                            
+                                                        </div>
+                                                        {% endif %}
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                            
+                                            {% else %}
+                                            <label style=" font-size: 16px;margin-left: 435px !important;"> <b>No Data Available</b> </label>
+                                            {% endif %}
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <!-- END FORM-->
+                            </div>
+                        </div>
+                        <!-- END PORTLET-->
+                    </div>
+                   </div>
+                </div>
+            </div>
+            <!-- END CONTENT BODY -->
+        </div>
+        <!-- END CONTENT -->
+    </div>             
+</div>
+            
+<!-- END CONTAINER -->
+
+        <!-- BEGIN FOOTER -->
+        <div class="page-footer">
+            <div class="page-footer-inner"> 2016 &copy; DigiSpace Software Private Limited
+            </div>
+            <div class="scroll-to-top">
+                <i class="icon-arrow-up"></i>
+            </div>
+        </div>
+        <!-- END FOOTER -->
+         <div class="modal fade draggable-modal" id="delete_user" tabindex="-1" role="basic" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">                                                
+                        <div class="modal-body">
+
+                <div class="form-body">
+                    <h4 class="text-center">Do you want to deactivate Subscriber ?</h4>
+                        </div>
+                        <div style="text-align:center !important;" class="modal-footer">
+                        <button type="button" onclick="inactive_user()" class="btn green">Yes</button>
+                        <button type="button" class="btn green" data-dismiss="modal">No</button>
+                            
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+        </div>
+
+        <div class="modal fade draggable-modal" id="delete_users" tabindex="-1" role="basic" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+
+                <div class="form-body">
+                    <h4 class="text-center">This Subscriber has active adverts. Do you still want to deactivate this Subscriber?</h4>
+                        </div>
+                        <div style="text-align:center !important;" class="modal-footer">
+                        <button type="button" onclick="inactive_users()" class="btn green">Yes</button>
+                        <button type="button" class="btn green" data-dismiss="modal">No</button>
+
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+        </div>
+         <div class="modal fade draggable-modal" id="remove_user" tabindex="-1" role="basic" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+
+                            <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+
+                </div>                                                
+                        <div class="modal-body">
+
+                <div class="form-body">
+                    <h4 class="text-center">Subscriber has been deactivated successfully</h4>
+                        </div>
+                        <div style="text-align:center !important;" class="modal-footer">
+                        <button type="button" onclick="location.reload();" class="btn green" data-dismiss="modal">OK</button>
+
+                            
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+        </div>
+        <div class="modal fade draggable-modal" id="active_premium_service" tabindex="-1" role="basic" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                     <div class="modal-header">
+                            <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+
+                    </div>                                                
+                        <div class="modal-body">
+
+                <div class="form-body">
+                    <h4 class="text-center">Do you want to activate Subscriber ?</h4>
+                        </div>
+                        <div style="text-align:center !important;" class="modal-footer">
+                        <button type="button" onclick="activate_subscriber()" class="btn green">Yes</button>
+                        <button type="button" class="btn green" data-dismiss="modal">No</button>
+                            
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+        </div>
+        <div class="modal fade draggable-modal" id="activate_premium_service" tabindex="-1" role="basic" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                     <div class="modal-header">
+                            <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+
+                    </div>                                                
+                        <div class="modal-body">
+
+                <div class="form-body">
+                    <h4 class="text-center">Subscriber has been activated successfully</h4>
+                        </div>
+                        <div style="text-align:center !important;" class="modal-footer">
+                        <a href="/view-subscriber-list/"><input type="submit"  value="OK"
+                                   class="btn btn-primary" id="btn"></a>
+
+
+                            
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+        </div>
+        
+        <!-- <div class="modal fade " id="createNew" tabindex="-1" role="basic" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                     <div class="modal-header">
+                     		<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                           <label class="control-label font-18 font-bold ">Apply Filters
+                                                                          </label>
+                    </div>
+                                                                    
+                        <div class="modal-body">
+
+			                <div class="form-body">
+			                	<form id="scheduleFrm">
+                        <div class="row">
+                            <input id="supplier_id" name="supplier_id" hidden type="text" value="110">
+                        </div>
+
+                            <div class="row">
+                                <div class="form-group col-lg-12">
+                                    <label style=" font-size: 16px;">
+                                        City </label>
+                                    <br>
+                                    <select class="form-control sel2" style=" width: 142px;font-size: 14px;color: #797979;"
+                                            name="city_id" id="city_id">
+                                        <option value=""><b>Select City </b></option>
+                                        {% for obj_cat in city_list %}
+                                        <option value="{{obj_cat.city_id}}">{{obj_cat.city_name}}</option>
+                                        {%endfor%}
+                                    </select>
+
+                                </div>
+
+                                <div class="form-group col-lg-12">
+                                    <label style=" font-size: 16px;"> Time </label>
+                                    <br>
+                                    <input id="One_week" type="button" class="btn btn-outline green" name="Time"
+                                           value="1W"
+                                           onclick="activate_daterange();">
+                                    <input id="One_month" type="button" class="btn btn-outline green" name="Time"
+                                           value="1M"
+                                           onclick="activate_daterange();">
+                                    <input id="Three_month" type="button" class="btn btn-outline green" name="Time"
+                                           value="3M"
+                                           onclick="activate_daterange();">
+                                    <input id="Six_month" type="button" class="btn btn-outline green" name="Time"
+                                           value="6M"
+                                           onclick="activate_daterange();">
+                                    <input id="date_range" type="button" class="btn btn-outline green" name="Time"
+                                           value="Date Range"
+                                           onclick="activate_daterange();">
+                                </div>
+                            </div>
+
+                            <br>
+                            <div class="row ">
+                                <div id="active_date" class="form-group col-md-12 "
+                                     style=" margin-left: -14px;    margin-bottom: 0px;margin-top: -22px;">
+
+                                    <div class="form-group col-md-2" style="padding-right: 0px !important;width: 10.6667%;">
+                                        <label style=" font-size: 16px;">
+                                            From</label>
+                                    </div>
+                                    <div class="form-group col-md-4 " style="padding-right: 0px !important;width: 28.333%;">
+
+                                        <div class="input-append date form_datetime" >
+                                            <input placeholder="DD-MM-YY" style="width: 124px;" name="startDate" 
+                                                   id="startDate" size="16" type="text" value="" readonly>
+                                                   
+                                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            <span class="add-on"><i class="icon-th"></i></span>
+                                            <label class="error"
+                                               style="color:red; display:none;"></label>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group col-md-2 " style="padding-right: 0px !important;width: 10.6667%;">
+
+                                        <label style=" font-size: 16px;">
+                                            To</label>
+                                    </div>
+                                    <div class="form-group col-md-4 " style="padding-right: 0px !important;width: 28.333%;">
+
+                                        <div class="input-append date form_datetime">
+                                            <input placeholder="DD-MM-YY"  style="width: 124px;" name="endDate"
+                                                   id="endDate" size="16" type="text" value="" readonly>
+                                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            <span class="add-on"><i class="icon-th"></i></span>
+                                            <label class="error"
+                                               style="color:red; display:none;"></label>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group col-md-12 ">
+                                    <label> <b>Status </b> </label>
+                                </div>
+
+                                <div class="form-group col-lg-12" style=" margin-left: -14px;">
+
+                                    <div class=" col-lg-4">
+                                        <input id="Active" type="radio"  name="stat" value="1" checked> Active
+                                    </div>
+
+                                    <div class=" col-lg-4">
+                                        <input id="Expired" type="radio"  name="stat" value="0"> Inactive
+                                    </div>
+
+                                    <div class=" col-lg-4">
+                                        <input id="Show_All" type="radio"  name="stat" value=""> Show All
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline grey_color " data-dismiss="modal">Cancel
+                                </button>
+                                <button type="button" id="submit_btn" onclick="filter_advert();"
+                                        class="btn btn-outline done_btn">Apply
+                                </button>
+
+                            </div>
+                    </form>
+			                    
+			                </div>
+                    </div>
+             
+                </div>
+                
+            </div>
+        </div> -->
+        
+        
+     <div class="modal fade bs-modal-lg" id="createNew" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 style=" font-size: 18px;">Apply Filters</h4>
+                </div>
+                <form id="scheduleFrm">
+                    <div class="row">
+                        <input id="supplier_id" name="supplier_id" hidden type="text" value="110">
+                    </div>
+                    <div class="modal-body">
+                       <!--  <div class="row">
+                            <div class="form-group col-lg-12">
+                                    <label style=" font-size: 16px;">
+                                        City 
+                                       <span class="required"> * </span> 
+                                        </label>
+                                    <br>
+                                    <select class="form-control sel2" style="font-size: 14px;color: #797979;"
+                                            name="city_id" id="city_id">
+                                        <option value=""><b>Select City </b></option>
+                                        <option value="all">All</option>
+                                        {% for obj_cat in city_list %}
+                                        <option value="{{obj_cat.city_id}}">{{obj_cat.city_name}}</option>
+                                        {%endfor%}
+                                    </select>
+											<label class="error"
+                                         style="color:red; display:none;"></label>
+                                </div>
+                             </div> -->  
+                         <div class="row">     
+                            <div class="form-group col-lg-12">
+                                <label style=" font-size: 16px;"> Time </label>
+                                <br>
+                                <input id="One_week" type="button" class="btn btn-outline green" name="Time"
+                                       value="1W" style="width: 19%;"
+                                       >
+                                <input id="One_month" type="button" class="btn btn-outline green" name="Time"
+                                       value="1M" style="width: 19%;"
+                                       >
+                                <input id="Three_month" type="button" class="btn btn-outline green" name="Time"
+                                       value="3M" style="width: 19%;">
+                                       
+                                <input id="Six_month" type="button" class="btn btn-outline green" name="Time"
+                                       value="6M" style="width: 19%;"
+                                       >
+                                <input id="date_range" type="button" class="btn btn-outline green" name="Time"
+                                       value="Date Range" style="width: 19%;"
+                                       >
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="form-group col-lg-12">
+                                    <label style=" font-size: 16px;">
+                                        Created 
+                                        </label>
+                                   
+                                </div>
+                          </div>
+                          <br>
+                        <div class="row ">
+                            <div id="active_date" class="form-group col-md-12 "
+                                 style=" margin-left: -14px;    margin-bottom: 0px;margin-top: -22px;">
+                                <div class="form-group col-md-1 " >
+                                    <label class="control-label" style="    margin-top: 5px; font-size: 16px;">
+                                        From</label>
+                                </div>
+                                <div class="form-group col-md-5 " >
+                                    <div class="input-append date form_datetime">
+                                        <input type="text"
+                                            
+                                            name="startDate"
+                                            id="startDate"
+                                            class="form-control date-picker"
+                                        >
+                                         <input type="text"
+                                            readonly
+                                            name="startDate"
+                                            id="startDate1"
+                                            class="form-control "
+                                        >
+                                        <label class="error"
+                                               style="color:red; display:none;"></label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-1 ">
+                                    <label style="    margin-top: 5px; font-size: 16px;">
+                                        To</label>
+                                </div>
+                                <div class="form-group col-md-5 " >
+                                    <div class="input-append date form_datetime">
+                                        <input type="text"
+                                            
+                                            name="endDate"
+                                            id="endDate"
+                                            class="form-control date-picker"
+                                        >
+                                         <input type="text"
+                                            readonly
+                                            name="endDate"
+                                            id="endDate1"
+                                            class="form-control date-picker"
+                                        >
+                                        <label class="error"
+                                               style="color:red; display:none;"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-12 ">
+                                <label style=" font-size: 16px;"> Status  </label>
+                            </div>
+
+                            <div class="form-group col-lg-12">
+                                <div class=" col-lg-4">
+                                    <label class="font-15 font-regular">
+                                    <input type="radio"
+                                           id="Active" name="stat"
+                                           value="1" 
+                                           class="telephone_radio"/>Active</label>
+                                </div>
+                                <div class=" col-lg-4">
+                                    <label class="font-15 font-regular">
+                                    <input type="radio"
+                                           id="Expired" name="stat"
+                                           value="0"
+                                           class="telephone_radio"/>Expired</label>
+                                </div>
+                                <div class=" col-lg-4">
+                                    <label class="font-15 font-regular">
+                                    <input type="radio"
+                                           id="Show_All" name="stat"
+                                           value="" 
+                                           class="telephone_radio"/>Show All</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline grey_color " data-dismiss="modal">Cancel
+                            </button>
+                            <button type="button" id="submit_btn" onclick="filter_advert();"
+                                    class="btn btn-outline done_btn">Apply
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+ <!-- END CONTAINER -->
+       
+        <!--[if lt IE 9]>
+<script src="../assets/global/plugins/respond.min.js"></script>
+<script src="../assets/global/plugins/excanvas.min.js"></script> 
+<![endif]-->
+        <!-- BEGIN CORE PLUGINS -->
+<!-- BEGIN CORE PLUGINS -->
+<script src="{% static 'assets/global/plugins/jquery.min.js' %}" type="text/javascript"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="{% static 'assets/global/plugins/bootstrap/js/bootstrap.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/js.cookie.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}"
+        type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js' %}"
+        type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/jquery.blockui.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/uniform/jquery.uniform.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js' %}"
+        type="text/javascript"></script>
+<!-- END CORE PLUGINS -->
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<script src="{% static 'assets/global/plugins/select2/js/select2.full.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/jquery-validation/js/jquery.validate.min.js' %}"
+        type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/jquery-validation/js/additional-methods.min.js' %}"
+        type="text/javascript"></script>
+<!-- <script src="{% static 'assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js' %}" type="text/javascript"></script> -->
+<!-- <script src="{% static 'assets/global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.js' %}" type="text/javascript"></script> -->
+<script src="{% static 'assets/global/plugins/ckeditor/ckeditor.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/bootstrap-markdown/lib/markdown.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/bootstrap-markdown/js/bootstrap-markdown.js' %}"
+        type="text/javascript"></script>
+<!-- END PAGE LEVEL PLUGINS -->
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<script src="{% static 'assets/global/plugins/select2/js/select2.full.min.js' %}" type="text/javascript"></script>
+<!-- END PAGE LEVEL PLUGINS -->
+<!-- BEGIN THEME GLOBAL SCRIPTS -->
+<script src="{% static 'assets/global/scripts/app.min.js' %}" type="text/javascript"></script>
+<!-- END THEME GLOBAL SCRIPTS -->
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="{% static 'assets/pages/scripts/components-select2.min.js' %}" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+<!-- END THEME GLOBAL SCRIPTS -->
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="{% static 'assets/pages/scripts/form-validation.min.js' %}" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+<!-- BEGIN THEME LAYOUT SCRIPTS -->
+<script src="{% static 'assets/layouts/layout2/scripts/layout.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/layouts/layout2/scripts/demo.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/layouts/global/scripts/quick-sidebar.min.js' %}" type="text/javascript"></script>
+
+<script src="{% static 'assets/pages/scripts/form-wizard.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/bootstrap-wizard/jquery.bootstrap.wizard.min.js' %}"
+        type="text/javascript"></script>
+
+<script src="{% static 'vendor/bootstrap-fileinput/jasny-bootstrap.js' %}"></script>
+
+<script src="http://kendo.cdn.telerik.com/2016.2.504/js/kendo.all.min.js"></script>
+
+<!-- END THEME LAYOUT SCRIPTS -->
+
+<script src="{% static 'assets/pages/scripts/dropzone1.js' %}"></script>
+<script src="{% static 'assets/bootstrap-tagsinput.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/ion.rangeslider/js/ion.rangeSlider.min.js' %}"></script>
+
+        <!-- END THEME LAYOUT SCRIPTS -->
+    </body>
+    
+    <script type="text/javascript" >
+    
+    $("#country1").change(function () {
+        getState1();
+    });
+    $("#statec1").change(function () {
+        getCity1();
+    });
+
+    
+
+    function getState1() {
+        $("#subscriber_div").css("display","none");
+
+        country_id = $('#country1 :selected').val();
+        if (country_id) {
+            $.ajax({
+                type: 'GET',
+                url: '/get-state/',
+                data: {'country_id': country_id},
+                success: function (response) {
+                    $('#statec1').html('');
+                    $('#statec1').append("<option value=''>Select State</option>");
+                    $.each(response.state_list, function (index, item) {
+                        $('#statec1').append(item);
+                    });
+                    $('#statec1').val("").change();
+                    $('#currency').val(response.currency)
+                },
+                error: function (response) {
+                    alert("Error!");
+                },
+            });
+        }
+        else {
+            $('#statec1').html('');
+            $('#statec1').append("<option value=''>Select State</option>");
+            $('#statec1').val("").change();
+        }
+    }
+
+    function getCity1() {
+        $("#subscriber_div").css("display","none");
+
+        state_id = $('#statec1 :selected').val();
+        if (state_id) {
+            $.ajax({
+                type: 'GET',
+                url: '/get-city-place/',
+                data: {'state_id': state_id},
+                success: function (response) {
+                    //alert('success');
+                    $('#city1').html('');
+                    $('#city1').append("<option value=''>Select City</option>");
+                    $.each(response.city_list, function (index, item) {
+                        $('#city1').append(item);
+                    });
+                    $('#city1').val("").change();
+                },
+                error: function (response) {
+                    alert("Error!");
+                },
+            });
+        }
+        else {
+            $('#city1').html('');
+            $('#city1').append("<option value=''>Select City</option>");
+            $('#city1').val("").change();
+        }
+    }
+            
+    $("#supplier_anchor").addClass("tab-active");
+    $("#supplier_icon").addClass("icon-active");
+    $("#supplier_active").css("display","block");
+    
+    $(document).ready(function(){
+                
+
+     if ({{flag_ck}} == 1) {
+         if ({{flag_ct}} == 0) {
+     		   $("#subscriber_div").css("display","block");
+     		   $("#no_data").css("display","none");
+        }
+        else {
+     	     $("#subscriber_div").css("display","none");
+     	     $("#no_data").css("display","block");
+        }
+     }
+
+     
+         var maxHeight = 0;
+         var maxHeader = 0;
+
+        $('.prem_div').each(function() {
+        maxHeight = Math.max(maxHeight, $(this).height());
+        maxHeight = maxHeight - 25;
+    }).height(maxHeight);
+    
+        $('.header_div').each(function() {
+        maxHeader = Math.max(maxHeader, $(this).height());
+        maxHeader = maxHeader - 3; 
+    }).height(maxHeader);
+    
+        	$("#startDate").hide();
+    	$("#endDate").hide();
+$(".sel2").select2({});
+$("#city_id").select2({
+width: '100%'
+});
+    $("#startDate").datepicker({
+            
+        dateFormat: 'dd/mm/yy'
+    });
+    
+    $("#endDate").datepicker({
+            
+        dateFormat: 'dd/mm/yy'
+    });
+     $.datepicker._clearDate(this);
+    
+});
+
+flag =0;
+
+
+function filter_advert() {
+
+ country_var = $('#country1').val()
+ state_var = $('#statec1').val()
+ city_name_var = $('#city1').val()
+   	 
+		//checkCity
+	/*	var city_status =checkCity()
+		if (city_status == false){
+				
+				return false;		
+		}*/
+
+	   if (flag == 1){ 
+		var ck_status =check_date_range()
+		 isValid = false;
+			if (ck_status == false){			
+				return false;		
+		}
+		}
+	
+	if($('#startDate1').val() == ""){
+
+	 startDate_var = $('#startDate').val()
+    endDate_var = $('#endDate').val()
+    //city_name_var = $('#city_id').val()
+    stat_var = $("input[name='stat']:checked").val()
+	
+	}else{
+	
+		    startDate_var = $('#startDate1').val()
+    endDate_var = $('#endDate').val()
+    //city_name_var = $('#city_id').val()
+    stat_var = $("input[name='stat']:checked").val()
+	
+	
+	}
+
+    startDate_var = $('#startDate').val()
+    endDate_var = $('#endDate').val()
+    //city_name_var = $('#city_id').val()
+    stat_var = $("input[name='stat']:checked").val()
+    
+	if(stat_var == undefined){
+			stat_var = ""
+	}
+
+    location.href = '/view-subscriber-list/?start_date_var='+startDate_var+'&end_date_var='+endDate_var+'&status_var='+stat_var+'&city_var='+city_name_var+'&country_var='+country_var+'&state_var='+state_var
+}
+
+$('#date_range').on('click', function() {
+flag=1
+
+});
+
+function check_date_range(){
+
+  
+        if(check_start_date() & check_end_date() )
+        {
+            return true;
+        }else{
+     
+				return false;
+			}
+		
+}
+
+function check_start_date(){
+            var isValid = false;
+                if($("#startDate").val() ==""  || $("#startDate").val()== null)
+                {
+
+                    $("#startDate").parent().children('.error').css("display", "block");
+                    $("#startDate").parent().children('.error').text("Please select Start Date ");
+                  isValid = false;
+               }else{
+
+                    $("#startDate").parent().children('.error').css("display", "none");
+                isValid =  true;
+               }
+               return isValid;
+
+        }
+        
+ function check_end_date(){
+            var isValid = false;
+                if($("#endDate").val() ==""  || $("#endDate").val()== null)
+                {
+
+                    $("#endDate").parent().children('.error').css("display", "block");
+                    $("#endDate").parent().children('.error').text("Please select End Date ");
+                  isValid = false;
+               }else{
+
+                    $("#endDate").parent().children('.error').css("display", "none");
+                isValid =  true;
+               }
+               return isValid;
+
+        }
+        
+        function checkCity(){
+
+            city1 = $("#city_id").val();
+
+             if(city1 == '' || city1 == null)
+            {
+            $("#city_id").parent().children('.error').css("display", "block");
+             $("#city_id").parent().children('.error').text("Please select City");
+            return false;
+            }
+           else{
+            $("#city_id").parent().children('.error').css("display", "none");
+           return true;
+           }
+        }
+    
+
+function sort_by(){
+ sortby = $("#sortby").val();
+ country_var = $('#country1').val()
+ state_var = $('#statec1').val()
+ city_name_var = $('#city1').val()
+
+   if (city_name_var != '') {
+   location.href = '/view-subscriber-list/?city_var='+city_name_var+'&sort_by='+sortby+'&country_var='+country_var+'&state_var='+state_var	
+   }
+   else {
+   	return false;
+   }
+}
+
+    var date_flag = "1";
+
+    $("#One_week").click(function() {
+
+    $('#One_week').css({
+        'background-color': '#32C5D2',
+      'color': '#FFF',
+       
+    });
+    
+       $('#date_range').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+
+    $('#Six_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#One_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#Three_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+
+    	$("#startDate").hide();
+    	$("#endDate").hide();
+    	$("#startDate1").show();
+    	$("#endDate1").show();
+    	
+        var date = new Date();
+        date.setDate(date.getDate() - 7 );
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#startDate").val(newdate);
+        $("#startDate1").val(newdate);
+        var date = new Date();
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#endDate").val(newdate);
+        $("#endDate1").val(newdate);
+    });
+    $("#One_month").click(function() {
+	
+		    $('#One_month').css({
+        'background-color': '#32C5D2',
+      'color': '#FFF',
+       
+    });    
+    
+       $('#date_range').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+
+    $('#Six_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#Three_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#One_week').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+    
+        	$("#startDate").hide();
+    	$("#endDate").hide();
+    	$("#startDate1").show();
+    	$("#endDate1").show();
+        var date = new Date();
+        date.setDate(date.getDate() - 30 );
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#startDate").val(newdate);
+         $("#startDate1").val(newdate);
+        var date = new Date();
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#endDate").val(newdate);
+         $("#endDate1").val(newdate);
+    });
+    $("#Three_month").click(function() {
+    
+    				    $('#Three_month').css({
+        'background-color': '#32C5D2',
+      'color': '#FFF',
+       
+    }); 
+    
+       $('#date_range').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+
+    $('#Six_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#One_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#One_week').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+       
+	
+   
+    
+        	$("#startDate").hide();
+    	$("#endDate").hide();
+    	$("#startDate1").show();
+    	$("#endDate1").show();
+        var date = new Date();
+        date.setDate(date.getDate() - 90 );
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#startDate").val(newdate);
+        $("#startDate1").val(newdate);
+        var date = new Date();
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#endDate").val(newdate);
+         $("#endDate1").val(newdate);
+    });
+    $("#Six_month").click(function() {
+    
+    				    $('#Six_month').css({
+        'background-color': '#32C5D2',
+      'color': '#FFF',
+       
+    });
+    
+        $('#date_range').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+
+    $('#Three_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#One_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#One_week').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+       
+    
+        	$("#startDate").hide();
+    	$("#endDate").hide();
+    	$("#startDate1").show();
+    	$("#endDate1").show();
+        var date = new Date();
+        date.setDate(date.getDate() - 180 );
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#startDate").val(newdate);
+        $("#startDate1").val(newdate);
+        var date = new Date();
+        var yyyy = date.getFullYear().toString();
+        var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = date.getDate().toString();
+        newdate = (dd[1]?dd:"0"+dd[0]) + "/"+  (mm[1]?mm:"0"+mm[0]) + "/" +  yyyy;
+        $("#endDate").val(newdate);
+         $("#endDate1").val(newdate);
+    });
+    
+    
+    $("#date_range").click(function() {
+
+	    $('#date_range').css({
+        'background-color': '#32C5D2',
+      'color': '#FFF',
+
+    });
+      
+    $('#Six_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+
+    $('#Three_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#One_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#One_week').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+       
+
+    
+    
+    
+      $("#startDate").show();
+    	$("#endDate").show();
+    	$("#startDate1").hide();
+    	$("#endDate1").hide();
+        $("#startDate").val(null);
+        $("#startDate").datepicker( "destroy" );
+        $("#startDate").datepicker({
+            dateFormat: 'dd/mm/yy',
+
+        });
+        date_flag = "0";
+        $("#endDate").val(null);
+    });
+
+    $("#startDate").change(function(){
+        if(date_flag == "0"){
+            var from = $("#startDate").val().split("/");
+            var date = new Date(from[2], from[1] - 1, from[0]);
+            $("#endDate").datepicker( "destroy" );
+            $("#endDate").datepicker({
+                dateFormat: 'dd/mm/yy',
+                minDate: date,
+
+            });
+        }
+    });
+
+
+    var xyz;
+    function delete_user_detail(id) {
+        xyz = id;
+        $("#delete_user").modal('show');
+   }
+
+function inactive_user() {
+    $("#delete_user").modal('hide');
+        var  user_id = xyz;
+        $.ajax({
+            type: 'POST',
+            url: '/delete-subscriber/',
+            data: {'user_id': user_id},
+            success: function (response) {
+            console.log(response);
+                if (response.success == 'true') {
+                    $("#delete_user").modal('hide');
+                  $("#remove_user").modal('show');
+                  
+                }
+                if (response.success == 'false') {
+                    alert(response.message);
+                }
+            },
+                            beforeSend: function () {
+            $("#processing").css('display','block');
+            },
+            complete: function () {
+                $("#processing").css('display','none');
+            },
+            error: function (response) {
+            console.log(response);
+                alert('error');
+            },
+        });    
+    }
+
+    var tuv;
+    function delete_users_detail(id) {
+        tuv = id;
+        $("#delete_users").modal('show');
+    }
+    function inactive_users() {
+        $("#delete_users").modal('hide');
+        var  user_id = tuv;
+        $.ajax({
+            type: 'POST',
+            url: '/delete-subscriber/',
+            data: {'user_id': user_id},
+            success: function (response) {
+            console.log(response);
+                if (response.success == 'true') {
+                    $("#delete_user").modal('hide');
+                  $("#remove_user").modal('show');
+
+                }
+                if (response.success == 'false') {
+                    alert(response.message);
+                }
+            },
+                            beforeSend: function () {
+            $("#processing").css('display','block');
+            },
+            complete: function () {
+                $("#processing").css('display','none');
+            },
+            error: function (response) {
+            console.log(response);
+                alert('error');
+            },
+        });
+    }
+
+ var var2;
+function active_subscriber(id){
+  var1 = id;
+  $("#active_premium_service").modal('show');
+    }
+    
+function activate_subscriber() {
+        var subscriber_id = var1;
+        $("#active_premium_service").modal('hide');
+        $.ajax({
+            type: 'POST',
+            url: '/active-subscriber/',
+            data: {'subscriber_id': subscriber_id},
+            success: function (response) {
+            console.log(response);
+                if (response.success == 'true') {
+                    $("#active_premium_service").modal('hide');
+                  $("#activate_premium_service").modal('show');
+               
+                }
+                if (response.success == 'false') {
+                    
+                }
+            },
+                beforeSend: function () {
+            $("#processing").css('display','block');
+            },
+            complete: function () {
+                $("#processing").css('display','none');
+            },
+            error: function (response) {
+            console.log(response);
+               
+            },
+        });    
+    }
+    
+      document.getElementById("txtSearch").oninput=function(){
+      
+    var matcher = new RegExp(document.getElementById("txtSearch").value, "gi");
+    for (var i=0;i<document.getElementsByClassName("connect-cat").length;i++) {
+        if (matcher.test(document.getElementsByClassName("id")[i].innerHTML)
+        || matcher.test(document.getElementsByClassName("bname")[i].innerHTML)
+        || matcher.test(document.getElementsByClassName("city_name")[i].innerHTML)
+       || matcher.test(document.getElementsByClassName("user_name")[i].innerHTML)
+        || matcher.test(document.getElementsByClassName("user_contact")[i].innerHTML)
+        || matcher.test(document.getElementsByClassName("user_email")[i].innerHTML))
+        
+        
+        
+        {
+            document.getElementsByClassName("connect-cat")[i].style.display="inline-block";
+        } else {
+            document.getElementsByClassName("connect-cat")[i].style.display="none";
+        }
+    }
+}
+
+function refresh_data(){
+
+$("#city_id").parent().children('.error').css("display", "none");
+$("#endDate").parent().children('.error').css("display", "none");
+$("#startDate").parent().children('.error').css("display", "none");
+$('#startDate').val("");
+$('#endDate').val("");
+$('#startDate1').val("");
+$('#endDate1').val("");
+
+
+		            $('.radio').addClass("focus");
+        $('.radio').children("span").removeClass("checked");
+        $('.radio').children("span").find("input").prop('checked', false);
+        	$("#startDate").hide();
+    	$("#endDate").hide();
+    	        	$("#startDate1").show();
+    	$("#endDate1").show();
+    	$("#city_id").select2("val", "");
+    	
+    	
+          $('#date_range').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    }); 	
+   $('#Six_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+
+    $('#Three_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#One_month').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+        $('#One_week').css({
+	'background-color': '#FFF',
+   'border-color': '#32C5D2;',
+   'color': '#32C5D2;',
+   ' background': 'transparent none repeat scroll 0px 0px;'
+    });
+
+    
+}
+</script>
+
+</html>

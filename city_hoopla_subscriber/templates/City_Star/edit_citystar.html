@@ -21,7 +21,7 @@ License: You must have a valid license purchased only from themeforest(the above
 {% load staticfiles %}
 <head>
         <meta charset="utf-8" />
-        <title>City Hoopla | Edit City Star </title>
+        <title>CityHoopla | Edit City Star </title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <meta content="" name="description" />
@@ -638,7 +638,10 @@ hr {
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-default">
-                            
+                            <li>
+                                <a href="/edit-profile/?user_id={{request.session.login_user}}">
+                                    <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
+                            </li>
                             <li>
                                 <a href="/log-out/">
                                    <i class="icon-key" aria-hidden="true"></i> Log Out </a>

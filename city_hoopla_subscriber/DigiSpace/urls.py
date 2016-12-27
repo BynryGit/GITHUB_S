@@ -10,7 +10,7 @@ from subscriberapp.subscriber_urls import subscriber_urlpattern
 from crmapp.urls import crm_urlpatterns
 from citystarapp.urls import citystar_urlpatterns
 from citylifeapp.urls import citylife_urlpatterns
-
+from ticketresellapp.urls import ticketresell_urlpatterns
 
 #from django.views.generic import direct_to_template
 from django.views.generic import TemplateView
@@ -32,6 +32,7 @@ urlpatterns = patterns('',
     url(r'^CTI-CRM/', include(crm_urlpatterns)),
     url(r'^city-star/', include(citystar_urlpatterns)),
     url(r'^city-life/', include(citylife_urlpatterns)),
+    url(r'^ticket-resell/', include(ticketresell_urlpatterns)),
     url(r'^subscriber-portal/', include(subscriber_urlpattern)),
     url(r'^captcha/', include('captcha.urls')),
     url(r'^rate-card/', 'Admin.views.rate_card',name='rate_card'),
@@ -61,8 +62,10 @@ urlpatterns = patterns('',
     url(r'^add-currency/', 'Admin.views.add_currency',name='add_currency'),
     url(r'^get-city/', 'Admin.views.get_city',name='get-city'),
     url(r'^get-pincode/', 'Admin.views.get_pincode',name='get_pincode'),  
-    url(r'^save-supplier/', 'Admin.supplier.save_supplier',name='save_supplier'),  
-    url(r'^save-service/', 'Admin.supplier.save_service',name='save_service'),  
+    url(r'^save-supplier/', 'Admin.supplier.save_supplier',name='save_supplier'),
+    url(r'^check-poc/', 'Admin.supplier.check_poc',name='check_poc'),
+    url(r'^check-update-poc/', 'Admin.supplier.check_update_poc',name='check_update_poc'),
+    url(r'^save-service/', 'Admin.supplier.save_service',name='save_service'),
     url(r'^register-supplier/', 'Admin.supplier.register_supplier',name='register_supplier'),  
     url(r'^save-advert/', 'Admin.advert.save_advert',name='save_advert'),
     url(r'^save-advert-form/', 'Admin.advert.save_advert',name='save_advert'),
@@ -113,6 +116,7 @@ urlpatterns = patterns('',
     url(r'^edit-subscriber/', 'Admin.supplier.edit_subscriber',name='edit_subscriber'),  
     url(r'^edit-service/', 'Admin.supplier.edit_service',name='edit_service'),  
     url(r'^update-subscriber-detail/', 'Admin.supplier.update_subscriber_detail',name='update_subscriber_detail'),  
+    url(r'^search-advert/', 'Admin.supplier.search_advert',name='search_advert'),  
     
     # payal
     url(r'^add-role/', 'Admin.views.add_role',name='add_role'),
@@ -152,6 +156,7 @@ urlpatterns = patterns('',
     url(r'^add-rate-card/', 'Admin.ratecard.add_rate_card',name='add_rate_card'),
     url(r'^edit-rate-card/', 'Admin.ratecard.edit_rate_card',name='edit_rate_card'),
     url(r'^delete-rate-card/', 'Admin.ratecard.delete_rate_card',name='delete_rate_card'),
+    url(r'^activate-rate-card/', 'Admin.ratecard.activate_rate_card',name='activate_rate_card'),
     url(r'^get-city-category-list/', 'Admin.ratecard.get_city_category_list',name='get_city_category_list'),
     url(r'^get-all-category-list/', 'Admin.ratecard.get_all_category_list',name='get_all_category_list'),
     url(r'^save-prem-sevice-rate-card/', 'Admin.ratecard.save_prem_sevice_ratecard',name='save_prem_sevice_ratecard'),
@@ -216,6 +221,9 @@ urlpatterns = patterns('',
     url(r'^my_subscription_sale/', 'Admin.dashboard.my_subscription_sale',name='my_subscription_sale'),
     url(r'^get_advert_databse/', 'Admin.dashboard.get_advert_databse',name='get_advert_databse'),
     url(r'^get_new_registered_consumer/', 'Admin.dashboard.get_new_registered_consumer',name='get_new_registered_consumer'),
+
+    url(r'^get-registered-consumer-data/', 'Admin.dashboard.get_registered_consumer_data',name='get_registered_consumer_data'),
+    
     url(r'^get_consumer_activity/', 'Admin.dashboard.get_consumer_activity',name='get_consumer_activity'),
     url(r'^get_consumer_usage/', 'Admin.dashboard.get_consumer_usage',name='get_consumer_usage'),
 
@@ -249,7 +257,9 @@ urlpatterns = patterns('',
     url(r'^get_advert_list5/', 'Admin.dashboard.get_advert_list5',name='get_advert_list5'),
     url(r'^get_advert_list6/', 'Admin.dashboard.get_advert_list6',name='get_advert_list6'),
     url(r'^get_advert_health_datebase/', 'Admin.dashboard.get_advert_health_datebase',name='get_advert_health_datebase'),
-
+#################### VERY NEW
+    url(r'^get-category-list/', 'Admin.dashboard.get_category_list',name='get_category_list'),
+    url(r'^get_advert_status_data/', 'Admin.dashboard.get_advert_status_data',name='get_advert_status_data'),
 
     # Management @admin report
     url(r'^get_sales/', 'Admin.dashboard.get_sales',name='get_sales'),
@@ -288,10 +298,26 @@ urlpatterns = patterns('',
     url(r'^regenerate-password/', 'Admin.supplier.regenerate_password',name='regenerate_password'), 
     url(r'^set-new-password/', 'Admin.supplier.set_new_password',name='set_new_password'),  
     url(r'^password-changed/', 'Admin.supplier.password_changed',name='password_changed'),
-    url(r'^advert-stat/', 'Admin.advert.advert_stat',name='advert_stat'),
+    url(r'^advert-stat/', 'Admin.advert.advert_stat',name='advert_stat'),   
+    url(r'^get-salesperson/', 'Admin.supplier.get_sales_staff_list',name='advert_stat'),
+    url(r'^get-categories/', 'Admin.advert.get_categories',name='get_categories'),
+
+# New urls after date 16-11-16
+    url(r'^delete-nearby-attraction/', 'Admin.advert.delete_nearbyatt',name='delete_nearbyatt'),
+    url(r'^delete-shopping/', 'Admin.advert.delete_shopping',name='delete_shopping'),
+    url(r'^delete-school/', 'Admin.advert.delete_school',name='delete_school'),
+    url(r'^delete-hospital/', 'Admin.advert.delete_hospital',name='delete_hospital'),
 
 
+# forgot Password Admin
+    url(r'^forgot-password/', 'Admin.views.forgot_password', name='forgot_password'),
+    url(r'^reset-password/', 'Admin.views.reset_password', name='forgot_password'),
+    url(r'^reset-new-password/', 'Admin.views.reset_new_password', name='forgot_password'),
 
-    url(r'^get-categories/', 'Admin.advert.get_categories',name='get_categories'),   
+    #admin_profile
+    url(r'^edit-profile/', 'Admin.views.edit_profile', name='edit_profile'),
+# New report urls
+    url(r'^get-advert-data/', 'Admin.dashboard.get_advert_data',name='get_advert_data'),
+    url(r'^get-sales-staff-list/', 'Admin.dashboard.get_sales_staff_list',name='get_sales_staff_list'),
 
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

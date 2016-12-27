@@ -19,7 +19,7 @@ License: You must have a valid license purchased only from themeforest(the above
 {% load staticfiles %}
     <head>
         <meta charset="utf-8" />
-        <title>City Hoopla | Category</title>
+        <title>CityHoopla | Category</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <meta content="" name="description" />
@@ -107,47 +107,36 @@ div.dataTables_filter label {
     color: #FFF;
     border-radius: 20px !important;
     background: transparent -moz-linear-gradient(left center , #0D67E6, #11CA9A) repeat scroll 0% 0% !important;
-      /* Safari 4-5, Chrome 1-9 */
-  background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a));
-
-  /* Safari 5.1, Chrome 10+ */
-  background: -webkit-linear-gradient(left, #0d67e6, #11ca9a);
-
-  /* Firefox 3.6+ */
-  background: -moz-linear-gradient(left, #0d67e6, #11ca9a);
-
-  /* IE 10 */
-  background: -ms-linear-gradient(left, #0d67e6, #11ca9a);
-
-  /* Opera 11.10+ */
-  background: -o-linear-gradient(left, #0d67e6, #11ca9a);
 }
 
-style="color: #FFF;border-radius: 20px !important;
-							background: transparent -moz-linear-gradient(left center , #0D67E6, #11CA9A) repeat scroll 0% 0% !important;"
-
-.btn-default-add {
-    color: #ffffff;
-    font-size: 18px;
+.done_btn{
+    color: rgb(255, 255, 255);
     border-radius: 20px !important;
-  background-color: #0d67e6;
-      /* Safari 4-5, Chrome 1-9 */
-  background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a));
+    background-color: #0d67e6;
+    background-image: url(images/linear_bg_1.png);
+    background-repeat: repeat-y;
 
-  /* Safari 5.1, Chrome 10+ */
-  background: -webkit-linear-gradient(left, #0d67e6, #11ca9a);
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
 
-  /* Firefox 3.6+ */
-  background: -moz-linear-gradient(left, #0d67e6, #11ca9a);
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
 
-  /* IE 10 */
-  background: -ms-linear-gradient(left, #0d67e6, #11ca9a);
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
 
-  /* Opera 11.10+ */
-  background: -o-linear-gradient(left, #0d67e6, #11ca9a);
-    
+    /* IE 10 */
+    background: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
 }
-
 
 .grey_color{
     border: 1px solid rgb(72, 72, 72);
@@ -284,7 +273,10 @@ style="color: #FFF;border-radius: 20px !important;
                                     <i class="fa fa-angle-down"></i>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-default">
-                                   
+                                   <li>
+                                <a href="/edit-profile/?user_id={{request.session.login_user}}">
+                                    <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
+                            </li>
                                     <li>
                                         <a href="/log-out/">
                                             <i class="icon-key"></i> Log Out </a>
@@ -333,8 +325,24 @@ style="color: #FFF;border-radius: 20px !important;
                         <div class="col-lg-12 ">
                         	<div class="col-md-6">
                         	<br>
-										<span class="brad-crum-1">Configure</span>  <i class="fa fa-angle-right"></i>  <span class="brad-crum-2">Category</span>  </h4>			
-									</div>   
+										<span class="brad-crum-1"><b>Configure</b></span>  <i class="fa fa-angle-right"></i>  <span class="brad-crum-2">Category</span>  </h4>			
+									</div>
+								 </div>
+							</div> 
+							<br>
+							
+						
+				<div class="row">
+		       <div class="col-lg-12">		
+			
+		          <ul class="nav nav-tabs">
+		               <li class="active"><a data-toggle="tab" href="#subscriber" onclick="tab_change1();"  >CityBusiness </a></li>
+		               <li><a data-toggle="tab" href="#sales" onclick="tab_change2();">CityLife </a></li>
+		          </ul>
+		          
+		          <div class="tab-content">   
+			         <div id="subscriber" class="tab-pane fade in active" >  							
+							  
                             <div class="portlet light  ">
                                  <!-- <div class="portlet-title">
                                     <div class="caption">
@@ -400,7 +408,8 @@ style="color: #FFF;border-radius: 20px !important;
                                                 </div>
                                                 <div class="col-lg-offset-2 col-lg-2 form-group" style="margin-top: 26px;">
                                                     <div  class="pull-right ">
-                                                        <a type="button"  class="btn done_btn1  btn-outline" data-toggle="modal" href="/add-category/"> Add Category</a>
+                                                        <a type="button" style="color: #FFF;border-radius: 20px !important;
+							background: transparent -moz-linear-gradient(left center , #0D67E6, #11CA9A) repeat scroll 0% 0% !important;" class="btn btn-outline done_btn" data-toggle="modal" href="/add-category/"> Add Category</a>
                                                     </div>
                                                 </div>
                                            
@@ -446,9 +455,10 @@ style="color: #FFF;border-radius: 20px !important;
 													<a id={{cat_obj.category_id}} href="/edit-category/?category_id={{cat_obj.category_id}}"  style="text-align: center;letter-spacing: 5px;width:15%;" title="Edit" class="edit" data-toggle="modal" href="#edit_subscription"><i class="fa fa-pencil"></i></a>
 													{% if  cat_obj.active_advert == 'No' %}
 														<a id={{cat_obj.category_id}} onclick=delete_category({{cat_obj.category_id}}); style="text-align: center;letter-spacing: 5px;width:15%;" title="Delete"  ><i class="fa fa-trash"></i></a>
-													{% else %}
-														<a onclick="del_mod();" style="text-align: center;letter-spacing: 5px;width:15%;" title="Delete"  ><i class="fa fa-trash"></i></a>	
-													{% endif %}																								
+                                                    {% else %}
+                                                        <a onclick="del_mod('{{cat_obj.category_name}}');" style="text-align: center;letter-spacing: 5px;width:15%;" title="Delete"  ><i class="fa fa-trash"></i></a>  
+                                                    {% endif %} 
+																																				
 											{% else %}
 													<a id={{cat_obj.category_id}} onclick="active_service(this.id);" style="text-align: center;letter-spacing: 5px;width:15%;margin-left: 36px !important;" title="Activate" class="edit" data-toggle="modal" href="#edit_subscription"><i class="fa fa-repeat"></i></a>
 											{% endif %}					            		
@@ -480,6 +490,154 @@ style="color: #FFF;border-radius: 20px !important;
                        </div>     
                             <!-- END PORTLET-->
                         </div>
+                      </div>
+                     
+                     <div id="sales" class="tab-pane fade in active" style="display:none">
+                         <div class="portlet light  ">
+                                 <!-- <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="icon-social-dribbble font-green"></i>
+                                        <span class="caption-subject font-green bold uppercase">Category List</span>
+                                    </div>
+                                </div> -->
+ 
+                                <div class="portlet-body form">
+                                    <!-- BEGIN FORM-->
+                                    <br>
+                        					 
+
+                                                        <form id="cityform" role="form" enctype="multipart/form-data"
+                                                              name="city-form" method="POST">
+                                                            {% csrf_token %}
+
+                                                            <div class="row" >
+                                                                <div class="col-lg-3">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label ">Country
+                                                                        </label>
+                                                                       
+                                                                        <select id="country3" name="country"
+                                                                                 onchange="getStates()">
+                                                                            <option value="">Select Country</option>
+                                                                            {% for country in country_list %}
+                                                                            <option value="{{country.country_id}}">
+                                                                                {{country}}
+                                                                            </option>
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                        <label class="error"
+                                                                               style="color:red; display:none;"></label>
+                                                                        <!--  <label class="error" id="state_error" style="color:red; display:none;"></label>      -->
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="col-lg-3">
+                                                                   <div class="form-group">
+					 																	   <label  class="control-label"> State
+
+							                                                 </label>
+																				 
+							                                                 <select style="" onchange="getCitys()" id="state3" name="state"  required > 
+																							 	<option value="">Select State</option> 
+																							 	                         
+																                        {% for state in state_list %}	
+																             	
+																                        												                        
+																                        <option value="{{ state.state_id }}"> {{ state.state_name }}</option>
+																                        
+																           
+																                        {% endfor %}
+																                      </select>
+													                               <label class="error" style="color:red; display:none;"></label>                                                          	                                                        		
+					 																	</div>
+					 															    </div>
+ 																	                                                             
+                                                                <div class="col-lg-3">
+				 																			<label  class="control-label"> City
+				                                                         </label>
+				                                                     
+				                                                         <select style="" onchange="open_addcat()" name="city" id="city3"  >
+																                     	 <option value="">Select City</option>
+																                     	{% for city in city_list %}
+																                     	<option value="{{ city.city_id }}"> {{ city.city_name }}</option>
+																			                 {% endfor %}
+																			                       	
+																                     </select>
+																                     <label class="error" style="color:red; display:none;"></label>
+				 																		</div>
+ 																		
+ 																		
+                                                                
+                                                                 <div class="col-lg-2" style="margin-top: 30px;float: right;">
+                                                                    <a onclick="add_sub_cat(this.name,0,0,0)"
+                                                                       name="sub_cat_level_1-collapse_btn_1"
+                                                                       class="btn btn-outline done_btn"> Add Category </a>
+                                                                </div>
+                                                                
+                                                            </div>
+                                                            
+                                                            <div id="city-sequence">
+
+                                                            </div>
+
+                                                            <label class="error" id="city_error"
+                                                                   style="color:red; display:none;"></label>
+                                                            <hr>
+                                                        </form>
+
+                                                               <br>
+
+																		<div class="col-lg-12" style="z-index: 900;">
+																			<div class="col-lg-5" style="z-index: 900;">
+																			</div>	
+																			<div class="col-lg-4" style="z-index: 900;">									                
+												                     <label id="show_data" class="text-center ">  </label> 
+												                     </div>
+												                     <div class="col-lg-3" style="z-index: 900;">
+												                     </div>
+												                  </div>
+												               </div>
+                                                                                                                 
+                                                      
+                                                        <div class="row" id="cat_div" style="display:none">
+
+                                                            <div class="col-lg-12" >
+                                                                <div class="form-group">
+                                                                    <label class="control-label ">Category
+                                                                        <span class="required"> * </span>
+                                                                    </label>
+                                                                </div>
+                                                                                 
+                                                                <div class="row" style='margin-left: 2.33333%;'
+                                                                     id="sub_cat_level_1">
+
+                                                                </div>
+
+                                                            </div>
+                                                              
+                                                        </div>
+
+                                                        <br>
+
+                                                        <div id="save_btn" class="form-actions text-right" style="display:none">
+
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <a href="/category/"> <input type="button"
+                                                                                                 class="btn btn-outline grey_color "
+                                                                                      data-dismiss="modal"
+                                                                                                 value="Cancel"></input></a>
+                                                                    <input id="add_category" value="Save" class="btn btn-outline done_btn"
+                                                                           type="button" >
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                   
+                                                 </div>      
+
+                         </div>
+                      </div>      
+                       
                     </div>
                 </div>
                 <!-- END CONTENT BODY -->
@@ -553,7 +711,7 @@ style="color: #FFF;border-radius: 20px !important;
         <!-- /.modal -->
         <!-- BEGIN FOOTER -->
         <div class="page-footer">
-            <div class="page-footer-inner"> 2016 &copy; DigiSpace Software Private Limited
+            <div class="page-footer-inner"> 2016 &copy; DigiSpace.
             </div>
             <div class="scroll-to-top">
                 <i class="icon-arrow-up"></i>
@@ -634,7 +792,7 @@ style="color: #FFF;border-radius: 20px !important;
                             <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 138px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
                     </div>                                                
                         <div class="modal-body">
-                            <form action="index.html" class="form-horizontal form-row-seperated">
+                            <form  class="form-horizontal form-row-seperated">
                 <div class="form-body">
                     <h4 class="text-center">Do you want to deactivate category?</h4>
                         </div>
@@ -719,15 +877,119 @@ style="color: #FFF;border-radius: 20px !important;
                 <!-- /.modal-dialog -->
             </div>
         </div>
+ 
+        <!-- END FOOTER -->
+        <div style="overflow-y:hidden;" id="affiliate-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width: 374px;">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 130px;"
+                     src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+                <!-- <a href="/category/">  <button type="button" class="close" data-dismiss="modal">&times;</button></a> -->
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h4 style="text-align:center;" id="cat_model">Category added successfully</h4>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-offset-5 col-md-2">
+                     <input type="button" data-dismiss="modal" value="OK" class="btn btn-primary" id="btn-loading-demo" >
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div style="overflow-y:hidden;" id="error-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width: 416px;">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 146px;"
+                     src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h4 class="text-center" id="error-message"></h4>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-offset-5 col-md-2">
+                        <input data-dismiss="modal" type="submit" value="OK"
+                               class="btn btn-primary" id="btn-loading-demo">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div style="overflow-y:hidden;" id="remove_cat_model" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width: 416px;">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 146px;"
+                     src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h4 style="text-align:center;">Are you sure you wish to delete the category ?</h4>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                    		 <div class="col-md-6" id="yup">
+   								  <input  type="hidden" 
+                               class="btn btn-primary" id="yes1" >                             
+                             <input  type="submit" value="Yes"
+                               class="btn btn-primary" id="delete_city_cat" >
+                         </div>
+                         <div class="col-md-2" >
+                             <input data-dismiss="modal" type="submit" value="No"
+                               class="btn btn-primary" id="btn-loading-demo" >
+                         </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
         <div class="modal fade draggable-modal" id="del_mod" tabindex="-1" role="basic" aria-hidden="true">
-	    <div class="modal-dialog" style="width:400px;">
-	        <div class="modal-content">                                                
-	            <div class="modal-body">
-						<div class="modal-header">
-	                   <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 120px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
-	                </div>
-	                <div class="form-body">
-	                    <h4 class="text-center" id="del_mod_msg">The City "City Name" cannot be deleted as there are active adverts present for it</h4>
+        <div class="modal-dialog" style="width:400px;">
+            <div class="modal-content">                                                
+                <div class="modal-body">
+                        <div class="modal-header">
+                       <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 120px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+                    </div>
+                    <div class="form-body">
+                        <h4 class="text-center" id="del_mod_msg">The City "City Name" cannot be deleted as there are active adverts present for it</h4>
                    </div>
                         <div style="text-align:center !important;" class="modal-footer">
                         <button type="button" class="btn green" data-dismiss="modal">OK</button>
@@ -735,9 +997,41 @@ style="color: #FFF;border-radius: 20px !important;
                     </div>
                 </div>
             </div>
-  </div>     
- 
-        <!-- END FOOTER -->
+  </div>
+
+<div style="overflow-y:hidden;" id="success_cat_model" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width: 416px;">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 146px;"
+                     src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h4 style="text-align:center;"> Category deleted successfully </h4>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                    		
+                        <div class="col-md-offset-5 col-md-2">
+                           <input type="button" data-dismiss="modal" value="OK" class="btn btn-primary" id="btn-loading-demo" >
+                       </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
         <!--[if lt IE 9]>
 <script src="{% static 'assets/global/plugins/respond.min.js' %}"></script>
 <script src="{% static 'assets/global/plugins/excanvas.min.js' %}"></script> 
@@ -782,11 +1076,35 @@ style="color: #FFF;border-radius: 20px !important;
         <!-- END THEME LAYOUT SCRIPTS -->
         
          <script type="text/javascript">
+         
+
 
          $("#ref_data_nav").addClass("active");
          $("#category_nav").addClass("active");
+         
+         
+         
+function tab_change1(){
+
+$("#subscriber").css("display","block");
+$("#sales").css("display","none");
+$("#management").css("display","none");
+$("#analytical").css("display","none");
+table_init();
+ table_init2();
+}         
+         
+         function tab_change2(){
+
+$("#subscriber").css("display","none");
+$("#sales").css("display","block");
+
+
+}
 
         $(document).ready(function() {
+        
+
         
         		 $(".city").select2();
         $("#city").select2();
@@ -828,13 +1146,6 @@ style="color: #FFF;border-radius: 20px !important;
                 oTable.fnFilter($("#txtSearch").val());
             });           
             }); 
-                  
-	function del_mod() {
-        cat_nm = $('#cat_nm').val();
-        $('#del_mod_msg').text('The Category '+cat_nm+' cannot be deleted as there are active adverts present for it');
-        $("#del_mod").modal('show');
-   }                  
-                  
                      
 		function getState() {
         country_id = $('#country').val();
@@ -1015,6 +1326,543 @@ function active_service(id){
                     
         
         </script>
+        
+        
+        <script type="text/javascript">
+
+
+    $('#delete_city_cat').click(function(event){
+        event.preventDefault();
+        call_rem();
+        });
+
+var cat_id_global =''
+function call_rem() {
+
+	var xyz = document.getElementsByName($("#yes1").val());
+
+	$(xyz).parent().parent().parent().parent().find('.col-lg-12').children().find('.fa-caret-down').removeClass("fa-caret-down").addClass("fa-caret-right");
+   $(xyz).parent().parent().next('div').html('');
+   $(xyz).parent().parent().html('');
+   $("#remove_cat_model").modal('hide');
+   
+   
+
+
+			cat_id_global = cat_id_global
+  			$.ajax({
+  				  
+				   type	: "POST",
+				   url : '/city-life/delete-citylife-cat/',
+ 					data : {'cat_id_global': cat_id_global},
+				                       
+              success: function (response) {
+	              if(response.success=='true'){
+		           	  	    
+				          $("#sub_cat_level_1").html("");
+		           	    $.each(response.final_list, function (index, item) {
+        		              btn = "<div class='col-lg-1' style='margin-top: 7px; margin-left:15px; padding:0px;'>&nbsp;&nbsp;<a name='sub_cat_level-collapse_btn_"+ index +"' id='"+item.category_id+"' style='color:red' onclick='remove_sub_cat_new(this);' class='fa fa-times-circle fa-lg'></a></div>"
+                          child_div = "<div class='row' style='margin-left: 4.33333%;' id='sub_cat_level"+ index +"'></div>"
+                          var div_str = "<div class='col-lg-12'><div class='col-lg-10' style='width: 422px;margin-left: -39px;'><div class='form-group' >"
+                          div_str = div_str + "<input value='"+item.category_name+"' type='text' name='level_1' id='"+ item.category_id +"' class='form-control' /><label for='sub_cat_name"+ index +"' class='error' style='color:red; display:none;'></div></div>"
+                          div_str = div_str + btn + "</div>"+ child_div
+						        $("#sub_cat_level_1").append(div_str);
+						        $("#sub_cat_level_1").show();
+				          });
+				         $("#success_cat_model").modal('show');
+				          
+	              	}
+	      			if (response.success == "false") {
+							$("#error-modal").modal('show');                    
+	       			}							                        		                      		                       		
+               },
+               	beforeSend: function () {
+            $("#processing").css('display','block');
+            },
+            complete: function () {
+                $("#processing").css('display','none');
+            },
+               error : function(response){
+                  	alert("_Error");
+            	}              
+           });
+   
+  
+   
+}
+ 
+function remove_sub_cat_new(xyz){
+    $("#yes1").val(xyz.name);
+    cat_id_global = xyz.id
+    $("#remove_cat_model").modal('show');
+}
+    
+list = []
+
+function open_addcat() {
+
+
+if ($("#city3").val()!= '' ) {
+ 
+		 $("#cat_div").css("display","block");
+		 $("#save_btn").css("display","block");
+       
+     
+
+	   var formData= new FormData();
+		formData.append('city',$("#city3").val());
+
+  			$.ajax({
+  				  
+				   type	: "POST",
+				   url : '/city-life/citylife-cat/',
+ 					data : formData,
+					cache: false,
+		         processData: false,
+		    		contentType: false,                       
+              success: function (response) {
+	              if(response.success=='true'){
+		           	  	 if (response.final_list != '') {
+		           	  	
+		           	  	 $("#show_data").html(""); 	
+				          $("#sub_cat_level_1").html("");
+		           	    $.each(response.final_list, function (index, item) {
+        		              btn = "<div class='col-lg-1' style='margin-top: 7px; margin-left:15px; padding:0px;'>&nbsp;&nbsp;<a name='sub_cat_level-collapse_btn_"+ index +"' id='"+item.category_id+"' style='color:red' onclick='remove_sub_cat_new(this);' class='fa fa-times-circle fa-lg'></a></div>"
+                          child_div = "<div class='row' style='margin-left: 4.33333%;' id='sub_cat_level"+ index +"'></div>"
+                          var div_str = "<div class='col-lg-12'><div class='col-lg-10' style='width: 422px;margin-left: -39px;'><div class='form-group' >"
+                          div_str = div_str + "<input value='"+item.category_name+"' type='text' name='level_1' id='"+ item.category_id +"' class='form-control' /><label for='sub_cat_name"+ index +"' class='error' style='color:red; display:none;'></div></div>"
+                          div_str = div_str + btn + "</div>"+ child_div
+						        $("#sub_cat_level_1").append(div_str);
+						        $("#sub_cat_level_1").show();
+				          });
+				         
+		           	  	 }
+		           	  	else {
+		           	  		 $("#show_data").css("display","block"); 
+		           	  		 $('#show_data').text("No category available");
+		           	  		 $("#sub_cat_level_1").html("");
+		           	  		 $("#cat_div").css("display","none");
+		                   $("#save_btn").css("display","none");
+		           	  	} 
+	              	}
+	      			if (response.success == "false") {
+							$("#error-modal").modal('show');                    
+	       			}							                        		                      		                       		
+               },
+               	beforeSend: function () {
+            $("#processing").css('display','block');
+            },
+            complete: function () {
+                $("#processing").css('display','none');
+            },
+               error : function(response){
+                  	alert("_Error");
+            	}              
+           });   
+			
+		}
+else {
+
+	$("#sub_cat_level_1").css('display','none');
+	$("#cat_div").css("display","none");
+   $("#save_btn").css("display","none");
+   $("#show_data").html(""); 
+}  
+}	
+
+ $(document).ready(function(){
+     $(".city").select2();
+     $("#city3").select2();
+     $("#country3").select2();
+     $("#state3").select2();
+     
+ });
+ 
+     /* For Delete Blank category */
+ var p_index = 1;
+    function remove_cat(p_index){
+
+        $("#prod"+p_index).remove();
+
+    }
+
+  i = 1;
+  j = 0;
+  k = 0;
+  
+function add_sub_cat(div_name,level,key,a){
+			
+		if ($("#city3").val()!= '') {
+			$("#show_data").html(""); 	
+
+		  $("#show_data").css("display","none");
+
+     if ($("sub_cat_level_1").val() == '') {
+     			 $("#sub_cat_level_1").html("");
+     }   	  
+   	 
+   	  
+   	  
+   	  $("#cat_div").css("display","block");
+        $("#save_btn").css("display","block");
+		                   
+        var div_name = div_name.split('-');
+        $("#"+div_name[1]).removeClass("fa fa-caret-right fa-lg").addClass("fa fa-caret-down fa-lg");
+        if(level == 5){
+            return false;
+        }
+        i = i + 1;
+        k = k + 1;
+        levels = level + 1;
+        if(level == 0){
+            level_name = 'level_1'
+        }
+        else if(level == 1){
+            level_name = 'level_2'
+        }
+        else if(level == 2){
+            level_name = 'level_3'
+        }
+        else if(level == 3){
+            level_name = 'level_4'
+        }
+        else if(level == 4){
+            level_name = 'level_5'
+        }
+      
+            btn = "<div class='col-lg-1' style='margin-top: 7px; margin-left:15px; padding:0px;'>&nbsp;&nbsp;<a name='sub_cat_level-collapse_btn_' id='' style='color:red' onclick='remove_cat("+p_index+");' class='fa fa-times-circle fa-lg'></a></div>"
+           // btn = "<div class='col-lg-1' style='margin-top: 7px; margin-left:15px; padding:0px;'><a name='sub_cat_level"+ i +"-collapse_btn_"+ i +"' onclick='add_sub_cat(this.name,"+levels+","+j+","+k+")' class='fa fa-plus-circle fa-lg'></a>&nbsp;&nbsp;<a name='sub_cat_level-collapse_btn_' style='color:red' onclick='remove_sub_cat_new(this);' class='fa fa-times-circle fa-lg'></a></div>"
+            child_div = "<div class='row' style='margin-left: 4.33333%;' id='sub_cat_level"+ i +"'></div>"
+            
+        $("#"+div_name[0]).append(
+            "<div class='col-lg-12' id='prod"+ p_index +"'><div class='col-lg-10' style='width: 422px;margin-left: -39px;'><div class='form-group' >"+
+           
+            "<input type='text' name='"+level_name+"'  id='' class='form-control' /><label for='sub_cat_name"+ k +"' class='error' style='color:red; display:none;'></div></div>"+
+            btn + "</div>"+ child_div
+
+        );
+        
+        p_index++;
+
+        $("#"+div_name[0]).show();
+        }
+		}
+
+    $("#add_category").click(function(event)  {
+
+        if (validateData() == false){
+            return false;
+        };
+
+        var panel= $("#sub_cat_level_1");
+        var inputs = panel.find("input");
+        var namePattern = /[a-zA-Z0-9\-\s]+$/;
+
+        for (i = 0; i < inputs.length; i++) {
+
+            var label = $("label[for='"+inputs[i].id+"']");
+            if(namePattern.test(inputs[i].value))
+            {
+                if($.isNumeric(inputs[i].value))
+                {
+                    label.css("display", "block");
+                    label.html("Category should contain alphanumeric only");
+                    return false;
+                }
+            }
+            else{
+                label.css("display", "none");
+                label.html("");
+            }
+        }
+
+        event.preventDefault();
+
+        category = $("#cat_name").val();
+        var namePattern = /[a-zA-Z0-9\-\s]+$/;
+
+        if (category=="")
+        {
+            $("#cat_error").css("display", "block");
+            $("#cat_error").html("Please enter category");
+            return false;
+        }
+        else{
+            $("#cat_error").css("display", "none");
+            $("#cat_error").html("");
+        }
+
+        if(namePattern.test(category))
+        {
+            if($.isNumeric($("#cat_name").val()))
+            {
+                $("#cat_error").css("display", "block");
+                $("#cat_error").html("Category should contain alphanumeric only");
+                return false;
+            }
+        }
+        else{
+            $("#cat_error").css("display", "none");
+            $("#cat_error").html("");
+        }
+
+        var panel= $("#sub_cat_level_1");
+        var inputs = panel.find("input");
+
+        var level_1 = '';
+        var level_2 = [];
+        var level_3 = [];
+        var level_4 = [];
+        var level_5 = [];
+        list = []
+        list1 = []
+        for (i = 0; i < inputs.length; i++) {
+            j = i + 1;
+            if (j <= inputs.length){
+                if (j== inputs.length){
+                    j = j - 1;
+                }
+              
+                if($.isNumeric(inputs[i].value)){
+                    $(inputs[i]).parent().children('.error').css("display", "block");
+                    $(inputs[i]).parent().children('.error').html("category should contain alphanumeric only");;
+                    return false;
+                }
+                if(inputs[i].name == 'level_1'){
+                    if(level_1 !=[] && inputs[j].name != 'level_2' || level_1 ==[] && inputs[j].name != 'level_2'){
+                        level_1 = [];
+                       
+                        level_1 = inputs[i].value;                   
+                        list.push(level_1);
+                        
+                        cat_id = inputs[i].id ;
+                        if (cat_id == "") {
+                        	list1.push("");	
+                        }
+                        else {
+                        	list1.push(cat_id);	
+                        }
+
+                    }
+                    else{
+                        level_1 = []
+                        level_1 = inputs[i].value
+                        level_2 = []
+                        level_3 = []
+                        level_4 = []
+                        level_5 = []
+                    }
+                }               
+            }
+            //console.log(inputs[i].value);
+        }
+
+        var formData = new FormData();
+
+        formData.append('list',list);
+        formData.append('list1',list1);
+
+        //formData.append('form_data',$("#cityform").serialize());
+        formData.append('city',$("#city3").val());
+        formData.append('country',$("#country3").val());
+
+        $.ajax({
+
+            type : 'POST',
+            url : '/city-life/save-category-citylife/',
+            data : formData,
+            cache: true,
+            processData: false,
+            contentType: false,
+
+            success: function (response) {
+                if(response.success=='true'){
+                                    
+                      $("#sub_cat_level_1").html("");
+		           	    $.each(response.final_list, function (index, item) {
+        		              btn = "<div class='col-lg-1' style='margin-top: 7px; margin-left:15px; padding:0px;'>&nbsp;&nbsp;<a name='sub_cat_level-collapse_btn_' id='"+item.category_id+"' style='color:red' onclick='remove_sub_cat_new(this);' class='fa fa-times-circle fa-lg'></a></div>"
+                          child_div = "<div class='row' style='margin-left: 4.33333%;' id='sub_cat_level"+ index +"'></div>"
+                          var div_str = "<div class='col-lg-12'><div class='col-lg-10' style='width: 422px;margin-left: -39px;'><div class='form-group' >"
+                          div_str = div_str + "<input value='"+item.category_name+"' type='text' name='level_1' id='"+item.category_id+"' class='form-control' /><label for='sub_cat_name"+ index +"' class='error' style='color:red; display:none;'></div></div>"
+                          div_str = div_str + btn + "</div>"+ child_div
+						        $("#sub_cat_level_1").append(div_str);
+						        $("#sub_cat_level_1").show();
+				          });
+				            $('#cat_model').text(response.message)
+				            $("#affiliate-modal").modal('show');
+
+                }
+               else if (response.success=='true1') {
+               	 $("#sub_cat_level_1").html("");
+               	 $("#affiliate-modal").modal('show');
+               }
+                if (response.success == "false") {
+                    $('#error-message').text(response.message)
+                        $("#error-modal").modal('show');
+                    }
+                },
+                beforeSend: function () {
+                    $("#processing").css('display','block');
+                },
+                complete: function () {
+                    $("#processing").css('display','none');
+                },
+                error : function(response){
+                    alert("_Error");
+                }
+            });
+
+    });
+
+function validateData(){
+        if(checkcountry("#country3") == true & checkCity("#city3") == true){
+          
+            return true;
+        }
+        else {
+        	 return false;
+        }
+       
+    }
+
+
+function checkcountry(country){
+ if($(country).val()!='' && $(country).val()!=null)
+   {
+   $(country).parent().children('.error').css("display", "none");
+   return true;
+   }
+
+   else {
+    $(country).parent().children('.error').css("display", "block");
+    $(country).parent().children('.error').text("Please select Country");
+   return false; 
+   }
+}
+
+function checkCity(city){
+ if($(city).val()!='' && $(city).val()!=null)
+   {
+   $(city).parent().children('.error').css("display", "none");
+   return true;
+   }
+
+   else {
+    $(city).parent().children('.error').css("display", "block");
+    $(city).parent().children('.error').text("Please select City");
+   return false; 
+   }
+}
+
+function getCity() {
+
+        cont_id = $('#country3 :selected').val();
+        if (cont_id) {
+            $.ajax({
+
+                type: 'GET',
+                url: '/city-life/get-city-countrybase/',
+                data: {'cont_id': cont_id},
+                success: function (response) {
+                		//	alert('success');
+                    $('#city3').html('');
+                    $('#city3').append("<option value=''>Select City</option>");
+                    $.each(response.city_list, function (index, item) {
+                        $('#city3').append(item);
+                    });
+                    $('#city3').val("");
+                },
+                error: function (response) {
+                    alert("Error!");
+                },
+            });
+        }
+        else {
+        $('#city3').html('');
+        $('#city3').val("");
+        $("#sub_cat_level_1").css('display','none');
+        }
+    }
+
+
+
+function getStates() {
+			
+        country_id = $('#country3 :selected').val();
+        //alert(country_id);
+        if (country_id) {
+           //alert('in getState');
+            $.ajax({
+
+                type: 'GET',
+                url: '/subscriber-portal/get-state/',
+                data: {'country_id': country_id},
+                success: function (response) {
+                		//alert('success');
+                    $('#state3').html('');
+                    $('#state3').append("<option value=''>Select State</option>");
+                    $.each(response.state_list, function (index, item) {
+                        $('#state3').append(item);
+                    });
+                    $('#state3').val("");
+                },
+                error: function (response) {
+                    alert("Error!");
+                },
+
+            });
+        }
+        else {
+            $('#state3').html('');
+            $('#state3').append("<option value=''>Select State</option>");
+            $('#state3').val("").change();
+        }
+    }
+
+    function del_mod(cat_name) {
+        $('#del_mod_msg').html('');
+        cat_nm = $('#cat_nm').val();
+        
+        $('#del_mod_msg').text('The Category '+cat_name+' cannot be deleted as there are active adverts present for it');
+        $("#del_mod").modal('show');
+   } 
+  
+ function getCitys() {
+
+			//$('#city').select2('val','');
+			//$('#pincode').select2('val','');
+        state_id = $('#state3 :selected').val();
+        if (state_id) {
+           //alert('in getcity');
+            $.ajax({
+
+                type: 'GET',
+                url: '/subscriber-portal/get-city/',
+                data: {'state_id': state_id},
+                success: function (response) {
+                		//	alert('success');
+                    $('#city3').html('');
+                    $('#city3').append("<option value=''>Select City</option>");
+                    $.each(response.city_list, function (index, item) {
+                        $('#city3').append(item);
+                    });
+                    $('#city3').val("");
+                },
+                error: function (response) {
+                    alert("Error!");
+                },
+
+            });
+        }
+        else {
+            $('#city3').val("");
+            $('#city3').append("<option value=''>Select City</option>");
+            $('#city3').val("").change();
+        }
+    }
+      
+    
+</script>
     </body>
 
 </html>

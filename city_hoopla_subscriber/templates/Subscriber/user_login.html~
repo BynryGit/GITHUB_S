@@ -368,6 +368,10 @@
 						
                     location.href="/subscriber-portal/subscriber-dashboard/"
                 }
+                if(response.success=='redirect'){	
+						
+                    location.href="/subscriber-portal/select-subscriber/"
+                }                
                 if(response.success=='false'){
                     $("#login_modal").modal('show');
                     captcha_reload()

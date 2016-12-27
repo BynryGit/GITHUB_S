@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
+    'django_crontab',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,9 +43,18 @@ INSTALLED_APPS = (
     'captcha',
     'push_notifications',
     'digispaceapp.templatetags.my_template_tag',
-
+    'djcelery',
+    'kombu.transport.django'
 )
 
+import djcelery
+djcelery.setup_loader()
+BROKER_URL="django://"
+CELERY_IMPORTS = ('DigiSpace.tasks')
+
+PUSH_NOTIFICATIONS_SETTINGS = {
+    "GCM_API_KEY": "AIzaSyDc3llc1alxNzkeoDgy9YpJnqUu4bQJJ_w",
+}
 
 
 MIDDLEWARE_CLASSES = (
@@ -60,6 +70,7 @@ MIDDLEWARE_CLASSES = (
     'subscriberapp.middleware.AutoLogout',
 )
 
+
 CAPTCHA_IMAGE_SIZE=(142,35)
 CAPTCHA_FONT_SIZE=30
 CAPTCHA_CHALLENGE_FUNCT = 'Admin.captcha_mod.random_digit_challenge'
@@ -71,6 +82,19 @@ WSGI_APPLICATION = 'DigiSpace.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
+
+'''DATABASES = {
+   'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'digispace_db',
+            'USER': 'root',
+            'PASSWORD': 'root',
+            'HOST': '127.0.0.1',
+            'PORT': '3306',
+            'TIME_ZONE': 'Asia/Kolkata',
+
+   }
+}'''
 
 DATABASES = {
    'default': {
@@ -84,7 +108,6 @@ DATABASES = {
 
    }
 }
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
@@ -121,11 +144,14 @@ MEDIA_URL ='/media/'
 
 CRONJOBS = [
     ('0 0 * * *', 'digispaceapp.cron_sms_digispace.my_scheduled_job'),
+    ('*/5 * * * *', 'digispaceapp.auto_activate.auto_activate_citystar'),
+    ('*/5 * * * *', 'digispaceapp.auto_deactivate.auto_deactivate_citystar'),
+    ('0 */3 * * *', 'digispaceapp.screen_cron_job.screen_present'),
 ]
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
 # Auto logout delay in minutes
-AUTO_LOGOUT_DELAY = 40 #equivalent to 30 minutes
+AUTO_LOGOUT_DELAY = 300 #equivalent to 30 minutes
 
 #SESSION_EXPIRE_AT_BROWSER_CLOSE= True

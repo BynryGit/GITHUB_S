@@ -21,7 +21,7 @@ License: You must have a valid license purchased only from themeforest(the above
 {% load staticfiles %}
 <head>
     <meta charset="utf-8"/>
-    <title>City Hoopla | Add Category</title>
+    <title>CityHoopla | Add Category</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
     <meta content="" name="description"/>
@@ -282,6 +282,38 @@ width: 100% !important;
     border-radius: 3px;
 }
 
+.done_btn{
+    height: 33px;
+    margin-top: 9px;
+     	
+    color: rgb(255, 255, 255);
+    border-radius: 20px !important;
+    background-color: #0d67e6;
+    background-image: url(images/linear_bg_1.png);
+    background-repeat: repeat-y;
+
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* IE 10 */
+    background: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+}
+
 .done_btn1 {
     color: #FFF;
     border-radius: 20px !important;
@@ -314,12 +346,14 @@ width: 100% !important;
 
 .btn {
     transition: all 0.3s ease 0s !important;
-    background-image: none !important;
+
     box-shadow: none !important;
     outline: none !important;
     position: relative;
     font-size: 16px;
 }
+
+
 
 .fileinput .btn {
     vertical-align: middle;
@@ -370,10 +404,10 @@ width: 100% !important;
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-default">
-                            <!-- <li>
-                                <a href="page_user_profile_1.html">
-                                    <i class="icon-user"></i> My Profile </a>
-                            </li> -->
+                           <li>
+                                <a href="/edit-profile/?user_id={{request.session.login_user}}">
+                                    <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
+                            </li>
                             <li>
                                 <a href="/log-out/">
                                     <i class="icon-key"></i> Log Out </a>
@@ -413,9 +447,7 @@ width: 100% !important;
 				<div class="col-md-offset-4 col-md-2" style="margin-top: -7px;">
 				<br>
 					<a href="/category/"> <input type="button" style="margin-top: 9px;padding: 2px 12px;" class="btn grey_color" data-dismiss="modal" value="Cancel"></input></a>
-	             <button id="add_category" style="margin-top: 9px;padding: 2px 12px;color: #FFF;
-							border-radius: 20px !important;
-							background: transparent -moz-linear-gradient(left center , #0D67E6, #11CA9A) repeat scroll 0% 0% !important;" class="btn btn-outline done_btn">Save	</button>		
+	             <button id="add_category"  class="btn btn-outline done_btn">Save	</button>		
 				</div> 
                     <div class="portlet light  ">
                         <div class="portlet-body form">

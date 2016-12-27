@@ -45,7 +45,7 @@ import calendar
 
 #SERVER_URL = "http://52.40.205.128"
 #SERVER_URL = "http://127.0.0.1:8000" 
-SERVER_URL = "http://52.66.169.65"    
+SERVER_URL = "http://52.66.133.35" 
 
 def view_user_list(request):
     try:

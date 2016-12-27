@@ -19,7 +19,7 @@ License: You must have a valid license purchased only from themeforest(the above
 {% load staticfiles %}
     <head>
         <meta charset="utf-8" />
-        <title>City Hoopla | City List</title>
+        <title>CityHoopla | City List</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <meta content="" name="description" />
@@ -604,10 +604,10 @@ hr {
                                     <i class="fa fa-angle-down"></i>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-default">
-                                   <!--  <li>
-                                        <a href="page_user_profile_1.html">
-                                            <i class="icon-user"></i> My Profile </a>
-                                    </li> -->
+                                  <li>
+                                <a href="/edit-profile/?user_id={{request.session.login_user}}">
+                                    <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
+                            </li>
                                     <li>
                                         <a href="/log-out/">
                                             <i class="icon-key"></i> Log Out </a>
@@ -793,7 +793,7 @@ hr {
 												                          		<a class="fa fa-pencil" href="/edit-city/?city_place_id={{ city.city_place_id }}" style="color:#3eb199; font-size:17px;"
 												                                                       ></a>
 												                              <span style="font-size:20px;">|</span>
-																						<a class="fa fa-trash-o" onclick="del_mod();" style="color:#3eb199; font-size:17px;"
+																						<a class="fa fa-trash-o" onclick="del_mod('{{city.city_name}}');" style="color:#3eb199; font-size:17px;"
 												                                                       ></a> 														                                                       
 																						<input type="hidden" id="cid_id" value="{{city.city_name}}">												          
 												                          </div>	
@@ -1031,13 +1031,12 @@ $('#state option[value='+ $('#selectedState').val() +']').attr("selected", "sele
         $("#delete_user").modal('show');
    }
    
-      function del_mod() {
+      function del_mod(city_nm) {
         //alert($('#cid_id').val());
-        city_nm = $('#cid_id').val();
+        //city_nm = $('#cid_id').val();
         $('#del_mod_msg').text('The City '+city_nm+' cannot be deleted as there are active adverts present for it');
         $("#del_mod").modal('show');
    }
- 		
  		
  		function inactive_user() {
  		$("#delete_user").modal('hide');	

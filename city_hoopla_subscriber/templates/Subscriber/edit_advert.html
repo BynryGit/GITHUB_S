@@ -1461,7 +1461,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                                     <div class="row">
                                                                                                         <div class="col-lg-3 col-md-3 check-advert"
                                                                                                              style="padding-top: 30px;">
-                                                                                                            <li>
+                                                                                                             <li>
                                                                                                                 <label id="tel_lebel_{{rate_card.rate_card_id}}"
                                                                                                                        class="font-15 font-regular">
                                                                                                                     {% if enquiry_service_data.enquiry_service_name == rate_card.service_name %}
@@ -1475,6 +1475,21 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                                                                value="{{rate_card.service_name}}"
                                                                                                                                class="telephone_radio"/>{{rate_card.service_name}}</label>
                                                                                                                     {%endif%}
+                                                                                                                    {% if rate_card.service_name == 'Platinum' %}
+                                                                                                                       <b>  <span style="font-size: 11px;color: #10b1ad !important;"><br>(Sales Lead SMS sent immediately)</span> </b>
+                                                                                                                    {% elif rate_card.service_name == 'Diamond' %}
+                                                                                                                    <b>  <span style="font-size: 11px;color: #10b1ad !important;"><br>(Sales Lead SMS sent 10 mins after the customer call)</span> </b>
+                                                                                                                    {% elif rate_card.service_name == 'Gold' %}
+                                                                                                                    <b>   <span style="font-size: 11px;color: #10b1ad !important;"><br> (Sales Lead SMS sent 20 mins after the customer call)</span></b>
+                                                                                                                    {% elif rate_card.service_name == 'Silver' %}
+                                                                                                                    <b>   <span style="font-size: 11px;color: #10b1ad !important;"><br> (Sales Lead SMS sent 25 mins after the customer call)</span></b>
+                                                                                                                    {% elif rate_card.service_name == 'Bronze' %}
+                                                                                                                    <b>  <span style="font-size: 11px;color: #10b1ad !important;"><br> (Sales Lead SMS sent 30 mins after the customer call)</span></b>
+                                                                                                                    {% elif rate_card.service_name == 'Value' %}
+                                                                                                                    <b>   <span style="font-size: 11px;color: #10b1ad !important;"><br>(Sales Lead SMS sent 35 mins after the customer call)</span></b>
+																																							{% endif %}
+                                                                                                                    
+
                                                                                                             </li>
                                                                                                         </div>
                                                                                                         <div class="col-lg-3 col-md-3">
@@ -2082,7 +2097,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                             </label>
                                                                                             <textarea name="speciality"
                                                                                                       maxlength="5000"
-                                                                                                      id="speciality"
+                                                                                                      id="speciality" onkeyup="textAreaAdjust(this)"
                                                                                                       class="form-control">{{advert_data.speciality}}</textarea>
                                                                                             <label class="control-label  dis_count" style="font-size:15px;; float:right">
                                                                                                 0 /5000 Characters
@@ -2101,7 +2116,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                             </label>
                                                                                             <textarea
                                                                                                     name="happy_hour_offer"
-                                                                                                    maxlength="5000"
+                                                                                                    maxlength="5000"  onkeyup="textAreaAdjust(this)"
                                                                                                     id="happy_hour_offer"
                                                                                                     class="form-control">{{advert_data.happy_hour_offer}}</textarea>
                                                                                             <label class="control-label  dis_count" style="font-size:15px;; float:right">
@@ -2119,7 +2134,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                             <label class="control-label " style="font-size:15px; font-weight:500;">
                                                                                                 Facilities</label>
                                                                                             <textarea name="facility"
-                                                                                                      maxlength="5000"
+                                                                                                      maxlength="5000" onkeyup="textAreaAdjust(this)"
                                                                                                       id="facility"
                                                                                                       class="form-control">{{advert_data.facility}}</textarea>
                                                                                             <label class="control-label  dis_count" style="font-size:15px;; float:right">
@@ -2138,7 +2153,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                                 Course Duration
                                                                                             </label>
                                                                                             <textarea
-                                                                                                    name="course_duration"
+                                                                                                    name="course_duration" onkeyup="textAreaAdjust(this)"
                                                                                                     maxlength="5000"
                                                                                                     id="course_duration"
                                                                                                     class="form-control">{{advert_data.course_duration}}</textarea>
@@ -2155,7 +2170,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                             <label class="control-label " style="font-size:15px; font-weight:500;">
                                                                                                 Affilated To
                                                                                             </label>
-                                                                                            <textarea name="affilated"
+                                                                                            <textarea name="affilated" onkeyup="textAreaAdjust(this)"
                                                                                                       maxlength="5000"
                                                                                                       id="affilated"
                                                                                                       class="form-control">{{advert_data.affilated_to}}</textarea>
@@ -2211,7 +2226,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                             Description
                                                                                             <span class="required"> * </span>
                                                                                         </label>
-                                                                                        <textarea cols="50" rows="" id="short_discription" maxlength="5000"
+                                                                                        <textarea  id="short_discription" maxlength="5000" onkeyup="textAreaAdjust(this)"
                                                                                                   class="form-control">{{advert_data.short_description}} </textarea>
                                                                                                   
                                                                                         <label id="short_discription_count" class="control-label  dis_count" style="font-size:15px;; float:right">
@@ -2232,7 +2247,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                         <textarea type="text"
                                                                                                   name="product_discription"
                                                                                                   id="product_discription"
-                                                                                                  maxlength="5000"
+                                                                                                  maxlength="5000" onkeyup="textAreaAdjust(this)" 
                                                                                                   class="form-control">{{advert_data.product_description}}</textarea>
                                                                                         <label class="control-label  dis_count" id="product_discription_count" style="font-size:15px;; float:right">
                                                                                                         0 /5000 Characters
@@ -2249,7 +2264,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                             <!-- <span class="required"> * </span> -->
                                                                                         </label>
                                                                                         <textarea type="text"
-                                                                                                  name="discount_discription"
+                                                                                                  name="discount_discription" onkeyup="textAreaAdjust(this)" 
                                                                                                   maxlength="5000"
                                                                                                   id="discount_discription"
                                                                                                   class="form-control">{{advert_data.discount_description}}</textarea>
@@ -2474,7 +2489,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                         </label>
                                                                                         <textarea type="text"
                                                                                                   name="other_details"
-                                                                                                  maxlength="5000"
+                                                                                                  maxlength="5000" onkeyup="textAreaAdjust(this)"
                                                                                                   id="other_details"
                                                                                                   class="form-control">{{ advert_data.any_other_details }}</textarea>
                                                                                         <label class="control-label  dis_count" style="font-size:15px;; float:right">
@@ -2668,18 +2683,30 @@ License: You must have a valid license purchased only from themeforest(the above
 
                                                                                 <div class="col-lg-6 col-md-6">
                                                                                     <div class="form-group form-height">
-                                                                                        <label class="control-label " style="font-size:15px; font-weight:500;">State
+                                                                                        <label class="control-label " style="font-size:15px; font-weight:500;">States
                                                                                             <span class="required"> * </span>
                                                                                         </label>
                                                                                         <select class="form-control select2-hidden-accessible"
                                                                                                 onchange=""
                                                                                                 id="statec"
                                                                                                 name="statec">
-                                                                                            <option value="">
-                                                                                                Select State
-                                                                                            </option>
-
-                                                                                        </select>
+                                                       
+                                                                                        <option value="">
+                                                                                           Select State
+                                                                                         </option>
+		                                                                                    {% for state in state_list %}
+		                                                                                        {% if business_data.state_id == state.state_id %}
+		                                                                                            <option selected value="{{ state.state_id }}">
+		                                                                                                {{ state.state_name }}
+		                                                                                            </option>
+		                                                                                        {% else %}
+		                                                                                            <option value="{{ state.state_id }}">
+		                                                                                                {{ state.state_name }}
+		                                                                                            </option>
+		                                                                                        {% endif %}
+		                                                                                    {% endfor %}
+		                                                                                </select>
+                                                                                
                                                                                         <label class="error font-12 font-regular"
                                                                                                style="color:red; display:none;"></label>
                                                                                     </div>
@@ -2695,7 +2722,22 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                             <option value="">
                                                                                                 Select City
                                                                                             </option>
-                                                                                        </select>
+                                                                                       
+                                                                                 
+                                                                                    {% for city in city_list %}
+                                                                                        {% if business_data.city_place_id == city.city_place_id %}
+                                                                                            <option selected value="{{ city.city_place_id }}">
+                                                                                                {{ city.city_id.city_name }}
+                                                                                            </option>
+                                                                                        {% else %}
+                                                                                            <option value="{{ city.city_place_id }}">
+                                                                                                {{ city.city_id.city_name }}
+                                                                                            </option>
+                                                                                        {% endif %}
+                                                                                    {% endfor %}
+                                                                                </select>
+                                                                                
+                                                                                
                                                                                         <label class="error font-12 font-regular"
                                                                                                style="color:red; display:none;"></label>
                                                                                     </div>
@@ -2712,7 +2754,21 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                             <option value="">
                                                                                                 Select Pincode
                                                                                             </option>
-                                                                                        </select>
+                                                                      
+                                                                                         {% for pin in pincode_list1 %}
+                                                                                          {% if advert_data.pincode_id == pin.pincode_id %}
+                                                                                             <option selected value="{{ pin.pincode_id }}">
+                                                                                                {{ pin.pincode }}
+                                                                                            </option>
+                                                                                         {% else %}
+                                                                                            <option value="{{ pin.pincode_id }}">
+                                                                                                {{ pin.pincode }}
+                                                                                            </option>
+                                                                                         {% endif %}
+                                                                                        {% endfor %}
+                                                                                      </select>
+                                                                                
+                                                                                
                                                                                         <label class="error font-12 font-regular"
                                                                                                style="color:red; display:none;"></label>
                                                                                     </div>
@@ -2891,7 +2947,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
                                                     {% if cat_amenities %}
 
-                                                         <div class="row div-border div-color cat_amenity" style="padding-bottom: 9px !important;">
+                                                         <div class="row div-border div-color cat_amenity" style="padding-bottom: 9px !important;" id="othr_amnty">
                                                             <div class="col-lg-12 col-md-12">
                                                                 <div class="form-group"
                                                                      style="margin-top: 10px;margin-bottom: 0px;">
@@ -2943,7 +2999,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                <div class="form-group">
                                                                   <textarea
                                                                        name="other_amenity"
-                                                                       maxlength="500"
+                                                                       maxlength="500" onkeyup="textAreaAdjust(this)"
                                                                        id="any_other_amenity"
                                                                        class="form-control">{{ advert_data.other_amenity }}</textarea>
                                                                     <label class="control-label  dis_count "
@@ -3275,7 +3331,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                             <label class="control-label " style="font-size:15px;">Other Projects
                                                                                                 <!-- <span class="required"> * </span> -->
                                                                                             </label>
-                                                                                            <textarea type="text" name="other_projects"
+                                                                                            <textarea type="text" name="other_projects" onkeyup="textAreaAdjust(this)"
                                                                                                       maxlength="5000"
                                                                                                       id="other_projects"
                                                                                                       class="form-control">{{advert_data.other_projects}}</textarea>
@@ -4503,22 +4559,61 @@ $( ".pre_start_date").datepicker({
 $( ".date-picker1" ).datepicker({});
 
 
+    function textAreaAdjust(o) {
+        o.style.height = "1px";
+        o.style.height = (o.scrollHeight)+"px";
+    }
+    
 $("#short_discription").keyup(function(){
+
         text_length = $("#short_discription").val().trim().length;
         text_count = text_length + "/5000 Characters";
         $("#short_discription").parent().children('.dis_count').text(text_count);
     });
+
+ $('#short_discription').bind('keypress', function(e) {
+
+    if ((e.keyCode || e.which) == 13) {
+        e.preventDefault();
+
+        //Just add this line to your code
+        $(this).val($(this).val()+'\n');
+
+        return false;
+    }
+});
+
 
 $("#product_discription").keyup(function(){
         text_length = $("#product_discription").val().trim().length;
         text_count = text_length + "/5000 Characters";
         $("#product_discription").parent().children('.dis_count').text(text_count);
     });
+$('#product_discription').bind('keypress', function(e) {
+    if ((e.keyCode || e.which) == 13) {
+        e.preventDefault();
+
+        //Just add this line to your code
+        $(this).val($(this).val()+'\n');
+
+        return false;
+    }
+});    
 $("#any_other_amenity").keyup(function(){
         text_length = $("#any_other_amenity").val().trim().length;
         text_count = text_length + "/5000 Characters";
         $("#any_other_amenity").parent().children('.dis_count').text(text_count);
     });
+$('#any_other_amenity').bind('keypress', function(e) {
+    if ((e.keyCode || e.which) == 13) {
+        e.preventDefault();
+
+        //Just add this line to your code
+        $(this).val($(this).val()+'\n');
+
+        return false;
+    }
+});    
 
 $("#discount_discription").keyup(function(){
         text_length = $("#discount_discription").val().trim().length;
@@ -4533,7 +4628,6 @@ $("#discount_discription").keyup(function(){
         }
 
     });
-
 $('#discount_discription').bind('keypress', function(e) {
     if ((e.keyCode || e.which) == 13) {
         e.preventDefault();
@@ -4551,42 +4645,114 @@ $("#other_details").keyup(function(){
         text_count = text_length + "/5000 Characters";
         $("#other_details").parent().children('.dis_count').text(text_count);
     });
+$('#other_details').bind('keypress', function(e) {
+    if ((e.keyCode || e.which) == 13) {
+        e.preventDefault();
+
+        //Just add this line to your code
+        $(this).val($(this).val()+'\n');
+
+        return false;
+    }
+});    
 
 $("#other_projects").keyup(function(){
         text_length = $("#other_projects").val().trim().length;
         text_count = text_length + "/5000 Characters";
         $("#other_projects").parent().children('.dis_count').text(text_count);
     });
+$('#other_projects').bind('keypress', function(e) {
+    if ((e.keyCode || e.which) == 13) {
+        e.preventDefault();
+
+        //Just add this line to your code
+        $(this).val($(this).val()+'\n');
+
+        return false;
+    }
+});    
 
 $("#speciality").keyup(function(){
         text_length = $("#speciality").val().trim().length;
         text_count = text_length + "/5000 Characters";
         $("#speciality").parent().children('.dis_count').text(text_count);
     });
+$('#speciality').bind('keypress', function(e) {
+    if ((e.keyCode || e.which) == 13) {
+        e.preventDefault();
+
+        //Just add this line to your code
+        $(this).val($(this).val()+'\n');
+
+        return false;
+    }
+});
 
 $("#happy_hour_offer").keyup(function(){
         text_length = $("#happy_hour_offer").val().trim().length;
         text_count = text_length + "/5000 Characters";
         $("#happy_hour_offer").parent().children('.dis_count').text(text_count);
     });
+$('#happy_hour_offer').bind('keypress', function(e) {
+    if ((e.keyCode || e.which) == 13) {
+        e.preventDefault();
+
+        //Just add this line to your code
+        $(this).val($(this).val()+'\n');
+
+        return false;
+    }
+});
 
 $("#facility").keyup(function(){
         text_length = $("#facility").val().trim().length;
         text_count = text_length + "/5000 Characters";
         $("#facility").parent().children('.dis_count').text(text_count);
     });
+$('#facility').bind('keypress', function(e) {
+    if ((e.keyCode || e.which) == 13) {
+        e.preventDefault();
+
+        //Just add this line to your code
+        $(this).val($(this).val()+'\n');
+
+        return false;
+    }
+});    
 
 $("#affilated").keyup(function(){
         text_length = $("#affilated").val().trim().length;
         text_count = text_length + "/5000 Characters";
         $("#affilated").parent().children('.dis_count').text(text_count);
     });
+$('#affilated').bind('keypress', function(e) {
+    if ((e.keyCode || e.which) == 13) {
+        e.preventDefault();
+
+        //Just add this line to your code
+        $(this).val($(this).val()+'\n');
+
+        return false;
+    }
+});
+    
 
 $("#course_duration").keyup(function(){
         text_length = $("#course_duration").val().trim().length;
         text_count = text_length + "/5000 Characters";
         $("#course_duration").parent().children('.dis_count').text(text_count);
     });
+$('#course_duration').bind('keypress', function(e) {
+    if ((e.keyCode || e.which) == 13) {
+        e.preventDefault();
+
+        //Just add this line to your code
+        $(this).val($(this).val()+'\n');
+
+        return false;
+    }
+});    
+
 
     referanceDay = {
         '3' : "3 Days",
@@ -4654,8 +4820,35 @@ function sub_clear_subcat(){
     var advert_flag = '';
 
  $( document ).ready(function() {
+        duration_change_flag = 1;
 
-           
+        function countRows(id) {
+        
+            var stringLength = document.getElementById(id).value.length;
+            if (stringLength >0) {
+				var count = Math.ceil(stringLength / 49 );
+            count = count * 20;
+            count = count + 15;
+            $("#"+id).css("height",count+"px")            	
+            }
+            
+        }
+        countRows("short_discription");
+        countRows("speciality");
+        countRows("happy_hour_offer");
+        countRows("facility");
+        countRows("course_duration");
+        countRows("affilated");
+        countRows("product_discription");
+        countRows("discount_discription");
+        countRows("other_details");
+        //other_amenity
+        countRows("other_projects");
+        
+       if ($('#othr_amnty').length) {
+            countRows("any_other_amenity");
+        }
+ 
         $.ajax({
             type : "POST",
             url : '/subscriber-portal/get-edit-booked-slots/',
@@ -4816,10 +5009,9 @@ function sub_clear_subcat(){
     });
 
     function sub_check_cat(lvl,this_val){
-
+		
         main_category_id =  $("#sub_category").val();
         supplier_id = $("#supplier_id_hidden").val();
-
         $("#property_desc").hide();
         if($('#sub_category option:selected').text().trim() == "Real Estate"){
             if($('#llvl1 option:selected').text().trim() == "Realtors"){
@@ -4882,9 +5074,10 @@ function sub_clear_subcat(){
         $.ajax({
             type    : "POST",
             url : '/subscriber-portal/check-category-supplier/',
-            data : {'category_id':$(this_val).val(),'cat_level':lvl,'main_category_id':main_category_id,'supplier_id':supplier_id},
+            data : {'category_id':$(this_val).val(),'cat_level':lvl,'main_category_id':main_category_id,'supplier_id':supplier_id,'city_place_id':$("#city1").val()},
             success: function (response) {
                 if(duration_change_flag == 1){
+							
                     $("#subscription_div").css("display","none");
                     $("#duration_list").val("").change();
                 }
@@ -5229,7 +5422,8 @@ function check_advert(id,counter)
                             no4_ranges = response.booked_date_list;
                         }
                         if(counter == 5){
-                            no5_ranges = response.date_list;
+                        //alert('gg')
+                            no5_ranges = response.booked_date_list;
                         }
                     }
                     if (response.success == "false") {
@@ -5552,7 +5746,7 @@ function check_advert(id,counter)
                 numberOfMonths: 1,
                 beforeShowDay: function(date) {
                     for(var i=0; i<ranges5.length; i++) {
-                        if(date >= new Date(ranges5[i].start_date) && date <= new Date(ranges5[i].end_date)) return [false, ''];
+                        if(date >= new Date(ranges5[i]) && date <= new Date(ranges5[i])) return [false, ''];
                     }
                     return [true, ''];
                 },
@@ -6317,6 +6511,26 @@ function check_advert(id,counter)
 
         $(document).ready(function(){
 
+            $("#country").val("{{advert_data.country_id}}").change();
+            $("#country").prop("disabled","true");
+            $("#statec").prop("disabled","true");
+            $("#city").prop("disabled","true");
+            $("#currency").val("{{advert_data.currency}}");
+            
+            setTimeout(function(){
+                $("#statec").val({{advert_data.state_id}}).change();
+            }, 1000);        
+            setTimeout(function(){
+                $("#city").val({{advert_data.city_place_id}}).change();
+            }, 2000);
+            setTimeout(function(){
+             $("#pincode").val({{advert_data.pincode_id}}).change();
+             //alert($("#pincode").val())
+            }, 2500);
+            setTimeout(function(){
+                duration_change_flag = 1;
+            }, 3000);
+            
 
                 if($("#dis_flag").val() == 1){
                 $("#startDate").hide();
@@ -6338,39 +6552,17 @@ function check_advert(id,counter)
             $('#website').val(Website);
             validates();
 
-            $("#country").val("{{advert_data.country_id}}").change();
-            $("#country").prop("disabled","true");
-            $("#statec").prop("disabled","true");
-            $("#city").prop("disabled","true");
-            $("#currency").val("{{advert_data.currency}}");
-            setTimeout(function(){
-                $("#statec").val({{advert_data.state_id}}).change();
-            }, 1000);
-            setTimeout(function(){
-                $("#city").val({{advert_data.city_place_id}}).change();
-            }, 2000);
-            setTimeout(function(){
 
-              $("#pincode").val({{advert_data.pincode_id}}).change();
-
-            }, 2500);
-
-            setTimeout(function(){
-                duration_change_flag = 1;
-                //alert(duration_change_flag)
-            }, 3000);
 			
 			
-
-
             text_length = $("#short_discription").val().trim().length;
             text_count = text_length + "/5000 Characters";
             $("#short_discription").parent().children('.dis_count').text(text_count);
             
             // Dynamic size of Text area
-			   var stringLength = document.getElementById("short_discription").value.length;
-            var count = Math.ceil(stringLength / document.getElementById("short_discription").cols); 
-      		document.getElementById("short_discription").rows = count; 
+			  // var stringLength = document.getElementById("short_discription").value.length;
+           // var count = Math.ceil(stringLength / document.getElementById("short_discription").cols); 
+      	//	document.getElementById("short_discription").rows = count; 
 				
             text_length = $("#product_discription").val().trim().length;
             text_count = text_length + "/5000 Characters";
@@ -6533,7 +6725,7 @@ function check_advert(id,counter)
               infoWindow.open(map, this);
               map.setZoom(8);
 
-                  });
+              });
           // Try HTML5 geolocation.
           if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
@@ -6604,7 +6796,7 @@ function check_advert(id,counter)
             map.panTo(position);
           }
           function placeMarker2(position, map) {
-            if ( marker ) {
+            if (marker ) {
                 marker.setPosition(position);
 
               } else {
@@ -6623,22 +6815,31 @@ function check_advert(id,counter)
             var geocoder = new google.maps.Geocoder();
             var lat='';
             var lng='';
+					
+					//alert($('#city :selected').text())
+					//alert($("#statec :selected").text())	
+					//alert($("#pincode :selected").text())
             var city_state_zip =$('#city :selected').text()+", "+$("#statec :selected").text()+", "+$("#pincode :selected").text();
-            var street_address = $("#address_line1").val()+" ," + $('#address_line2').val()  +", "+$("#area").val();
-            var address = street_address + " " + city_state_zip;
-            geocoder.geocode( { 'address': address}, function(results, status) {
+				           
+            var street_address = $("#address_line1").val()+", " + $('#address_line2').val()  +", "+$("#area").val();
+            var address = street_address+", "+ city_state_zip;
+            //alert(address) 
+            geocoder.geocode({'address': address}, function(results, status) {
+				//alert(status)
             if (status == google.maps.GeocoderStatus.OK) {
                lat = results[0].geometry.location.lat(); //getting the lat
                $('#lat').val(lat);
-               lng = results[0].geometry.location.lng(); //getting the lng
+               //alert('ff')
+               lng = results[0].geometry.location.lng(); //getting the long
                $('#lng').val(lng);
+               
                map.setCenter(results[0].geometry.location);
                     $("#lat").val(lat);
               $("#lng").val(lng);
                placeMarker(results[0].geometry.location,map);
              } else {
                     //alert("Geocode was not successful for the following reason: " + status);
-                    }
+              }
              });
              var latlng = new google.maps.LatLng(lat, lng);
              var myOptions = {
@@ -6650,6 +6851,7 @@ function check_advert(id,counter)
          }
 
         function validates(){
+        
             if ($('#address_line1').val().length   > 0 || $('#address_line2').val().length   > 0  && $('#area').val().length   >   0   &&
                 $('#city :selected').text().length  >   0   &&
                 $('#statec :selected').text().length    >   0 && $('#pincode :selected').text().length    >   0) {
@@ -6658,6 +6860,7 @@ function check_advert(id,counter)
 
         }
         function GetAddress() {
+          
             var lat = parseFloat();
             var lng = parseFloat(document.getElementById("txtLongitude").value);
             var latlng = new google.maps.LatLng(lat, lng);
@@ -7068,6 +7271,7 @@ function check_advert(id,counter)
         getCity();
     });
     $("#city").change(function () {
+    //alert('city chaged')
         getPincode();
     });
 
@@ -7286,6 +7490,7 @@ function check_advert(id,counter)
 
 
     function getPincode(){
+   // alert($('#city :selected').val())
         city_id = $('#city :selected').val();
         if (city_id) {
             $.ajax({

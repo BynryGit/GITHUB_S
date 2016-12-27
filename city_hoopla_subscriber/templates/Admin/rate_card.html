@@ -248,43 +248,63 @@ div.dataTables_filter label {
                                                 <ul class="nav nav-tabs tabs-left" style="min-height:750px;">
                                                     {% for city in city_list %}
                                                         {% if forloop.counter == 1 %}
-                                                            <li class="active">
+                                                            <li class="active" >
                                                                 <a style="cursor:default">
                                                                     <span onclick="changeCityData({{city.city_id}},{{forloop.counter}})" style="cursor:pointer" data-toggle="tab">
                                                                         {{city.city_name}}
                                                                     </span>
-                                                                    {% if city.has_rate_card == 'true' %}
-                                                                        <span onclick="deleteModalCall({{city.city_id}},{{forloop.counter}})" id="trash_{{forloop.counter}}" class="float_right">
+                                                                    {% if city.has_rate_card == 'true' and city.rate_card_status == '0' %}
+                                                                        <span onclick="activateModalCall({{city.city_id}},{{forloop.counter}})" id="activate_{{forloop.counter}}" class="float_right">
                                                                             <i class="fa fa-trash"></i>
                                                                         </span>
                                                                     {% else %}
-                                                                        <span id="trash_{{forloop.counter}}" class="float_right" style="cursor:default;">
-                                                                            <i class="fa fa-trash"></i>
+                                                                        {% if city.active_business_advert == 'true' %}
+                                                                            <span onclick="dontdeleteModalCall('{{city.city_name}}')" id="trash_{{forloop.counter}}" class="float_right">
+                                                                                <i class="fa fa-trash"></i>
+                                                                            </span>
+                                                                        {% elif city.has_rate_card == 'true' %}
+                                                                            <span onclick="deleteModalCall({{city.city_id}},{{forloop.counter}})" id="trash_{{forloop.counter}}" class="float_right">
+                                                                                <i class="fa fa-trash"></i>
+                                                                            </span>
+                                                                        {% else %}
+                                                                            <span id="trash_{{forloop.counter}}" class="float_right" style="cursor:default;">
+                                                                                <i class="fa fa-trash"></i>
+                                                                            </span>
+                                                                        {% endif %}
+                                                                        <span onclick="editRateCard({{city.city_id}})" id="pencil_{{forloop.counter}}" class="float_right">
+                                                                            <i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;
                                                                         </span>
                                                                     {% endif %}
-                                                                    <span onclick="editRateCard({{city.city_id}})" id="pencil_{{forloop.counter}}" class="float_right">
-                                                                        <i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;
-                                                                    </span>
                                                                 </a>
                                                             </li>
                                                         {% else %}
                                                             <li>
-                                                                <a style="cursor:default">
+                                                                <a style="cursor:default" id="anchor_{{forloop.counter}}">
                                                                     <span id="city_name_{{forloop.counter}}" onclick="changeCityData({{city.city_id}},{{forloop.counter}})" style="cursor:pointer" data-toggle="tab">
                                                                         {{city.city_name}}
                                                                     </span>
-                                                                    {% if city.has_rate_card == 'true' %}
-                                                                        <span onclick="deleteModalCall({{city.city_id}},{{forloop.counter}})" id="trash_{{forloop.counter}}" class="float_right" style="display:none;">
-                                                                            <i class="fa fa-trash"></i>
+                                                                    {% if city.has_rate_card == 'true' and city.rate_card_status == '0' %}
+                                                                        <span onclick="activateModalCall({{city.city_id}},{{forloop.counter}})" id="activate_{{forloop.counter}}" class="float_right" style="display:none;">
+                                                                            <i class="fa fa-repeat"></i>
                                                                         </span>
                                                                     {% else %}
-                                                                        <span id="trash_{{forloop.counter}}" class="float_right" style="display:none; cursor:default;">
-                                                                            <i class="fa fa-trash"></i>
+                                                                        {% if city.active_business_advert == 'true' %}
+                                                                            <span onclick="dontdeleteModalCall('{{city.city_name}}')" id="trash_{{forloop.counter}}" class="float_right" style="display:none;">
+                                                                                <i class="fa fa-trash"></i>
+                                                                            </span>
+                                                                        {% elif city.has_rate_card == 'true' %}
+                                                                            <span onclick="deleteModalCall({{city.city_id}},{{forloop.counter}})" id="trash_{{forloop.counter}}" class="float_right" style="display:none;">
+                                                                                <i class="fa fa-trash"></i>
+                                                                            </span>
+                                                                        {% else %}
+                                                                            <span id="trash_{{forloop.counter}}" class="float_right" style="display:none; cursor:default;">
+                                                                                <i class="fa fa-trash"></i>
+                                                                            </span>
+                                                                        {% endif %}
+                                                                        <span onclick="editRateCard({{city.city_id}})" id="pencil_{{forloop.counter}}" class="float_right" style="display:none;">
+                                                                            <i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;
                                                                         </span>
                                                                     {% endif %}
-                                                                    <span onclick="editRateCard({{city.city_id}})" id="pencil_{{forloop.counter}}" class="float_right" style="display:none;">
-                                                                        <i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;
-                                                                    </span>
                                                                 </a>
                                                             </li>
                                                         {% endif %}
@@ -437,12 +457,51 @@ div.dataTables_filter label {
             </div>
             <div class="modal-body">
                 <div class="form-body">
-                    <h4 class="text-center">Do you want to delete rate card for <span id="del_city"></span>?</h4>
+                    <h4 class="text-center">Do you want to deactivate rate card for <span id="del_city"></span>?</h4>
                     <input type="hidden" id="del_city_id">
                     <input type="hidden" id="del_city_counter">
                 </div>
                 <div style="text-align:center !important;" class="modal-footer">
                     <button type="button" onclick="deleteRateCard()" class="btn green">Yes</button>
+                    <button type="button" class="btn green" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade draggable-modal" id="dont_delete_city" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog" style="width: 365px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 117px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+            </div>
+            <div class="modal-body">
+                <div class="form-body">
+                    <h4 class="text-center">The Rate Card for <span id="dont_del_city"></span> cannot be deleted as there are active subscription and adverts present for it.</h4>
+                </div>
+                <div style="text-align:center !important;" class="modal-footer">
+                    <button type="button" class="btn green" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade draggable-modal" id="activate_city" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog" style="width: 365px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 117px;" src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+            </div>
+            <div class="modal-body">
+                <div class="form-body">
+                    <h4 class="text-center">Do you want to activate rate card for <span id="act_city"></span>?</h4>
+                    <input type="hidden" id="act_city_id">
+                    <input type="hidden" id="act_city_counter">
+                </div>
+                <div style="text-align:center !important;" class="modal-footer">
+                    <button type="button" onclick="activateRateCard()" class="btn green">Yes</button>
                     <button type="button" class="btn green" data-dismiss="modal">No</button>
                 </div>
             </div>
@@ -639,6 +698,18 @@ div.dataTables_filter label {
         location.href="/edit-rate-card/?city_id="+city_id
     }
 
+    function dontdeleteModalCall(city_name){
+        $("#dont_del_city").text(city_name);
+        $("#dont_delete_city").modal('show');
+    }
+
+    function activateModalCall(city_id,counter){
+        $("#act_city").text($("#city_name_"+counter).text());
+        $("#act_city_id").val(city_id);
+        $("#act_city_counter").val(counter);
+        $("#activate_city").modal('show');
+    }
+
     function deleteModalCall(city_id,counter){
         $("#del_city").text($("#city_name_"+counter).text());
         $("#del_city_id").val(city_id);
@@ -646,9 +717,44 @@ div.dataTables_filter label {
         $("#delete_city").modal('show');
     }
 
+    function activateRateCard(){
+        city_id = $("#act_city_id").val();
+        city_name = $("#act_city").text().trim();
+        counter = $("#act_city_counter").val();
+        $("#activate_city").modal('hide');
+
+        $.ajax({
+            type : "GET",
+            url : '/activate-rate-card/',
+            data : {'city_id':city_id},
+            success: function (response) {
+                if(response.success=='true'){
+                    toastr.success(response.message);
+                    $("#anchor_"+counter).html('');
+                    $("#anchor_"+counter).append(
+                        '<span id="city_name_'+counter+'" onclick="changeCityData('+city_id+','+counter+')" style="cursor:pointer" data-toggle="tab">'+city_name+'</span>'+
+                        '<span onclick="deleteModalCall('+city_id+','+counter+')" id="trash_'+counter+'" class="float_right" style="display:none;"><i class="fa fa-trash"></i></span>'+
+                        '<span onclick="editRateCard('+city_id+')" id="pencil_'+counter+'" class="float_right" style="display:none;"><i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;</span>'
+                    );
+                    changeCityData(city_id,counter);
+                }
+            },
+            beforeSend: function () {
+                $("#processing").css('display','block');
+            },
+            complete: function () {
+                $("#processing").css('display','none');
+            },
+            error : function(response){
+                alert("_Error");
+            }
+        });
+    }
+
     function deleteRateCard(){
         city_id = $("#del_city_id").val();
         counter = $("#del_city_counter").val();
+        city_name = $("#del_city").text().trim();
         $("#delete_city").modal('hide');
         $("#trash_"+counter).prop("onclick", null);
         $("#trash_"+counter).css("cursor", "default");
@@ -659,6 +765,11 @@ div.dataTables_filter label {
             success: function (response) {
                 if(response.success=='true'){
                     toastr.success(response.message);
+                    $("#anchor_"+counter).html('');
+                    $("#anchor_"+counter).append(
+                        '<span id="city_name_'+counter+'" onclick="changeCityData('+city_id+','+counter+')" style="cursor:pointer" data-toggle="tab">'+city_name+'</span>'+
+                        '<span onclick="activateModalCall('+city_id+','+counter+')" id="activate_'+counter+'" class="float_right" style="display:none;"><i class="fa fa-repeat"></i></span>'
+                    );
                     changeCityData(city_id,counter);
                 }
             },
@@ -682,6 +793,7 @@ div.dataTables_filter label {
 
         $("#trash_"+counter).css("display","block");
         $("#pencil_"+counter).css("display","block");
+        $("#activate_"+counter).css("display","block");
         $.ajax({
             type : "GET",
             url : '/get-city-rate-card/',

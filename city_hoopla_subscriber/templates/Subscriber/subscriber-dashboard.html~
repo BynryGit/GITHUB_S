@@ -850,7 +850,7 @@ display: none;
                                 </div>
 
                                 <div class="col-lg-3" id="week" style="font-size: 12px;">
-                                    <select class="form-control sel2" onchange="change_data1();">
+                                    <select class="form-control sel2" onchange="change_data();">
                                        
                                         <option value="week">Current Week</option>
                                         <option value="month">Current Month</option>
@@ -859,7 +859,7 @@ display: none;
                                 </div>
                                 
                                 <div class="col-lg-3" id="" style="font-size: 12px;">
-                                   <select style="" onchange="change_data1()"  id="advert" class="form-control sel2">
+                                   <select style="" onchange="change_data()"  id="advert" class="form-control sel2">
 					                     	 <option value="">All Adverts</option>
 					                     	 {% for country in advert_list1 %}
 					                     	 <option value="{{ country.advert_id }}"> {{ country.advert_name }}</option>
@@ -1090,25 +1090,10 @@ display: none;
 
 
 $( document ).ready(function() {
-		 booking_fun();
-		  	setTimeout(function(){ 
-            views_fun();
-       	}, 500);
-		 
-  		      
-});
 
-function change_data1(){
-		 booking_fun();
-		  	setTimeout(function(){ 
-            views_fun();
-       	}, 500);
-}
-function booking_fun() {	
-					
-		  week_var = $('#week :selected').val();
-        advert_var = $('#advert :selected').val();
-        var supplier_id={{request.session.supplier_id}};
+  week_var = $('#week :selected').val();
+  advert_var = $('#advert :selected').val();
+  var supplier_id={{request.session.supplier_id}};
         $.ajax({
             type  : "GET",
             url   : '/subscriber-portal/get-booking-graph-data/',
@@ -1117,94 +1102,325 @@ function booking_fun() {
 		 		  	 if (response.success == 'Expired') {		
 		 		  			location.href = '/subscriber-portal/?status=Expired'
 		 		  		}
- 		  		// ALL STAT
-  		 	 $('#disc1').text(response.avail_discount_count);
-  		    $('#disc2').text(response.avail_callbacks_count);
-  		    $('#disc3').text(response.avail_callsmade_count);
-  		    $('#disc4').text(response.avail_shares_count);
+		 		  		            
+           // ALL STAT
+	     		 	 $('#disc1').text(response.avail_discount_count);
+	     		    $('#disc2').text(response.avail_callbacks_count);
+	     		    $('#disc3').text(response.avail_callsmade_count);
+	     		    $('#disc4').text(response.avail_shares_count);
+	     		
+	     		
+	     		
+	     		
+      
+          
+	     	 //  Total Bookings graph  
+	     	       // Load Charts and the corechart package.
+                //google.charts.load('current', {'packages':['corechart']});
+                google.charts.load('current', {'packages':['line']});
+                google.charts.setOnLoadCallback(drawChart);
+                //google.charts.setOnLoadCallback(drawStuff);
+
+                function drawChart() {
+                
+                    var data = new google.visualization.DataTable();
+                    data.addColumn('string', '');
+                    data.addColumn('number', 'Bookings');
+                    //data.addColumn('number', 'Guest Uers(s)');
+                    data.addRows(response.list);
+                    var options = {
+                        chart: {
+                            //title: 'Box Office Earnings in First Two Weeks of Opening',
+                            //subtitle: 'in millions of dollars (USD)'
+                        },
+                        //width: 500,
+                        //height: 500
+                        //axes: {
+                          //x: {
+                            //0: {side: 'top'}
+                          //}
+                        //}
+                    };
+                    var chart = new google.charts.Line(document.getElementById('linechart_material'));
+                    chart.draw(data, options);
+                }
+                
+       /*//  Total views graph        
+               //google.charts.load('current', {'packages':['bar']});
+              // google.charts.setOnLoadCallback(drawStuff);
+
+			      function drawStuff() {
+			        var data = new google.visualization.arrayToDataTable([
+			          ['Opening Move', 'Percentage'],
+			          ["King's pawn (e4)", 44],
+			          ["Queen's pawn (d4)", 31],
+			          ["Knight to King 3 (Nf3)", 12],
+			          ["Queen's bishop pawn (c4)", 10],
+			          ['Other', 3]
+			        ]);
 			
- 
-  	       //  Total Bookings graph  
-
-       google.charts.load('current', {'packages':['line']});
-       google.charts.setOnLoadCallback(drawChart);
-
-       function drawChart() {
-       
-           var data1 = new google.visualization.DataTable();
-           data1.addColumn('string', '');
-           data1.addColumn('number', '');
-           data1.addRows(response.list);
-           var options = {
-               chart: {
-                   //title: 'Box Office Earnings in First Two Weeks of Opening',
-                   //subtitle: 'in millions of dollars (USD)'
-               },
-               //width: 500,
-               //height: 500
-               //axes: {
-                 //x: {
-                   //0: {side: 'top'}
-                 //}
-               //}
-           };
-           var chart = new google.charts.Line(document.getElementById('linechart_material'));
-           chart.draw(data1, options);
-          }
-         },
-        error : function(response){
-          alert("_Error");
-         },
+			        var options = {
+			          title: 'Chess opening moves',
+			          width: 900,
+			          legend: { position: 'none' },
+			          chart: { title: 'Chess opening moves',
+			                   subtitle: 'popularity by percentage' },
+			          bars: 'vertical', // Required for Material Bar Charts.
+			          bar: { groupWidth: "90%" }
+			        };
+			
+			        var chart = new google.charts.Bar(document.getElementById('total_views'));
+			        chart.draw(data, options);
+			      };   */
+			         
+			   var chart = AmCharts.makeChart( "total_views", {
+							  "fontFamily":"Open Sans",							  
+							  "type": "serial",
+							  "theme": "light",
+							  "dataProvider": [ {
+							    "day": "MON",
+							    "visits": response.mon2
+							  }, {
+							    "day": "TUE",
+							    "visits": response.tue2
+							  }, {
+							    "day": "WED",
+							    "visits": response.wen2
+							  }, {
+							    "day": "THU",
+							    "visits":response.thus2
+							  }, {
+							    "day": "FRI",
+							    "visits":response.fri2
+							  }, {
+							    "day": "SAT",
+							    "visits":response.sat2
+							  }, {
+							    "day": "SUN",
+							    "visits":response.sun2
+							  }
+							  ],
+							  "valueAxes": [ {
+							    "gridColor": "#FFFFFF",
+							    "gridAlpha": 0.2,
+							    "dashLength": 0
+							  } ],
+							  "gridAboveGraphs": true,
+							  "startDuration": 1,
+							  "graphs": [ {
+							    "balloonText": "[[category]]: <b>[[value]]</b>",
+							    "fillAlphas": 0.8,
+							    "lineAlpha": 0.2,
+							    "type": "column",
+							    "autoColor": true,
+							    "valueField": "visits"
+							  } ],
+							  "chartCursor": {
+							    "categoryBalloonEnabled": false,
+							    "cursorAlpha": 0,
+							    "zoomable": false
+							  },
+							  "categoryField": "day",
+							  "categoryAxis": {
+							    "gridPosition": "start",
+							    "gridAlpha": 0,
+							    "tickPosition": "start",
+							    "tickLength": 20
+							  },
+							  "export": {
+							    "enabled": true
+							  }
+							
+							} );  
+							
+            },
+            error : function(response){
+                alert("_Error");
+            },
         });
-       }
-               
-   function views_fun() {
+});
 
-		  week_var = $('#week :selected').val();
-        advert_var = $('#advert :selected').val();
-        var supplier_id={{request.session.supplier_id}};
-        $.ajax({
-            type  : "GET",
-            url   : '/subscriber-portal/get-booking-graph-data/',
-            data : {'week_var':week_var,'supplier_id':supplier_id,'advert_var':advert_var},
-            success: function (response) {
+function change_data(){
+
+  week_var = $('#week :selected').val();
+  advert_var = $('#advert :selected').val();
+
+var supplier_id={{request.session.supplier_id}};
+
+	$.ajax({
+  	  	  type	: "GET",
+		  url 	: '/subscriber-portal/get-booking-graph-data/',
+		  data : {'week_var':week_var,'supplier_id':supplier_id,'advert_var':advert_var},                       
+		  
+
+	     success: function (response) {
+ 		  console.log(response);
 		 		  	 if (response.success == 'Expired') {		
 		 		  			location.href = '/subscriber-portal/?status=Expired'
-		 		  		}  		                    
- 		  		// ALL STAT
-  		 	 $('#disc1').text(response.avail_discount_count);
-  		    $('#disc2').text(response.avail_callbacks_count);
-  		    $('#disc3').text(response.avail_callsmade_count);
-  		    $('#disc4').text(response.avail_shares_count);
+		 		  		}
+		 		  		 		  
+	     		    $('#disc1').text(response.avail_discount_count);
+	     		    $('#disc2').text(response.avail_callbacks_count);
+	     		    $('#disc3').text(response.avail_callsmade_count);
+	     		    $('#disc4').text(response.avail_shares_count);
+	     		    
+        //  Total Bookings graph  
+                google.charts.load('current', {'packages':['line']});
+                google.charts.setOnLoadCallback(drawChart);
 
-      google.charts.load('current', {'packages':['bar']});
-      google.charts.setOnLoadCallback(drawStuff);
+                function drawChart() {
+                    var data = new google.visualization.DataTable();
+                    data.addColumn('string', '');
+                    data.addColumn('number', 'Bookings');
+                    //data.addColumn('number', 'Guest Uers(s)');
+                    data.addRows(response.list);
+                    var options = {
+                        chart: {
+                            //title: 'Box Office Earnings in First Two Weeks of Opening',
+                            //subtitle: 'in millions of dollars (USD)'
+                        },
+                        //width: 500,
+                        //height: 500
+                        //axes: {
+                          //x: {
+                            //0: {side: 'top'}
+                          //}
+                        //}
+                    };
+                    var chart = new google.charts.Line(document.getElementById('linechart_material'));
+                    chart.draw(data, options);
+                }
+         		    
+        //  Total Views graph 
+	     		  if(response.var1=='month'){
 
-      function drawStuff() {
-        var data = new google.visualization.arrayToDataTable(response.list2);
-
-        var options = {
-
-          legend: { position: 'none' },
-          chart: { 
-          
-                 },
-          bars: 'vertical', // Required for Material Bar Charts.
-      
-        };
-
-        var chart = new google.charts.Bar(document.getElementById('total_views'));
-        chart.draw(data, options);
-      };
-      
-      				    
-           },
-        error : function(response){
-          alert("_Error");
-         },
-        });				    
-  }
-
+							var chart = AmCharts.makeChart( "total_views", {
+							  "fontFamily":"Open Sans",							  
+							  "type": "serial",
+							  "theme": "light",
+							  "dataProvider": [ {
+							    "day": "Week 1",
+							    "visits": response.advert_total_count1
+							  }, {
+							    "day": "Week 2",
+							    "visits": response.advert_total_count2
+							  }, {
+							    "day": "Week 3",
+							    "visits": response.advert_total_count3
+							  }, {
+							    "day": "Week 4",
+							    "visits":response.advert_total_count4
+							  }, {
+							    "day": "Week 5",
+							    "visits":response.advert_total_count5
+							  }
+							  ],
+							  "valueAxes": [ {
+							    "gridColor": "#FFFFFF",
+							    "gridAlpha": 0.2,
+							    "dashLength": 0
+							  } ],
+							  "gridAboveGraphs": true,
+							  "startDuration": 1,
+							  "graphs": [ {
+							    "balloonText": "[[category]]: <b>[[value]]</b>",
+							    "fillAlphas": 0.8,
+							    "lineAlpha": 0.2,
+							    "type": "column",
+							    "autoColor": true,
+							    "valueField": "visits"
+							  } ],
+							  "chartCursor": {
+							    "categoryBalloonEnabled": false,
+							    "cursorAlpha": 0,
+							    "zoomable": false
+							  },
+							  "categoryField": "day",
+							  "categoryAxis": {
+							    "gridPosition": "start",
+							    "gridAlpha": 0,
+							    "tickPosition": "start",
+							    "tickLength": 20
+							  },
+							  "export": {
+							    "enabled": true
+							  }
+							
+							} ); 
+	     		        }
+	     		 else if (response.var1=='week') {
+	         			           
+							var chart = AmCharts.makeChart( "total_views", {
+							  "fontFamily":"Open Sans",							  
+							  "type": "serial",
+							  "theme": "light",
+							  "dataProvider": [ {
+							    "day": "MON",
+							    "visits": response.mon2
+							  }, {
+							    "day": "TUE",
+							    "visits": response.tue2
+							  }, {
+							    "day": "WED",
+							    "visits": response.wen2
+							  }, {
+							    "day": "THU",
+							    "visits":response.thus2
+							  }, {
+							    "day": "FRI",
+							    "visits":response.fri2
+							  }, {
+							    "day": "SAT",
+							    "visits":response.sat2
+							  }, {
+							    "day": "SUN",
+							    "visits":response.sun2
+							  }
+							  ],
+							  "valueAxes": [ {
+							    "gridColor": "#FFFFFF",
+							    "gridAlpha": 0.2,
+							    "dashLength": 0
+							  } ],
+							  "gridAboveGraphs": true,
+							  "startDuration": 1,
+							  "graphs": [ {
+							    "balloonText": "[[category]]: <b>[[value]]</b>",
+							    "fillAlphas": 0.8,
+							    "lineAlpha": 0.2,
+							    "type": "column",
+							    "autoColor": true,
+							    "valueField": "visits"
+							  } ],
+							  "chartCursor": {
+							    "categoryBalloonEnabled": false,
+							    "cursorAlpha": 0,
+							    "zoomable": false
+							  },
+							  "categoryField": "day",
+							  "categoryAxis": {
+							    "gridPosition": "start",
+							    "gridAlpha": 0,
+							    "tickPosition": "start",
+							    "tickLength": 20
+							  },
+							  "export": {
+							    "enabled": true
+							  }
+							
+							} ); 
+	     		    }
+             },
+	      error : function(response){
+	         	alert("_Error");
+	   	},
+	   		complete: function() {
+           		$("#job-post-form").show();
+   			   $("#processing").css('display','none');
+   	    }               
+	  });
+}
+	
           
 </script>
 </body>

@@ -38,7 +38,7 @@ from django.http import HttpResponseRedirect
 import os
 
 #SERVER_URL = "http://52.40.205.128"
-SERVER_URL = "http://52.66.169.65"
+SERVER_URL = "http://52.66.133.35"
 #SERVER_URL = "http://192.168.0.125:8017"
 
 #CTI CRM APIs=============================================================================
@@ -614,7 +614,8 @@ def viewstarprofile(request):
     print '-------image-------',obj.citystarID
     #like_obj = CityStar_Like.objects.get(citystarID=obj.citystarID)
     #view_obj = CityStar_View.objects.get(citystarID=obj.citystarID)
-    data={'username':request.session['login_user'],'id':obj.citystarID,'title':obj.title,'name':obj.name,'address':obj.address1,
+    addr = obj.address1+ ', '+obj.address2
+    data={'username':request.session['login_user'],'id':obj.citystarID,'title':obj.title,'name':obj.name,'address':addr,
                'phone':obj.phone,
                'email':obj.email,
                'age':obj.age,

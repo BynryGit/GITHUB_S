@@ -1699,6 +1699,7 @@ def edit_advert(request):
         tax_list = Tax.objects.all()
         temp_data = ''
         cat_amenities = []
+        pincode_list = []
 
         advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=advert_id)
         business_obj = Business.objects.get(business_id=str(advert_sub_obj.business_id))
@@ -1717,9 +1718,12 @@ def edit_advert(request):
             'state_id': business_obj.state_id.state_id,
             'city_place_id': business_obj.city_place_id.city_place_id
         }
-
         state_list = State.objects.filter(country_id = str(business_obj.country_id.country_id))
         city_list = City_Place.objects.filter(state_id = str(business_obj.state_id.state_id))
+
+        city_id1 = City_Place.objects.get(city_place_id=city_place_id)
+        city_id2 = City.objects.get(city_id=str(city_id1.city_id.city_id))
+        pincode_list1 = Pincode.objects.filter(city_id=city_id2.city_id).order_by('pincode')
 
         supplier_id = str(advert_sub_obj.advert_id.supplier_id)
         category_lvl1_list = []
@@ -1811,7 +1815,6 @@ def edit_advert(request):
 
                 if business_obj.category and business_obj.category_level_1 and business_obj.category_level_2 and business_obj.category_level_3 and business_obj.category_level_4 and business_obj.category_level_5:
                     amenity_list = CategorywiseAmenity.objects.filter(status="1",category=category_id,category_level_1=category_level_1,category_level_3=category_level_3,category_level_4=category_level_4,category_level_5=category_level_5)
-
         
                 ameninty_checked = "false"
                 for amnenity in amenity_list:
@@ -2269,7 +2272,6 @@ def edit_advert(request):
             'discount_flag':discount_flag,
             'discount_start_date':discount_start_date,
             'discount_end_date':discount_end_date
-
         }
 
         product_obj = Product.objects.filter(advert_id=advert_id)
@@ -2358,12 +2360,10 @@ def edit_advert(request):
                 'nr_shop_list': nr_shop_list, 'nr_shcl_list': nr_shcl_list, 'nr_hosp_list': nr_hosp_list,
                 'category_l1_list': category_l1_list, 'category_l2_list': category_l2_list,
                 'category_l3_list': category_l3_list,
-                'category_l4_list': category_l4_list, 'category_l5_list': category_l5_list,'state_list' :state_list,'city_list' :city_list
+                'category_l4_list': category_l4_list, 'category_l5_list': category_l5_list,'state_list' :state_list,'city_list' :city_list,'pincode_list1':pincode_list1
                 }
+                
         return render(request, 'Subscriber/edit_advert.html', data)
-
-
-
 
 def renew_subscription(request):
     if not request.user.is_authenticated():
@@ -2933,6 +2933,7 @@ def login_open(request):
         message_logout='Your session is timed out, Please login again.'
     else:
         message_logout = ''
+    logout(request)        
     form = CaptchaForm()
     return render_to_response('Subscriber/user_login.html', dict(
         form=form,message_logout=message_logout
@@ -2943,12 +2944,12 @@ def login_open(request):
 def signin(request):
     data = {}
     try:
-        print 'in login'
         if request.POST:
             form = CaptchaForm(request.POST)
             print 'logs: login request with: ', request.POST
             username = request.POST['username']
             password = request.POST['password']
+            request.session['login_user'] = ''
 
             if form.is_valid():
                 try:
@@ -2961,7 +2962,6 @@ def signin(request):
                             print 'valid form after----->', user
                             user_Supplier_obj = Supplier.objects.get(username=username)
                             if user_Supplier_obj.supplier_status == "1":
-                                print "-----------------active----------------------",user_Supplier_obj.username
                                 request.session['login_user'] = user_Supplier_obj.username
                                 request.session['first_name'] = user_Supplier_obj.contact_person
                                 request.session['supplier_id'] = user_Supplier_obj.supplier_id
@@ -2970,31 +2970,42 @@ def signin(request):
                                 else:
                                     request.session['user_image'] = ''
                                 login(request, user)
-                                print "USERNAME", request.session['login_user']
-                                data = {'success': 'true', 'username': request.session['first_name'],
+
+                                supplier_obj_count = Supplier.objects.filter(contact_email=user_Supplier_obj.username).count()
+                                if supplier_obj_count == 1:
+                                    data = {'success': 'true', 'username': request.session['first_name'],
+                                        'supplier_id': user_Supplier_obj.supplier_id}
+                                else:
+                                    data = {'success': 'redirect', 'username': request.session['first_name'],
                                         'supplier_id': user_Supplier_obj.supplier_id}
 
                         else:
+                            print '.......111......'
                             data = {'success': 'false', 'message': 'User Is Not Active'}
                             return HttpResponse(json.dumps(data), content_type='application/json')
                     else:
+                        print '.........222.......'
                         data = {'success': 'Invalid Password', 'message': 'Invalid Password'}
                         print "====USERNAME", data
                         return HttpResponse(json.dumps(data), content_type='application/json')
                 except Exception as e:
+                    print '........3333......'
                     print e
                     data = {'success': 'false', 'message': 'Invalid Username'}
                     return HttpResponse(json.dumps(data), content_type='application/json')
             else:
+                print '.......4444.....'
                 form = CaptchaForm()
                 data = {'success': 'Invalid Captcha', 'message': 'Invalid Captcha'}
                 print "INVALID CAPTCHA"
                 return HttpResponse(json.dumps(data), content_type='application/json')
     except MySQLdb.OperationalError, e:
+        print '.......5555........'
         print e
         data = {'success': 'false', 'message': 'Internal server'}
         return HttpResponse(json.dumps(data), content_type='application/json')
     except Exception, e:
+        print '.......6666........'
         print 'Exception ', e
         data = {'success': 'false', 'message': 'Invalid Username or Password'}
     return HttpResponse(json.dumps(data), content_type='application/json')
@@ -3198,9 +3209,6 @@ def subscriber_advert(request):
 
     else:     
         # last_touch = datetime.now()
-        print '...........NEWWWWWW.........$$$$$$$$$$$$$$$$',datetime.now()
-        last_touch = request.session['last_touch']        
-        print '...........NEWWWWWW.........$$$$$$$$$$$$$$$$',request.session['last_touch']
         advert_status = ''
         date_gap = ''
         subscription_days = ''
@@ -3936,10 +3944,14 @@ def subscriber_dashboard(request):
             final_list = []
             advert_list1 = []
             try:
-                print '......Advert dropdown   ........'
-                today_date = str(datetime.now())
-                one_month_date = str(datetime.now() - timedelta(days=7))
-                Advert_list = Advert.objects.filter(supplier_id=request.session['supplier_id'])
+                user_Supplier_obj = Supplier.objects.get(supplier_id=request.GET.get('supplier_id'))
+                print "-----------------active----------------------",user_Supplier_obj.username
+                request.session['login_user'] = user_Supplier_obj.contact_email
+                request.session['first_name'] = user_Supplier_obj.contact_person
+                request.session['supplier_id'] = user_Supplier_obj.supplier_id
+
+                Advert_list = Advert.objects.filter(supplier_id=request.GET.get('supplier_id'))#request.session['supplier_id']
+
                 for ad_obj in Advert_list:
                     advert_id = ad_obj.advert_id
                     advert_name = ad_obj.advert_name
@@ -4944,6 +4956,7 @@ def send_email_update(trans_id, business_name):
     return 1
 
 
+
 @csrf_exempt
 def get_booking_graph_data(request):
     if not request.user.is_authenticated():
@@ -5032,9 +5045,7 @@ def get_booking_graph_data(request):
 
                             month = current_date.month
                             first_date_of_current_month = datetime(year, month, start_week)
-                            print 'VVVVVVVVVVVVVVVVVVVVV',first_date_of_current_month
                             last_date_of_current_month = datetime(year, month, end_week)
-                            print 'CCCCCCCCCCCCCCCCCCCC',last_date_of_current_month
                             coupon_code_count = CouponCode.objects.filter(
                                 creation_date__range=[first_date_of_current_month, last_date_of_current_month], advert_id=request.GET.get('advert_var')
                             ).count()
@@ -5367,6 +5378,7 @@ def get_booking_graph_data(request):
             print 'Exception ', e
     return HttpResponse(json.dumps(data), content_type='application/json')
 
+
 @csrf_exempt
 def check_category(request):
     # pdb.set_trace()
@@ -5405,7 +5417,7 @@ def check_category_supplier(request):
         data = {'success':'Expired'}
 
     else:
-        print "IN CHECK NEW CATEGORY"
+        print "IN CHECK NEW CATEGORY",request.POST
         has_rate_card = 'false'
         try:
             temp_data = ''
@@ -5476,7 +5488,6 @@ def check_category_supplier(request):
                     data = {
                         'success': 'false','has_rate_card':has_rate_card,'cat_amenities':cat_amenities
                     }
-                    print data
             else:
                 cat_level = int(request.POST.get('cat_level')) - 1
                 supplier_obj = Supplier.objects.get(supplier_id=request.session['supplier_id'])
@@ -5693,11 +5704,38 @@ def get_booked_slots(request):
                     if i >= 10:
                         booked_date_list.append(dates.strftime("%m/%d/%Y"))
             elif request.POST.get('service_name') == 'Top Advert':
+                # print '...........TOP ADVERT..................'
                 premium_service_obj = PremiumService.objects.filter(
                     city_place_id = request.POST.get('city_place_id'),
                     premium_service_name = request.POST.get('service_name'),
                     premium_service_status = 1
                 )
+
+                for premium_service in premium_service_obj:
+                    if str(premium_service.business_id.business_id) != str(request.POST.get('business_id')):
+                        start_date = datetime.strptime(premium_service.start_date, "%d/%m/%Y")
+                        end_date = datetime.strptime(premium_service.end_date, "%d/%m/%Y")
+                        date_data = {
+                            'start_date': str(start_date.strftime("%m/%d/%Y")),
+                            'end_date': str(end_date.strftime("%m/%d/%Y"))
+                        }
+                        slider_date_list.append(date_data)
+                slider_start_date = datetime.strptime(request.POST.get('start_date'), "%d/%m/%Y")
+                slider_end_date = datetime.strptime(request.POST.get('end_date'), "%d/%m/%Y")
+                date_diff = slider_end_date - slider_start_date
+                for i in range(date_diff.days + 1):
+                    duration_date_list.append(slider_start_date + timedelta(i))
+                for dates in duration_date_list:
+                    i = 0
+                    for slider_date in slider_date_list:
+                        date1 = datetime.strptime(slider_date['start_date'], "%m/%d/%Y")
+                        date2 = datetime.strptime(slider_date['end_date'], "%m/%d/%Y")
+                        if date1 <= dates <= date2:
+                            i = i + 1
+                    if i >= 15:
+                        booked_date_list.append(dates.strftime("%m/%d/%Y"))
+                # print 'SSSSSSSSSSSSSSS',booked_date_list
+
             else:
                 premium_service_obj = PremiumService.objects.filter(
                     category_level=request.POST.get('cat_lvl'),
@@ -5717,6 +5755,9 @@ def get_booked_slots(request):
                     date_list.append(date_data)
             if request.POST.get('service_name') == 'Advert Slider':
                 date_list = []
+            if request.POST.get('service_name') == 'Top Advert':
+                date_list = []
+            # print '........booked_date_list....',booked_date_list
             data = {'success': 'true','date_list':date_list,'booked_date_list':booked_date_list}
         except Exception, e:
             print e
@@ -6389,3 +6430,56 @@ def update_subscription_plan(request):
             print e
             data = {'success': 'false', 'message': e}
     return HttpResponse(json.dumps(data), content_type='application/json')    
+
+@csrf_exempt
+def select_subscriber(request):
+    if not request.user.is_authenticated():
+        logout(request)
+        form = CaptchaForm()
+        return render_to_response('Subscriber/user_login.html', dict(
+            form=form, message_logout='Your session is timed out, Please login again.'
+        ), context_instance=RequestContext(request))
+
+    else:     
+        try:
+            data = {}
+            supplier_list1 = []
+            try:
+                supplier_list = Supplier.objects.filter(contact_email=request.session['login_user'])
+                for sub_obj in supplier_list:
+                    supplier_id     = sub_obj.supplier_id
+                    contact_person  = sub_obj.contact_person
+                    business_name   = sub_obj.business_name
+                    user_city       = sub_obj.city_place_id.city_id.city_name
+                    user_contact_no = sub_obj.contact_no
+                    user_email_id   = sub_obj.contact_email
+                    supplier_status = sub_obj.supplier_status
+                    if sub_obj.title:
+                        user_title =sub_obj.title
+                    else:
+                        user_title=""
+                    user_name = str(user_title + " " +sub_obj.contact_person) 
+
+                    if sub_obj.logo:
+                        logo = SERVER_URL + sub_obj.logo.url
+                    else:
+                        logo = SERVER_URL + '/static/assets/layouts/layout2/img/City_Hoopla_Logo.png'
+
+                    supplier_list1.append({
+                        'supplier_id': supplier_id, 'contact_person': contact_person,
+                        'business_name':business_name,'user_city':user_city,
+                        'user_contact_no':user_contact_no,
+                        'user_email_id':user_email_id,'user_name':user_name,
+                        'logo':logo,'status':supplier_status
+                     })
+                data = {'success': 'true', 'supplier_list1': supplier_list1}
+
+            except IntegrityError as e:
+                print e
+                data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time',
+                        'username': request.session['login_user']}
+        except MySQLdb.OperationalError, e:
+            print e
+        except Exception, e:
+            print 'Exception ', e
+        return render(request, 'Subscriber/select_subscriber.html', data)

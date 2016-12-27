@@ -1003,7 +1003,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                             Speciality
                                                                             <span class="required"> * </span>
                                                                         </label>
-                                                                        <textarea name="speciality"
+                                                                        <textarea name="speciality"  onkeyup="textAreaAdjust(this)"
                                                                                   maxlength="5000"
                                                                                   id="speciality"
                                                                                   class="form-control"></textarea>
@@ -1025,6 +1025,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                             Happy Hour Offer
                                                                         </label>
                                                                         <textarea
+                                                                         onkeyup="textAreaAdjust(this)"
                                                                                 name="happy_hour_offer"
                                                                                 maxlength="5000"
                                                                                 id="happy_hour_offer"
@@ -1045,7 +1046,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                         <label class="control-label "
                                                                                style="font-size:15px; ">
                                                                             Facilities</label>
-                                                                        <textarea name="facility"
+                                                                        <textarea name="facility"  onkeyup="textAreaAdjust(this)"
                                                                                   maxlength="5000"
                                                                                   id="facility"
                                                                                   class="form-control"></textarea>
@@ -1066,7 +1067,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                style="font-size:15px; ">
                                                                             Course Duration
                                                                         </label>
-                                                                        <textarea
+                                                                        <textarea  onkeyup="textAreaAdjust(this)"
                                                                                 name="course_duration"
                                                                                 maxlength="5000"
                                                                                 id="course_duration"
@@ -1086,7 +1087,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                                style="font-size:15px; ">
                                                                             Affilated To
                                                                         </label>
-                                                                        <textarea name="affilated"
+                                                                        <textarea name="affilated"  onkeyup="textAreaAdjust(this)"
                                                                                   maxlength="5000"
                                                                                   id="affilated"
                                                                                   class="form-control"></textarea>
@@ -1153,7 +1154,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                         Description
                                                                         <span class="required"> * </span>
                                                                     </label>
-                                                                    <textarea id="short_discription" maxlength="5000"
+                                                                    <textarea id="short_discription" onkeyup="textAreaAdjust(this)" maxlength="5000"
                                                                               class="form-control"></textarea>
                                                                     <label id="short_discription_count"
                                                                            class="control-label  dis_count"
@@ -1173,7 +1174,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                            style="font-size:15px; ">Product
                                                                         Description
                                                                     </label>
-                                                                    <textarea type="text"
+                                                                    <textarea type="text" onkeyup="textAreaAdjust(this)"
                                                                               name="product_discription"
                                                                               id="product_discription"
                                                                               maxlength="5000"
@@ -1196,7 +1197,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                         <!-- <span class="required"> * </span> -->
                                                                     </label>
                                                                     <textarea type="text"
-                                                                              name="discount_discription"
+                                                                              name="discount_discription" onkeyup="textAreaAdjust(this)"
                                                                               maxlength="5000"
                                                                               id="discount_discription"
                                                                               class="form-control"></textarea>
@@ -1288,7 +1289,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                         <!-- <span class="required"> * </span> -->
                                                                     </label>
                                                                     <textarea type="text"
-                                                                              name="other_details"
+                                                                              name="other_details" onkeyup="textAreaAdjust(this)"
                                                                               maxlength="5000"
                                                                               id="other_details"
                                                                               class="form-control"></textarea>
@@ -1645,7 +1646,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                   <textarea
                                                                        name="other_amenity"
                                                                        maxlength="500"
-                                                                       id="any_other_amenity"
+                                                                       id="any_other_amenity" onkeyup="textAreaAdjust(this)" 
                                                                        class="form-control"></textarea>
                                                                     <label class="control-label  amenity_count"
                                                                            style="font-size:15px;; float:right">
@@ -1833,7 +1834,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                     </label>
                                                                         <textarea type="text" name="other_projects"
                                                                                   maxlength="5000"
-                                                                                  id="other_projects"
+                                                                                  id="other_projects" onkeyup="textAreaAdjust(this)" 
                                                                                   class="form-control"></textarea>
                                                                     <label class="control-label  dis_count"
                                                                            style="font-size:15px;; float:right">
@@ -2745,6 +2746,12 @@ License: You must have a valid license purchased only from themeforest(the above
 <script src="{% static 'assets/global/plugins/ion.rangeslider/js/ion.rangeSlider.min.js' %}"></script>
 <script type="text/javascript">
 
+function textAreaAdjust(o) {
+        o.style.height = "1px";
+        o.style.height = (o.scrollHeight)+"px";
+    }
+    
+    
 function remove_school(s_index){
 
         $("#school"+s_index).remove();

@@ -35,10 +35,14 @@ import random
 from django.views.decorators.cache import cache_control
 import urllib2
 
-SERVER_URL = "http://192.168.0.180:9999"   
+#Pagination
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.shortcuts import render
+
+SERVER_URL = "http://52.66.133.35"
 #SERVER_URL = "http://52.66.144.182"
 
-# SERVER_URL = "http://127.0.0.1:8000" 
+#SERVER_URL = "http://127.0.0.1:8000" 
 
 def get_city_category(city_place_id):
     ##    pdb.set_trace()
@@ -101,100 +105,112 @@ def add_subscriber(request):
         return render(request, 'Admin/add_supplier.html', data)
 
 
+def get_sales_staff_list(request):
+    city_id = request.GET.get('city_id')
+    sales_staff_list = []
+    role_name_list = ["Admin", "Sales", "Super User", "Marketing"]
+    sales_person_list = UserProfile.objects.filter(user_status='1', user_role__role_name__in=role_name_list)
+    if city_id != "all":
+        sales_person_list = sales_person_list.filter(city_place_id = city_id)
+    for sale in sales_person_list:
+        sales_person_name = sale.user_first_name + ' ' + sale.user_last_name
+        sales_person_name = str(sales_person_name)
+        sales_data = {
+            "sales_person_name": sales_person_name,
+            "user_id": sale.user_id
+        }
+        sales_staff_list.append(sales_data)
+    data = {
+        'success': 'true',
+        'sales_staff_list': sales_staff_list
+    }
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
 
 @csrf_exempt
 def check_category(request):
-    # pdb.set_trace()
-    print request.POST
-    if not request.user.is_authenticated():
-        data = {'success':'Expired'}
-
-    else:
-        print "IN CHECK NEW CATEGORY"
-        has_rate_card = 'false'
-        try:
-            temp_data = ''
-            cat_amenities = []
-            if request.POST.get('cat_level') != '6':
-                if request.POST.get('cat_level') == '1':
-                    cat_obj = CategoryLevel1.objects.filter(parent_category_id=request.POST.get('category_id'))
-                if request.POST.get('cat_level') == '2':
-                    cat_obj = CategoryLevel2.objects.filter(parent_category_id=request.POST.get('category_id'))
-                if request.POST.get('cat_level') == '3':
-                    cat_obj = CategoryLevel3.objects.filter(parent_category_id=request.POST.get('category_id'))
-                if request.POST.get('cat_level') == '4':
-                    cat_obj = CategoryLevel4.objects.filter(parent_category_id=request.POST.get('category_id'))
-                if request.POST.get('cat_level') == '5':
-                    cat_obj = CategoryLevel5.objects.filter(parent_category_id=request.POST.get('category_id'))
-                cat_list = []
-                print 'aaaa',cat_obj
-                if cat_obj:
-                    for cat in cat_obj:
-                        options_data = '<option value=' + str(cat.category_id) + '>' + cat.category_name + '</option>'
-                        cat_list.append(options_data)
-                    data = { 'success': 'true','category_list': cat_list}
-                    print 'QQQQQQQQQQQQ',data
-                else:
-                    cat_level = int(request.POST.get('cat_level')) - 1
-                    print "main_category_id",request.POST.get('main_category_id')
-                    xyz = []
-                    amenity_list = CategorywiseAmenity.objects.filter(status="1",category=request.POST.get('main_category_id'))
-                    if amenity_list:
-                        xyz = amenity_list
-                    if cat_level == 1:
-                        amenity_list = CategorywiseAmenity.objects.filter(status="1",category_level_1=request.POST.get('category_id'),category=request.POST.get('main_category_id'))
-                        if amenity_list:
-                            xyz = amenity_list
-                    if cat_level == 2:
-                        print "in cate 2"
-                        amenity_list = CategorywiseAmenity.objects.filter(status="1",category_level_2=request.POST.get('category_id'),category=request.POST.get('main_category_id'))
-                        if amenity_list:
-                            xyz = amenity_list
-                    if cat_level == 3:
-                        amenity_list = CategorywiseAmenity.objects.filter(status="1",category_level_3=request.POST.get('category_id'),category=request.POST.get('main_category_id'))
-                        if amenity_list:
-                            xyz = amenity_list
-
-                    if cat_level == 4:
-                        amenity_list = CategorywiseAmenity.objects.filter(status="1",category_level_4=request.POST.get('category_id'),category=request.POST.get('main_category_id'))
-                        if amenity_list:
-                            xyz = amenity_list
-                    if cat_level == 5:
-                        amenity_list = CategorywiseAmenity.objects.filter(status="1",category_level_5=request.POST.get('category_id'),category=request.POST.get('main_category_id'))
-                        if amenity_list:
-                            xyz = amenity_list
-
-                    for amnenity in xyz:
-
-                        temp_data ={
-                        'id':str(amnenity.categorywise_amenity_id),
-                        'amenity':str(amnenity.amenity)
-                        }
-                        cat_amenities.append(temp_data)
-
-                    supplier_obj = Supplier.objects.get(supplier_id = request.POST.get('supplier_id'))
-                    rate_card = RateCard.objects.filter(city_place_id = str(supplier_obj.city_place_id))
-                    service_rate_card = CategoryWiseRateCard.objects.filter(city_place_id = str(supplier_obj.city_place_id),
-                                                                       category_id=request.POST.get('category_id'))
-                    if rate_card and service_rate_card:
-                        has_rate_card = 'true'
-                    data = {
-                        'success': 'false','has_rate_card':has_rate_card,'cat_amenities':cat_amenities
-                    }
-                    print data
+    has_rate_card = 'false'
+    try:
+        temp_data = ''
+        cat_amenities = []
+        if request.POST.get('cat_level') != '6':
+            if request.POST.get('cat_level') == '1':
+                cat_obj = CategoryLevel1.objects.filter(parent_category_id=request.POST.get('category_id'))
+            if request.POST.get('cat_level') == '2':
+                cat_obj = CategoryLevel2.objects.filter(parent_category_id=request.POST.get('category_id'))
+            if request.POST.get('cat_level') == '3':
+                cat_obj = CategoryLevel3.objects.filter(parent_category_id=request.POST.get('category_id'))
+            if request.POST.get('cat_level') == '4':
+                cat_obj = CategoryLevel4.objects.filter(parent_category_id=request.POST.get('category_id'))
+            if request.POST.get('cat_level') == '5':
+                cat_obj = CategoryLevel5.objects.filter(parent_category_id=request.POST.get('category_id'))
+            cat_list = []
+            if cat_obj:
+                for cat in cat_obj:
+                    options_data = '<option value=' + str(cat.category_id) + '>' + cat.category_name + '</option>'
+                    cat_list.append(options_data)
+                data = { 'success': 'true','category_list': cat_list}
             else:
                 cat_level = int(request.POST.get('cat_level')) - 1
-                supplier_obj = Supplier.objects.get(supplier_id=request.session['supplier_id'])
-                rate_card = RateCard.objects.filter(city_place_id=str(supplier_obj.city_place_id))
-                service_rate_card = CategoryWiseRateCard.objects.filter(city_place_id=str(supplier_obj.city_place_id),
+                xyz = []
+                amenity_list = CategorywiseAmenity.objects.filter(status="1",category=request.POST.get('main_category_id'))
+                if amenity_list:
+                    xyz = amenity_list
+                if cat_level == 1:
+                    amenity_list = CategorywiseAmenity.objects.filter(status="1",category_level_1=request.POST.get('category_id'),category=request.POST.get('main_category_id'))
+                    if amenity_list:
+                        xyz = amenity_list
+                if cat_level == 2:
+                    amenity_list = CategorywiseAmenity.objects.filter(status="1",category_level_2=request.POST.get('category_id'),category=request.POST.get('main_category_id'))
+                    if amenity_list:
+                        xyz = amenity_list
+                if cat_level == 3:
+                    amenity_list = CategorywiseAmenity.objects.filter(status="1",category_level_3=request.POST.get('category_id'),category=request.POST.get('main_category_id'))
+                    if amenity_list:
+                        xyz = amenity_list
+
+                if cat_level == 4:
+                    amenity_list = CategorywiseAmenity.objects.filter(status="1",category_level_4=request.POST.get('category_id'),category=request.POST.get('main_category_id'))
+                    if amenity_list:
+                        xyz = amenity_list
+                if cat_level == 5:
+                    amenity_list = CategorywiseAmenity.objects.filter(status="1",category_level_5=request.POST.get('category_id'),category=request.POST.get('main_category_id'))
+                    if amenity_list:
+                        xyz = amenity_list
+
+                for amnenity in xyz:
+
+                    temp_data ={
+                    'id':str(amnenity.categorywise_amenity_id),
+                    'amenity':str(amnenity.amenity)
+                    }
+                    cat_amenities.append(temp_data)
+
+                supplier_obj = Supplier.objects.get(supplier_id = request.POST.get('supplier_id'))
+                rate_card = RateCard.objects.filter(city_place_id=request.POST.get('city_place_id'))
+                service_rate_card = CategoryWiseRateCard.objects.filter(city_place_id=request.POST.get('city_place_id'),
                                                                         category_id=request.POST.get('category_id'),
                                                                         category_level=cat_level,
                                                                         rate_card_status = '1')
                 if rate_card and service_rate_card:
                     has_rate_card = 'true'
-                data = {'success': 'false', 'has_rate_card': has_rate_card}
-        except Exception, e:
-            print e
+                data = {
+                    'success': 'false','has_rate_card':has_rate_card,'cat_amenities':cat_amenities
+                }
+        else:
+            cat_level = int(request.POST.get('cat_level')) - 1
+            supplier_obj = Supplier.objects.get(supplier_id=request.session['supplier_id'])
+            rate_card = RateCard.objects.filter(city_place_id=request.POST.get('city_place_id'))
+            service_rate_card = CategoryWiseRateCard.objects.filter(city_place_id=request.POST.get('city_place_id'),
+                                                                    category_id=request.POST.get('category_id'),
+                                                                    category_level=cat_level,
+                                                                    rate_card_status = '1')
+            if rate_card and service_rate_card:
+                has_rate_card = 'true'
+            data = {'success': 'false', 'has_rate_card': has_rate_card}
+    except Exception, e:
+        print e
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
@@ -213,44 +229,165 @@ def get_country(request):
         print 'Exception ', e
     return country_list
 
+
+
 @csrf_exempt
 def get_telephone_service_slots(request):
-    if not request.user.is_authenticated():
-        data = {'success':'Expired'}
 
-    else:    
-        has_platinum = 'false'
-        has_diamond = 'false'
-        has_gold = 'false'
-        has_silver = 'false'
-        has_bronze = 'false'
-        has_value = 'false'
-        try:
-            print request.POST
-            start_date = request.POST.get('start_date')
-            cat_level = int(request.POST.get('cat_lvl'))
-            enquiry_service_obj = EnquiryService.objects.filter(
-                category_id=request.POST.get('cat_id'),
-                category_level=cat_level,
-                city_place_id=request.POST.get('city_place_id'),
-                enquiry_service_status=1,
-                enquiry_service_name='Platinum'
-            )
-            for enquiry_service in enquiry_service_obj:
+    has_platinum = 'false'
+    has_diamond = 'false'
+    has_gold = 'false'
+    has_silver = 'false'
+    has_bronze = 'false'
+    has_value = 'false'
+    try:
+        print request.POST
+        start_date = request.POST.get('start_date')
+        cat_level = int(request.POST.get('cat_lvl'))
+        enquiry_service_obj = EnquiryService.objects.filter(
+            category_id=request.POST.get('cat_id'),
+            category_level=cat_level,
+            city_place_id=request.POST.get('city_place_id'),
+            enquiry_service_status=1,
+            enquiry_service_name='Platinum'
+        )
+        for enquiry_service in enquiry_service_obj:
+            date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
+            date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
+            date3 = datetime.strptime(start_date, "%d/%m/%Y")
+            if date1 <= date3 <= date2:
+                has_platinum = 'true'
+
+        enquiry_service_obj = EnquiryService.objects.filter(
+            category_id=request.POST.get('cat_id'),
+            category_level=cat_level,
+            city_place_id=request.POST.get('city_place_id'),
+            enquiry_service_status=1,
+            enquiry_service_name='Diamond'
+        )
+        for enquiry_service in enquiry_service_obj:
+            date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
+            date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
+            date3 = datetime.strptime(start_date, "%d/%m/%Y")
+            if date1 <= date3 <= date2:
+                has_diamond = 'true'
+
+
+        enquiry_service_obj = EnquiryService.objects.filter(
+            category_id=request.POST.get('cat_id'),
+            category_level=cat_level,
+            city_place_id=request.POST.get('city_place_id'),
+            enquiry_service_status=1,
+            enquiry_service_name='Gold'
+        )
+        for enquiry_service in enquiry_service_obj:
+            date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
+            date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
+            date3 = datetime.strptime(start_date, "%d/%m/%Y")
+            if date1 <= date3 <= date2:
+                has_gold = 'true'
+
+        enquiry_service_obj = EnquiryService.objects.filter(
+            category_id=request.POST.get('cat_id'),
+            category_level=cat_level,
+            city_place_id=request.POST.get('city_place_id'),
+            enquiry_service_status=1,
+            enquiry_service_name='Silver'
+        )
+        i = 0
+        for enquiry_service in enquiry_service_obj:
+            date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
+            date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
+            date3 = datetime.strptime(start_date, "%d/%m/%Y")
+            if date1 <= date3 <= date2:
+                i = i + 1
+        if i >= 2:
+            has_silver = 'true'
+
+        enquiry_service_obj = EnquiryService.objects.filter(
+            category_id=request.POST.get('cat_id'),
+            category_level=cat_level,
+            city_place_id=request.POST.get('city_place_id'),
+            enquiry_service_status=1,
+            enquiry_service_name='Bronze'
+        )
+        i = 0
+        for enquiry_service in enquiry_service_obj:
+            date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
+            date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
+            date3 = datetime.strptime(start_date, "%d/%m/%Y")
+            if date1 <= date3 <= date2:
+                i = i + 1
+        if i >= 3:
+            has_bronze = 'true'
+
+        enquiry_service_obj = EnquiryService.objects.filter(
+            category_id=request.POST.get('cat_id'),
+            category_level=cat_level,
+            city_place_id=request.POST.get('city_place_id'),
+            enquiry_service_status=1,
+            enquiry_service_name='Value'
+        )
+        i = 0
+        for enquiry_service in enquiry_service_obj:
+            date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
+            date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
+            date3 = datetime.strptime(start_date, "%d/%m/%Y")
+            if date1 <= date3 <= date2:
+                i = i + 1
+        if i >= 2:
+            has_value = 'true'
+
+        data = {
+            'success': 'true',
+            'has_platinum': has_platinum, 'has_diamond': has_diamond,
+            'has_gold': has_gold, 'has_silver': has_silver,
+            'has_bronze': has_bronze, 'has_value': has_value,
+        }
+    except Exception, e:
+        print e
+        data = {'success': 'true'}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+
+@csrf_exempt
+def get_edit_telephone_service_slots(request):
+
+    has_platinum = 'false'
+    has_diamond = 'false'
+    has_gold = 'false'
+    has_silver = 'false'
+    has_bronze = 'false'
+    has_value = 'false'
+    try:
+        print request.POST
+        start_date = request.POST.get('start_date')
+        cat_level = int(request.POST.get('cat_lvl'))
+        enquiry_service_obj = EnquiryService.objects.filter(
+            category_id=request.POST.get('cat_id'),
+            category_level=cat_level,
+            city_place_id=request.POST.get('city_place_id'),
+            enquiry_service_status=1,
+            enquiry_service_name='Platinum'
+        )
+        for enquiry_service in enquiry_service_obj:
+            if str(enquiry_service.business_id.business_id) != str(request.POST.get('business_id')):
                 date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
                 date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
                 date3 = datetime.strptime(start_date, "%d/%m/%Y")
                 if date1 <= date3 <= date2:
                     has_platinum = 'true'
 
-            enquiry_service_obj = EnquiryService.objects.filter(
-                category_id=request.POST.get('cat_id'),
-                category_level=cat_level,
-                city_place_id=request.POST.get('city_place_id'),
-                enquiry_service_status=1,
-                enquiry_service_name='Diamond'
-            )
-            for enquiry_service in enquiry_service_obj:
+        enquiry_service_obj = EnquiryService.objects.filter(
+            category_id=request.POST.get('cat_id'),
+            category_level=cat_level,
+            city_place_id=request.POST.get('city_place_id'),
+            enquiry_service_status=1,
+            enquiry_service_name='Diamond'
+        )
+        for enquiry_service in enquiry_service_obj:
+            if str(enquiry_service.business_id.business_id) != str(request.POST.get('business_id')):
                 date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
                 date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
                 date3 = datetime.strptime(start_date, "%d/%m/%Y")
@@ -258,229 +395,199 @@ def get_telephone_service_slots(request):
                     has_diamond = 'true'
 
 
-            enquiry_service_obj = EnquiryService.objects.filter(
-                category_id=request.POST.get('cat_id'),
-                category_level=cat_level,
-                city_place_id=request.POST.get('city_place_id'),
-                enquiry_service_status=1,
-                enquiry_service_name='Gold'
-            )
-            for enquiry_service in enquiry_service_obj:
+        enquiry_service_obj = EnquiryService.objects.filter(
+            category_id=request.POST.get('cat_id'),
+            category_level=cat_level,
+            city_place_id=request.POST.get('city_place_id'),
+            enquiry_service_status=1,
+            enquiry_service_name='Gold'
+        )
+        for enquiry_service in enquiry_service_obj:
+            if str(enquiry_service.business_id.business_id) != str(request.POST.get('business_id')):
                 date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
                 date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
                 date3 = datetime.strptime(start_date, "%d/%m/%Y")
                 if date1 <= date3 <= date2:
                     has_gold = 'true'
 
-            enquiry_service_obj = EnquiryService.objects.filter(
-                category_id=request.POST.get('cat_id'),
-                category_level=cat_level,
-                city_place_id=request.POST.get('city_place_id'),
-                enquiry_service_status=1,
-                enquiry_service_name='Silver'
-            )
-            i = 0
-            for enquiry_service in enquiry_service_obj:
+        enquiry_service_obj = EnquiryService.objects.filter(
+            category_id=request.POST.get('cat_id'),
+            category_level=cat_level,
+            city_place_id=request.POST.get('city_place_id'),
+            enquiry_service_status=1,
+            enquiry_service_name='Silver'
+        )
+        i = 0
+        for enquiry_service in enquiry_service_obj:
+            if str(enquiry_service.business_id.business_id) != str(request.POST.get('business_id')):
                 date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
                 date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
                 date3 = datetime.strptime(start_date, "%d/%m/%Y")
                 if date1 <= date3 <= date2:
                     i = i + 1
-            if i >= 2:
-                has_silver = 'true'
+        if i >= 2:
+            has_silver = 'true'
 
-            enquiry_service_obj = EnquiryService.objects.filter(
-                category_id=request.POST.get('cat_id'),
-                category_level=cat_level,
-                city_place_id=request.POST.get('city_place_id'),
-                enquiry_service_status=1,
-                enquiry_service_name='Bronze'
-            )
-            i = 0
-            for enquiry_service in enquiry_service_obj:
+        enquiry_service_obj = EnquiryService.objects.filter(
+            category_id=request.POST.get('cat_id'),
+            category_level=cat_level,
+            city_place_id=request.POST.get('city_place_id'),
+            enquiry_service_status=1,
+            enquiry_service_name='Bronze'
+        )
+        i = 0
+        for enquiry_service in enquiry_service_obj:
+            if str(enquiry_service.business_id.business_id) != str(request.POST.get('business_id')):
                 date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
                 date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
                 date3 = datetime.strptime(start_date, "%d/%m/%Y")
                 if date1 <= date3 <= date2:
                     i = i + 1
-            if i >= 3:
-                has_bronze = 'true'
+        if i >= 3:
+            has_bronze = 'true'
 
-            enquiry_service_obj = EnquiryService.objects.filter(
-                category_id=request.POST.get('cat_id'),
-                category_level=cat_level,
-                city_place_id=request.POST.get('city_place_id'),
-                enquiry_service_status=1,
-                enquiry_service_name='Value'
-            )
-            i = 0
-            for enquiry_service in enquiry_service_obj:
+        enquiry_service_obj = EnquiryService.objects.filter(
+            category_id=request.POST.get('cat_id'),
+            category_level=cat_level,
+            city_place_id=request.POST.get('city_place_id'),
+            enquiry_service_status=1,
+            enquiry_service_name='Value'
+        )
+        i = 0
+        for enquiry_service in enquiry_service_obj:
+            if str(enquiry_service.business_id.business_id) != str(request.POST.get('business_id')):
                 date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
                 date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
                 date3 = datetime.strptime(start_date, "%d/%m/%Y")
                 if date1 <= date3 <= date2:
                     i = i + 1
-            if i >= 2:
-                has_value = 'true'
+        if i >= 2:
+            has_value = 'true'
 
-            data = {
-                'success': 'true',
-                'has_platinum': has_platinum, 'has_diamond': has_diamond,
-                'has_gold': has_gold, 'has_silver': has_silver,
-                'has_bronze': has_bronze, 'has_value': has_value,
-            }
-        except Exception, e:
-            print e
-            data = {'success': 'true'}
+        data = {
+            'success': 'true',
+            'has_platinum': has_platinum, 'has_diamond': has_diamond,
+            'has_gold': has_gold, 'has_silver': has_silver,
+            'has_bronze': has_bronze, 'has_value': has_value,
+        }
+    except Exception, e:
+        print e
+        data = {'success': 'true'}
     return HttpResponse(json.dumps(data), content_type='application/json')
 
-@csrf_exempt
-def get_edit_telephone_service_slots(request):
-    if not request.user.is_authenticated():
-        data = {'success':'Expired'}
 
-    else:    
+
+@csrf_exempt
+def get_booked_slots(request):   
+    date_list = []
+    slider_date_list = []
+    duration_date_list = []
+    booked_date_list = []
+    try:
+        if request.POST.get('service_name') == 'Advert Slider':
+            premium_service_obj = PremiumService.objects.filter(
+                city_place_id = request.POST.get('city_place_id'),
+                premium_service_name = request.POST.get('service_name'),
+                premium_service_status = 1
+            )
+            for premium_service in premium_service_obj:
+                if str(premium_service.business_id.business_id) != str(request.POST.get('business_id')):
+                    start_date = datetime.strptime(premium_service.start_date, "%d/%m/%Y")
+                    end_date = datetime.strptime(premium_service.end_date, "%d/%m/%Y")
+                    date_data = {
+                        'start_date': str(start_date.strftime("%m/%d/%Y")),
+                        'end_date': str(end_date.strftime("%m/%d/%Y"))
+                    }
+                    slider_date_list.append(date_data)
+            slider_start_date = datetime.strptime(request.POST.get('start_date'), "%d/%m/%Y")
+            slider_end_date = datetime.strptime(request.POST.get('end_date'), "%d/%m/%Y")
+            date_diff = slider_end_date - slider_start_date
+            for i in range(date_diff.days + 1):
+                duration_date_list.append(slider_start_date + timedelta(i))
+                print 'ssssssssssssssssss',duration_date_list
+            for dates in duration_date_list:
+                i = 0
+                for slider_date in slider_date_list:
+                    date1 = datetime.strptime(slider_date['start_date'], "%m/%d/%Y")
+                    date2 = datetime.strptime(slider_date['end_date'], "%m/%d/%Y")
+                    if date1 <= dates <= date2:
+                        i = i + 1
+                if i >= 10:
+                    booked_date_list.append(dates.strftime("%m/%d/%Y"))
+        elif request.POST.get('service_name') == 'Top Advert':
+            premium_service_obj = PremiumService.objects.filter(
+                city_place_id = request.POST.get('city_place_id'),
+                premium_service_name = request.POST.get('service_name'),
+                premium_service_status = 1
+            )
+        else:
+            premium_service_obj = PremiumService.objects.filter(
+                category_level=request.POST.get('cat_lvl'),
+                category_id=request.POST.get('cat_id'),
+                city_place_id=request.POST.get('city_place_id'),
+                premium_service_name=request.POST.get('service_name'),
+                premium_service_status=1
+            )
+        for premium_service in premium_service_obj:
+            if str(premium_service.business_id.business_id) != str(request.POST.get('business_id')):
+                start_date = datetime.strptime(premium_service.start_date, "%d/%m/%Y")
+                end_date = datetime.strptime(premium_service.end_date, "%d/%m/%Y")
+                date_data ={
+                    'start_date':str(start_date.strftime("%m/%d/%Y")),
+                    'end_date':str(end_date.strftime("%m/%d/%Y"))
+                }
+                date_list.append(date_data)
+        if request.POST.get('service_name') == 'Advert Slider':
+            date_list = []
+        data = {'success': 'true','date_list':date_list,'booked_date_list':booked_date_list}
+    except Exception, e:
+        print e
+        data = {'success': 'true', 'date_list': date_list,'booked_date_list':booked_date_list}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+
+@csrf_exempt
+def get_edit_booked_slots(request):
+
+    date_list = []
+    city_place_id = request.POST.get('city_place_id')
+    business_id = request.POST.get('business_id')
+    cat_lvl = request.POST.get('cat_lvl')
+    cat_id = request.POST.get('cat_id')
+    try:
+        no1_ranges = []
+        no2_ranges = []
+        no3_ranges = []
+        no4_ranges = []
+        no5_ranges = []
+        slider_date_list=[]
+        duration_date_list=[]
+        no1_start_date,no1_end_date = '', ''
+        no2_start_date,no2_end_date = '', ''
+        no3_start_date,no3_end_date = '', ''
+        no4_start_date,no4_end_date = '', ''
+        no5_start_date,no5_end_date = '', ''
         has_platinum = 'false'
         has_diamond = 'false'
         has_gold = 'false'
         has_silver = 'false'
         has_bronze = 'false'
         has_value = 'false'
-        try:
-            print request.POST
-            start_date = request.POST.get('start_date')
-            cat_level = int(request.POST.get('cat_lvl'))
-            enquiry_service_obj = EnquiryService.objects.filter(
-                category_id=request.POST.get('cat_id'),
-                category_level=cat_level,
-                city_place_id=request.POST.get('city_place_id'),
-                enquiry_service_status=1,
-                enquiry_service_name='Platinum'
-            )
-            for enquiry_service in enquiry_service_obj:
-                if str(enquiry_service.business_id.business_id) != str(request.POST.get('business_id')):
-                    date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
-                    date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
-                    date3 = datetime.strptime(start_date, "%d/%m/%Y")
-                    if date1 <= date3 <= date2:
-                        has_platinum = 'true'
 
-            enquiry_service_obj = EnquiryService.objects.filter(
-                category_id=request.POST.get('cat_id'),
-                category_level=cat_level,
-                city_place_id=request.POST.get('city_place_id'),
-                enquiry_service_status=1,
-                enquiry_service_name='Diamond'
-            )
-            for enquiry_service in enquiry_service_obj:
-                if str(enquiry_service.business_id.business_id) != str(request.POST.get('business_id')):
-                    date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
-                    date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
-                    date3 = datetime.strptime(start_date, "%d/%m/%Y")
-                    if date1 <= date3 <= date2:
-                        has_diamond = 'true'
-
-
-            enquiry_service_obj = EnquiryService.objects.filter(
-                category_id=request.POST.get('cat_id'),
-                category_level=cat_level,
-                city_place_id=request.POST.get('city_place_id'),
-                enquiry_service_status=1,
-                enquiry_service_name='Gold'
-            )
-            for enquiry_service in enquiry_service_obj:
-                if str(enquiry_service.business_id.business_id) != str(request.POST.get('business_id')):
-                    date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
-                    date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
-                    date3 = datetime.strptime(start_date, "%d/%m/%Y")
-                    if date1 <= date3 <= date2:
-                        has_gold = 'true'
-
-            enquiry_service_obj = EnquiryService.objects.filter(
-                category_id=request.POST.get('cat_id'),
-                category_level=cat_level,
-                city_place_id=request.POST.get('city_place_id'),
-                enquiry_service_status=1,
-                enquiry_service_name='Silver'
-            )
-            i = 0
-            for enquiry_service in enquiry_service_obj:
-                if str(enquiry_service.business_id.business_id) != str(request.POST.get('business_id')):
-                    date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
-                    date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
-                    date3 = datetime.strptime(start_date, "%d/%m/%Y")
-                    if date1 <= date3 <= date2:
-                        i = i + 1
-            if i >= 2:
-                has_silver = 'true'
-
-            enquiry_service_obj = EnquiryService.objects.filter(
-                category_id=request.POST.get('cat_id'),
-                category_level=cat_level,
-                city_place_id=request.POST.get('city_place_id'),
-                enquiry_service_status=1,
-                enquiry_service_name='Bronze'
-            )
-            i = 0
-            for enquiry_service in enquiry_service_obj:
-                if str(enquiry_service.business_id.business_id) != str(request.POST.get('business_id')):
-                    date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
-                    date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
-                    date3 = datetime.strptime(start_date, "%d/%m/%Y")
-                    if date1 <= date3 <= date2:
-                        i = i + 1
-            if i >= 3:
-                has_bronze = 'true'
-
-            enquiry_service_obj = EnquiryService.objects.filter(
-                category_id=request.POST.get('cat_id'),
-                category_level=cat_level,
-                city_place_id=request.POST.get('city_place_id'),
-                enquiry_service_status=1,
-                enquiry_service_name='Value'
-            )
-            i = 0
-            for enquiry_service in enquiry_service_obj:
-                if str(enquiry_service.business_id.business_id) != str(request.POST.get('business_id')):
-                    date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
-                    date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
-                    date3 = datetime.strptime(start_date, "%d/%m/%Y")
-                    if date1 <= date3 <= date2:
-                        i = i + 1
-            if i >= 2:
-                has_value = 'true'
-
-            data = {
-                'success': 'true',
-                'has_platinum': has_platinum, 'has_diamond': has_diamond,
-                'has_gold': has_gold, 'has_silver': has_silver,
-                'has_bronze': has_bronze, 'has_value': has_value,
-            }
-        except Exception, e:
-            print e
-            data = {'success': 'true'}
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-@csrf_exempt
-def get_booked_slots(request):
-    if not request.user.is_authenticated():
-        data = {'success':'Expired'}
-
-    else:    
-        date_list = []
-        slider_date_list = []
-        duration_date_list = []
-        booked_date_list = []
-        try:
-            print request.POST
-            if request.POST.get('service_name') == 'Advert Slider':
+        service_name_list = ['Advert Slider', 'Top Advert', 'No.1 Listing', 'No.2 Listing', 'No.3 Listing']
+        for service_name in service_name_list:
+            if service_name == 'Advert Slider':
                 premium_service_obj = PremiumService.objects.filter(
-                    city_place_id = request.POST.get('city_place_id'),
-                    premium_service_name = request.POST.get('service_name'),
-                    premium_service_status = 1
+                    city_place_id=city_place_id,
+                    premium_service_name=service_name,
+                    premium_service_status=1
                 )
                 for premium_service in premium_service_obj:
-                    if str(premium_service.business_id.business_id) != str(request.POST.get('business_id')):
+                    if str(premium_service.business_id.business_id) == str(business_id):
+                        no4_start_date, no4_end_date = premium_service.start_date, premium_service.end_date
+                for premium_service in premium_service_obj:
+                    if str(premium_service.business_id.business_id) != str(business_id):
                         start_date = datetime.strptime(premium_service.start_date, "%d/%m/%Y")
                         end_date = datetime.strptime(premium_service.end_date, "%d/%m/%Y")
                         date_data = {
@@ -488,330 +595,259 @@ def get_booked_slots(request):
                             'end_date': str(end_date.strftime("%m/%d/%Y"))
                         }
                         slider_date_list.append(date_data)
-                slider_start_date = datetime.strptime(request.POST.get('start_date'), "%d/%m/%Y")
-                slider_end_date = datetime.strptime(request.POST.get('end_date'), "%d/%m/%Y")
-                date_diff = slider_end_date - slider_start_date
-                for i in range(date_diff.days + 1):
-                    duration_date_list.append(slider_start_date + timedelta(i))
-                for dates in duration_date_list:
-                    i = 0
-                    for slider_date in slider_date_list:
-                        date1 = datetime.strptime(slider_date['start_date'], "%m/%d/%Y")
-                        date2 = datetime.strptime(slider_date['end_date'], "%m/%d/%Y")
-                        if date1 <= dates <= date2:
-                            i = i + 1
-                    if i >= 10:
-                        booked_date_list.append(dates.strftime("%m/%d/%Y"))
-            elif request.POST.get('service_name') == 'Top Advert':
+                    slider_start_date = datetime.strptime(request.POST.get('start_date'), "%d/%m/%Y")
+                    slider_end_date = datetime.strptime(request.POST.get('end_date'), "%d/%m/%Y")
+                    date_diff = slider_end_date - slider_start_date
+                    for i in range(date_diff.days + 1):
+                        duration_date_list.append(slider_start_date + timedelta(i))
+                    for dates in duration_date_list:
+                        i = 0
+                        for slider_date in slider_date_list:
+                            date1 = datetime.strptime(slider_date['start_date'], "%m/%d/%Y")
+                            date2 = datetime.strptime(slider_date['end_date'], "%m/%d/%Y")
+                            if date1 <= dates <= date2:
+                                i = i + 1
+                        if i >= 10:
+                            no4_ranges.append(dates.strftime("%m/%d/%Y"))
+            no4_ranges = set(no4_ranges)
+            no4_ranges = list(no4_ranges)
+            if service_name == 'Top Advert':
+                date_list = []
                 premium_service_obj = PremiumService.objects.filter(
-                    city_place_id = request.POST.get('city_place_id'),
-                    premium_service_name = request.POST.get('service_name'),
-                    premium_service_status = 1
-                )
-            else:
-                premium_service_obj = PremiumService.objects.filter(
-                    category_level=request.POST.get('cat_lvl'),
-                    category_id=request.POST.get('cat_id'),
-                    city_place_id=request.POST.get('city_place_id'),
-                    premium_service_name=request.POST.get('service_name'),
+                    city_place_id=city_place_id,
+                    premium_service_name=service_name,
                     premium_service_status=1
                 )
-            for premium_service in premium_service_obj:
-                if str(premium_service.business_id.business_id) != str(request.POST.get('business_id')):
-                    start_date = datetime.strptime(premium_service.start_date, "%d/%m/%Y")
-                    end_date = datetime.strptime(premium_service.end_date, "%d/%m/%Y")
-                    date_data ={
-                        'start_date':str(start_date.strftime("%m/%d/%Y")),
-                        'end_date':str(end_date.strftime("%m/%d/%Y"))
-                    }
-                    date_list.append(date_data)
-            if request.POST.get('service_name') == 'Advert Slider':
+                for premium_service in premium_service_obj:
+                    if str(premium_service.business_id.business_id) != str(business_id):
+                        start_date = datetime.strptime(premium_service.start_date, "%d/%m/%Y")
+                        end_date = datetime.strptime(premium_service.end_date, "%d/%m/%Y")
+                        date_data = {
+                            'start_date': str(start_date.strftime("%m/%d/%y")),
+                            'end_date': str(end_date.strftime("%m/%d/%y"))
+                        }
+                        date_list.append(date_data)
+                    else:
+                        no5_start_date, no5_end_date = premium_service.start_date, premium_service.end_date
+                no5_ranges = date_list
+            if service_name == 'No.1 Listing':
                 date_list = []
-            data = {'success': 'true','date_list':date_list,'booked_date_list':booked_date_list}
-        except Exception, e:
-            print e
-            data = {'success': 'true', 'date_list': date_list,'booked_date_list':booked_date_list}
+                premium_service_obj = PremiumService.objects.filter(
+                    category_level=cat_lvl,
+                    category_id=cat_id,
+                    city_place_id=city_place_id,
+                    premium_service_name=service_name,
+                    premium_service_status=1
+                )
+                print "premium_service_obj", premium_service_obj
+                for premium_service in premium_service_obj:
+                    if str(premium_service.business_id.business_id) != str(business_id):
+                        start_date = datetime.strptime(premium_service.start_date, "%d/%m/%Y")
+                        end_date = datetime.strptime(premium_service.end_date, "%d/%m/%Y")
+                        date_data = {
+                            'start_date': str(start_date.strftime("%m/%d/%y")),
+                            'end_date': str(end_date.strftime("%m/%d/%y"))
+                        }
+                        date_list.append(date_data)
+                    else:
+                        no1_start_date, no1_end_date = premium_service.start_date, premium_service.end_date
+                no1_ranges = date_list
+            if service_name == 'No.2 Listing':
+                date_list = []
+                premium_service_obj = PremiumService.objects.filter(
+                    category_level=cat_lvl,
+                    category_id=cat_id,
+                    city_place_id=city_place_id,
+                    premium_service_name=service_name,
+                    premium_service_status=1
+                )
+                for premium_service in premium_service_obj:
+                    if str(premium_service.business_id.business_id) != str(business_id):
+                        start_date = datetime.strptime(premium_service.start_date, "%d/%m/%Y")
+                        end_date = datetime.strptime(premium_service.end_date, "%d/%m/%Y")
+                        date_data = {
+                            'start_date': str(start_date.strftime("%m/%d/%y")),
+                            'end_date': str(end_date.strftime("%m/%d/%y"))
+                        }
+                        date_list.append(date_data)
+                    else:
+                        no2_start_date, no2_end_date = premium_service.start_date, premium_service.end_date
+                no2_ranges = date_list
+            if service_name == 'No.3 Listing':
+                date_list = []
+                premium_service_obj = PremiumService.objects.filter(
+                    category_level=cat_lvl,
+                    category_id=cat_id,
+                    city_place_id=city_place_id,
+                    premium_service_name=service_name,
+                    premium_service_status=1
+                )
+                for premium_service in premium_service_obj:
+                    if str(premium_service.business_id.business_id) != str(business_id):
+                        start_date = datetime.strptime(premium_service.start_date, "%d/%m/%Y")
+                        end_date = datetime.strptime(premium_service.end_date, "%d/%m/%Y")
+                        date_data = {
+                            'start_date': str(start_date.strftime("%m/%d/%y")),
+                            'end_date': str(end_date.strftime("%m/%d/%y"))
+                        }
+                        date_list.append(date_data)
+                    else:
+                        no3_start_date, no3_end_date = premium_service.start_date, premium_service.end_date
+                no3_ranges = date_list
+
+        start_date = request.POST.get('start_date')
+        cat_level = int(request.POST.get('cat_lvl'))
+        enquiry_service_obj = EnquiryService.objects.filter(
+            category_id=request.POST.get('cat_id'),
+            category_level=cat_level,
+            city_place_id=request.POST.get('city_place_id'),
+            enquiry_service_status=1,
+            enquiry_service_name='Platinum'
+        )
+        for enquiry_service in enquiry_service_obj:
+            if str(enquiry_service.business_id.business_id) != str(business_id):
+                date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
+                date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
+                date3 = datetime.strptime(start_date, "%d/%m/%Y")
+                if date1 <= date3 <= date2:
+                    has_platinum = 'true'
+
+        enquiry_service_obj = EnquiryService.objects.filter(
+            category_id=request.POST.get('cat_id'),
+            category_level=cat_level,
+            city_place_id=request.POST.get('city_place_id'),
+            enquiry_service_status=1,
+            enquiry_service_name='Diamond'
+        )
+        for enquiry_service in enquiry_service_obj:
+            if str(enquiry_service.business_id.business_id) != str(business_id):
+                date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
+                date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
+                date3 = datetime.strptime(start_date, "%d/%m/%Y")
+                if date1 <= date3 <= date2:
+                    has_diamond = 'true'
+
+        enquiry_service_obj = EnquiryService.objects.filter(
+            category_id=request.POST.get('cat_id'),
+            category_level=cat_level,
+            city_place_id=request.POST.get('city_place_id'),
+            enquiry_service_status=1,
+            enquiry_service_name='Gold'
+        )
+        for enquiry_service in enquiry_service_obj:
+            if str(enquiry_service.business_id.business_id) != str(business_id):
+                date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
+                date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
+                date3 = datetime.strptime(start_date, "%d/%m/%Y")
+                if date1 <= date3 <= date2:
+                    has_gold = 'true'
+
+        enquiry_service_obj = EnquiryService.objects.filter(
+            category_id=request.POST.get('cat_id'),
+            category_level=cat_level,
+            city_place_id=request.POST.get('city_place_id'),
+            enquiry_service_status=1,
+            enquiry_service_name='Silver'
+        )
+        i = 0
+        for enquiry_service in enquiry_service_obj:
+            if str(enquiry_service.business_id.business_id) != str(business_id):
+                date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
+                date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
+                date3 = datetime.strptime(start_date, "%d/%m/%Y")
+                if date1 <= date3 <= date2:
+                    i = i + 1
+        if i >= 2:
+            has_silver = 'true'
+
+        enquiry_service_obj = EnquiryService.objects.filter(
+            category_id=request.POST.get('cat_id'),
+            category_level=cat_level,
+            city_place_id=request.POST.get('city_place_id'),
+            enquiry_service_status=1,
+            enquiry_service_name='Bronze'
+        )
+        i = 0
+        for enquiry_service in enquiry_service_obj:
+            if str(enquiry_service.business_id.business_id) != str(business_id):
+                date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
+                date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
+                date3 = datetime.strptime(start_date, "%d/%m/%Y")
+                if date1 <= date3 <= date2:
+                    i = i + 1
+        if i >= 3:
+            has_bronze = 'true'
+
+        enquiry_service_obj = EnquiryService.objects.filter(
+            category_id=request.POST.get('cat_id'),
+            category_level=cat_level,
+            city_place_id=request.POST.get('city_place_id'),
+            enquiry_service_status=1,
+            enquiry_service_name='Value'
+        )
+        i = 0
+        for enquiry_service in enquiry_service_obj:
+            if str(enquiry_service.business_id.business_id) != str(business_id):
+                date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
+                date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
+                date3 = datetime.strptime(start_date, "%d/%m/%Y")
+                if date1 <= date3 <= date2:
+                    i = i + 1
+        if i >= 2:
+            has_value = 'true'
+
+        data = {
+            'success': 'true','no1_ranges':no1_ranges,
+            'no2_ranges':no2_ranges,'no3_ranges':no3_ranges,
+            'no4_ranges':no4_ranges,'no5_ranges':no5_ranges,
+            'no1_start_date': no1_start_date,
+            'no2_start_date': no2_start_date,
+            'no3_start_date': no3_start_date,
+            'no4_start_date': no4_start_date,
+            'no5_start_date': no5_start_date,
+            'no1_end_date': no1_end_date,
+            'no2_end_date': no2_end_date,
+            'no3_end_date': no3_end_date,
+            'no4_end_date': no4_end_date,
+            'no5_end_date': no5_end_date,
+            'has_platinum': has_platinum, 'has_diamond': has_diamond,
+            'has_gold': has_gold, 'has_silver': has_silver,
+            'has_bronze': has_bronze, 'has_value': has_value,
+        }
+    except Exception, e:
+        print e
+        data = {'success': 'true'}
     return HttpResponse(json.dumps(data), content_type='application/json')
 
+
 @csrf_exempt
-def get_edit_booked_slots(request):
-    if not request.user.is_authenticated():
-        data = {'success':'Expired'}
-
-    else:    
-        date_list = []
-        city_place_id = request.POST.get('city_place_id')
-        business_id = request.POST.get('business_id')
-        cat_lvl = request.POST.get('cat_lvl')
-        cat_id = request.POST.get('cat_id')
-        try:
-            no1_ranges = []
-            no2_ranges = []
-            no3_ranges = []
-            no4_ranges = []
-            no5_ranges = []
-            slider_date_list=[]
-            duration_date_list=[]
-            no1_start_date,no1_end_date = '', ''
-            no2_start_date,no2_end_date = '', ''
-            no3_start_date,no3_end_date = '', ''
-            no4_start_date,no4_end_date = '', ''
-            no5_start_date,no5_end_date = '', ''
-            has_platinum = 'false'
-            has_diamond = 'false'
-            has_gold = 'false'
-            has_silver = 'false'
-            has_bronze = 'false'
-            has_value = 'false'
-
-            service_name_list = ['Advert Slider', 'Top Advert', 'No.1 Listing', 'No.2 Listing', 'No.3 Listing']
-            for service_name in service_name_list:
-                if service_name == 'Advert Slider':
-                    premium_service_obj = PremiumService.objects.filter(
-                        city_place_id=city_place_id,
-                        premium_service_name=service_name,
-                        premium_service_status=1
-                    )
-                    for premium_service in premium_service_obj:
-                        if str(premium_service.business_id.business_id) == str(business_id):
-                            no4_start_date, no4_end_date = premium_service.start_date, premium_service.end_date
-                    for premium_service in premium_service_obj:
-                        if str(premium_service.business_id.business_id) != str(business_id):
-                            start_date = datetime.strptime(premium_service.start_date, "%d/%m/%Y")
-                            end_date = datetime.strptime(premium_service.end_date, "%d/%m/%Y")
-                            date_data = {
-                                'start_date': str(start_date.strftime("%m/%d/%Y")),
-                                'end_date': str(end_date.strftime("%m/%d/%Y"))
-                            }
-                            slider_date_list.append(date_data)
-                        slider_start_date = datetime.strptime(request.POST.get('start_date'), "%d/%m/%Y")
-                        slider_end_date = datetime.strptime(request.POST.get('end_date'), "%d/%m/%Y")
-                        date_diff = slider_end_date - slider_start_date
-                        for i in range(date_diff.days + 1):
-                            duration_date_list.append(slider_start_date + timedelta(i))
-                        for dates in duration_date_list:
-                            i = 0
-                            for slider_date in slider_date_list:
-                                date1 = datetime.strptime(slider_date['start_date'], "%m/%d/%Y")
-                                date2 = datetime.strptime(slider_date['end_date'], "%m/%d/%Y")
-                                if date1 <= dates <= date2:
-                                    i = i + 1
-                            if i >= 10:
-                                no4_ranges.append(dates.strftime("%m/%d/%Y"))
-                no4_ranges = set(no4_ranges)
-                no4_ranges = list(no4_ranges)
-                if service_name == 'Top Advert':
-                    date_list = []
-                    premium_service_obj = PremiumService.objects.filter(
-                        city_place_id=city_place_id,
-                        premium_service_name=service_name,
-                        premium_service_status=1
-                    )
-                    for premium_service in premium_service_obj:
-                        if str(premium_service.business_id.business_id) != str(business_id):
-                            start_date = datetime.strptime(premium_service.start_date, "%d/%m/%Y")
-                            end_date = datetime.strptime(premium_service.end_date, "%d/%m/%Y")
-                            date_data = {
-                                'start_date': str(start_date.strftime("%m/%d/%y")),
-                                'end_date': str(end_date.strftime("%m/%d/%y"))
-                            }
-                            date_list.append(date_data)
-                        else:
-                            no5_start_date, no5_end_date = premium_service.start_date, premium_service.end_date
-                    no5_ranges = date_list
-                if service_name == 'No.1 Listing':
-                    date_list = []
-                    premium_service_obj = PremiumService.objects.filter(
-                        category_level=cat_lvl,
-                        category_id=cat_id,
-                        city_place_id=city_place_id,
-                        premium_service_name=service_name,
-                        premium_service_status=1
-                    )
-                    print "premium_service_obj", premium_service_obj
-                    for premium_service in premium_service_obj:
-                        if str(premium_service.business_id.business_id) != str(business_id):
-                            start_date = datetime.strptime(premium_service.start_date, "%d/%m/%Y")
-                            end_date = datetime.strptime(premium_service.end_date, "%d/%m/%Y")
-                            date_data = {
-                                'start_date': str(start_date.strftime("%m/%d/%y")),
-                                'end_date': str(end_date.strftime("%m/%d/%y"))
-                            }
-                            date_list.append(date_data)
-                        else:
-                            no1_start_date, no1_end_date = premium_service.start_date, premium_service.end_date
-                    no1_ranges = date_list
-                if service_name == 'No.2 Listing':
-                    date_list = []
-                    premium_service_obj = PremiumService.objects.filter(
-                        category_level=cat_lvl,
-                        category_id=cat_id,
-                        city_place_id=city_place_id,
-                        premium_service_name=service_name,
-                        premium_service_status=1
-                    )
-                    for premium_service in premium_service_obj:
-                        if str(premium_service.business_id.business_id) != str(business_id):
-                            start_date = datetime.strptime(premium_service.start_date, "%d/%m/%Y")
-                            end_date = datetime.strptime(premium_service.end_date, "%d/%m/%Y")
-                            date_data = {
-                                'start_date': str(start_date.strftime("%m/%d/%y")),
-                                'end_date': str(end_date.strftime("%m/%d/%y"))
-                            }
-                            date_list.append(date_data)
-                        else:
-                            no2_start_date, no2_end_date = premium_service.start_date, premium_service.end_date
-                    no2_ranges = date_list
-                if service_name == 'No.3 Listing':
-                    date_list = []
-                    premium_service_obj = PremiumService.objects.filter(
-                        category_level=cat_lvl,
-                        category_id=cat_id,
-                        city_place_id=city_place_id,
-                        premium_service_name=service_name,
-                        premium_service_status=1
-                    )
-                    for premium_service in premium_service_obj:
-                        if str(premium_service.business_id.business_id) != str(business_id):
-                            start_date = datetime.strptime(premium_service.start_date, "%d/%m/%Y")
-                            end_date = datetime.strptime(premium_service.end_date, "%d/%m/%Y")
-                            date_data = {
-                                'start_date': str(start_date.strftime("%m/%d/%y")),
-                                'end_date': str(end_date.strftime("%m/%d/%y"))
-                            }
-                            date_list.append(date_data)
-                        else:
-                            no3_start_date, no3_end_date = premium_service.start_date, premium_service.end_date
-                    no3_ranges = date_list
-
-            start_date = request.POST.get('start_date')
-            cat_level = int(request.POST.get('cat_lvl'))
-            enquiry_service_obj = EnquiryService.objects.filter(
-                category_id=request.POST.get('cat_id'),
-                category_level=cat_level,
-                city_place_id=request.POST.get('city_place_id'),
-                enquiry_service_status=1,
-                enquiry_service_name='Platinum'
-            )
-            for enquiry_service in enquiry_service_obj:
-                if str(enquiry_service.business_id.business_id) != str(business_id):
-                    date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
-                    date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
-                    date3 = datetime.strptime(start_date, "%d/%m/%Y")
-                    if date1 <= date3 <= date2:
-                        has_platinum = 'true'
-
-            enquiry_service_obj = EnquiryService.objects.filter(
-                category_id=request.POST.get('cat_id'),
-                category_level=cat_level,
-                city_place_id=request.POST.get('city_place_id'),
-                enquiry_service_status=1,
-                enquiry_service_name='Diamond'
-            )
-            for enquiry_service in enquiry_service_obj:
-                if str(enquiry_service.business_id.business_id) != str(business_id):
-                    date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
-                    date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
-                    date3 = datetime.strptime(start_date, "%d/%m/%Y")
-                    if date1 <= date3 <= date2:
-                        has_diamond = 'true'
-
-            enquiry_service_obj = EnquiryService.objects.filter(
-                category_id=request.POST.get('cat_id'),
-                category_level=cat_level,
-                city_place_id=request.POST.get('city_place_id'),
-                enquiry_service_status=1,
-                enquiry_service_name='Gold'
-            )
-            for enquiry_service in enquiry_service_obj:
-                if str(enquiry_service.business_id.business_id) != str(business_id):
-                    date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
-                    date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
-                    date3 = datetime.strptime(start_date, "%d/%m/%Y")
-                    if date1 <= date3 <= date2:
-                        has_gold = 'true'
-
-            enquiry_service_obj = EnquiryService.objects.filter(
-                category_id=request.POST.get('cat_id'),
-                category_level=cat_level,
-                city_place_id=request.POST.get('city_place_id'),
-                enquiry_service_status=1,
-                enquiry_service_name='Silver'
-            )
-            i = 0
-            for enquiry_service in enquiry_service_obj:
-                if str(enquiry_service.business_id.business_id) != str(business_id):
-                    date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
-                    date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
-                    date3 = datetime.strptime(start_date, "%d/%m/%Y")
-                    if date1 <= date3 <= date2:
-                        i = i + 1
-            if i >= 2:
-                has_silver = 'true'
-
-            enquiry_service_obj = EnquiryService.objects.filter(
-                category_id=request.POST.get('cat_id'),
-                category_level=cat_level,
-                city_place_id=request.POST.get('city_place_id'),
-                enquiry_service_status=1,
-                enquiry_service_name='Bronze'
-            )
-            i = 0
-            for enquiry_service in enquiry_service_obj:
-                if str(enquiry_service.business_id.business_id) != str(business_id):
-                    date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
-                    date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
-                    date3 = datetime.strptime(start_date, "%d/%m/%Y")
-                    if date1 <= date3 <= date2:
-                        i = i + 1
-            if i >= 3:
-                has_bronze = 'true'
-
-            enquiry_service_obj = EnquiryService.objects.filter(
-                category_id=request.POST.get('cat_id'),
-                category_level=cat_level,
-                city_place_id=request.POST.get('city_place_id'),
-                enquiry_service_status=1,
-                enquiry_service_name='Value'
-            )
-            i = 0
-            for enquiry_service in enquiry_service_obj:
-                if str(enquiry_service.business_id.business_id) != str(business_id):
-                    date1 = datetime.strptime(enquiry_service.start_date, "%d/%m/%Y")
-                    date2 = datetime.strptime(enquiry_service.end_date, "%d/%m/%Y")
-                    date3 = datetime.strptime(start_date, "%d/%m/%Y")
-                    if date1 <= date3 <= date2:
-                        i = i + 1
-            if i >= 2:
-                has_value = 'true'
-
-            data = {
-                'success': 'true','no1_ranges':no1_ranges,
-                'no2_ranges':no2_ranges,'no3_ranges':no3_ranges,
-                'no4_ranges':no4_ranges,'no5_ranges':no5_ranges,
-                'no1_start_date': no1_start_date,
-                'no2_start_date': no2_start_date,
-                'no3_start_date': no3_start_date,
-                'no4_start_date': no4_start_date,
-                'no5_start_date': no5_start_date,
-                'no1_end_date': no1_end_date,
-                'no2_end_date': no2_end_date,
-                'no3_end_date': no3_end_date,
-                'no4_end_date': no4_end_date,
-                'no5_end_date': no5_end_date,
-                'has_platinum': has_platinum, 'has_diamond': has_diamond,
-                'has_gold': has_gold, 'has_silver': has_silver,
-                'has_bronze': has_bronze, 'has_value': has_value,
-            }
-        except Exception, e:
-            print e
-            data = {'success': 'true'}
+def check_poc(request):
+    try:
+        supplier_obj = Supplier.objects.get(username=request.POST.get('user_email'))
+        data = {
+            'success': 'true',
+            'message': "Supplier added successfully",
+        }
+    except Exception, e:
+        data = {
+            'success': 'false',
+            'message': str(e)
+        }
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 @csrf_exempt
 def save_supplier(request):
     try:
         # pdb.set_trace()
+        count = Supplier.objects.all().count()
+        poc_flag = 0
+        try:
+            parent_supplier_obj = Supplier.objects.get(username=request.POST.get('user_email'))
+            user_name = 'supplier_'+str(count)
+            poc_flag = 1
+        except:
+            user_name = request.POST.get('user_email')
+            pass
         supplier_obj = Supplier(
             business_name=request.POST.get('business_name'),
             phone_no=request.POST.get('phone_no'),
@@ -828,7 +864,7 @@ def save_supplier(request):
             contact_person=request.POST.get('user_name'),
             contact_email=request.POST.get('user_email'),
             contact_no=request.POST.get('user_contact_no'),
-            username=request.POST.get('user_email'),
+            username=user_name,
             sales_person_name=UserProfile.objects.get(user_id=request.POST.get('sale_person_name')),
             sales_person_email=request.POST.get('sale_person_email'),
             sales_person_contact_number=request.POST.get('sale_person_contact_no'),
@@ -836,25 +872,31 @@ def save_supplier(request):
             supplier_status='1'
         )
         supplier_obj.save()
-        ret = u''
-        ret=''.join(random.choice('0123456789ABCDEF') for i in range(6))
-        OTP = ret
-        supplier_obj.set_password(OTP);      
-        supplier_obj.save()  
-        email = str(supplier_obj.contact_email)
-        supplier_id=str(supplier_obj.supplier_id)
-        try:
-            supplier_contact_mail(supplier_obj,OTP)
-            supplier_contact_sms(supplier_obj,OTP)
-        except:
-            pass
+        if poc_flag == 0:
+            ret = u''
+            ret=''.join(random.choice('0123456789ABCDEF') for i in range(6))
+            OTP = ret
+            supplier_obj.set_password(OTP);
+            supplier_obj.save()
+            try:
+                supplier_contact_mail(supplier_obj, OTP)
+                supplier_contact_sms(supplier_obj, OTP)
+            except:
+                pass
+
+        if poc_flag == 1:
+            supplier_obj.parent_supplier_id = parent_supplier_obj
+        else:
+            supplier_obj.parent_supplier_id = supplier_obj
+
+        supplier_obj.save()
 
         email = str(supplier_obj.contact_email)
         supplier_id=str(supplier_obj.supplier_id)
-        try:
-            supplier_add_mail(supplier_obj)
-        except:
-            pass
+        # try:
+        #     supplier_add_mail(supplier_obj)
+        # except:
+        #     pass
 
         try:
             supplier_obj.logo = request.FILES['logo']
@@ -862,20 +904,11 @@ def save_supplier(request):
         except:
             pass
 
-        category_obj = CategoryCityMap.objects.filter(city_place_id = request.POST.get('city'))
-        category_list = []
-        for category in category_obj:
-            cat_obj = Category.objects.get(category_id = category.category_id.category_id)
-            if cat_obj.category_name != "Ticket Resell":
-                category_data = '<option value="'+str(cat_obj.category_id)+'">'+cat_obj.category_name+'</option>'
-                category_list.append(category_data)
-
         data = {
             'success': 'true',
             'message': "Supplier added successfully",
             'email': email,
-            'supplier_id':supplier_id,
-            'category_list':category_list
+            'supplier_id':supplier_id
         }
     except Exception, e:
         data = {
@@ -888,22 +921,30 @@ def save_supplier(request):
 def supplier_contact_mail(supplier_obj,OTP):
     sales_person_name = str(supplier_obj.sales_person_name.user_first_name + " "+ supplier_obj.sales_person_name.user_last_name)
     sales_person_number = str(supplier_obj.sales_person_name.user_contact_no)
+    sales_person_email = str(supplier_obj.sales_person_name.usre_email_id)
     poc =str(supplier_obj.contact_email)
-    gmail_user = "cityhoopla2016"
-    gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <do-not-reply@city-hoopla.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = [poc]
-    try:
-        TEXT = "Dear " + str(supplier_obj.contact_person) + ", \n\n"+ "Greetings from CityHoopla !!! \n\n"+ "You are now successfully registered as Subscriber with CityHoopla. Please find below your login credentials to manage your Subscriber Account. \n\n"+ "Username: "+ str(supplier_obj.contact_email)+ "\n"+ "Password: "+  str(OTP)+ '\n\n' + "Click on the link below to configure your account, buy subscriptions and adverts!!!" + "\n"+SERVER_URL+"/regenerate-password/?supplier_id="+str(supplier_obj.supplier_id)+ "\n\n"+"In case of any issues please contact your CityHoopla sales partner "+ sales_person_name + " at " + sales_person_number +" or write to info@cityhoopla.com"+'\n\n' + "Best Wishes," + '\n' + "Team CityHoopla "
-        SUBJECT = "Welcome to CityHoopla!"
-        # server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587)
-        server.ehlo()
-        server.starttls()
+    print TO
+    cc = ['info@city-hoopla.com']
 
+    try:
+        TEXT = "Business Name: "+supplier_obj.business_name+", "+supplier_obj.city_place_id.city_id.city_name
+        TEXT = TEXT + "\n\nDear " + str(supplier_obj.contact_person) + ", \n\n"+ "Greetings from CityHoopla !!! \n\n"+ "You are now successfully registered as our brand new active subscriber.\nPlease find below your username and temporary password of your self service tool to manage your account and advertisements.\nYou can change your password when you attempt to login for the first time. \n\n"+ "Username: "+ str(supplier_obj.contact_email)+ "\n"+ "Password: "+  str(OTP)+ '\n\n' + "Your Self Service Tool link: " + "\n"+SERVER_URL+"/regenerate-password/?supplier_id="+str(supplier_obj.supplier_id)+ "\n(click this link or copy it to your browser)\n\n"+"In case of any issue you may face, please contact your CityHoopla Sales Partner "+ sales_person_name + " at " + sales_person_number +" or write to "+ sales_person_email +" and mark cc to info@cityhoopla.com"+'\n\n' + "Best Wishes," + '\n' + "Team CityHoopla."
+        SUBJECT = "Welcome to CityHoopla!"
+        #server = smtplib.SMTP_SSL()
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
+        server.ehlo()
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
-        message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
-        server.sendmail(FROM, TO, message)
+        message = """From: %s\nTo: %s\ncc: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO),", ".join(cc), SUBJECT, TEXT)
+        #print "message",message
+        toaddrs = TO + cc
+        server.sendmail(FROM,toaddrs,message)
         server.quit()
     except SMTPException, e:
         print e
@@ -996,26 +1037,27 @@ def new_password_mail(supplier_obj,OTP):
     sales_person_name = str(supplier_obj.sales_person_name.user_first_name + " "+ supplier_obj.sales_person_name.user_last_name)
     sales_person_number = str(supplier_obj.sales_person_name.user_contact_no)
     poc = str(supplier_obj.contact_email)    
-    gmail_user = "cityhoopla2016"
-    gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <do-not-reply@city-hoopla.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = [poc]
+    cc = ['info@city-hoopla.com']
     try:
         TEXT = "Dear " + str(supplier_obj.contact_person) + ", \n\n"+ "Greetings from CityHoopla !!! \n\n"+ "Your password for self service portal has been successfully chnaged. Please find below your login credentials to manage your Subscriber Account. \n\n"+ "Username: "+ str(supplier_obj.contact_email)+ "\n"+ "Password: "+  str(OTP)+ '\n\n' + "Click on the link below to configure your account, buy subscriptions and adverts!!!" + "\n"+SERVER_URL+"/subscriber-portal/"+"\n\n"+"In case of any issues please contact your CityHoopla sales partner "+ sales_person_name + " at " + sales_person_number +" or write to info@cityhoopla.com"+'\n\n' + "Best Wishes," + '\n' + "Team CityHoopla "
         SUBJECT = "Your CityHoopla Password has been changed!"
-        # server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        #server = smtplib.SMTP_SSL()
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
-        server.sendmail(FROM, TO, message)
+        server.sendmail(FROM,TO,message)
         server.quit()
     except SMTPException, e:
         print e
     return 1
-
 
 def new_password_sms(supplier_obj,OTP):
     # pdb.set_trace()
@@ -1048,19 +1090,21 @@ def new_password_sms(supplier_obj,OTP):
 
 
 
+
 @csrf_exempt
 def save_service(request):
     advert_flag = 'false'
     try:
         # pdb.set_trace()
         supplier_id = request.POST.get('supplier_id')
-        print "supplier_id", supplier_id
+        print "country_id", request.POST.get('country1')
         supplier_obj = Supplier.objects.get(supplier_id=supplier_id)
         city_place_id = str(supplier_obj.city_place_id)
         category_id = request.POST.get('sub_category')
         duration = request.POST.get('duration_list')
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
+
 
         premium_service_list = request.POST.getlist('premium_service')
         premium_service_duration_list = request.POST.getlist('premium_ser_duration')
@@ -1126,8 +1170,6 @@ def save_service(request):
             city_place_id=City_Place.objects.get(city_place_id=request.POST.get('city1')) if request.POST.get(
                     'city1') else None,
         )
-
-
         business_obj.save()
         if request.POST.get('lvl1'):
             business_obj.category_level_1 = CategoryLevel1.objects.get(category_id=request.POST.get('lvl1'))
@@ -1515,8 +1557,9 @@ def register_supplier(request):
         }
         subscriber_info.append(temp_data)
 
-        supplier_add_payment_mail(payment_obj)
-        payment_sms(payment_obj)
+        # supplier_add_payment_mail(payment_obj)
+        # payment_sms(payment_obj)
+        consumer_payment_mail(subscriber_obj,business_obj)
 
 
         data = {
@@ -1727,6 +1770,7 @@ def register_supplier_review(request):
         subscriber_info.append(temp_data)
 
         supplier_add_payment_mail(payment_obj)
+        consumer_payment_mail(subscriber_obj,business_obj)
         payment_sms(payment_obj)
 
 
@@ -1826,79 +1870,75 @@ def get_basic_subscription_amount(request):
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
-@csrf_exempt
-def get_premium_subscription_amount(request):
-    if not request.user.is_authenticated():
-        data = {'success':'Expired'}
-
-    else:    
-        try:
-            print "--------------------------------", request.POST
-            duration = request.POST.get('duration')
-            service_name = request.POST.get('service_name')
-            cat_lvl = request.POST.get('cat_lvl')
-            cat_id = request.POST.get('cat_id')
-            user_id = request.POST.get('supplier_id')
-            supplier_obj = Supplier.objects.get(supplier_id=user_id)
-            city_place_id = str(supplier_obj.city_place_id)
-
-            if service_name == "Subscription" or service_name == "No.1 Listing" or service_name == "No.2 Listing" or service_name == "No.3 Listing":
-                rate_card_obj = CategoryWiseRateCard.objects.get(service_name=service_name,category_id=cat_id,rate_card_status = '1',
-                                                                 category_level=cat_lvl,city_place_id = city_place_id)
-            else:
-                rate_card_obj = RateCard.objects.get(service_name=service_name,rate_card_status = '1',city_place_id = city_place_id)
-            if duration == '3':
-                amount = str(rate_card_obj.cost_for_3_days)
-            if duration == '7':
-                amount = str(rate_card_obj.cost_for_7_days)
-            if duration == '30':
-                amount = str(rate_card_obj.cost_for_30_days)
-            if duration == '90':
-                amount = str(rate_card_obj.cost_for_90_days)
-            if duration == '180':
-                amount = str(rate_card_obj.cost_for_180_days)
-            data = {'success': 'true', 'amount': amount}
-        except:
-            data = {'success': 'true', 'amount': "0.00"}
-    return HttpResponse(json.dumps(data), content_type='application/json')
 
 @csrf_exempt
-def get_telephone_subscription_amount(request):
-    if not request.user.is_authenticated():
-        data = {'success':'Expired'}
-
-    else:
+def get_premium_subscription_amount(request):  
+    try:
         print "--------------------------------", request.POST
         duration = request.POST.get('duration')
         service_name = request.POST.get('service_name')
-        if request.POST.get('city_place_id'):
-            city_place_id = request.POST.get('city_place_id')
-        elif request.POST.get('supplier_id'):
-            city_place_id = Supplier.objects.get(supplier_id = request.POST.get('supplier_id')).city_place_id.city_place_id
-        try:
-            rate_card_obj = TelephoneEnquiryRateCard.objects.get(service_name=service_name,rate_card_status = '1',city_place_id = city_place_id)
-            if duration == '3':
-                amount = str(rate_card_obj.cost_for_3_days)
-            if duration == '7':
-                amount = str(rate_card_obj.cost_for_7_days)
-            if duration == '30':
-                amount = str(rate_card_obj.cost_for_30_days)
-            if duration == '90':
-                amount = str(rate_card_obj.cost_for_90_days)
-            if duration == '180':
-                amount = str(rate_card_obj.cost_for_180_days)
-            data = {'success': 'true', 'amount': amount}
-        except Exception as e:
-            print e
-            data = {'success': 'true', 'amount': '0'}
+        cat_lvl = request.POST.get('cat_lvl')
+        cat_id = request.POST.get('cat_id')
+        user_id = request.POST.get('supplier_id')
+        supplier_obj = Supplier.objects.get(supplier_id=user_id)
+        city_place_id = request.POST.get('city_place_id')
+        if not city_place_id:
+            city_place_id = str(supplier_obj.city_place_id)
+
+        if service_name == "Subscription" or service_name == "No.1 Listing" or service_name == "No.2 Listing" or service_name == "No.3 Listing":
+            rate_card_obj = CategoryWiseRateCard.objects.get(service_name=service_name,category_id=cat_id,rate_card_status = '1',
+                                                             category_level=cat_lvl,city_place_id = city_place_id)
+        else:
+            rate_card_obj = RateCard.objects.get(service_name=service_name,rate_card_status = '1',city_place_id = city_place_id)
+        if duration == '3':
+            amount = str(rate_card_obj.cost_for_3_days)
+        if duration == '7':
+            amount = str(rate_card_obj.cost_for_7_days)
+        if duration == '30':
+            amount = str(rate_card_obj.cost_for_30_days)
+        if duration == '90':
+            amount = str(rate_card_obj.cost_for_90_days)
+        if duration == '180':
+            amount = str(rate_card_obj.cost_for_180_days)
+        data = {'success': 'true', 'amount': amount}
+    except:
+        data = {'success': 'true', 'amount': "0.00"}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+@csrf_exempt
+def get_telephone_subscription_amount(request):
+
+    duration = request.POST.get('duration')
+    service_name = request.POST.get('service_name')
+    if request.POST.get('city_place_id'):
+        city_place_id = request.POST.get('city_place_id')
+    elif request.POST.get('supplier_id'):
+        city_place_id = Supplier.objects.get(supplier_id = request.POST.get('supplier_id')).city_place_id.city_place_id
+    try:
+        rate_card_obj = TelephoneEnquiryRateCard.objects.get(service_name=service_name,rate_card_status = '1',city_place_id = city_place_id)
+        if duration == '3':
+            amount = str(rate_card_obj.cost_for_3_days)
+        if duration == '7':
+            amount = str(rate_card_obj.cost_for_7_days)
+        if duration == '30':
+            amount = str(rate_card_obj.cost_for_30_days)
+        if duration == '90':
+            amount = str(rate_card_obj.cost_for_90_days)
+        if duration == '180':
+            amount = str(rate_card_obj.cost_for_180_days)
+        data = {'success': 'true', 'amount': amount}
+    except Exception as e:
+        print e
+        data = {'success': 'true', 'amount': '0'}
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def view_subscriber_list(request):
     try:
-
         final_list = []
+        user_obj_list = ''
         pre_date = datetime.now().strftime("%d/%m/%Y")
         pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
         date_gap = ''
@@ -1907,79 +1947,55 @@ def view_subscriber_list(request):
         status_var = request.GET.get('status_var')
         start_date_var = request.GET.get('start_date_var')
         end_date_var = request.GET.get('end_date_var')
+        country_var = request.GET.get('country_var')
+        if country_var:
+            country_var = int(country_var)
+        state_var = request.GET.get('state_var')
+        if state_var:
+            state_var = int(state_var)        
         city_var = request.GET.get('city_var')
+        if city_var:
+            city_var = int(city_var)                
+        
+        state_list =[]
+        city_list1 = []
+
         try:
+            flag_ck = 0
+            user_obj_list = Supplier.objects.all().order_by('-supplier_created_date')
+
             if start_date_var:
                 start_date = datetime.strptime(start_date_var, "%d/%m/%Y")- timedelta(days=1)
             if end_date_var:
                 end_date = datetime.strptime(end_date_var, "%d/%m/%Y")+ timedelta(days=1)
-
             
-            if start_date_var and end_date_var and status_var and city_var:
-                if city_var == "all":
-                    user_list = Supplier.objects.filter(
-                        supplier_created_date__range=[start_date, end_date],
-                        supplier_status=request.GET.get('status_var')
-                    ).order_by('-supplier_id')
-                else:
-                    user_list = Supplier.objects.filter(
-                        city_place_id=request.GET.get('city_var'),
-                        supplier_created_date__range=[start_date, end_date],
-                        supplier_status=request.GET.get('status_var')).order_by('-supplier_id')
-
-
-            elif start_date_var and end_date_var and city_var:
-                if city_var == "all":
-                    user_list = Supplier.objects.filter(
-                        supplier_created_date__range=[start_date, end_date]
-                    ).order_by('-supplier_id')
-                else:
-                    user_list = Supplier.objects.filter(
-                        city_place_id=request.GET.get('city_var'),
-                        supplier_created_date__range=[start_date, end_date]
-                    ).order_by('-supplier_id')
-            elif start_date_var and end_date_var and status_var:
-                user_list = Supplier.objects.filter(
-                    supplier_created_date__range=[start_date, end_date],
-                    supplier_status=request.GET.get('status_var')
-                ).order_by('-supplier_id')
-            elif start_date_var and end_date_var:
-                user_list = Supplier.objects.filter(
+            if start_date_var and end_date_var:
+                flag_ck=1
+                user_obj_list = user_obj_list.filter(
                     supplier_created_date__range=[start_date, end_date]
                 ).order_by('-supplier_id')
-            elif city_var and status_var:
-                if city_var == "all":
-                    user_list = Supplier.objects.filter(
-                        supplier_status=request.GET.get('status_var')
-                    ).order_by('-supplier_created_date')
-                else:
-                    user_list = Supplier.objects.filter(
-                        city_place_id=request.GET.get('city_var'),
-                        supplier_status=request.GET.get('status_var')
-                    ).order_by('-supplier_created_date')
 
-            elif city_var :
+            if city_var:
+                flag_ck=1
                 if city_var == "all":
-                    user_list = Supplier.objects.all().order_by('-supplier_created_date')
-                    
+                    user_obj_list = user_obj_list.all().order_by('-supplier_created_date').reverse()
                 else:
-                    user_list = Supplier.objects.filter(
+                    user_obj_list = user_obj_list.filter(
                         city_place_id=request.GET.get('city_var')
-                    ).order_by('-supplier_created_date')
-            elif status_var:
-                print "In status "
-                user_list = Supplier.objects.filter(
+                    ).order_by('-supplier_created_date').reverse()                
+
+            if status_var:
+                flag_ck=1
+                user_obj_list = user_obj_list.filter(
                     supplier_status=request.GET.get('status_var')
                 ).order_by('-supplier_created_date')
-            elif sort_by == "oldest_first":
-                print "In sort"
-                user_list = Supplier.objects.all().order_by('-supplier_created_date').reverse()
-            else:
-                print "In else"
-                user_list = Supplier.objects.all().order_by('-supplier_created_date')
+            if sort_by == "newest_first":
+                flag_ck=1
+                user_obj_list = user_obj_list.all().order_by('-supplier_created_date').reverse()
 
-            for user_obj in user_list:
+            for user_obj in user_obj_list:
                 user_id = str(user_obj.supplier_id)
+                advert_count = get_cat_data(user_id)
                 business_name = user_obj.business_name
                 user_name = user_obj.contact_person
                 user_email_id = user_obj.contact_email
@@ -2001,7 +2017,7 @@ def view_subscriber_list(request):
                 # subscription_start_date = '---'
                 subscription_end_date = '---'
 
-                advert_count = Advert.objects.filter(supplier_id=user_obj, status="1").count()
+                # advert_count = Advert.objects.filter(supplier_id=user_obj, status="1").count()
 
                 subscription_obj = Business.objects.filter(supplier=user_obj)
                 # for business in subscription_obj:
@@ -2012,7 +2028,6 @@ def view_subscriber_list(request):
                 #                   end_date2 = datetime.strptime(end_date1, "%m/%d/%Y")
                 #                   date_gap = (end_date2 - pre_date).days
 
-                print '=========len==========', len(subscription_obj)
                 if len(subscription_obj) <= 1:
                     edit = '<a  id="' + str(
                         user_id) + '" title="Edit" class="edit" style="padding: 8px;" data-toggle="modal;" href="/edit-subscriber/?user_id=' + str(
@@ -2048,7 +2063,19 @@ def view_subscriber_list(request):
                         'status': user_obj.supplier_status
                         }
                 final_list.append(list)
-            data = {'username': request.session['login_user'],'sort_by':sort_by, 'success': 'true', 'city_list': get_cities(request),
+            if country_var:
+                state_list = State.objects.filter(country_id = str(country_var))
+            if state_var:
+                city_list1 = City_Place.objects.filter(state_id = str(state_var))
+            if flag_ck == 1:
+                if not final_list: #if list is blank
+                    flag_ct = 1;
+                else :
+                    flag_ct = 0;
+            else:
+                flag_ct = 1;
+
+            data = {'flag_ck':flag_ck,'city_list1':city_list1,'state_list':state_list,'country_var':country_var,'state_var':state_var,'city_var':city_var,'flag_ct':flag_ct,'country_list': get_country(request),'username': request.session['login_user'],'sort_by':sort_by, 'success': 'true', 'city_list': get_cities(request),
                     'subscriber_list': final_list}
         except IntegrityError as e:
             data = {'success': 'false', 'message': 'Error in  loading page. Please try after some time'}
@@ -2059,10 +2086,35 @@ def view_subscriber_list(request):
     return render(request, 'Admin/supplier_list.html', data)
 
 
+def get_cat_data(user_id):
+    advert_count = 0
+    subcat_list = []
+    i = 0
+    advert_obj = Advert.objects.filter(supplier_id=user_id, status='1')
+    for adverts in advert_obj:
+        advert_id = adverts.advert_id
+        try:
+            pre_date = datetime.now().strftime("%d/%m/%Y")
+            pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
+            advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=advert_id)
+            end_date = advert_sub_obj.business_id.end_date
+            start_date = datetime.strptime(advert_sub_obj.business_id.start_date, "%d/%m/%Y")
+            end_date = datetime.strptime(end_date, "%d/%m/%Y")
+            date_gap = end_date - pre_date
+            if int(date_gap.days) >= 0:
+                i = i + 1
+
+                    
+        except Exception:
+            print ""
+
+    advert_count = advert_count + int(i) 
+    return advert_count
+
+
 # TO GET THE STATE
 def get_cities(request):
     ##    pdb.set_trace()
-    print "IN cities"
     city_list = []
     try:
         city = City_Place.objects.filter(city_status='1')
@@ -2073,7 +2125,6 @@ def get_cities(request):
 
             }
             city_list.append(options_data)
-            print city_list
         return city_list
     except Exception, e:
         print 'Exception ', e
@@ -2087,6 +2138,10 @@ def delete_subscriber(request):
         user_obj = Supplier.objects.get(supplier_id=request.POST.get('user_id'))
         user_obj.supplier_status = '0'
         user_obj.save()
+        advert_obj = Advert.objects.filter(supplier_id = request.POST.get('user_id'))
+        for advert in advert_obj:
+            advert.status = '0'
+            advert.save()
         supplier_inactive_mail(user_obj)
         supplier_inactive_sms(user_obj)
         data = {'message': 'User Inactivated Successfully', 'success': 'true'}
@@ -2175,6 +2230,9 @@ def edit_subscriber(request):
         state = subscriber_obj.state.state_id
         city_list = City_Place.objects.filter(state_id=state, city_status='1')
         city = subscriber_obj.city_place_id
+        role_name_list = ["Admin", "Sales", "Super User", "Marketing"]
+        sales_person_list = UserProfile.objects.filter(user_status='1', user_role__role_name__in=role_name_list)
+        sales_person_list = sales_person_list.filter(city_place_id = city)
         city_name = subscriber_obj.city_place_id.city_id.city_name
         city_id = subscriber_obj.city_place_id.city_id.city_id
         pincode_list = Pincode.objects.filter(city_id=city_id, pincode_status='1')
@@ -2208,7 +2266,7 @@ def edit_subscriber(request):
                 'contact_person': contact_person, 'secondary_email': secondary_email,
                 'city_list': city_list, 'state': state, 'city': city, 'pincode_list': pincode_list,
                 'business_name': business_name, 'business_details': business_details, 'address2': address2,
-                'address1': address1,
+                'address1': address1,'sales_person_list':sales_person_list,
                 'file_name': file_name, 'display_image': display_image, 'phone_no': phone_no,
                 'secondary_phone_no': secondary_phone_no, 'contact_email': contact_email, 'user_pincode': pincode,
                 'supplier_id': supplier_id,'flag':flag,'business_id':business_id,
@@ -2223,7 +2281,7 @@ def edit_subscriber(request):
                     'contact_person': contact_person, 'secondary_email': secondary_email,
                     'city_list': city_list, 'state': state, 'city': city, 'pincode_list': pincode_list,
                     'business_name': business_name, 'business_details': business_details, 'address2': address2,
-                    'address1': address1,
+                    'address1': address1,'sales_person_list':sales_person_list,
                     'file_name': file_name, 'display_image': display_image, 'phone_no': phone_no,
                     'secondary_phone_no': secondary_phone_no, 'contact_email': contact_email, 'user_pincode': pincode,
                     'supplier_id': supplier_id,
@@ -2334,21 +2392,46 @@ def edit_subscriber_detail(request):
                 'city_place_id':city_place_id}
         return render(request, 'Admin/edit-subscriber-detail.html', data)
 
+@csrf_exempt
+def check_update_poc(request):
+    supplier_obj = Supplier.objects.get(supplier_id=request.POST.get('supplier_id'))
+    if supplier_obj.contact_email == request.POST.get('user_email'):
+        data = {
+            'success': 'false'
+        }
+    else:
+        try:
+            supplier_obj = Supplier.objects.get(username=request.POST.get('user_email'))
+            data = {
+                'success': 'true',
+                'message': "Supplier added successfully",
+            }
+        except Exception, e:
+            data = {
+                'success': 'false',
+                'message': str(e)
+            }
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
 
 @csrf_exempt
 def update_subscriber(request):
     try:
         # pdb.set_trace()
-        print "USER", request.POST.get('user_email')
-        if request.POST.get('user_email'):
+        count = Supplier.objects.all().count()
+        poc_flag = 0
+        supplier_obj = Supplier.objects.get(supplier_id=request.POST.get('supplier_id'))
+        if supplier_obj.contact_email == request.POST.get('user_email'):
+            user_name = request.POST.get('user_email')
+        else:
             try:
-                supplier_obj = Supplier.objects.get(supplier_id=request.POST.get('supplier_id'))
-                supplier_obj.username = request.POST.get('user_email')
-                supplier_obj.save()
-            except IntegrityError, e:
-                print "Exception", e
-                data = {'success': 'false', 'message': 'User already exist.'}
-                return HttpResponse(json.dumps(data), content_type='application/json')
+                parent_supplier_obj = Supplier.objects.get(username=request.POST.get('user_email'))
+                user_name = 'supplier_' + str(count)
+                poc_flag = 1
+            except:
+                user_name = request.POST.get('user_email')
+                pass
+
         print "=======Country", request.POST.get('country')
         supplier_obj = Supplier.objects.get(supplier_id=request.POST.get('supplier_id'))
         supplier_obj.business_name = request.POST.get('business_name')
@@ -2371,6 +2454,13 @@ def update_subscriber(request):
         supplier_obj.sales_person_contact_number = request.POST.get('sale_person_contact_no')
         supplier_obj.title =request.POST.get('title')
 
+        if poc_flag == 1:
+            supplier_obj.user_name = user_name
+            supplier_obj.parent_supplier_id = parent_supplier_obj
+        else:
+            supplier_obj.user_name = user_name
+            supplier_obj.parent_supplier_id = supplier_obj
+
         supplier_obj.save()
         if request.POST.get('user_email'):
             supplier_obj.contact_email = request.POST.get('user_email')
@@ -2380,10 +2470,8 @@ def update_subscriber(request):
         except:
             pass
         supplier_obj.save()
-        try:
-            supplier_edit_mail(supplier_obj)
-        except:
-            pass
+        # supplier_edit_mail(supplier_obj)
+
         data = {
             'success': 'true',
             'message': "Subscriber edited successfully"
@@ -2711,8 +2799,6 @@ def review_payment(request):
             'advert_id':advert_id
         }
 
-        print "DATA",data
-
     except Exception, e:
         data = {
             'success': 'false',
@@ -2725,6 +2811,7 @@ def renew_subscription(request):
     if not request.user.is_authenticated():
         return redirect('backoffice')
     else:
+        search_flag = request.GET.get('search_flag')
         advert_id = request.GET.get('advert_id')
         tax_list = Tax.objects.all()
         advert_obj = Advert.objects.get(advert_id=advert_id)
@@ -2743,7 +2830,10 @@ def renew_subscription(request):
             'business_id': str(business_obj.business_id),
             'service_rate_card_duration': int(business_obj.duration),
             'start_date': str(business_obj.start_date),
-            'end_date': str(business_obj.end_date)
+            'end_date': str(business_obj.end_date),
+            'country_id': str(business_obj.country_id.country_id),
+            'state_id': str(business_obj.state_id.state_id),
+            'city_place_id': str(business_obj.city_place_id.city_place_id)
         }
 
         category_lvl1_list = []
@@ -2841,7 +2931,7 @@ def renew_subscription(request):
                 advert_service_list.append(advert_service_data)
                 pass
 
-        data = {'tax_list': tax_list, 'advert_service_list': advert_service_list,'telephone_rate_card':telephone_rate_card,
+        data = {'search_flag':search_flag,'tax_list': tax_list, 'advert_service_list': advert_service_list,'telephone_rate_card':telephone_rate_card,
                 'username': request.session['login_user'], 'category_list': get_category(request),
                 'country_list': get_country(request), 'city_place_id':city_place_id,
                 'state_list': get_states(request), 'business_data': business_data, 'advert_name': advert_name,
@@ -2877,8 +2967,14 @@ def edit_subscription(request):
             'business_id': str(business_obj.business_id),
             'service_rate_card_duration': int(business_obj.duration),
             'start_date': str(business_obj.start_date),
-            'end_date': str(business_obj.end_date)
+            'end_date': str(business_obj.end_date),
+            'country_id': business_obj.country_id.country_id,
+            'state_id': business_obj.state_id.state_id,
+            'city_place_id': business_obj.city_place_id.city_place_id
         }
+
+        state_list = State.objects.filter(country_id = str(business_obj.country_id.country_id))
+        city_list = City_Place.objects.filter(state_id = str(business_obj.state_id.state_id))
 
         category_lvl1_list = []
         category_lvl2_list = []
@@ -2887,11 +2983,17 @@ def edit_subscription(request):
         category_lvl5_list = []
         cat_id = ''
         cat_lvl = ''
+        category_list = []
+        category_id_list = []
 
         if business_obj.category:
             business_data['category_id'] = business_obj.category.category_id
             cat_id = business_obj.category.category_id
             cat_lvl = ''
+            cat_city_map = CategoryCityMap.objects.filter(city_place_id=str(business_obj.city_place_id.city_place_id))
+            for cat in cat_city_map:
+                category_id_list.append(cat.category_id.category_id)
+            category_list = Category.objects.filter(category_status = '1', category_id__in = category_id_list).exclude(category_name  = 'Ticket Resell')
 
         if business_obj.category_level_1:
             business_data['category_level_1'] = business_obj.category_level_1.category_id
@@ -3170,9 +3272,9 @@ def edit_subscription(request):
             print e
             enquiry_service_data = {}
             pass
-        print "------------------------------------", enquiry_service_data
+        #print "------------------------------------", enquiry_service_data
         total_amount = basic_amount + amount_1 + amount_2 + amount_3 + amount_4 + amount_5 + tel_amount_1 + tel_amount_2 + tel_amount_3 + tel_amount_4 + tel_amount_5 + tel_amount_6
-        #total_amount = total_amount 
+        #total_amount = total_amount
 
         advert_service_list =[]
         advert_service_lists =[]
@@ -3191,7 +3293,7 @@ def edit_subscription(request):
         advert_service_lists.extend(rate_card_obj)
 
         for advert_service in advert_service_lists:
-            print advert_service
+            #print advert_service
             try:
                 premium_obj = PremiumService.objects.get(
                     premium_service_name=advert_service.service_name,
@@ -3222,8 +3324,8 @@ def edit_subscription(request):
                 pass
 
 
-        data = {'tax_list': tax_list, 'advert_service_list': advert_service_list,
-                'username': request.session['login_user'], 'category_list': get_city_category(city_place_id),
+        data = {'tax_list': tax_list, 'advert_service_list': advert_service_list, 'category_list':category_list,
+                'username': request.session['login_user'], #'category_list': get_city_category(city_place_id),
                 'business_data': business_data, 'telephone_rate_card': telephone_rate_card,
                 'premium_service_list': premium_service_list,'enquiry_service_data':enquiry_service_data,
                 'total_amount': float(total_amount), 'basic_amount': basic_amount, 'amount_1': amount_1,
@@ -3231,9 +3333,9 @@ def edit_subscription(request):
                 'tel_amount_1': tel_amount_1, 'tel_amount_2': tel_amount_2, 'tel_amount_3': tel_amount_3,
                 'tel_amount_4': tel_amount_4, 'tel_amount_5': tel_amount_5, 'tel_amount_6': tel_amount_6,
                 'category_lvl1_list':category_lvl1_list,'city_place_id':city_place_id,
-                'category_lvl2_list': category_lvl2_list,
-                'category_lvl3_list': category_lvl3_list,
-                'category_lvl4_list': category_lvl4_list,
+                'category_lvl2_list': category_lvl2_list,'country_list': get_country(request),
+                'category_lvl3_list': category_lvl3_list, 'state_list' :state_list,
+                'category_lvl4_list': category_lvl4_list, 'city_list' :city_list,
                 'category_lvl5_list': category_lvl5_list,'business_id':business_id,
                 'cat_id':cat_id,'cat_lvl':cat_lvl,'supplier_id':supplier_id,'flag':flag,'advert_id':advert_id
                 }
@@ -3306,6 +3408,11 @@ def update_subscription_plan(request):
         business_obj.supplier = supplier_obj
         business_obj.business_created_date = datetime.now()
         business_obj.business_created_by = supplier_obj.contact_email
+        business_obj.country_id=Country.objects.get(country_id=request.POST.get('country1')) if request.POST.get(
+            'country1') else None
+        business_obj.state_id=State.objects.get(state_id=request.POST.get('statec1')) if request.POST.get('statec1') else None
+        business_obj.city_place_id=City_Place.objects.get(city_place_id=request.POST.get('city1')) if request.POST.get(
+            'city1') else None
 
         business_obj.save()
         if request.POST.get('lvl1'):
@@ -3517,23 +3624,26 @@ def supplier_edit_payment_mail_user(business_obj):
     contact_email = str(business_obj.supplier.contact_email)
     sales_person_name = str(business_obj.supplier.sales_person_name.user_first_name + " "+ business_obj.supplier.sales_person_name.user_last_name)
     sales_person_number = str(business_obj.supplier.sales_person_name.user_contact_no)
-    gmail_user = "cityhoopla2016"
-    gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <do-not-reply@city-hoopla.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = [contact_email]
+    cc = ['info@city-hoopla.com']
     # pdb.set_trace()
     try:
         TEXT = "Dear " + contact_person + ",\n\n" + "Your payment for CityHoopla Subscription with Transaction ID " + str(
             business_obj.transaction_code) + " is processed successfully. Please proceed for Addition of Advert.\n\n"+"In case of any issues please contact your CityHoopla sales partner "+ sales_person_name + " at " + sales_person_number +" or write to info@cityhoopla.com"+'\n\n' + "Best Wishes," + '\n' + "Team CityHoopla "
         SUBJECT = "CityHoopla Subscription Payment Processed Successfully!"
-        # server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        #server = smtplib.SMTP_SSL()
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
-        message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
-        server.sendmail(FROM, TO, message)
+        message = """From: %s\nTo: %s\ncc: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO),", ".join(cc), SUBJECT, TEXT)
+        toaddrs = TO + cc
+        server.sendmail(FROM,toaddrs,message)
         server.quit()
     except SMTPException, e:
         print e
@@ -3819,19 +3929,20 @@ def check_subscription(premium_service_list, premium_day):
 #   return data         
 
 def supplier_add_mail(supplier_obj):
-    gmail_user = "cityhoopla2016"
-    gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = ['cityhoopla2016@gmail.com']
     try:
         TEXT = "Hi Admin,\nSubscriber " + str(supplier_obj.contact_person) + " " + "with Business " + str(
             supplier_obj.business_name) + " " + "has been added successfully.\nTo view complete details visit portal and follow - Customers -> Subscribers" + '\n\n' + "Thank You," + '\n' + "CityHoopla Team"
         SUBJECT = "Subscriber Added Successfully!"
-        # server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        #server = smtplib.SMTP_SSL()
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
         server.sendmail(FROM, TO, message)
@@ -3842,9 +3953,9 @@ def supplier_add_mail(supplier_obj):
 
 
 def supplier_add_service_mail(business_obj):
-    gmail_user = "cityhoopla2016"
-    gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = ['cityhoopla2016@gmail.com']
     # pdb.set_trace()
     try:
@@ -3852,11 +3963,12 @@ def supplier_add_service_mail(business_obj):
             business_obj.supplier.business_name) + " " + "has been added successfully.\nTransaction ID " + str(
             business_obj.transaction_code) + " for this transaction has been generated successfully.\nTo view complete details visit portal and follow - Customers -> Subscribers" + '\n\n' + "Thank You," + '\n' + "CityHoopla Team"
         SUBJECT = "Subscriber Added Successfully!"
-        # server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        #server = smtplib.SMTP_SSL()
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
         server.sendmail(FROM, TO, message)
@@ -3867,9 +3979,9 @@ def supplier_add_service_mail(business_obj):
 
 
 def supplier_add_payment_mail(payment_obj):
-    gmail_user = "cityhoopla2016"
-    gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = ['cityhoopla2016@gmail.com']
     business_obj = Business.objects.get(business_id=str(payment_obj.business_id.business_id))
     supplier_id = Supplier.objects.get(supplier_id=str(business_obj.supplier_id))
@@ -3879,11 +3991,12 @@ def supplier_add_payment_mail(payment_obj):
             supplier_id.business_name) + " " + "has been added successfully.\nPayment ID" + str(
             payment_obj.payment_code) + " for this payment has been generated successfully. \nTo view complete details visit portal and follow - Customers -> Subscribers" + '\n\n' + "Thank You," + '\n' + "CityHoopla Team"
         SUBJECT = "Subscriber Added Successfully!"
-        # server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        #server = smtplib.SMTP_SSL()
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
         server.sendmail(FROM, TO, message)
@@ -3892,21 +4005,51 @@ def supplier_add_payment_mail(payment_obj):
         print e
     return 1
 
+def consumer_payment_mail(supplier_obj,business_obj):
+    sales_person_name = str(supplier_obj.sales_person_name.user_first_name + " "+ supplier_obj.sales_person_name.user_last_name)
+    sales_person_number = str(supplier_obj.sales_person_name.user_contact_no)
+    sales_person_email = str(supplier_obj.sales_person_name.usre_email_id)
+    poc =str(supplier_obj.contact_email)
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
+    TO = [poc]
+    cc = ['info@city-hoopla.com']
+
+    try:
+        TEXT = "Business Name: "+supplier_obj.business_name+", "+supplier_obj.city_place_id.city_id.city_name
+        TEXT = TEXT + "\n\nDear " + str(supplier_obj.contact_person) + ", \n\n"+ "Thank you for your payment. Please note, your payment for CityHoopla subscription with transaction ID "+ business_obj.transaction_code +" is now processed successfully. We can now proceed with your advertisement on-boarding.\nYou can either do this yourself via your self-service tool OR your CityHoopla Sales Partner can help you do the same.\n\nPlease contact your CityHoopla Sales Partner "+ sales_person_name + " at " + sales_person_number +" or write to "+ sales_person_email +" and mark cc to info@cityhoopla.com"+'\n\n' + "Best Wishes," + '\n' + "Team CityHoopla."
+        SUBJECT = "CityHoopla Payment Processed Successfully!"
+        #server = smtplib.SMTP_SSL()
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
+        server.ehlo()
+        #server.starttls()
+        server.login(gmail_user, gmail_pwd)
+        message = """From: %s\nTo: %s\ncc: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO),", ".join(cc), SUBJECT, TEXT)
+        toaddrs = TO + cc
+        server.sendmail(FROM,toaddrs,message)
+        server.quit()
+    except SMTPException, e:
+        print e
+    return 1
 
 def supplier_edit_mail(supplier_obj):
-    gmail_user = "cityhoopla2016"
-    gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = ['cityhoopla2016@gmail.com']
     try:
         TEXT = "Hi Admin,\nSubscriber " + str(supplier_obj.contact_person) + " " + "with Business " + str(
             supplier_obj.business_name) + " " + "has been updated successfully.\nTo view complete details visit portal and follow - Customers -> Subscribers" + '\n\n' + "Thank You," + '\n' + "CityHoopla Team"
         SUBJECT = "Subscriber Updated Successfully!"
-        # server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        #server = smtplib.SMTP_SSL()
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
         server.sendmail(FROM, TO, message)
@@ -3917,9 +4060,9 @@ def supplier_edit_mail(supplier_obj):
 
 
 def supplier_edit_service_mail(business_obj):
-    gmail_user = "cityhoopla2016"
-    gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = ['cityhoopla2016@gmail.com']
     # pdb.set_trace()
     try:
@@ -3927,11 +4070,12 @@ def supplier_edit_service_mail(business_obj):
             business_obj.supplier.business_name) + " " + "has been updated successfully. \nTransaction ID " + str(
             business_obj.transaction_code) + " for this transaction has been generated successfully.\nTo view complete details visit portal and follow - Customers -> Subscribers" + '\n\n' + "Thank You," + '\n' + "CityHoopla Team"
         SUBJECT = "Subscriber Updated Successfully!"
-        # server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        #server = smtplib.SMTP_SSL()
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
         server.sendmail(FROM, TO, message)
@@ -3942,9 +4086,9 @@ def supplier_edit_service_mail(business_obj):
 
 
 def supplier_edit_payment_mail(payment_obj):
-    gmail_user = "cityhoopla2016"
-    gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = ['cityhoopla2016@gmail.com']
     business_obj = Business.objects.get(business_id=str(payment_obj.business_id.business_id))
     supplier_id = Supplier.objects.get(supplier_id=str(business_obj.supplier_id))
@@ -3954,11 +4098,12 @@ def supplier_edit_payment_mail(payment_obj):
             supplier_id.business_name) + " " + "has been updated successfully.\nPayment ID" + str(
             payment_obj.payment_code) + " for this payment has been generated successfully.\nTo view complete details visit portal and follow - Customers -> Subscribers" + '\n\n' + "Thank You," + '\n' + "CityHoopla Team"
         SUBJECT = "Subscriber Updated Successfully!"
-        # server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        #server = smtplib.SMTP_SSL()
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
         server.sendmail(FROM, TO, message)
@@ -3969,20 +4114,21 @@ def supplier_edit_payment_mail(payment_obj):
 
 
 def supplier_inactive_mail(user_obj):
-    gmail_user = "cityhoopla2016"
-    gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = ['cityhoopla2016@gmail.com']
     # pdb.set_trace()
     try:
         TEXT = "Hi Admin,\nSubscriber " + str(user_obj.contact_person) + " " + "with Business " + str(
             user_obj.business_name) + " " + "deactivated successfully.\n\nThank You," + '\n' + "CityHoopla Team"
         SUBJECT = "Subscriber Deactivated Successfully!"
-        # server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        #server = smtplib.SMTP_SSL()
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
         server.sendmail(FROM, TO, message)
@@ -3998,6 +4144,10 @@ def active_subscriber(request):
         subscriber_obj = Supplier.objects.get(supplier_id=request.POST.get('subscriber_id'))
         subscriber_obj.supplier_status = '1'
         subscriber_obj.save()
+        advert_obj = Advert.objects.filter(supplier_id=request.POST.get('subscriber_id'))
+        for advert in advert_obj:
+            advert.status = '1'
+            advert.save()
         supplier_activate_mail(subscriber_obj)
         data = {'message': 'Subscriber activated Successfully', 'success': 'true'}
 
@@ -4009,20 +4159,21 @@ def active_subscriber(request):
 
 
 def supplier_activate_mail(user_obj):
-    gmail_user = "cityhoopla2016"
-    gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = ['cityhoopla2016@gmail.com']
     # pdb.set_trace()
     try:
         TEXT = "Hi Admin,\nSubscriber " + str(user_obj.contact_person) + " " + "with Business " + str(
             user_obj.business_name) + " " + "activated successfully.\n\nThank You," + '\n' + "CityHoopla Team"
         SUBJECT = "Subscriber Activated Successfully!"
-        # server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        #server = smtplib.SMTP_SSL()
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
         server.sendmail(FROM, TO, message)
@@ -4031,3 +4182,282 @@ def supplier_activate_mail(user_obj):
         print e
     return 1
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def search_advert(request):
+    try:
+        contacts = []
+        advert_list      = []
+        final_advert_list= []
+        search_key_list  = []
+        pre_date         = datetime.now().strftime("%d/%m/%Y")
+        pre_date         = datetime.strptime(pre_date, "%d/%m/%Y")
+
+        search_by        = request.GET.get('search_by')
+        city_place_id    = request.GET.get('city_id_var')
+        category_id      = request.GET.get('cat_list_var')
+        category_level_1 = request.GET.get('cat_list1_var')
+        category_level_2 = request.GET.get('cat_list2_var')
+        category_level_3 = request.GET.get('cat_list3_var')
+        category_level_4 = request.GET.get('cat_list4_var')
+        category_level_5 = request.GET.get('cat_list5_var')
+        stat_var         = request.GET.get('stat_var')
+
+        final_advert_list = Advert.objects.all()
+        if city_place_id == "all":
+            final_advert_list = final_advert_list.all()
+        elif city_place_id != "all" and city_place_id !=None:
+            final_advert_list = final_advert_list.filter(city_place_id=city_place_id)
+
+        if category_id:
+            final_advert_list = final_advert_list.filter(
+                category_id=category_id
+            )
+        if category_level_1:
+            final_advert_list = final_advert_list.filter(
+                category_level_1=category_level_1
+            )
+        if category_level_2:
+            final_advert_list = final_advert_list.filter(
+                category_level_2=category_level_2
+            )
+        if category_level_3:
+            final_advert_list = final_advert_list.filter(
+                category_level_3=category_level_3
+            )
+        if category_level_4:
+            final_advert_list = final_advert_list.filter(
+                category_level_4=category_level_4
+            )
+        if category_level_5:
+            final_advert_list = final_advert_list.filter(
+                category_level_5=category_level_5
+            )
+        if stat_var:
+            final_advert_list = final_advert_list.filter(
+                status=stat_var
+            )
+        print '........START.........\n\n\n\n\n\n\n...........SS........'
+        print final_advert_list
+        search_key_list1= final_advert_list
+        search_key_list2= final_advert_list
+        search_key_list3= final_advert_list
+        search_key_list4= final_advert_list
+
+        if search_by :
+            print '....................IN SIDE SEARCH ADVERT..................'
+            advert_list1 = search_key_list1.filter(advert_name__icontains = str(search_by))
+            if advert_list1 != '':
+                print 'AAAAAAAAAAAAAAAAAAAAAAAAAAA',advert_list1
+                search_key_list.extend(advert_list1)
+
+            advert_list2 = search_key_list2.filter(advert_id__icontains = search_by)
+            if advert_list2 != '':
+                search_key_list.extend(advert_list2)
+                print 'BBBBBBBBBBBBBBBBBBBBBBBBBBBB',advert_list2
+
+            try:
+                business_list = Business.objects.filter(transaction_code__icontains = str(search_by))
+                print '..business LIST...',business_list
+                for business_obj in business_list:
+                    advert_bus_obj = AdvertSubscriptionMap.objects.get(business_id= business_obj.business_id)
+                    advert_bus_obj2 = search_key_list3.filter(advert_id= str(advert_bus_obj.advert_id))
+                    
+                    if advert_bus_obj2 != '':
+                        print 'CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC',advert_bus_obj2
+                        search_key_list.extend(advert_bus_obj2) 
+
+            except Exception as e:
+                print '........first...EXCEPTION....',e
+
+            try:
+                payment_list = PaymentDetail.objects.filter(payment_code__icontains = str(search_by))
+                print '...Payment List...',payment_list
+                for payment_obj in payment_list:
+                    advert_pay_obj = AdvertSubscriptionMap.objects.get(business_id= payment_obj.business_id)
+                    advert_pay_obj2 = search_key_list4.filter(advert_id= str(advert_pay_obj.advert_id))
+                    if advert_pay_obj2 != '':
+                        print 'DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD',advert_pay_obj2
+                        search_key_list.extend(advert_pay_obj2)
+
+                final_advert_list =set(search_key_list)
+            except Exception as e:
+                print '........second...EXCEPTION....',e
+        print '>>>>>>>>>LAST<<<<<<<<<<',final_advert_list
+        for advert_obj in final_advert_list:
+            premium_service_list = []
+            advert_id = advert_obj.advert_id
+
+
+            advert_views = AdvertView.objects.filter(advert_id=advert_id).count()
+            advert_likes = AdvertLike.objects.filter(advert_id=advert_id).count()
+            advert_shares = AdvertShares.objects.filter(advert_id=advert_id).count()
+            advert_bookings = CouponCode.objects.filter(advert_id=advert_id).count()
+
+            advert_name = advert_obj.advert_name
+            advert_area = advert_obj.area
+            advert_city = advert_obj.city_place_id.city_id.city_name
+            category_name = advert_obj.category_id.category_name
+            advert_creation_date = advert_obj.creation_date.strftime("%d %b %y")
+
+            if advert_obj.display_image:
+                display_image = SERVER_URL + advert_obj.display_image.url
+            else:
+                display_image = SERVER_URL + '/static/assets/layouts/layout2/img/City_Hoopla_Logo.jpg'
+
+            advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=advert_id)
+            transaction_code = advert_sub_obj.business_id.transaction_code
+
+            business_id_new = advert_sub_obj.business_id
+            
+            payment_obj = PaymentDetail.objects.get(business_id = business_id_new)
+            
+            payment_code = payment_obj.payment_code
+
+            start_date = advert_sub_obj.business_id.start_date
+            start_date = datetime.strptime(start_date, "%d/%m/%Y")
+            end_date = advert_sub_obj.business_id.end_date
+            end_date = datetime.strptime(end_date, "%d/%m/%Y")
+
+            date_gap = (end_date - pre_date).days
+
+            if date_gap > 0:
+                date_gap = date_gap
+            else:
+                date_gap = 0
+
+            if date_gap <= 10 and date_gap >= 3:
+                advert_status = 1
+                subscription_days = "( "+ str(date_gap) +" days Remaining )"
+                subscription_text = "Starts on " + start_date.strftime("%d %b %y")
+                subscriber_color = "orange"
+                advert_color = "orange"
+            elif date_gap == 0:
+                advert_status = 0
+                subscription_days = ""
+                subscription_text = "Expiring Today" #+ end_date.strftime("%d %b %y")
+                subscriber_color = "orange"
+                advert_color = "orange"
+            elif date_gap == 2:
+                    print "In date gap 2"
+                    advert_status = 0
+                    subscription_days = "( "+ str(date_gap) +" days Remaining )"
+                    subscription_text = "Started on " + start_date.strftime("%d %b %y")
+                    subscriber_color = "orange"
+                    advert_color = "orange"
+            else:
+                advert_status = 2
+                subscription_days = "( " + str(date_gap) + " days Remaining )"
+                subscription_text = "Starts on " + start_date.strftime("%d %b %y")
+                subscriber_color = "#333"
+                advert_color = "green"
+
+            business_id = advert_sub_obj.business_id
+            premium_service_list = premium_list(business_id)
+            advert_data = {
+                'advert_id': advert_id,
+                'transaction_code':transaction_code,
+                'payment_code':payment_code, 
+                'advert_status': advert_status,
+                'status':advert_obj.status,
+                'advert_name': advert_name,
+                'advert_area': advert_area,
+                'advert_creation_date': advert_creation_date,
+                'advert_city': advert_city,
+                'category_name': category_name,
+                'display_image' : display_image,
+                'advert_views': advert_views,
+                'advert_likes': advert_likes,
+                'advert_shares': advert_shares,
+                'subscription_days': subscription_days,
+                'subscription_text': subscription_text,
+                'subscriber_color': subscriber_color,
+                'premium_service_list': premium_service_list,
+                'advert_bookings': advert_bookings,
+                'advert_color': advert_color,
+                'date_gap': date_gap
+            }
+            advert_list.append(advert_data)
+
+            paginator = Paginator(advert_list, 12)  # Show 25 contacts per page
+            page = request.GET.get('page')
+            try:
+                contacts = paginator.page(page)
+            except PageNotAnInteger:
+                # If page is not an integer, deliver first page.
+                contacts = paginator.page(1)
+            except EmptyPage:
+                # If page is out of range (e.g. 9999), deliver last page of results.
+                contacts = paginator.page(paginator.num_pages)
+
+
+        if search_by == None:
+            search_by = ''
+        data = {'username': request.session['login_user'],'advert_list': contacts,
+                'city_places_list': get_city_places1(request),'search_keyword':search_by}
+    except Exception, e:
+        raise e
+        data = {'success':'false' }
+    return render(request, 'Admin/search_advert.html', data)
+
+def premium_list(business_id):
+    premium_ser_list = PremiumService.objects.filter(business_id=business_id)
+    premium_service_list = []
+    pre_date = datetime.now().strftime("%d/%m/%Y")
+    pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
+    for premium_obj in premium_ser_list:
+        status_advert = ''
+        date_gap = ''
+        premium_service_name = premium_obj.premium_service_name
+        start_date = premium_obj.start_date
+        start_date = datetime.strptime(start_date, "%d/%m/%Y")
+        end_date = premium_obj.end_date
+        end_date = datetime.strptime(end_date, "%d/%m/%Y")
+        date_gap = (end_date - pre_date).days
+
+        if date_gap > 0:
+            date_gap = date_gap
+        else:
+            date_gap = 0
+
+        if date_gap <= 10 and date_gap >= 3:
+            status_advert = 1
+            premium_days = "( " + str(date_gap) + " days Remaining )"
+            premium_text = "Starts on " + start_date.strftime("%d %b %y")
+            premium_color = "orange"
+        elif date_gap == 0:
+            status_advert = 0
+            premium_days = ""
+            premium_text = "Expiring Today"# + end_date.strftime("%d %b %y")
+            premium_color = "orange"
+        elif date_gap == 2:
+            status_advert = 0
+            premium_days = "( " + str(date_gap) + " days Remaining )"
+            premium_text = "Started on " + start_date.strftime("%d %b %y")
+            premium_color = "orange"
+        else:
+            status_advert = 2
+            premium_days = "( " + str(date_gap) + " days Remaining )"
+            premium_text = "Starts on " + start_date.strftime("%d %b %y")
+            premium_color = "#333"
+
+        premium_data = {
+            'premium_service_name': premium_service_name,
+            'premium_days': premium_days,
+            'premium_text': premium_text,
+            'premium_color': premium_color
+        }
+        premium_service_list.append(premium_data)
+    return premium_service_list
+
+# TO GET THE CITY
+def get_city_places1(request):
+    city_list = []
+    try:
+        city_objs = City_Place.objects.all()
+        for city in city_objs:
+            city_list.append({'city_place_id': city.city_place_id, 'city': city.city_id.city_name})
+        data = city_list
+        return data
+
+    except Exception, ke:
+        print ke

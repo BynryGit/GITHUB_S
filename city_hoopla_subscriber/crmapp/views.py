@@ -38,11 +38,13 @@ from django.views.decorators.cache import cache_control
 # HTTP Response
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-
+from DigiSpace.tasks import send_to_subscriber
+from DigiSpace.tasks import send_sms_to_consumer
+from DigiSpace.tasks import send_email_to_consumer
 
 #from DigiSpace.tasks import print_some_times
 #SERVER_URL = "http://52.40.205.128"
-SERVER_URL = "http://52.66.169.65"
+SERVER_URL = "http://52.66.116.36"
 #SERVER_URL = "http://127.0.0.1:8000"
 
 #CTI CRM APIs=============================================================================

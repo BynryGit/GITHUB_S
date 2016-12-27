@@ -21,7 +21,7 @@ License: You must have a valid license purchased only from themeforest(the above
 {% load staticfiles %}
 <head>
     <meta charset="utf-8"/>
-    <title>City Hoopla | Edit Advert </title>
+    <title>CityHoopla | Edit Advert </title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
     <meta content="" name="description"/>
@@ -513,6 +513,77 @@ hr {
     font-size: 20px;
 }
 
+.slide-wrapper {
+    position: relative
+}
+
+
+@media (min-width: 768px) {
+    .carousel-caption {
+        text-align: left;
+        padding-right: 300px;
+    }
+
+}
+
+/* MISC */
+#homepage-feature .item {
+    overflow: hidden;
+    min-height: 400px;
+    background-color: transparent;
+    background-size: cover;
+}
+#homepage-feature > .carousel-control {
+    width: 30px;
+    font-size: 40px;
+    color: #fff;
+    text-shadow: none;
+    filter: none;
+    opacity: 1;
+}
+#homepage-feature > .carousel-control span {
+    position: absolute;
+    top: 50%;
+    margin-top: -30px;
+    width: 100%;
+    text-align: center;
+    display: block;
+}
+
+.carousel-control.right1 {
+    left: auto;
+    right: 0px;
+    background-repeat: repeat-x;
+}
+
+.carousel-control.left1 {
+    background-repeat: repeat-x;
+}
+
+#homepage-features .item {
+    overflow: hidden;
+    height: 400px;
+    background-color: transparent;
+    background-size: cover;
+}
+#homepage-features > .carousel-control {
+    width: 30px;
+    font-size: 40px;
+    color: #fff;
+    text-shadow: none;
+    filter: none;
+    opacity: 1;
+}
+#homepage-features > .carousel-control span {
+    position: absolute;
+    top: 50%;
+    margin-top: -30px;
+    width: 100%;
+    text-align: center;
+    display: block;
+}
+
+
     </style>
 
 <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
@@ -572,6 +643,10 @@ hr {
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-default">
+                        <li>
+                                <a href="/edit-profile/?user_id={{request.session.login_user}}">
+                                    <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
+                            </li>
                            <li>
                                       <a href="/log-out/">
                                     <i class="icon-key"></i> Log Out </a>
@@ -680,6 +755,7 @@ hr {
                                                                                                     class="fileinput-exists"><i
                                                                                                     class="fa fa-pencil"></i></span>
                                                                                                 <input type="file"
+                                                                                                onchange="calc_image(this.files[0]);"
                                                                                                        class="form-control"
                                                                                                        name="display_image"
                                                                                                        accept="image/*"
@@ -902,9 +978,9 @@ hr {
                                                                                         <div class="form-group">
                                                                                             <label class="control-label " style="font-size:15px; font-weight:500;">
                                                                                                 Speciality
-                                                                                                <span class="required"> * </span>
+                                                                                                <!-- <span class="required"> * </span> -->
                                                                                             </label>
-                                                                                            <textarea name="speciality"
+                                                                                            <textarea name="speciality" onkeyup="textAreaAdjust(this)"
                                                                                                       maxlength="5000"
                                                                                                       id="speciality"
                                                                                                       class="form-control">{{advert_data.speciality}}</textarea>
@@ -924,7 +1000,7 @@ hr {
                                                                                                 Happy Hour Offer
                                                                                             </label>
                                                                                             <textarea
-                                                                                                    name="happy_hour_offer"
+                                                                                                    name="happy_hour_offer" onkeyup="textAreaAdjust(this)"
                                                                                                     maxlength="5000"
                                                                                                     id="happy_hour_offer"
                                                                                                     class="form-control">{{advert_data.happy_hour_offer}}</textarea>
@@ -942,7 +1018,7 @@ hr {
                                                                                         <div class="form-group">
                                                                                             <label class="control-label " style="font-size:15px; font-weight:500;">
                                                                                                 Facilities</label>
-                                                                                            <textarea name="facility"
+                                                                                            <textarea name="facility" onkeyup="textAreaAdjust(this)"
                                                                                                       maxlength="5000"
                                                                                                       id="facility"
                                                                                                       class="form-control">{{advert_data.facility}}</textarea>
@@ -961,7 +1037,7 @@ hr {
                                                                                             <label class="control-label " style="font-size:15px; font-weight:500;">
                                                                                                 Course Duration
                                                                                             </label>
-                                                                                            <textarea
+                                                                                            <textarea onkeyup="textAreaAdjust(this)" 
                                                                                                     name="course_duration"
                                                                                                     maxlength="5000"
                                                                                                     id="course_duration"
@@ -1037,7 +1113,7 @@ hr {
                                                                                             Description
                                                                                             <span class="required"> * </span>
                                                                                         </label>
-                                                                                        <textarea id="short_discription" maxlength="5000"
+                                                                                        <textarea id="short_discription" maxlength="5000" onkeyup="textAreaAdjust(this)"
                                                                                                   class="form-control">{{advert_data.short_description}}</textarea>
                                                                                         <label id="short_discription_count" class="control-label  dis_count" style="font-size:15px;; float:right">
                                                                                                         0 /5000 Characters
@@ -1055,7 +1131,7 @@ hr {
                                                                                             Description
                                                                                         </label>
                                                                                         <textarea type="text"
-                                                                                                  name="product_discription"
+                                                                                                  name="product_discription" onkeyup="textAreaAdjust(this)" 
                                                                                                   id="product_discription"
                                                                                                   maxlength="5000"
                                                                                                   class="form-control">{{advert_data.product_description}}</textarea>
@@ -1066,7 +1142,7 @@ hr {
                                                                                 </div>
                                                                             </div>
 
-                                                                            <div class="row div-border-left-right div-color">
+                                                                      <div class="row div-border-left-right div-color">
                                                                                 <div class="col-lg-12 col-md-12">
                                                                                     <div class="form-group">
                                                                                         <label class="control-label " style="font-size:15px; font-weight:500;">Discount
@@ -1074,7 +1150,7 @@ hr {
                                                                                             <!-- <span class="required"> * </span> -->
                                                                                         </label>
                                                                                         <textarea type="text"
-                                                                                                  name="discount_discription"
+                                                                                                  name="discount_discription" onkeyup="textAreaAdjust(this)" 
                                                                                                   maxlength="5000"
                                                                                                   id="discount_discription"
                                                                                                   class="form-control">{{advert_data.discount_description}}</textarea>
@@ -1083,7 +1159,207 @@ hr {
                                                                                                     </label>
                                                                                     </div>
                                                                                 </div>
+                                                                                
+                                                                                {% if  advert_data.discount_description %}
+                                                                                
+                                                                            <div id="discounted_row">  
+                                                                                    <div class="col-lg-12 col-md-12">
+                                                                                        <div class="form-group">
+                                                                                            <label class="control-label "
+                                                                                                   style="font-size:15px; ">Discount Validity
+                                                                                                Dates
+                                                                                                 <span class="required"> * </span> 
+                                                                                            </label>
+                                                                                            
+                                                                                                                <input hidden id="dis_flag" value="{{ advert_data.discount_flag }}"></input>
+                                                                                            </div>   
+                                                                                   </div>
+                                                                                   
+                                                                                {% if advert_data.discount_flag == 1 %}       
+                                                                                   <div id="ck_sub">                
+                                                                                      <div class="col-lg-12 col-md-12"
+                                                                                           style="margin-top: -5px !important;font-size:15px; padding-left: 12px;">
+                                                                                             <input type="checkbox" checked onclick="same_sub_check();"
+                                                                                                    id="inlineCheckbox21" 
+                                                                                                    class="discount"
+                                                                                                    value="0"
+                                                                                                    > 
+                                                                                            Same as Subscription</input>
+                                                                                      </div>
+                                                                                  </div>
+                                                                                  
+                                                                               <div id="dates_subscriptions">                                                          
+                                                                              <div class="form-group col-md-1 "  style="margin-top: 10px !important;">
+                                                                                            <label class="control-label" style="    margin-top: 5px; font-size: 15px;">
+                                                                                                Start</label>
+                                                                                        </div>
+                                                                              
+                                                                              <div class="form-group col-md-4 " style="margin-top: 10px !important;margin-left:10px !important">
+                                                                                        <div class="input-append date form_datetime">
+                                                                                            <input type="text"
+                                                                                                name="startDate"
+                                                                                                id="startDate"
+                                                                                                class="form-control date-picker">
+                                                                                             <input  id="s1" type="text"  readonly class="form-control" value="{{start_date}}"></input>
+                                                                                            <label class="error"
+                                                                                                   style="color:red; display:none;"></label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    
+                                                                                  <div class="form-group col-md-1 " style="margin-top: 10px !important;">
+                                                                                    <label style="    margin-top: 5px; font-size: 15px;">
+                                                                                        End</label>
+                                                                                </div>
+                                                                                    
+                                                                                    <div class="form-group col-md-4 "  style="margin-top: 10px !important;">
+                                                                                        <div class="input-append date form_datetime">
+                                                                                            <input type="text"
+                                                                                                name="endDate"
+                                                                                                id="endDate"
+                                                                                                class="form-control date-picker">
+                                                                                             <input  id="e1" type="text" readonly class="form-control" value="{{end_date}}"></input>
+                                                                                            <label class="error"
+                                                                                                   style="color:red; display:none;"></label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                 </div>
+                                                                             
+                                                                                <div class="col-lg-12 col-md-12">
+                                                                                    <label class="control-label font-12 font-regular" id="dis_error" 
+                                                                                                        style="color:red; display:none;">
+                                                                                                </label> 
+                                                                                </div>
+                                                                            </div>          
+                                                                                  {% else %}   
+                                                                                 <div id="ck_sub">                
+                                                                                      <div class="col-lg-12 col-md-12"
+                                                                                           style="margin-top: -5px !important;font-size:15px; padding-left: 12px;">
+                                                                                             <input type="checkbox"  onclick="same_sub_check();"
+                                                                                                    id="inlineCheckbox21" 
+                                                                                                    class="discount"
+                                                                                                    value="0"
+                                                                                                    > 
+                                                                                            Same as Subscription</input>
+                                                                                      </div>
+                                                                                  </div>
+                                                          
+                                                                                                    <div id="dates_subscriptions">                                                          
+                                                                                      <div class="form-group col-md-1 "  style="margin-top: 10px !important;">
+                                                                                                    <label class="control-label" style="    margin-top: 5px; font-size: 15px;">
+                                                                                                        Start</label>
+                                                                                                </div>
+                                                                                      
+                                                                                      <div class="form-group col-md-4 " style="margin-top: 10px !important;margin-left:10px !important">
+                                                                                                <div class="input-append date form_datetime">
+                                                                                                    <input type="text"
+                                                                                                        value="{{ advert_data.discount_start_date }}"
+                                                                                                        name="startDate"
+                                                                                                        id="startDate"
+                                                                                                        class="form-control date-picker">
+                                                                                                    <input  id="s1" type="text"  readonly class="form-control" value="{{start_date}}"></input>
+                                                                                                    <label class="error"
+                                                                                                           style="color:red; display:none;"></label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            
+                                                                                          <div class="form-group col-md-1 " style="margin-top: 10px !important;">
+                                                                                            <label style="    margin-top: 5px; font-size: 15px;">
+                                                                                                End</label>
+                                                                                        </div>
+                                                                                            
+                                                                                            <div class="form-group col-md-4 "  style="margin-top: 10px !important;">
+                                                                                                <div class="input-append date form_datetime">
+                                                                                                    <input type="text"
+                                                                                                        value="{{ advert_data.discount_end_date }}"
+                                                                                                        name="endDate"
+                                                                                                        id="endDate"
+                                                                                                        class="form-control date-picker">
+                                                                                                   <input  id="e1" type="text" readonly class="form-control" value="{{end_date}}"></input>
+                                                                                                    <label class="error"
+                                                                                                           style="color:red; display:none;"></label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                         </div> 
+                                                                                         
+                                                                                            <div class="col-lg-12 col-md-12">
+                                                                                    <label class="control-label font-12 font-regular" id="dis_error" 
+                                                                                                        style="color:red; display:none;">
+                                                                                                </label> 
+                                                                                </div>
                                                                             </div>
+                                                                                         
+                                                                                         {% endif %}  
+                                                                                {% else %}
+                                                                                <div id="discounted_row">  
+                                                                          
+                                                                                <div class="col-lg-12 col-md-12">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label "
+                                                                                               style="font-size:15px; ">Discount Validity
+                                                                                            Dates
+                                                                                             <span class="required"> * </span> 
+                                                                                        </label>
+                                                                                        
+                                                                                        </div>   
+                                                                               </div>    
+                                                                                      
+                                                                                      
+                                                                           <div id="ck_sub">                
+                                                                              <div class="col-lg-12 col-md-12"
+                                                                                   style="margin-top: -5px !important;font-size:15px; padding-left: 12px;">
+                                                                                     <input type="checkbox" onclick="same_sub_check();"
+                                                                                            id="inlineCheckbox21"
+                                                                                            class="discount"
+                                                                                            value="0"
+                                                                                            > 
+                                                                                    Same as Subscription</input>
+                                                                              </div>
+                                                                          </div>    
+                                                                              
+                                                                                            <div id="dates_subscriptions">                                                          
+                                                                              <div class="form-group col-md-1 "  style="margin-top: 10px !important;">
+                                                                                            <label class="control-label" style="    margin-top: 5px; font-size: 15px;">
+                                                                                                Start</label>
+                                                                                        </div>
+                                                                              
+                                                                              <div class="form-group col-md-4 " style="margin-top: 10px !important;margin-left:10px !important">
+                                                                                        <div class="input-append date form_datetime">
+                                                                                            <input type="text"
+                                                                                                
+                                                                                                name="startDate"
+                                                                                                id="startDate"
+                                                                                                class="form-control date-picker">
+                                                                                            
+                                                                                            <label class="error"
+                                                                                                   style="color:red; display:none;"></label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    
+                                                                                  <div class="form-group col-md-1 " style="margin-top: 10px !important;">
+                                                                                    <label style="    margin-top: 5px; font-size: 15px;">
+                                                                                        End</label>
+                                                                                </div>
+                                                                                    
+                                                                                    <div class="form-group col-md-4 "  style="margin-top: 10px !important;">
+                                                                                        <div class="input-append date form_datetime">
+                                                                                            <input type="text"
+                                                                                                
+                                                                                                name="endDate"
+                                                                                                id="endDate"
+                                                                                                class="form-control date-picker">
+                                                                                            <label class="error"
+                                                                                                   style="color:red; display:none;"></label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                 </div>   
+                                                                        </div> 
+                                                                        <div class="col-lg-12 col-md-12">
+                                                                            <label class="control-label font-12 font-regular" id="dis_error" 
+                                                                                                style="color:red; display:none;">
+                                                                                        </label> 
+                                                                        </div> 
+                                                                                {% endif %}
+                                                                        </div>
 
                                                                             <div class="row div-border-left-right div-color">
                                                                                 <div class="col-lg-12 col-md-12">
@@ -1094,7 +1370,7 @@ hr {
                                                                                         </label>
                                                                                         <textarea type="text"
                                                                                                   name="other_details"
-                                                                                                  maxlength="5000"
+                                                                                                  maxlength="5000" onkeyup="textAreaAdjust(this)" 
                                                                                                   id="other_details"
                                                                                                   class="form-control"></textarea>
                                                                                         <label class="control-label  dis_count" style="font-size:15px;; float:right">
@@ -1103,14 +1379,15 @@ hr {
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-
+                                                                            
+ 
                                                                             <div class="row div-border-bottom div-color">
                                                                                 <div class="col-lg-6 col-md-6">
                                                                                     <div class="form-group">
                                                                                         <label class="control-label " style="font-size:15px; font-weight:500;"> Country
                                                                                         <span class="required"> * </span>
                                                                                         </label>
-                                                                                        <select class="form-control select2-hidden-accessible"
+                                                                                        <select disabled class="form-control select2-hidden-accessible"
                                                                                                 id="country"
                                                                                                 name="country">
                                                                                             <option value="">Select
@@ -1290,7 +1567,7 @@ hr {
                                                                                         <label class="control-label " style="font-size:15px; font-weight:500;">State
                                                                                             <span class="required"> * </span>
                                                                                         </label>
-                                                                                        <select class="form-control select2-hidden-accessible"
+                                                                                        <select disabled class="form-control select2-hidden-accessible"
                                                                                                 onchange=""
                                                                                                 id="statec"
                                                                                                 name="statec">
@@ -1308,7 +1585,7 @@ hr {
                                                                                         <label class="control-label " style="font-size:15px; font-weight:500;">City
                                                                                             <span class="required"> * </span>
                                                                                         </label>
-                                                                                        <select class="form-control select2-hidden-accessible"
+                                                                                        <select disabled class="form-control select2-hidden-accessible"
                                                                                                 id="city"
                                                                                                 name="city">
                                                                                             <option value="">
@@ -1464,15 +1741,14 @@ hr {
                                                                                 </div>
                                                                                 <div class="col-lg-6 col-md-6">
                                                                                     <div class="form-group">
-                                                                                        <label class="control-label " style="font-size:15px; font-weight:500;">Mobile Number
-
-                                                                                            <span class="required"> * </span>
+                                                                                        <label class="control-label " style="font-size:15px; font-weight:500;">Mobile/ Landline/ Toll-Free
                                                                                         </label>
                                                                                         <input type="text" value="{{advert_data.contact_no}}"
                                                                                                onkeypress="return validateFloatKeyPresss(this,event);"
                                                                                                name="phone_no"
                                                                                                id="phone_no"
-                                                                                               class="form-control phone_number"/></input>
+                                                                                               class="form-control phone_number"
+                                                                                               maxlength="15"/></input>
                                                                                         <label class="error font-12 font-regular"
                                                                                                style="color:red; display:none;"></label>
                                                                                     </div>
@@ -1480,7 +1756,6 @@ hr {
                                                                                 <div class="col-lg-6 col-md-6">
                                                                                     <div class="form-group">
                                                                                         <label class="control-label " style="font-size:15px; font-weight:500;">Email
-                                                                                            <span class="required"> * </span>
                                                                                         </label>
                                                                                         <input type="text"  value="{{advert_data.email_primary}}"
                                                                                                name="email_primary"
@@ -1490,13 +1765,30 @@ hr {
                                                                                                style="color:red; display:none;"></label>
                                                                                     </div>
                                                                                 </div>
+                                                                                <div class="col-lg-12 col-md-12">
+                                                                                        <div class="form-group">
+                                                                                            <label class="control-label "
+                                                                                                   style="font-size:15px; ">Website
+                                                                                                
+                                                                                                <!-- <span class="required"> * </span> -->
+                                                                                            </label>
+                                                                                             <input type="text"                                                          
+                                                                                                   id="website"
+                                                                                                   name="website" value=" {{ advert_data.website }}"
+                                                                                                   class="form-control"/> </input>
+                                                                                            <label class="error font-12 font-regular"
+                                                                                                   style="color:red; display:none;"></label>
+                                                                                        </div>
+                                                                                    </div>
                                                                             </div>
 
                                                                             <br>
+                                                                            
+                                                                            
 
-                                                                                                                                          {% if cat_amenities %}
-
-                                                         <div class="row div-border div-color cat_amenity" style="padding-bottom: 9px !important;">
+                                                                    <div class="row div-border div-color cat_amenity" style="padding-bottom: 9px !important;">
+                                                            {% if cat_amenities %}
+                                                         
                                                             <div class="col-lg-12 col-md-12">
                                                                 <div class="form-group"
                                                                      style="margin-top: 10px;margin-bottom: 0px;">
@@ -1535,7 +1827,9 @@ hr {
                                                                         style="color:red; display:none;"></label>
                                                              </div>
 
-                                                              <div class="col-lg-12 col-md-12">
+                                                             {% endif %}
+                                                             
+                                                             <div class="col-lg-12 col-md-12">
                                                                  <div class="form-group"
                                                                       style="margin-top: 10px;margin-bottom: 0px;">
                                                                      <label style="font-size:15px; font-weight:700;"> Other Amenities
@@ -1548,7 +1842,8 @@ hr {
                                                                <div class="form-group">
                                                                   <textarea 
                                                                        name="other_amenity"
-                                                                       maxlength="500"
+                                                                       maxlength="500" 
+                                                                       onkeyup="textAreaAdjust(this)" 
                                                                        id="any_other_amenity"
                                                                        class="form-control">{{ advert_data.other_amenity }}</textarea>
                                                                     <label class="control-label  amenity_count"
@@ -1557,13 +1852,9 @@ hr {
                                                                     </label>
                                                                </div>
                                                            </div>
-
-                                                         </div>
+                                                             
+                                                             </div>
                                                          <br>
-                                                                        {% else %}
-                                                                        <div class="row">
-                                                                        </div>
-                                                                        {% endif %}
 
                                                                             <div class="row div-border div-color">
                                                                                 <div class="col-lg-10 col-md-10">
@@ -1583,9 +1874,10 @@ hr {
                                                                                             <label class="control-label " style="font-size:15px; font-weight:500;">Day
                                                                                                 <!-- <span class="required"> * </span> -->
                                                                                             </label>
-                                                                                            <select class="form-control opening_day week_days sel2" id="day" name="day" name="options2">
+                                                                                            <select class="form-control opening_day week_days sel2" id="day" onchange="day_change()" name="day" name="options2">
                                                                                                 <option value="">Select Day</option>
                                                                                                 <option value="All">All</option>
+                                                                                                <option value="Mon-Sat">Mon-Sat</option>
                                                                                                 <option value="Monday">Monday</option>
                                                                                                 <option value="Tuesday">Tuesday</option>
                                                                                                 <option value="Wednesday">Wednesday</option>
@@ -1624,7 +1916,8 @@ hr {
                                                                                                     <!-- <span class="required"> * </span> -->
                                                                                                 </label>
 
-                                                                                                        <select class="form-control opening_day week_days sel2" id="day" name="day" name="options2">
+                                                                                                        <select class="form-control opening_day week_days sel2" id="day" name="day" name="options2" onchange="day_change()" 
+                                                                                                        >
 
                                                                                                     <option value="">Select Day</option>
                                                                                                     {% if forloop.counter == 1%}
@@ -1632,6 +1925,11 @@ hr {
                                                                                                             <option selected value="All">All</option>
                                                                                                         {% else %}
                                                                                                             <option value="All">All</option>
+                                                                                                        {% endif %}
+                                                                                                        {% if time.day == "Mon-Sat" %}
+                                                                                                            <option selected value="Mon-Sat">Mon-Sat</option>
+                                                                                                        {% else %}
+                                                                                                            <option value="Mon-Sat">Mon-Sat</option>
                                                                                                         {% endif %}
                                                                                                     {% endif %}
                                                                                                     {% if time.day == "Monday" %}
@@ -1707,7 +2005,7 @@ hr {
                                                                                                     </label>
 
                                                                                                         <select class="form-control opening_day week_days sel2"
-                                                                                                                id="day{{forloop.counter}}"
+                                                                                                                id="day_{{forloop.counter}}"
                                                                                                                 onchange='day_change()'
                                                                                                                 name="day" name="options2">
 
@@ -1792,7 +2090,7 @@ hr {
                                                                                 <div class="col-lg-12 col-md-12">
                                                                                     <div class="form-group">
                                                                                         <label  style="font-size:15px;">Property Market Rate (Per Sq Feet)
-                                                                                            <span class="required"> * </span>
+                                                                                            <!-- <span class="required"> * </span> -->
                                                                                         </label>
                                                                                         <input type="text" value="{{advert_data.property_market_rate}}"
                                                                                                onkeypress="return validateFloatKeyPresss(this,event);"
@@ -1806,7 +2104,7 @@ hr {
                                                                                 <div class="col-lg-12 col-md-12" >
                                                                                     <div class="form-group">
                                                                                         <label  style="font-size:15px;">Possession Status
-                                                                                            <span class="required"> * </span>
+                                                                                          <!--   <span class="required"> * </span> -->
                                                                                         </label>
                                                                                         <select class="form-control sel2 property_status"
                                                                                                 id="possesion_status"
@@ -1841,7 +2139,7 @@ hr {
                                                                                     <div class="col-lg-6 col-md-6" style="margin-left: 16px ! important;">
                                                                                         <div class="form-group" id="ddelivery">
                                                                                             <label  style="font-size:15px;">Date of Delivery
-                                                                                                <span class="required"> * </span>
+                                                                                               <!--  <span class="required"> * </span> -->
                                                                                             </label>
                                                                                             <div class="input-group"
                                                                                                  data-date-format="dd-mm-yyyy"
@@ -1869,7 +2167,7 @@ hr {
                                                                                             <label class="control-label " style="font-size:15px;">Other Projects
                                                                                                 <!-- <span class="required"> * </span> -->
                                                                                             </label>
-                                                                                            <textarea type="text" name="other_projects"
+                                                                                            <textarea type="text" onkeyup="textAreaAdjust(this)" name=" other_projects"
                                                                                                       maxlength="5000"
                                                                                                       id="other_projects"
                                                                                                       class="form-control">{{advert_data.other_projects}}</textarea>
@@ -1939,7 +2237,7 @@ hr {
                                                                                                     <div class="form-group">
                                                                                                         <label class="control-label " style="font-size:15px;">Nearest
                                                                                                             Shopping Mall/Market
-                                                                                                            <span class="required" style="padding-left: 0px;"> * </span>
+                                                                                                          <!--   <span class="required" style="padding-left: 0px;"> * </span> -->
                                                                                                         </label>
                                                                                                         <input type="text" name="near_shopping" value="{{nr_shop.shop_name}}"
                                                                                                                class="form-control near_shop_mal"/>
@@ -1951,7 +2249,7 @@ hr {
                                                                                                     <div class="form-group">
                                                                                                         <label class="control-label " style="font-size:15px;">Distance
                                                                                                             From Property (Km)
-                                                                                                            <span class="required"> * </span>
+                                                                                                           <!--  <span class="required"> * </span> -->
                                                                                                         </label>
 
                                                                                                         </label>
@@ -1969,7 +2267,7 @@ hr {
                                                                                                 <div class="form-group">
                                                                                                     <label class="control-label " style="font-size:15px;">Nearest
                                                                                                         Shopping Mall/Market
-                                                                                                        <span class="required" style="padding-left: 0px;"> * </span>
+                                                                                                        <!-- <span class="required" style="padding-left: 0px;"> * </span> -->
                                                                                                     </label>
                                                                                                     <input type="text" name="near_shopping"
                                                                                                            class="form-control near_shop_mal"/>
@@ -1981,7 +2279,7 @@ hr {
                                                                                                 <div class="form-group">
                                                                                                     <label class="control-label " style="font-size:15px;">Distance
                                                                                                         From Property (Km)
-                                                                                                        <span class="required"> * </span>
+                                                                                                      <!--   <span class="required"> * </span> -->
                                                                                                     </label>
 
                                                                                                     </label>
@@ -2011,7 +2309,7 @@ hr {
                                                                                                 <div class="form-group">
                                                                                                     <label class="control-label " style="font-size:15px;">Nearest
                                                                                                         School
-                                                                                                        <span class="required"> * </span>
+                                                                                                        <!-- <span class="required"> * </span> -->
                                                                                                     </label>
                                                                                                     <p></p>
                                                                                                     <input type="text" name="near_school"
@@ -2024,7 +2322,7 @@ hr {
                                                                                                 <div class="form-group">
                                                                                                     <label class="control-label " style="font-size:15px;">Distance
                                                                                                         From Property (Km)
-                                                                                                        <span class="required"> * </span>
+                                                                                                       <!--  <span class="required"> * </span> -->
                                                                                                     </label>
 
                                                                                                     </label>
@@ -2042,7 +2340,7 @@ hr {
                                                                                                     <div class="form-group">
                                                                                                         <label class="control-label " style="font-size:15px;">Nearest
                                                                                                             School
-                                                                                                            <span class="required"> * </span>
+                                                                                                           <!--  <span class="required"> * </span> -->
                                                                                                         </label>
                                                                                                         <p></p>
                                                                                                         <input type="text" name="near_school" value="{{nr_shcl.school_name}}"
@@ -2055,7 +2353,7 @@ hr {
                                                                                                     <div class="form-group">
                                                                                                         <label class="control-label " style="font-size:15px;">Distance
                                                                                                             From Property (Km)
-                                                                                                            <span class="required"> * </span>
+                                                                                                            <!-- <span class="required"> * </span> -->
                                                                                                         </label>
 
                                                                                                         </label>
@@ -2086,7 +2384,7 @@ hr {
                                                                                                 <div class="form-group">
                                                                                                     <label class="control-label " style="font-size:15px;">Nearest
                                                                                                         Hospital
-                                                                                                        <span class="required"> * </span>
+                                                                                                        <!-- <span class="required"> * </span> -->
                                                                                                     </label>
                                                                                                     <p></p>
                                                                                                     <input type="text" name="name"
@@ -2100,7 +2398,7 @@ hr {
                                                                                                 <div class="form-group">
                                                                                                     <label class="control-label " style="font-size:15px;">Distance
                                                                                                         From Property (Km)
-                                                                                                        <span class="required"> * </span>
+                                                                                                      <!--   <span class="required"> * </span> -->
                                                                                                     </label>
 
                                                                                                     </label>
@@ -2118,7 +2416,7 @@ hr {
                                                                                                     <div class="form-group">
                                                                                                         <label class="control-label " style="font-size:15px;">Nearest
                                                                                                             Hospital
-                                                                                                            <span class="required"> * </span>
+                                                                                                           <!--  <span class="required"> * </span> -->
                                                                                                         </label>
                                                                                                         <p></p>
                                                                                                         <input type="text" name="name" value="{{nr_hosp.hospital_name}}"
@@ -2132,7 +2430,7 @@ hr {
                                                                                                     <div class="form-group">
                                                                                                         <label class="control-label " style="font-size:15px;">Distance
                                                                                                             From Property (Km)
-                                                                                                            <span class="required"> * </span>
+                                                                                                            <!-- <span class="required"> * </span> -->
                                                                                                         </label>
 
                                                                                                         </label>
@@ -2155,7 +2453,7 @@ hr {
                                                                                         <div class="col-lg-5 col-md-10">
                                                                                             <div class="form-group">
                                                                                                 <label class="control-label " style="font-size:15px;">Railway Station (Km)
-                                                                                                    <span class="required"> * </span>
+                                                                                                  <!--   <span class="required"> * </span> -->
                                                                                                 </label>
                                                                                                 <input type="text" value="{{advert_data.distance_frm_railway_station}}"
                                                                                                        onkeypress="return validateFloatKeyPress(this,event);"
@@ -2170,7 +2468,7 @@ hr {
                                                                                         <div class="col-lg-5 col-md-10">
                                                                                             <div class="form-group">
                                                                                                 <label class="control-label " style="font-size:15px;">Airport (Km)
-                                                                                                    <span class="required"> * </span>
+                                                                                                  <!--   <span class="required"> * </span> -->
                                                                                                 </label>
                                                                                                 <input type="text" value="{{advert_data.distance_frm_airport}}"
                                                                                                        onkeypress="return validateFloatKeyPress(this,event);"
@@ -2198,7 +2496,7 @@ hr {
                                                                                     Memory Usage
                                                                                 </div>
                                                                                 <div class="col-lg-7" style="padding-top: 5px; padding-right: 0px;">
-                                                                                    <progress style="background:lightgray" id="progress_bar" class="progress progress-striped progress-success" value="{{advert_data.image_video_space_used}}" max="100"></progress>
+                                                                                    <progress style="background:lightgray" id="progress_bar" class="progress progress-striped progress-success" value="0" max="100"></progress>
                                                                                 </div>
                                                                                 <div class="col-lg-5 progress_count" style="font-size:15px; font-weight:300; padding-left: 0px;">
                                                                                     0.00/100 MB
@@ -2219,6 +2517,12 @@ hr {
                                                                                            name="attachment">
                                                                                 </div>
                                                                             </div>
+                                                                            <div class="row" style="text-align:center; padding-bottom:15px;">
+                                                                                <button id="view_images" type="button" style="text-align:center"
+                                                                                        class="btn btn-outline done_btn">
+                                                                                    View Image(s)
+                                                                                </button>
+                                                                            </div>
                                                                             <div class="row">
                                                                                 <div class="form-group col-lg-12">
                                                                                     <div>
@@ -2235,6 +2539,12 @@ hr {
                                                                                                name="ac_attachment">
                                                                                     </div>
                                                                                 </div>
+                                                                            </div>
+                                                                            <div class="row" style="text-align:center; padding-bottom:15px;">
+                                                                                <button id="view_videos" type="button" style="text-align:center"
+                                                                                        class="btn btn-outline done_btn">
+                                                                                    View Video(s)
+                                                                                </button>
                                                                             </div>
                                                                             <div class="row">
                                                                                 <div class="col-lg-12 col-md-12">
@@ -2609,6 +2919,78 @@ hr {
     </div>
 </div>
 
+<div style="overflow-y:hidden;" id="modal-video" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="display:none;">
+                <img style="width: 100px; height: 52px; margin-top: -11px; margin-left: 236px;"
+                     src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+            </div>
+            <div class="modal-body" style="padding: 0px;">
+                <div class="form-body">
+                    <div class="form-body">
+                        <div class="slide-wrapper">
+                            <div id="homepage-features" style="min-height:400px;" class="carousel slide">
+                                <div id="video_slide_files" class="carousel-inner"></div>
+                            </div>
+                            <a class="left1 carousel-control" onclick="slide_images_left()" href="#homepage-features"
+                               data-slide="prev">
+                                <span class="fa fa-angle-left"
+                                    style="font-size: 50px;margin-top: 187px;"></span>
+                            </a>
+                            <a class="right1 carousel-control" onclick="slide_images_right()" href="#homepage-features"
+                                data-slide="next">
+                                <span class="fa fa-angle-right"
+                                    style="font-size: 50px;margin-top: 187px;">
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align:center !important; display:none;" class="modal-footer">
+                    <input data-dismiss="modal" type="submit" value="OK"
+                           class="btn btn-primary">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="overflow-y:hidden;" id="modal-image" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="display:none;">
+                <img style="width: 100px; height: 52px; margin-top: -11px; margin-left: 236px;"
+                     src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+            </div>
+            <div class="modal-body" style="padding: 0px;">
+                <div class="form-body">
+                    <div class="slide-wrapper">
+                        <div id="homepage-feature" style="min-height:400px;" class="carousel slide">
+                            <div id="img_slide_files" class="carousel-inner"></div>
+                        </div>
+                        <a class="left1 carousel-control" onclick="slide_images_left()" href="#homepage-feature"
+                           data-slide="prev">
+                            <span class="fa fa-angle-left"
+                                style="font-size: 50px;margin-top: 187px;"></span>
+                        </a>
+                        <a class="right1 carousel-control" onclick="slide_images_right()" href="#homepage-feature"
+                            data-slide="next">
+                            <span class="fa fa-angle-right"
+                                style="font-size: 50px;margin-top: 187px;">
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div style="text-align:center !important;display:none;" class="modal-footer">
+                    <input data-dismiss="modal" type="submit" value="OK"
+                           class="btn btn-primary">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--[if lt IE 9]>
 <script src="{% static 'assets/global/plugins/respond.min.js' %}"></script>
 <script src="{% static 'assets/global/plugins/excanvas.min.js' %}"></script>
@@ -2680,12 +3062,102 @@ hr {
     $("#supplier_icon").addClass("icon-active");
     $("#supplier_active").css("display","block");
 
+    function textAreaAdjust(o) {
+        o.style.height = "1px";
+        o.style.height = (o.scrollHeight)+"px";
+    }
+    
+    var display_image_size = "{{advert_data.display_image_size}}";
+    if(display_image_size == ""){
+        display_image_size = 0;
+    }
+    display_image_size = parseFloat(display_image_size)/(1000*1000)
+    $("#progress_bar").val(display_image_size)
+    // progress_bar = $("#progress_bar").val();
+    // total_val = progress_bar + display_image_size;
+    // $("#progress_bar").val(total_val);
+    // progrss_count = parseFloat(total_val).toFixed(2) + "/100 MB"
+    // $(".progress_count").text(progrss_count);
+
+    function calc_image(files){
+        progress_bar = $("#progress_bar").val();
+        total_val = parseFloat(progress_bar) - parseFloat(display_image_size);
+        display_image_size = parseInt(files.size)/(1000*1000);
+        total_val = total_val + display_image_size;
+        $("#progress_bar").val(total_val);
+        progrss_count = parseFloat(total_val).toFixed(2) + "/100 MB"
+        $(".progress_count").text(progrss_count);
+    }
+
     $("#duration_list").val("{{business_data.service_rate_card_duration}}").change();
     $("#dt50").val("{{business_data.start_date}}");
     $("#sub_category").val("{{business_data.category_id}}").change();
     $("#dt2").val("{{business_data.end_date}}");
     $("#note").text("{{payment_details.note}}");
     $('.al_days').prop("disabled", false);
+
+    $("#view_videos").click(function(){
+        $("#modal-video").modal('show');
+        $("#video_slide_files").html("");
+        $.ajax({
+            type : "GET",
+            url : '/get-advert-videos/',
+            data : {'advert_id':{{advert_id}}},
+            success: function (response) {
+                uploaded_image_list = response.image_list;
+            },
+            beforeSend: function () {
+                $("#processing").css('display','block');
+            },
+            complete: function () {
+                $("#processing").css('display','none');
+                $.each(uploaded_image_list, function (index, item) {
+                    if(index == 0){
+                        $("#video_slide_files").append('<div class="item active"><video width="70%" style="margin-left: 88px;" height="375px" controls="controls" ><source src="'+item.image_url+'" type="video/mp4"></video></div>');
+                    }
+                    else{
+                        $("#video_slide_files").append('<div class="item "><video width="70%" style="margin-left: 88px;" height="375px" controls="controls" ><source src="'+item.image_url+'" type="video/mp4"></video></div>');
+                    }
+                });
+            },
+            error : function(response){
+                alert("_Error");
+            }
+        });
+    })
+
+    $("#view_images").click(function(){
+        $("#modal-image").modal('show');
+        $("#img_slide_files").html("");
+        $.ajax({
+            type : "GET",
+            url : '/get-advert-images/',
+            data : {'advert_id':{{advert_id}}},
+            success: function (response) {
+                uploaded_image_list = response.image_list;
+            },
+            beforeSend: function () {
+                $("#processing").css('display','block');
+            },
+            complete: function () {
+                $("#processing").css('display','none');
+                $.each(uploaded_image_list, function (index, item) {
+                    if(index == 0){
+                        $("#img_slide_files").append('<div class="item active" style="background-image:url('+item.image_url+')"></div>');
+                    }
+                    else{
+                        $("#img_slide_files").append('<div class="item" style="background-image:url('+item.image_url+')"></div>');
+                    }
+                });
+            },
+            error : function(response){
+                alert("_Error");
+            }
+        });
+    })
+
+    function slide_images_left(){}
+    function slide_images_right(){}
 
 
     $("#short_discription").keyup(function(){
@@ -2728,6 +3200,15 @@ hr {
         text_length = $("#discount_discription").val().trim().length;
         text_count = text_length + "/5000 Characters";
         $("#discount_discription").parent().children('.dis_count').text(text_count);
+        
+                if (text_length > "0"){
+            $("#discounted_row").show();
+        }else if(text_length == "0"){
+                $("#discounted_row").hide();
+        
+        }
+
+
     });
 
          $('#discount_discription').bind('keypress', function(e) {
@@ -3060,6 +3541,41 @@ function remove_product(p_index){
         });
 
         $(document).ready(function(){
+            day_change();
+            function countRows(id) {
+                var stringLength = document.getElementById(id).value.length;
+                var count = Math.ceil( stringLength / 49 );
+                count = count * 20;
+                $("#"+id).css("height",count+"px")
+            }
+            countRows("short_discription");
+            countRows("speciality");
+            countRows("happy_hour_offer");
+            countRows("facility");
+            countRows("course_duration");
+            countRows("affilated");
+            countRows("product_discription");
+            countRows("discount_discription");
+            countRows("other_details");
+            countRows("any_other_amenity");
+        if($("#dis_flag").val() == 1){
+                $("#startDate").hide();
+                $("#endDate").hide();
+                $("#s1").show();
+                $("#e1").show();
+                
+                }else{
+                                $("#startDate").show();
+                $("#endDate").show();
+                $("#s1").hide();
+                $("#e1").hide();
+                
+                }
+                
+                
+            Website = $('#website').val();
+            Website = Website.replace(/\s/g,'');
+            $('#website').val(Website);
             validates();
             $("#country").val("{{advert_data.country_id}}").change();
             $("#currency").val("{{advert_data.currency}}");
@@ -3080,6 +3596,12 @@ function remove_product(p_index){
             $("#product_discription").parent().children('.dis_count').text(text_count);
             text_length = $("#discount_discription").val().trim().length;
             text_count = text_length + "/5000 Characters";
+            if (text_length > "0"){
+                    $("#discounted_row").show();
+                }else if(text_length == "0"){
+                        $("#discounted_row").hide();
+                
+                }
             $("#discount_discription").parent().children('.dis_count').text(text_count);
             text_length = $("#other_details").val().trim().length;
             text_count = text_length + "/5000 Characters";
@@ -3105,6 +3627,37 @@ function remove_product(p_index){
 
             text_length = $("#any_other_amenity").val().trim().length;
             text_count = text_length + "/500 Characters";
+            
+            
+         var from = $("#s1").val().split("/");
+        var startDate = new Date(from[2], from[1] - 1, from[0]);
+        var from = $("#e1").val().split("/");
+        var endDate = new Date(from[2], from[1] - 1, from[0]);
+
+        $( "#startDate" ).prop("disabled", false);
+        $( "#startDate" ).datepicker( "destroy" );
+        $( "#endDate" ).prop("disabled", false);
+        $( "#endDate" ).datepicker( "destroy" );
+        
+      $("#startDate").datepicker({
+            dateFormat: 'dd/mm/yy',
+            minDate: new Date(startDate),
+          maxDate: new Date(endDate)
+        });
+        
+            $("#startDate").change(function(){
+                
+            var from = $("#startDate").val().split("/");
+            var date = new Date(from[2], from[1] - 1, from[0]);
+            $("#endDate").datepicker( "destroy" );
+            $("#endDate").val("");
+            $("#endDate").datepicker({
+                dateFormat: 'dd/mm/yy',
+                minDate: date,
+                    maxDate: new Date(endDate)
+            });
+ 
+    });
 
 
 
@@ -3114,7 +3667,7 @@ function remove_product(p_index){
                 $("#cat_desc").hide();
             }
             else if(
-                $('#categ :selected').text().trim()=="Lifestyle" || $('#categ :selected').text().trim()=="Travel" || $('#categ :selected').text().trim()=="Electronics"
+                $('#categ :selected').text().trim()=="Fashion & LifeStyle" || $('#categ :selected').text().trim()=="Travel" || $('#categ :selected').text().trim()=="Electronics"
             ){
                 $("#cat_desc").show();
                 $("#speciality_textarea").show();
@@ -3130,7 +3683,7 @@ function remove_product(p_index){
                 $("#happy_textarea").hide();
                 $("#academics_textarea").hide();
             }
-            else if( $('#categ :selected').text().trim()=="Restaurants"){
+            else if( $('#categ :selected').text().trim()=="Food & Restaurants"){
                 $("#happy_textarea").show();
                 $("#facility_textarea").show();
                 $("#cat_desc").show();
@@ -3195,6 +3748,9 @@ function remove_product(p_index){
                     data : {'advert_id':{{advert_id}}},
                     success: function (response) {
                         uploaded_image_list = response.image_list;
+                        if(uploaded_image_list.length < 1){
+                            $("#view_images").css("display","none");
+                        }
                     },
                     beforeSend: function () {
                         $("#processing").css('display','block');
@@ -3212,13 +3768,7 @@ function remove_product(p_index){
                             };
                             image_id_list.push(item.image_id);
                             image_size_list.push(item.image_size);
-                            uploaded_file1_mb = uploaded_file1_mb + parseInt(item.image_size)/(1024*1024);
-
-                            uploaded_file_mb = parseFloat(uploaded_file1_mb) + parseFloat(uploaded_file2_mb);
-                            console.log(uploaded_file_mb);
-                            $("#progress_bar").val(parseFloat(uploaded_file_mb));
-                            progrss_count = parseFloat(uploaded_file_mb).toFixed(2) + "/100 MB"
-                            $(".progress_count").text(progrss_count);
+                            uploaded_file1_mb = uploaded_file1_mb + parseInt(item.image_size)/(1000*1000);
 
                             myDropzone.emit("addedfile", mockFile);
                             myDropzone.emit("thumbnail", mockFile, item.image_url);
@@ -3229,10 +3779,11 @@ function remove_product(p_index){
 
                             // console.log(reordered_array);
                         });
+
                         var temp_image_files = new Array();
                         temp_image_files=temp_image_file;
                         old_upload_size = uploaded_file1_mb;
-                        console.log(old_upload_size)
+                        //console.log(old_upload_size)
                     },
                     error : function(response){
                         alert("_Error");
@@ -3240,21 +3791,29 @@ function remove_product(p_index){
                 });
 
                 this.on("totaluploadprogress", function (file,progress,bytesSent) {
-
-                    uploaded_file1_mb = parseInt(bytesSent)/(1024*1024);
-                    uploaded_file_mb = old_upload_size + parseFloat(uploaded_file1_mb) + parseFloat(uploaded_file2_mb);
-                    $("#progress_bar").val(parseFloat(uploaded_file_mb));
-                    if(uploaded_file_mb > 100){
-                        $("#error-modal1").modal('show');
-                        $("#error-message1").text("Uploaded file size exceeds limit of 100 MB");
-                    }
-                    progrss_count = parseFloat(uploaded_file_mb).toFixed(2) + "/100 MB"
-                    $(".progress_count").text(progrss_count);
-                    var alreadyUploadedTotalSize = getTotalPreviousUploadedFilesSize(bytesSent);
+                    var alreadyUploadedTotalSize = getTotalPreviousUploadedFilesSize();
                 });
 
 
                 this.on("addedfile", function(file, response){
+
+                    progress_val = $("#progress_bar").val();
+                    uploaded_file1_mb = parseInt(file.size)/(1000*1000);
+                    progress_val = parseFloat(progress_val) + uploaded_file1_mb
+                    $("#progress_bar").val(progress_val);
+                    progrss_count = parseFloat(progress_val).toFixed(2) + "/100 MB"
+                    $(".progress_count").text(progrss_count);
+
+                    temp_image_files.push(file);
+
+                    if(progress_val > 100){
+                        $("#progress_bar").attr("max",progress_val);
+                        $("#error-modal1").modal('show');
+                        $("#error-message1").text("Uploaded file size exceeds limit of 100 MB");
+                        this.removeFile(file);
+                        $("#progress_bar").attr("max","100");
+                    }
+
                     $(".txt_dropzone3").text("");
                     if (this.files.length) {
                         var i, len, pre;
@@ -3264,7 +3823,7 @@ function remove_product(p_index){
                             }
                         }
                     }
-                    temp_image_files.push(file);
+
                 });
 
                 this.on("success", function (files, response) {
@@ -3276,17 +3835,16 @@ function remove_product(p_index){
                 });
 
                 this.on("removedfile", function(file){
+
                     deleting_image_id = reordered_array[temp_image_files.indexOf(file)];
                     deleting_image_size = image_size_list[image_id_list.indexOf(deleting_image_id)];
-                    if(deleting_image_size != undefined){
-                        deleting_image_size = parseFloat(deleting_image_size)/(1024*1024);
-                        old_upload_size = old_upload_size - deleting_image_size
-                        console.log(deleting_image_size,old_upload_size)
-                        uploaded_file_mb = uploaded_file_mb - deleting_image_size
-                        $("#progress_bar").val(parseFloat(uploaded_file_mb));
-                        progrss_count = parseFloat(uploaded_file_mb).toFixed(2) + "/100 MB"
-                        $(".progress_count").text(progrss_count);
-                    }
+
+                    progress_val = $("#progress_bar").val();
+                    uploaded_file1_mb = parseInt(file.size)/(1000*1000);
+                    progress_val = parseFloat(progress_val) - uploaded_file1_mb
+                    $("#progress_bar").val(progress_val);
+                    progrss_count = parseFloat(progress_val).toFixed(2) + "/100 MB"
+                    $(".progress_count").text(progrss_count);
 
                     $.ajax({
                         url: "/remove-advert-image/?image_id="+deleting_image_id,
@@ -3375,6 +3933,9 @@ function remove_product(p_index){
                     data : {'advert_id':{{advert_id}}},
                     success: function (response) {
                         uploaded_image_list = response.image_list;
+                        if(uploaded_image_list.length < 1){
+                            $("#view_videos").css("display","none");
+                        }
                     },
                     beforeSend: function () {
                         $("#processing").css('display','block');
@@ -3392,18 +3953,14 @@ function remove_product(p_index){
                             };
                             image_id_list.push(item.image_id);
                             image_size_list.push(item.image_size);
-                            uploaded_file2_mb = uploaded_file2_mb + parseInt(item.image_size)/(1024*1024);
-                            uploaded_file_mb = parseFloat(uploaded_file1_mb) + parseFloat(uploaded_file2_mb);
-                            $("#progress_bar").val(parseFloat(uploaded_file_mb));
-                            progrss_count = parseFloat(uploaded_file_mb).toFixed(2) + "/100 MB"
-                            $(".progress_count").text(progrss_count);
-
+                            uploaded_file2_mb = uploaded_file2_mb + parseInt(item.image_size)/(1000*1000);
                             myDropzone.emit("addedfile", mockFile);
                             reordered_array.push(item.image_id);
                             temp_image_file.push(mockFile);
                             myDropzone.files.push(mockFile);
                             $('#ac_attachments').val(reordered_array);
                         });
+
                         var temp_image_files = new Array();
                         temp_image_files=temp_image_file;
                         old_video_upload_size = uploaded_file2_mb;
@@ -3415,6 +3972,24 @@ function remove_product(p_index){
                 });
 
                 this.on("addedfile", function(file, response){
+
+                    progress_val = $("#progress_bar").val();
+                    uploaded_file1_mb = parseInt(file.size)/(1000*1000);
+                    progress_val = parseFloat(progress_val) + uploaded_file1_mb
+                    $("#progress_bar").val(progress_val);
+                    progrss_count = parseFloat(progress_val).toFixed(2) + "/100 MB"
+                    $(".progress_count").text(progrss_count);
+
+                    temp_image_files.push(file);
+
+                    if(progress_val > 100){
+                        $("#progress_bar").attr("max",progress_val);
+                        $("#error-modal1").modal('show');
+                        $("#error-message1").text("Uploaded file size exceeds limit of 100 MB");
+                        this.removeFile(file);
+                        $("#progress_bar").attr("max","100");
+                    }
+
                     $(".txt_dropzone").text("");
                     if (this.files.length) {
                         var i, len, pre;
@@ -3425,19 +4000,10 @@ function remove_product(p_index){
                             }
                         }
                     }
-                    temp_image_files.push(file);
+                    //temp_image_files.push(file);
                 });
 
                 this.on("totaluploadprogress", function (file,progress,bytesSent) {
-                    uploaded_file2_mb = parseInt(bytesSent)/(1024*1024);
-                    uploaded_file_mb = old_video_upload_size + parseFloat(uploaded_file1_mb) + parseFloat(uploaded_file2_mb)
-                    $("#progress_bar").val(parseFloat(uploaded_file_mb));
-                    if(uploaded_file_mb > 100){
-                        $("#error-modal1").modal('show');
-                        $("#error-message1").text("Uploaded file size exceeds limit of 100 MB");
-                    }
-                    progrss_count = parseFloat(uploaded_file_mb).toFixed(2) + "/100 MB"
-                    $(".progress_count").text(progrss_count);
                     var alreadyUploadedTotalSize = getTotalPreviousUploadedFilesSize(bytesSent);
                 });
 
@@ -3446,21 +4012,20 @@ function remove_product(p_index){
                     $('a .dz-remove').attr('href','/remove-advert-video/?image_id='+response.attachid);
                     reordered_array.push(response.attachid);
                     $('#ac_attachment').val(reordered_array);
-                    $('#ac_attachments').val(reordered_array);
+                    $('#ac_attachments').val(reordered_array)
                 });
 
                 this.on("removedfile", function(file){
                     deleting_image_id = reordered_array[temp_image_files.indexOf(file)];
                     deleting_image_size = image_size_list[image_id_list.indexOf(deleting_image_id)];
-                    if(deleting_image_size != undefined){
-                        deleting_image_size = parseFloat(deleting_image_size)/(1024*1024);
-                        old_video_upload_size = old_video_upload_size - deleting_image_size
-                        console.log(deleting_image_size,old_upload_size)
-                        uploaded_file_mb = uploaded_file_mb - deleting_image_size
-                        $("#progress_bar").val(parseFloat(uploaded_file_mb));
-                        progrss_count = parseFloat(uploaded_file_mb).toFixed(2) + "/100 MB"
-                        $(".progress_count").text(progrss_count);
-                    }
+
+                    progress_val = $("#progress_bar").val();
+                    uploaded_file1_mb = parseInt(file.size)/(1000*1000);
+                    progress_val = parseFloat(progress_val) - uploaded_file1_mb
+                    $("#progress_bar").val(progress_val);
+                    progrss_count = parseFloat(progress_val).toFixed(2) + "/100 MB"
+                    $(".progress_count").text(progrss_count);
+
                     $.ajax({
                         url: "/remove-advert-video/?image_id="+deleting_image_id,
                         success: function(result){
@@ -3801,7 +4366,7 @@ function remove_product(p_index){
     var i = 1;
     var j = 8;
     function add_working() {
-
+        day_flag = 0;
         var arr = document.getElementsByClassName("opening_day")
         if(arr.length >= 7){
             return false;
@@ -3818,9 +4383,31 @@ function remove_product(p_index){
             $("#wrk_hrs_label").css("display","none");
         }
 
+        list = []
+        $(".opening_day option:selected").each(function() {
+            if($(this).val() != ""){
+                if($(this).val() == "Mon-Sat"){
+                    list = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+                    day_flag = 1;
+                }
+                else{
+                    list.push($(this).val());
+                }
+            }
+        });
+        if(day_flag == 1){
+            if(arr.length >= 2){
+                return false;
+            }
+        }
+        if(list.length > 6){
+            day_change();
+            return false;
+        }
+
         $("#working_hours").append(
             "<div id='hours_div_"+j+"' class='row'><div class='col-lg-4'><div class='form-group'><label class='control-label '>Day</label>"+
-            "<select class='form-control opening_day sel2' id='day_"+i+"' onchange='day_change()' name='options2'><option value=''>Select Day</option><option value='Monday'>Monday</option>"+
+            "<select class='form-control opening_day sel2' id='day_"+j+"' onchange='day_change()' name='options2'><option value=''>Select Day</option><option value='Monday'>Monday</option>"+
             "<option value='Tuesday'>Tuesday</option><option value='Wednesday'>Wednesday</option><option value='Thursday'>Thursday</option>"+
             "<option value='Friday'>Friday</option><option value='Saturday'>Saturday</option> <option value='Sunday'>Sunday</option></select><label class='error' style='color:red; display:none;'></label>"+
             "</div></div><div class='form-group col-lg-4'><label class='control-label '>Start Time </label>"+
@@ -3856,39 +4443,108 @@ function remove_product(p_index){
         });
     }
 
-    $(".opening_day").change(function() {
-        var selected = $("option:selected", $(this)).val();
-
-        if(selected == "All"){
-            list = [];
-            list.push("All");
+    function day_change(){
+        day_list = ["All","Mon-Sat","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+        list = []
+        if($("#day").val() == 'All' ){
             $("#working_hours").html('');
-            $("#wrk_hrs_label").css("display","none");
-            $(".opening_day option").each(function() {
-                $(this).attr("disabled", false);
-            });
-            $("option[value='All']").siblings().removeAttr("disabled");
             return false;
         }
-        day_change();
-    });
 
-    function day_change(){
-        list = []
-        $(".opening_day option").each(function() {
-            $(this).attr("disabled", false);
-        });
         $(".opening_day").each(function() {
-            if($(this).val() != "" && $(this).val() !="All"){
-                list.push($(this).val());
+            if($("#day").val() == 'Mon-Sat' ){
+                if($(this)[0].value != '' ){
+                    if($(this)[0].value != 'Mon-Sat'){
+                        if($(this)[0].value != 'Sunday' ){
+                            this_id = $(this)[0].id;
+                            this_id = this_id.split('_');
+                            document.getElementById("hours_div_"+this_id[1]).remove();
+                        }
+                    }
+                }
             }
         });
+
+        v = 0;
+        $(".opening_day").each(function() {
+            if($("#day").val() == 'Mon-Sat' ){
+                if($(this)[0].value != '' ){
+                    if($(this)[0].value != 'Mon-Sat'){
+                        if($(this)[0].value != 'Sunday' ){
+                            alert($(this)[0].value);
+                            this.parentElement.removeChild(this);
+                        }
+                    }
+                }
+            }
+            v = v + 1;
+            day_val = $(this)[0].value;
+            if(day_val == 'Mon-Sat'){
+                list = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+            }
+            else if(day_val != ''){
+                list.push(day_val)
+            }
+            $(this).html('');
+            $(this).append('<option selected value="">Select Day</option>');
+            if(v == 1){
+                $(this).append('<option value="All">All</option>');
+                if(day_val == "Mon-Sat"){
+                    $(this).append('<option selected value="Mon-Sat">Mon-Sat</option>');
+                }
+                else{
+                    $(this).append('<option value="Mon-Sat">Mon-Sat</option>');
+                }
+            }
+            if(day_val == "Monday"){
+                $(this).append('<option selected value="Monday">Monday</option>');
+            }
+            else{
+                $(this).append('<option value="Monday">Monday</option>');
+            }
+            if(day_val == "Tuesday"){
+                $(this).append('<option selected value="Tuesday">Tuesday</option>');
+            }
+            else{
+                $(this).append('<option value="Tuesday">Tuesday</option>');
+            }
+            if(day_val == "Wednesday"){
+                $(this).append('<option selected value="Wednesday">Wednesday</option>');
+            }
+            else{
+                $(this).append('<option value="Wednesday">Wednesday</option>');
+            }
+            if(day_val == "Thursday"){
+                $(this).append('<option selected value="Thursday">Thursday</option>');
+            }
+            else{
+                $(this).append('<option value="Thursday">Thursday</option>');
+            }
+            if(day_val == "Friday"){
+                $(this).append('<option selected value="Friday">Friday</option>');
+            }
+            else{
+                $(this).append('<option value="Friday">Friday</option>');
+            }
+            if(day_val == "Saturday"){
+                $(this).append('<option selected value="Saturday">Saturday</option>');
+            }
+            else{
+                $(this).append('<option value="Saturday">Saturday</option>');
+            }
+            if(day_val == "Sunday"){
+                $(this).append('<option selected value="Sunday">Sunday</option>');
+            }
+            else{
+                $(this).append('<option value="Sunday">Sunday</option>');
+            }
+        });
+        list = jQuery.unique(list);
         $.each(list, function (index, item) {
             $(".opening_day").each(function() {
-                $("option[value='" + item + "']", $(this)).attr("disabled", true);
+                $("option[value='"+item+"']", $(this)).attr("disabled", true);
             });
         });
-
     }
 
     function remove_working(id){
@@ -4115,20 +4771,20 @@ function remove_product(p_index){
                 }
             }
         }
-        if(checkCateg("#categ") & checkAdverttitle("#advert_title") & checkShortDesc('#short_discription') & checkProductName('.product_name_cls') &  checkContactName('.contact_name') & checkPhoneNumber('.phone_number') & checkEmail('#email_primary') & checkaddress('#address_line1') & checkArea('#area') & checkLandmark('#landmark')
+        if(checkCateg("#categ") & checkAdverttitle("#advert_title") & checkShortDesc('#short_discription')& check_date_range() & checkProductName('.product_name_cls') &  checkContactName('.contact_name') &checkPhoneNumber('.phone_number') & checkaddress('#address_line1') & checkArea('#area') & checkLandmark('#landmark')
             & checkCountry("#country") & checkState("#statec") &  checkCity("#city") & checkPincode("#pincode") & check_ex_am('#any_other_amenity') )
         {
             return true;
         }
-        if($('#categ option:selected').text().trim()== "Restaurants" || $('#categ option:selected').text().trim()== "Health" ||
-        $('#categ option:selected').text().trim()== "Lifestyle" || $('#categ option:selected').text().trim()== "Travel" || $('#categ  option:selected').text().trim()== "Electronics"
-        ){
-            isValid = false;
-            var check_speciality = validspeciality();
-            if (check_speciality == false){
-                return false;
-            }
-        }
+        // if($('#categ option:selected').text().trim()== "Restaurants" || $('#categ option:selected').text().trim()== "Health" ||
+        // $('#categ option:selected').text().trim()== "Lifestyle" || $('#categ option:selected').text().trim()== "Travel" || $('#categ  option:selected').text().trim()== "Electronics"
+        // ){
+        //     isValid = false;
+        //     var check_speciality = validspeciality();
+        //     if (check_speciality == false){
+        //         return false;
+        //     }
+        // }
         if($('#categ option:selected').text().trim() == "Real Estate"){
             isValid = false;
             var asd = validateproperty();
@@ -4144,15 +4800,15 @@ function remove_product(p_index){
 
 
         if(validateData()){
-            if($('#categ option:selected').text().trim()== "Restaurants" || $('#categ option:selected').text().trim()== "Health" ||
-            $('#categ option:selected').text().trim()== "Lifestyle" || $('#categ option:selected').text().trim()== "Travel" || $('#categ  option:selected').text().trim()== "Electronics"
-            ){
-                isValid = false;
-                var check_speciality = validspeciality();
-                if (check_speciality == false){
-                    return false;
-                }
-            }
+            // if($('#categ option:selected').text().trim()== "Restaurants" || $('#categ option:selected').text().trim()== "Health" ||
+            // $('#categ option:selected').text().trim()== "Lifestyle" || $('#categ option:selected').text().trim()== "Travel" || $('#categ  option:selected').text().trim()== "Electronics"
+            // ){
+            //     isValid = false;
+            //     var check_speciality = validspeciality();
+            //     if (check_speciality == false){
+            //         return false;
+            //     }
+            // }
             if($('#categ option:selected').text().trim() == "Real Estate"){
                 isValid = false;
                 var asd = validateproperty();
@@ -4230,8 +4886,8 @@ function remove_product(p_index){
             }).get();
 
             var opening_day_list = []
-            opening_day_list = $('.opening_day').map(function() {
-                return $(this).val();
+            opening_day_list = $('.opening_day option:selected').map(function() {
+                return $(this)[0].value;
             }).get();
 
 
@@ -4317,6 +4973,25 @@ function remove_product(p_index){
             if($("#lvl5").val() != "" && $("#lvl5").val() != undefined){
                 subcat_list.push($("#lvl5").val())
             }
+            
+            var checkedValue = $('.discount:checked').val();
+            if (checkedValue == 0){
+                startDate = $("#s1").val();
+                endDate = $("#e1").val();
+            
+            }else if($("#startDate").val() !="" && $("#endDate").val() !="" ){
+                    startDate = $('#startDate').val();
+                    endDate   = $('#endDate').val();
+            }else if(checkedValue == undefined && $("#startDate").val() =="" && $("#endDate").val() ==""){
+                    startDate = ""
+                    endDate  =""
+            }
+            
+            
+                formData.append("startDate",startDate);  
+                formData.append("endDate",endDate);
+            
+             formData.append("website",$('#website').val());
             formData.append("title",$('#title').val());
             formData.append("any_other_amenity",$('#any_other_amenity').val());
             advert_keywords = $("#advert_keywords").val();
@@ -4345,7 +5020,7 @@ function remove_product(p_index){
             formData.append("country",$('#country').val());
             formData.append("city",$('#city').val());
             formData.append("pincode",$('#pincode').val());
-            formData.append("opening_day_list",list);
+            formData.append("opening_day_list",opening_day_list);
             formData.append("start_time_list",res);
             formData.append("end_time_list",res1);
             formData.append("any_other_details",$('#other_details').val());
@@ -4466,8 +5141,9 @@ function remove_product(p_index){
     }
 
     function checkWebsite(website){
-        Website = $(website).val()
-        var namePattern = /(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/;
+        Website = $(website).val();
+        Website = Website.replace(/\s/g, '');
+        var namePattern = /^(http:\/\/|www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
         if(Website==''){
             return true;
         }
@@ -4652,20 +5328,22 @@ function remove_product(p_index){
     */
 
     function checkPhoneNumber(phone_number){
-        var phoneNumberPattern = /^[789]\d{9}$/;
-        contact_number = $(phone_number).val()
-        if (contact_number == ""){
-            $(phone_number).parent().children('.error').css("display", "block");
-            $(phone_number).parent().children('.error').text("Please enter Mobile Number");
-            return false;
+        var phoneNumberPattern = /^\d{9-15}$/;
+        contact_number = $(phone_number).val();
+        if (contact_number != ""){
+            if(contact_number.length < 10){
+                $(phone_number).parent().children('.error').css("display", "block");
+                $(phone_number).parent().children('.error').text("Please enter valid Number ");
+                return false;
+            }
+            else{
+                $(phone_number).parent().children('.error').css("display", "none");
+                return true;
+            }
         }
-        else if(phoneNumberPattern.test(contact_number)){
+        else{
             $(phone_number).parent().children('.error').css("display", "none");
             return true;
-        }else{
-            $(phone_number).parent().children('.error').css("display", "block");
-            $(phone_number).parent().children('.error').text("Please enter valid Mobile Number");
-            return false;
         }
     }
 
@@ -4838,7 +5516,7 @@ function remove_product(p_index){
 
 
 
-        //Real Estate Validation
+                //Real Estate Validation
 
         function check_market_rate(){
          var isValid = false;
@@ -4876,7 +5554,7 @@ function remove_product(p_index){
 
         function check_comp_date(){
         var isValid = false;
-        if($("#possesion_status option:selected").text()=='Under Construction' ){
+        if($("#possesion_status option:selected").val()=='Under Construction' ){
 
                 if($("#date_of_delivery").val()=="" || $("#date_of_delivery").val()== null){
                   $("#ddelivery").parent().children('.error').css("display", "block");
@@ -4897,6 +5575,7 @@ function remove_product(p_index){
         }
 
 
+      
 
 
         function check_ner(near_by_attr){
@@ -4910,7 +5589,7 @@ function remove_product(p_index){
                     isValid = true;
                }else if($.isNumeric($(this).val())){
                 $(this).parent().children('.error').css("display", "block");
-                    $(this).parent().children('.error').text("Please enter valid Amenity");
+                    $(this).parent().children('.error').text("Please enter valid Attraction");
                     isValid = false;
                }
                else{
@@ -4931,16 +5610,15 @@ function remove_product(p_index){
 
                   if($(this).val()=="")
                {
-                    $(this).parent().children('.error').css("display", "block");
-                    $(this).parent().children('.error').text("Please enter Shopping Mall/Market");
-                    isValid = false;
+                  $(this).parent().children('.error').css("display", "none");
+                isValid = true;
                }else if($.isNumeric($(this).val())){
                 $(this).parent().children('.error').css("display", "block");
                     $(this).parent().children('.error').text("Please enter valid Shopping Mall/Market");
                     isValid = false;
                }
                else{
-                $(this).parent().children('.error').css("display", "none");
+                                  $(this).parent().children('.error').css("display", "none");
                 isValid = true;
                }
             }
@@ -4962,6 +5640,7 @@ function remove_product(p_index){
 
                }
                 });
+             
               return isValid;
             }
 
@@ -4972,9 +5651,8 @@ function remove_product(p_index){
                if(index==0){
                   if($(this).val()=='')
                {
-                    $(this).parent().children('.error').css("display", "block");
-                    $(this).parent().children('.error').text("Please enter Distance");
-                    isValid = false;
+                $(this).parent().children('.error').css("display", "none");
+                isValid = true;
                }else{
                 $(this).parent().children('.error').css("display", "none");
                 isValid = true;
@@ -5003,9 +5681,8 @@ function remove_product(p_index){
                if(index==0){
                   if($(this).val()=='')
                {
-                    $(this).parent().children('.error').css("display", "block");
-                    $(this).parent().children('.error').text("Please enter School Name");
-                    isValid = false;
+                $(this).parent().children('.error').css("display", "none");
+                isValid = true;
 
                }else if($.isNumeric($(this).val())){
                 $(this).parent().children('.error').css("display", "block");
@@ -5078,9 +5755,8 @@ function remove_product(p_index){
                if(index==0){
                 if($(this).val()=='')
                {
-                    $(this).parent().children('.error').css("display", "block");
-                    $(this).parent().children('.error').text("Please enter Hospital");
-                    isValid = false;
+                $(this).parent().children('.error').css("display", "none");
+                isValid = true;
 
                }else if($.isNumeric($(this).val())){
                 $(this).parent().children('.error').css("display", "block");
@@ -5191,7 +5867,7 @@ function remove_product(p_index){
     }
 
     function validateproperty(){
-        if(check_market_rate() & check_poss_status() & check_comp_date()  & check_ner('.near_by_attr') &  checkNearShoping('.near_shop_mal') & checkNearShopingD('.near_shop_d')  & checkNearSchool('.ner_sch') & checkNearSchoold('.ner_schd') & checkNearHospital('.ner_hos') & checkNearHospitald('.ner_hosd') & railwaystation() & airport()){
+        if(    check_ner('.near_by_attr') &  checkNearShoping('.near_shop_mal') &  checkNearSchool('.ner_sch') &  checkNearHospital('.ner_hos')  ){
             return true;
         }
         else{
@@ -5270,6 +5946,97 @@ function del_product(id) {
     }
 
     //-----------------------------------end-------------------------//
+    
+    
+    
+function same_sub_check(){
+
+var checkedValue = $('.discount:checked').val();
+if(checkedValue == 0){
+$("#s1").show();
+$("#e1").show();
+$("#startDate").hide();
+$("#endDate").hide();
+}else{
+
+$("#s1").hide();
+$("#e1").hide();
+$("#startDate").show();
+$("#endDate").show();
+}
+}
+
+
+function check_date_range(){
+text_length = $("#discount_discription").val().trim().length;
+ if (text_length > "0"){
+        var checkedValue = $('.discount:checked').val();
+
+        
+        if (checkedValue == undefined && $("#startDate").val() == "" && $("#endDate").val()== ""){
+
+        
+                    $("#dis_error").css("display", "block");
+            $("#dis_error").text("Please select Discount Validity Dates");
+            return false;
+        
+        }
+        else if(checkedValue != 0){
+
+                $("#dis_error").css("display","none");
+            
+                if(check_start_date() & check_end_date() )
+        {
+            return true;
+        }else{
+     
+                return false;
+            }
+            
+
+        }else{
+            $("#dis_error").css("display","none");
+                return true;
+        }
+ }else{
+ return true;
+ }
+
+}
+
+function check_start_date(){
+            var isValid = false;
+                if($("#startDate").val() ==""  || $("#startDate").val()== null)
+                {
+
+                    $("#startDate").parent().children('.error').css("display", "block");
+                    $("#startDate").parent().children('.error').text("Please select Start Date ");
+                  isValid = false;
+               }else{
+
+                    $("#startDate").parent().children('.error').css("display", "none");
+                isValid =  true;
+               }
+               return isValid;
+
+        }
+        
+ function check_end_date(){
+            var isValid = false;
+                if($("#endDate").val() ==""  || $("#endDate").val()== null)
+                {
+
+                    $("#endDate").parent().children('.error').css("display", "block");
+                    $("#endDate").parent().children('.error').text("Please select End Date ");
+                  isValid = false;
+               }else{
+
+                    $("#endDate").parent().children('.error').css("display", "none");
+                isValid =  true;
+               }
+               return isValid;
+
+        }
 </script>
 
 </body>

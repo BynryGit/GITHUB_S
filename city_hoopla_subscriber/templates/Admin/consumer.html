@@ -6,7 +6,7 @@
 {% load staticfiles %}
     <head>
         <meta charset="utf-8" />
-        <title>City Hoopla | Consumer</title>
+        <title>CityHoopla | Consumer</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <meta content="" name="description" />
@@ -148,7 +148,10 @@ text-align: center;
                                     <i class="fa fa-angle-down"></i>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-default">
-
+                                    <li>
+                                <a href="/edit-profile/?user_id={{request.session.login_user}}">
+                                    <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
+                            </li>
                                     <li>
                                         <a href="/log-out/">
                                             <i class="icon-key"></i> Log Out </a>

@@ -19,7 +19,7 @@ License: You must have a valid license purchased only from themeforest(the above
 {% load staticfiles %}
     <head>
         <meta charset="utf-8" />
-        <title>City Hoopla | User Login </title>
+        <title>CityHoopla | User Login </title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <meta content="" name="description" />
@@ -131,70 +131,84 @@ License: You must have a valid license purchased only from themeforest(the above
         </div> -->
         <!-- END LOGO -->
         <!-- BEGIN LOGIN -->
-             <div class="content" style="margin-top:9%;">
-            <!-- BEGIN LOGIN FORM -->
-            <form class="login_form" id="login_form" role="form" method="post">
-            <div class="text-center" style="margin-bottom:8%;">
+             <div class="content" style="margin-top:9%;" id="log_in">
+    <!-- BEGIN LOGIN FORM -->
+    <form class="login-form" id="login_form" role="form" method="post">
+   		 <div class="text-center" style="margin-bottom:8%;">
                 <a href="javascript:;">
                <img src="{% static 'assets/layouts/layout2/img/City_Hoopla_Logo.png' %}" alt="logo" style="width: 35%;" class="logo-default" /></a>
-               </div>
-            {% csrf_token %}
-               <!--  <h3 class="form-title font-green">Sign In</h3> -->
-                <div class="alert alert-danger display-hide">
-                    <button class="close" data-close="alert"></button>
-                    <span> Enter any username and password. </span>
-                </div>
-                <div class="form-group">
-                    <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
-                    <label class="control-label visible-ie8 visible-ie9">Username</label>
-                    <input class="form-control form-control-solid placeholder-no-fix" type="text" required autocomplete="off" placeholder="Username" name="username" /> </div>
-                <div class="form-group">
-                    <label class="control-label visible-ie8 visible-ie9">Password</label>
-                    <input class="form-control form-control-solid placeholder-no-fix" type="password" required autocomplete="off" placeholder="Password" name="password" /> </div>
-                <div class="form-actions">
-                {{ form.captcha }}
-                <div style="margin-left: 121px;">         
-                    <img src="{% static 'assets/pages/img/reset.png' %}" width="40" height="35"  style="cursor: pointer; cursor: pointer; margin-top: -54px; margin-left: 22px !important;" id="refresh_btn"/>
-                    
-                </div>
-               
-                   <!--  <a href="javascript:;" style ="font-size: 14px; float: right; display: inline-block;margin-top: 10px;margin-right: 217px;" id="forget-password" class="forget-password">Forgot Password?</a> -->
-                    <input value="Login" style="margin-left: 235px; margin-top: 2px;"   type="submit" class="btn green uppercase"></input>
-                 
-              </div>  
-                <!-- <div class="login-options">
-                    <h4>Or login with</h4>
-                    <ul class="social-icons">
-                        <li>
-                            <a class="social-icon-color facebook" data-original-title="facebook" href="javascript:;"></a>
-                        </li>
-                        <li>
-                            <a class="social-icon-color twitter" data-original-title="Twitter" href="javascript:;"></a>
-                        </li>
-                        <li>
-                            <a class="social-icon-color googleplus" data-original-title="Goole Plus" href="javascript:;"></a>
-                        </li>
-                        <li>
-                            <a class="social-icon-color linkedin" data-original-title="Linkedin" href="javascript:;"></a>
-                        </li>
-                    </ul>
-                </div> -->
-            </form>
-            <!-- END LOGIN FORM -->
-            <!-- BEGIN FORGOT PASSWORD FORM -->
-            <form class="forget-form" action="index.html" method="post">
-                <h3 class="font-green">Forget Password ?</h3>
-                <p> Enter your e-mail address below to reset your password. </p>
-                <div class="form-group">
-                    <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email" name="email" /> </div>
-                <div class="form-actions">
-                    <button type="button" id="back-btn" class="btn btn-default">Back</button>
-                    <button type="submit" class="btn btn-success uppercase pull-right">Submit</button>
-                </div>
-            </form>
-            <!-- END FORGOT PASSWORD FORM -->
-          
+             </div>
+        {% csrf_token %}
+        <!--  <h3 class="form-title font-green">Sign In</h3> -->
+        <div class="alert alert-danger display-hide">
+            <button class="close" data-close="alert"></button>
+            <span> Enter any username and password. </span>
         </div>
+        <div class="form-group">
+            <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+            <label class="control-label visible-ie8 visible-ie9">Username</label>
+            <input class="form-control form-control-solid placeholder-no-fix" type="text" required autocomplete="off"
+                   placeholder="Username" name="username"/></div>
+        <div class="form-group">
+            <label class="control-label visible-ie8 visible-ie9">Password</label>
+            <input class="form-control form-control-solid placeholder-no-fix" type="password" required
+                   autocomplete="off" placeholder="Password" name="password"/></div>
+        <div class="form-actions">
+            {{ form.captcha }}
+            <div style="margin-left: 121px;">
+                <img src="{% static 'assets/pages/img/reset.png' %}" width="40" height="35"
+                     style="cursor: pointer; cursor: pointer; margin-top: -54px; margin-left: 22px !important;"
+                     id="refresh_btn"/>
+
+            </div>
+
+
+            <input value="Login" style=" width: 343px;margin-top: 2px;" type="submit"
+                   class="btn green lowercase"></input>
+            <a href="javascript:;"
+               style="font-size: 14px; float: right; display: inline-block;margin-top: 10px;margin-right: 109px;"
+               id="forget-password" class="forget-password" >Forgot Password ?</a>
+
+        </div>
+        <!-- <div class="login-options">
+
+            <h4>Or login with</h4>
+            <ul class="social-icons">
+                <li>
+                    <a class="social-icon-color facebook" data-original-title="facebook" href="javascript:;"></a>
+                </li>
+                <li>
+                    <a class="social-icon-color twitter" data-original-title="Twitter" href="javascript:;"></a>
+                </li>
+                <li>
+                    <a class="social-icon-color googleplus" data-original-title="Goole Plus" href="javascript:;"></a>
+                </li>
+                <li>
+                    <a class="social-icon-color linkedin" data-original-title="Linkedin" href="javascript:;"></a>
+                </li>
+            </ul>
+        </div> -->
+    </form>
+    
+
+    <!-- END LOGIN FORM -->
+    <!-- BEGIN FORGOT PASSWORD FORM -->
+  
+    <form class="forget-form"  id="forgot_pass">
+        <h3 class="font-green">Forgot Password ?</h3>
+        <p> Enter your e-mail address below to reset your password. </p>
+        <div class="form-group">
+            <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email"
+                   name="email"/></div>
+        <div class="form-actions">
+            <button type="button" id="back-btn" class="btn btn-default">Back</button>
+            <button type="submit" class="btn btn-success uppercase pull-right">Submit</button>
+        </div>
+    </form>
+
+ </div>
+ 
+ 
        <div class="modal fade draggable-modal" id="captcha_modal" tabindex="-1" role="basic" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">                                                
@@ -251,6 +265,29 @@ License: You must have a valid license purchased only from themeforest(the above
                 <!-- /.modal-dialog -->
             </div>
         </div> 
+        
+    <div  id="affiliate-modal4" tabindex="-1" aria-hidden="true" class="modal fade" role="basic">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-body">
+                    <h4 class="text-center">Reset Password link has been sent on your registered email-id and mobile number 
+                            </h4>
+                </div>
+                <div style="text-align:center !important;" class="modal-footer">
+                    <a href="/backoffice/"><input type="submit" value="OK"
+                                                                             class="btn btn-primary"
+                                                                             id="advert-btn"></a>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
         
         <div class="modal fade draggable-modal" id="inactive" tabindex="-1" role="basic" aria-hidden="true">
                 <div class="modal-dialog">
@@ -334,6 +371,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                         
                                     }
                                     if(response.success=='false'){
+                                    
                                 $("#login_modal").modal('show');
                                 captcha_reload()
                                     }
@@ -364,6 +402,43 @@ License: You must have a valid license purchased only from themeforest(the above
         
                                                                  
                  }); 
+                 
+        $('#forgot_pass').submit(function(event) {
+
+        event.preventDefault();
+        $.ajax({
+            type : 'POST',
+            url : '/forgot-password/',
+            data : $("#forgot_pass").serialize(),
+            success: function(response) {
+                if(response.success=='true'){
+                  	$("#affiliate-modal4").modal('show');
+                    //location.href="/backoffice/"
+                }
+                if(response.success=='false'){
+                    $("#login_modal").modal('show');
+                    captcha_reload()
+                }
+                if(response.success=='Invalid Username'){
+                    $("#login_modal").modal('show');
+                    captcha_reload()
+                }
+                if(response.success=='Invalid Captcha'){
+                    $("#captcha_modal").modal('show');
+                    captcha_reload()
+                }
+                if(response.success=='Invalid Password'){
+                    $("#password").modal('show');
+                    captcha_reload()
+                }
+            },
+            error: function(response){
+                captcha_reload()
+            },
+        });
+    });
+                 
+                 
                  function captcha_reload() {
             $.ajax({
                 type: 'GET',

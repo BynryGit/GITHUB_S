@@ -6,7 +6,7 @@
 {% load staticfiles %}
     <head>
     <meta charset="utf-8"/>
-    <title>City Hoopla | Add User </title>
+    <title>CityHoopla | Add User </title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
     <meta content="" name="description"/>
@@ -590,6 +590,10 @@ hr {
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-default">
+                        <li>
+                                <a href="/edit-profile/?user_id={{request.session.login_user}}">
+                                    <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
+                            </li>
                             <li>
                                 <a href="/log-out/">
                                     <i class="icon-key"></i> Log Out </a>
@@ -713,8 +717,27 @@ hr {
 		                                                             <input  onkeypress="return validateIntKeyPress(this,event);"  value="{{phone_no}}" id="phone_no" maxlength="10" class="form-control"   />
 	                                                          		<label class="error" style="color:red; display:none;"></label>                                                          	
 	                                                          	</div>
-                                                          		
-                                                          	</div>
+	                                                          	
+	                                                          <div class="col-xs-6">
+
+ 																				 		<label  class="control-label"> <br> City
+	                                                                <span class="required"> * </span>
+	                                                               </label>
+	                                                           
+	                                                                <select   name="city" id="city" class="form-control sel2" required="">
+															                     	 <option value="">Select City</option>
+															                     	{% for city  in city_places_list %}
+																	                		 <option value="{{city.city_place_id}}">
+						                                                           {{city.city}}
+						                                                       </option>
+						                                                       {% endfor %}
+																																                       	
+															                     </select>
+															                     <label class="error" style="color:red; display:none;"></label>
+
+ 																				  </div>
+ 																			</div>	  
+
                                                           	
  																				 <div class="row">
  																				 <div class="col-xs-6" >
@@ -739,7 +762,7 @@ hr {
                                                        	<div class="col-xs-12 text-right">
 
                                                        		<button   type="button" class="btn btn-outline grey_color " onclick="location.href = '/user-list/';" >Cancel</button>
-                                                        	<button    type="button"  id="save-continue"  class="btn btn-outline done_btn" >Save </button>
+                                                        	   <button    type="button"  id="save-continue"  class="btn btn-outline done_btn" >Save </button>
                                                        	</div>
                                                         </div>
                                                         
@@ -902,14 +925,19 @@ hr {
         $("#administration_icon").addClass("icon-active");
         $("#administration_active").css("display","block");
         $("#admin_nav").addClass("active");
-
+        
+        
+        $(document).ready(function(){
 $(".sel2").select2({
             width: '100%'
         })
+  });
+
+
         
 function validateData(){
 
-	if(checkFirst_name("#First_name")&checkLast_name("#Last_name")&checkNumber("#phone_no")&checkEmail("#Username")&checkrole("#role")&checkpassword("#password"))
+	if(checkFirst_name("#First_name")&checkLast_name("#Last_name")&checkNumber("#phone_no")&checkEmail("#Username")&checkrole("#role")&checkcity("#city")&checkpassword("#password"))
 	{
 		return true;	
 	}
@@ -939,6 +967,7 @@ $("#save-continue").click(function(event)  {
 		formData.append("phone_no",$('#phone_no').val());    
 		formData.append("Username",$('#Username').val());    
 		formData.append("role",$('#role').val()); 
+		formData.append("city",$('#city').val()); 
 		formData.append("password",$('#password').val());
 	
   			$.ajax({
@@ -1048,6 +1077,22 @@ function checkrole(role){
    }
 }
 
+
+function checkcity(city){
+
+
+
+  if($(city).val()!='' && $(city).val()!=null)
+   {
+
+    $(city).parent().children('.error').css("display", "none");
+   return true;
+   }else{
+    $(city).parent().children('.error').css("display", "block");
+    $(city).parent().children('.error').text("Please select City");
+   return false; 
+   }
+}
 
 function checkpassword(password){
  passw = $(password).val()

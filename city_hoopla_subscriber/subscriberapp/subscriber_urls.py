@@ -61,4 +61,7 @@ subscriber_urlpattern = patterns('',
      url(r'^delete-school/', 'subscriberapp.views.delete_school',name='delete_school'),
      url(r'^delete-hospital/', 'subscriberapp.views.delete_hospital',name='delete_hospital'),     
      url(r'^update-subscription-plan/', 'subscriberapp.views.update_subscription_plan', name='update_subscription_plan'),
+     #select new subscriber
+     url(r'^select-subscriber/', 'subscriberapp.views.select_subscriber', name='select_subscriber'),
+
      ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

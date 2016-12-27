@@ -50,6 +50,23 @@ flag = (
     ('false','false'),
 )
 
+like_dislike = (
+    ('like', 'like'),
+    ('dislike', 'dislike'),
+)
+
+post_status = (
+    ('unread', 'unread'),
+    ('appropriate', 'appropriate'),
+    ('inappropriate', 'inappropriate'),
+    ('deleted','deleted'),
+)
+
+post_mood = (
+    ('positive', 'positive'),
+    ('negative', 'negative'),
+)
+
 app_user = (
     ('register', 'register'),
     ('guest', 'guest'),
@@ -63,11 +80,19 @@ city_star_status = (
     ('deactivated', 'deactivated'),
 )
 
+
+comment_status = (
+    ('read','read'),
+    ('unread','unread'),   
+)
+
+
 USER_IMAGES_PATH ='images/user_images/' 
 COMPANY_LOGO_PATH ='images/user_images/' 
 CATEGORY_PATH ='images/user_images/'
 STAR_IMAGES_PATH ='images/user_images/'
 ADVERT_IMAGES_PATH ='images/advert_images/'
+CITYLIFE_FILE_PATH = 'images/citylife_files/'
 
 class Operator(User):
     operator_id                        =       models.AutoField(primary_key=True, editable=False)
@@ -263,6 +288,7 @@ class UserProfile(User):
     user_created_by                =       models.CharField(max_length=100,null=True,blank=True)
     user_updated_by                =       models.CharField(max_length=100,null=True,blank= True)
     user_updated_date              =       models.DateTimeField(null=True,blank=True)
+    city_place_id                  =       models.ForeignKey(City_Place, blank=True, null=True)
 
 
     def __unicode__(self):
@@ -354,7 +380,7 @@ class CategoryLevel5(models.Model):
 class PhoneCategory(models.Model):
     phone_category_id                 =       models.AutoField(primary_key=True, editable=False)
     phone_category_name               =       models.CharField(max_length=15)
-    # phone_category_status             =       models.CharField(max_length=15,null=True,blank=True,default="1",choices=status)
+    phone_category_status             =       models.CharField(max_length=15,null=True,blank=True,default="1",choices=status)
     phone_category_created_date       =       models.DateTimeField(null=True,blank=True)
     phone_category_created_by         =       models.CharField(max_length=30,null=True,blank=True)
     phone_category_updated_by         =       models.CharField(max_length=30,null=True,blank= True)
@@ -397,6 +423,7 @@ class Supplier(User):
     sales_person_contact_number        =       models.CharField(blank=True,null=True,max_length=100,default=None)
     sales_person_email                 =       models.CharField(blank=True,null=True,max_length=100,default=None)
     title                               =       models.CharField(blank=True,null=True,max_length=50,default=None)
+    parent_supplier_id = models.ForeignKey('self', blank=True, null=True)
 
 
     def __unicode__(self):
@@ -459,7 +486,7 @@ class Advert(models.Model):
     other_amenity                    = models.CharField(max_length=500,blank=True,null=True)
     title                       =       models.CharField(blank=True,null=True,max_length=50,default=None)
     discount_start_date         =  models.CharField(blank=True,null=True,max_length=50,default=None)
-    discount_end_date         =  models.CharField(blank=True,null=True,max_length=50,default=None)    
+    discount_end_date         =  models.CharField(blank=True,null=True,max_length=50,default=None)
     
     def __unicode__(self):
         return unicode(self.advert_id)
@@ -721,7 +748,6 @@ class Business(models.Model):
     def __unicode__(self):
         return unicode(self.business_id)
 
-
 class CategorywiseAmenity(models.Model):
     categorywise_amenity_id = models.AutoField(primary_key=True, editable=False)
     amenity    = models.CharField(max_length=50, blank=True, null=True)
@@ -742,9 +768,9 @@ class CategorywiseAmenity(models.Model):
 
 
 class Amenities(models.Model):
-    amenity_id                  = models.AutoField(primary_key=True, editable=False)
-    advert_id                   = models.ForeignKey(Advert,blank=True,null=True)
-    categorywise_amenity_id     = models.ForeignKey(CategorywiseAmenity,blank=True,null=True)
+    amenity_id                 = models.AutoField(primary_key=True, editable=False)
+    advert_id                  = models.ForeignKey(Advert,blank=True,null=True)
+    categorywise_amenity_id    = models.ForeignKey(CategorywiseAmenity,blank=True,null=True)
     creation_date               = models.DateTimeField(null=True,blank=True)
     created_by                  = models.CharField(max_length=500,null=True,blank=True)
     updated_by                  = models.CharField(max_length=500,null=True,blank= True)
@@ -814,7 +840,7 @@ class PaymentDetail(models.Model):
     payment_created_by         =       models.CharField(max_length=30,null=True,blank=True)
     payment_updated_by         =       models.CharField(max_length=30,null=True,blank= True)
     payment_updated_date       =       models.DateTimeField(null=True,blank=True)
-    note = models.CharField(max_length=30,null=True,blank=True)
+    note = models.CharField(max_length=5000,null=True,blank=True)
     business_id                      =       models.ForeignKey(Business,blank=True,null=True)
 
     def __unicode__(self):
@@ -929,7 +955,10 @@ class SellTicket(models.Model):
     start_date = models.CharField(null=True, max_length=50, blank=True)
     start_time = models.CharField(max_length=50, null=True, blank=True)
     select_activation_date = models.CharField(max_length=50, null=True, blank=True)
+    #select_deactivation_date = models.CharField(max_length=50, null=True, blank=True)
     other_comments = models.CharField(max_length=5000, null=True, blank=True)
+    city_id = models.ForeignKey(City_Place, blank=True,null=True)
+    country_id = models.ForeignKey(Country, blank=True,null=True)
     contact_number = models.CharField(max_length=20, null=True, blank=True)
     image_one = models.ImageField("Image", upload_to=USER_IMAGES_PATH, max_length=500, default=None)
     image_two = models.ImageField("Image", upload_to=USER_IMAGES_PATH, max_length=500, default=None)
@@ -937,6 +966,9 @@ class SellTicket(models.Model):
     image_four = models.ImageField("Image", upload_to=USER_IMAGES_PATH, max_length=500, default=None)
     created_date = models.DateTimeField(default=datetime.now, null=True, blank=True)
     sellticket_views = models.CharField(max_length=10, null=True, blank=True)
+    status = models.CharField(max_length=15, null=True, blank=True, default="unread", choices=post_status)
+    updated_date = models.DateTimeField(null=True, blank=True)
+    deleted_date = models.DateTimeField(null=True, blank=True)    
 
     def __unicode__(self):
         return unicode(self.sellticket_id)
@@ -948,8 +980,11 @@ class SellTicketDetails(models.Model):
     no_of_tickets = models.CharField(max_length=50, null=True, blank=True)
     original_price = models.CharField(max_length=50, null=True, blank=True)
     asking_price = models.CharField(max_length=50, null=True, blank=True)
+    status = models.CharField(max_length=150, null=True, default="1", choices=status)
     created_date = models.DateTimeField(default=datetime.now, null=True, blank=True)
-
+    updated_date = models.DateTimeField(null=True, blank=True)
+    deleted_date = models.DateTimeField(null=True, blank=True)
+    
     def __unicode__(self):
         return unicode(self.sell_ticket_detail_id)
 
@@ -984,6 +1019,14 @@ class SellTicketReview(models.Model):
     def __unicode__(self):
         return unicode(self.id)
 
+class SellTicketView(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    user_id = models.ForeignKey(ConsumerProfile, blank=True, null=True)
+    sellticket_id = models.ForeignKey(SellTicket, blank=True, null=True)
+    creation_date = models.DateTimeField(null=True, blank=True)
+
+    def __unicode__(self):
+        return unicode(self.id)
 
 class SellTicketShares(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
@@ -1119,44 +1162,127 @@ class StarImage(models.Model):
 #################  ......CITY LIFE...... ######################
 
 class citylife_category(models.Model):
-    category_id         = models.AutoField(primary_key=True, editable=False)
-    category_name       = models.CharField(max_length=50,blank=True,null=True) 
-    city_id             = models.ForeignKey(City_Place,blank=True,null=True)
-    creation_date       = models.DateTimeField(null=True,blank=True)
-    creation_by         = models.CharField(max_length=500,null=True,blank=True)
+    category_id = models.AutoField(primary_key=True, editable=False)
+    category_name = models.CharField(max_length=50, blank=True, null=True)
+    city_id = models.ForeignKey(City_Place, blank=True, null=True)
+    creation_date = models.DateTimeField(null=True, blank=True)
+    creation_by = models.CharField(max_length=500, null=True, blank=True)
+    status = models.CharField(max_length=15, null=True, blank=True, default="1", choices=status)
 
     def __unicode__(self):
         return unicode(self.category_id)
 
-class PostFileDetails(models.Model):
-    post_file_id        = models.AutoField(primary_key=True, editable=False)
-    title               = models.CharField(max_length=50,blank=True,null=True) 
-    description         = models.CharField(max_length=50,blank=True,null=True) 
-    file                = models.FileField(upload_to=USER_IMAGES_PATH, max_length=500, null=True, blank=True)
-    citylife_category   = models.ForeignKey(citylife_category,blank=True)
-    memory_used         = models.CharField(max_length=50,blank=True,null=True) 
-    unread_post         = models.CharField(max_length=50,blank=True,null=True)
-    likes               = models.CharField(max_length=50,blank=True,null=True) 
-    views               = models.CharField(max_length=50,blank=True,null=True) 
-    shares              = models.CharField(max_length=50,blank=True,null=True) 
-    favourites          = models.CharField(max_length=50,blank=True,null=True) 
-    reviews             = models.CharField(max_length=50,blank=True,null=True) 
-    creation_date       = models.DateTimeField(null=True,blank=True)
-    creation_by         = models.CharField(max_length=500,null=True,blank=True)
+class PostDetails(models.Model):
+    post_id = models.AutoField(primary_key=True, editable=False)
+    citylife_category = models.ForeignKey(citylife_category, blank=True)
+    title = models.CharField(max_length=50, blank=True, null=True)
+    description = models.CharField(max_length=500, blank=True, null=True)
+    user_id = models.ForeignKey(ConsumerProfile, blank=True, null=True)
+    area = models.CharField(max_length=50, blank=True, null=True)    
+    mood = models.CharField(default="positive", max_length=100, null=True, blank=True, choices=post_mood)
+    #mood = models.CharField(max_length=100, blank=True, null=True)
+    share = models.CharField(default="0", max_length=100, null=True, blank=True)
+    city_id = models.ForeignKey(City_Place, blank=True)
+    country_id = models.ForeignKey(Country, blank=True)
+    status = models.CharField(max_length=15, null=True, blank=True, default="unread", choices=post_status)
+    post_status = models.CharField(max_length=150, null=True, default="unread", choices=comment_status)
+    creation_date = models.DateTimeField(null=True, blank=True)
+    creation_by = models.CharField(max_length=500, null=True, blank=True)
+    updated_by = models.CharField(max_length=500, null=True, blank=True)
+    updation_date = models.DateTimeField(null=True, blank=True)
+    deleted_date = models.DateTimeField(null=True, blank=True)    
+    
+    def __unicode__(self):
+        return unicode(self.post_id)
+
+class PostFile(models.Model):
+    post_file_id = models.AutoField(primary_key=True, editable=False)
+    post_id = models.ForeignKey(PostDetails, blank=True, null=True)
+    post_file = models.FileField(upload_to=CITYLIFE_FILE_PATH, max_length=500, null=True, blank=True)
+    file_width = models.CharField(max_length=500, null=True, blank=True)
+    file_height = models.CharField(max_length=500, null=True, blank=True)
+    creation_date = models.DateTimeField(null=True, blank=True)
+    created_by = models.CharField(max_length=500, null=True, blank=True)
+    updated_by = models.CharField(max_length=500, null=True, blank=True)
+    updation_date = models.DateTimeField(null=True, blank=True)
 
     def __unicode__(self):
         return unicode(self.post_file_id)
 
-class PostDetails(models.Model):
-    post_id             = models.AutoField(primary_key=True, editable=False)
-    post_file_id        = models.ForeignKey(PostFileDetails, blank=True, null=True)
-    username            = models.CharField(max_length=50,blank=True,null=True) 
-    posting_date        = models.DateTimeField(null=True,blank=True)
-    area                = models.CharField(max_length=50,blank=True,null=True) 
-    city_id             = models.ForeignKey(City_Place,blank=True)
-    country_id          = models.ForeignKey(Country,blank=True)
-    creation_date       = models.DateTimeField(null=True,blank=True)
-    creation_by         = models.CharField(max_length=500,null=True,blank=True)
+
+class PostMood(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    user_id = models.ForeignKey(ConsumerProfile, blank=True, null=True)
+    post_id = models.ForeignKey(PostDetails, blank=True, null=True)
+    status = models.CharField(default="like", max_length=100, null=True, blank=True, choices=like_dislike)
+    creation_date = models.DateTimeField(null=True, blank=True)
 
     def __unicode__(self):
-        return unicode(self.post_id)
+        return unicode(self.id)
+
+
+class PostComments(models.Model):
+    comment_id = models.AutoField(primary_key=True, editable=False)
+    user_id = models.ForeignKey(ConsumerProfile, blank=True, null=True)
+    post_id = models.ForeignKey(PostDetails, blank=True, null=True)
+    comment = models.CharField(max_length=500, null=True, blank=True)
+    status = models.CharField(max_length=150, null=True, default="1", choices=status)
+    comment_status = models.CharField(max_length=150, null=True, default="unread", choices=comment_status)
+    creation_date = models.DateTimeField(null=True, blank=True)
+    updated_date = models.DateTimeField(null=True, blank=True)
+    deleted_date = models.DateTimeField(null=True, blank=True)
+
+    def __unicode__(self):
+        return unicode(self.comment_id)
+
+class PostReplys(models.Model):
+    reply_id = models.AutoField(primary_key=True, editable=False)
+    user_id = models.ForeignKey(ConsumerProfile, blank=True, null=True)
+    comment_id = models.ForeignKey(PostComments, blank=True, null=True)
+    reply = models.CharField(max_length=500, null=True, blank=True)
+    status = models.CharField(max_length=150, null=True, default="1", choices=status)
+    creation_date = models.DateTimeField(null=True, blank=True)
+    updated_date = models.DateTimeField(null=True, blank=True)
+    deleted_date = models.DateTimeField(null=True, blank=True)
+
+    def __unicode__(self):
+        return unicode(self.reply_id)
+
+class LikeDislikeComment(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    user_id = models.ForeignKey(ConsumerProfile, blank=True, null=True)
+    comment_id = models.ForeignKey(PostComments, blank=True, null=True)
+    status = models.CharField(default="like", max_length=100, null=True, blank=True, choices=like_dislike)
+    creation_date = models.DateTimeField(null=True, blank=True)
+
+    def __unicode__(self):
+        return unicode(self.id)
+
+class LikeDislikeReply(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    user_id = models.ForeignKey(ConsumerProfile, blank=True, null=True)
+    reply_id = models.ForeignKey(PostReplys, blank=True, null=True)
+    status = models.CharField(default="like", max_length=100, null=True, blank=True, choices=like_dislike)
+    creation_date = models.DateTimeField(null=True, blank=True)
+
+    def __unicode__(self):
+        return unicode(self.id)
+
+class PostView(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    user_id = models.ForeignKey(ConsumerProfile, blank=True, null=True)
+    post_id = models.ForeignKey(PostDetails, blank=True, null=True)
+    creation_date = models.DateTimeField(null=True, blank=True)
+
+    def __unicode__(self):
+        return unicode(self.id)
+
+
+class PostFavourite(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    user_id = models.ForeignKey(ConsumerProfile, blank=True, null=True)
+    post_id = models.ForeignKey(PostDetails, blank=True, null=True)
+    creation_date = models.DateTimeField(null=True, blank=True)
+
+    def __unicode__(self):
+        return unicode(self.id)

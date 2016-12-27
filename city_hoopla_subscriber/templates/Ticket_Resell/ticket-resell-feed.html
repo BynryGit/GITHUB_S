@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+
+
+
+<html lang="en">
+{% load staticfiles %}
+<head>
+        <meta charset="utf-8" />
+        <title>CityHoopla | Ticket Resell</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <meta content="" name="description" />
+        <meta content="" name="author" />
+
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+        <link href="{% static 'assets/global/plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'assets/global/plugins/simple-line-icons/simple-line-icons.min.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'assets/global/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'assets/global/plugins/uniform/css/uniform.default.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css' %}" rel="stylesheet" type="text/css" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.css" rel="stylesheet" type="text/css" />
+        <link href="{% static 'assets/global/plugins/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'assets/global/plugins/select2/css/select2-bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+        <!-- <link href="{% static 'assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css' %}" rel="stylesheet" type="text/css" /> -->
+        <link href="{% static 'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'assets/global/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'assets/global/css/components.min.css' %}" rel="stylesheet" id="style_components" type="text/css" />
+        <link href="{% static 'assets/global/css/plugins.min.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'assets/layouts/layout2/css/layout.min.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'assets/layouts/layout2/css/themes/blue.min.css' %}" rel="stylesheet" type="text/css" id="style_color" />
+        <link href="{% static 'assets/layouts/layout2/css/custom.min.css' %}" rel="stylesheet" type="text/css" />
+
+        <link href="{% static 'vendor/bootstrap-fileinput/jasny-bootstrap.min.css' %}" rel="stylesheet" media="screen">
+
+		<!-- <link href="{% static 'ninja-slider.css' %}" rel="stylesheet" type="text/css" /> -->
+
+           <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2016.2.504/styles/kendo.common-material.min.css" />
+    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2016.2.504/styles/kendo.material.min.css" />
+
+         <link href="{% static 'assets/pages/css/dropzone.css' %}" rel="stylesheet" type="text/css" />
+         <link href="{% static 'assets/custom/css/map.css' %}" rel="stylesheet" type="text/css" />
+          <link href="{% static 'assets/bootstrap-tagsinput.css' %}" rel="stylesheet" type="text/css" />
+          <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
+        <!-- END THEME LAYOUT STYLES -->
+</head>
+    <!-- END HEAD -->
+    <style type="text/css">
+
+.has-success .control-label{
+	color : #333;
+}
+
+.has-success .form-control {
+	border: 1px solid #C2CAD8;
+}
+
+		div.dataTables_wrapper div.dataTables_info {
+    padding-top: 8px;
+    white-space: nowrap;
+    display: none;
+}
+div.dataTables_wrapper div.dataTables_length label {
+    font-weight: normal;
+    text-align: left;
+    white-space: nowrap;
+    display: none;
+}
+
+div.dataTables_filter label {
+    font-weight: normal;
+    white-space: nowrap;
+    text-align: left;
+    display: none;
+}
+
+.border_s{
+
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+.fa-lg {
+    font-size: 2.333333em;
+    line-height: .75em;
+    vertical-align: -15%;
+}
+
+div.checker span {
+    display: -moz-inline-box;
+    display: inline-block;
+    zoom: 1;
+    text-align: center;
+    background-position: 0 -260px;
+
+}
+
+#processing{
+    height: 100vh;
+    position: fixed;
+    width: 100%;
+    margin: 0px auto;
+    z-index: 9999;
+    background-color: #FFF;
+    background-image: none;
+    background-attachment: scroll;
+    background-position: 0% 0%;
+    background-clip: border-box;
+    background-origin: padding-box;
+    background-repeat: repeat;
+    background-size: inherit;
+    opacity: 0.5;
+}
+
+#loading{
+    width: 36%;
+    height: 22px;
+    position: absolute;
+    top: 26%;
+    left: 32%;
+    margin: -28px 0px 0px -25px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: #000;
+}
+
+.page-header.navbar .page-logo .logo-default {
+    margin: 2px 0 0;
+    width: 105px;
+    background: #f3f2f2;
+}
+
+.page-header.navbar .page-logo {
+    background: #f3f2f2;
+}
+
+.page-header.navbar .page-logo {
+    float: left;
+    display: block;
+    width: 195px;
+    height: 68px;
+    padding-left: 0px;
+    padding-right: 20px;
+}
+
+
+@media (max-width: 767px){
+.page-header.navbar {
+     background-color: #0d67e6;
+  background-image: url(images/linear_bg_1.png);
+  background-repeat: repeat-y;
+
+  /* Safari 4-5, Chrome 1-9 */
+  background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a));
+
+  /* Safari 5.1, Chrome 10+ */
+  background: -webkit-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* Firefox 3.6+ */
+  background: -moz-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* IE 10 */
+  background: -ms-linear-gradient(left, #0d67e6, #11ca9a);
+
+  /* Opera 11.10+ */
+  background: -o-linear-gradient(left, #0d67e6, #11ca9a);
+}
+}
+
+.form-height{
+height: 65px;
+}
+
+.user-image img {
+    max-width: 100%;
+}
+
+.fileinput .thumbnail>img {
+    height: 178px !important;
+}
+
+.fileinput-preview.thumbnail {
+    max-width: 278px;
+}
+
+.btn-azure:hover {
+    background-color: #0095C8;
+    border-color: #0095C8;
+    color: #ffffff;
+}
+
+.btn-file {
+    overflow: hidden;
+    position: relative;
+    vertical-align: middle;
+}
+
+.user-image .user-image-buttons {
+    position: static;
+
+    <!--top: 20%;-->
+    <!--left: 37%;-->
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+.btn-red:hover {
+    background-color: #da4f4a !important;
+    border-color: #da4f4a;
+    color: #ffffff;
+    display: none;
+}
+
+.btn-red{
+    display: none;
+}
+
+.btn-sm, .btn-group-sm>.btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+
+.btn {
+    transition: all 0.3s ease 0s !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    position: relative;
+}
+
+.fileinput .btn {
+    vertical-align: middle;
+}
+
+.bootstrap-tagsinput {
+    line-height: 35px;
+    width: 980px;
+}
+
+.error{
+    font-family: 'Roboto Bold', 'Roboto';
+    font-weight: 400;
+    font-style: normal;
+    font-size: 12px;
+}
+
+.form-wizard .steps > li.active > a.step .desc {
+    color: #2F353B;
+    font-weight: 700;
+    font-family: 'Roboto Bold', 'Roboto';
+}
+
+.portlet.light {
+    <!--padding: 0px 0px 4px;-->
+    <!--background-color: #eef1f5;-->
+}
+
+.form-wizard .steps, .form-wizard .steps > li > a.step {
+    <!--background-color: #eef1f5;-->
+    background-image: none;
+    border: 0;
+    box-shadow: none;
+    filter: none;
+}
+
+.dropzone .dz-preview, .dropzone-previews .dz-preview{
+    margin: 3px !important;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #6B6B6B;
+    border-bottom: 0;
+}
+
+
+#tab2 {
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.map-wrapper {
+    float: left;
+    margin: 0px 0px 0 0px;
+}
+
+#map {
+    border: 1px solid #DDD;
+    width: 21em;
+    overflow: hidden;
+    height: 20em;
+    margin: 10px 0 10px 0;
+    -webkit-box-shadow: #AAA 0px 0px 15px;
+}
+
+#my-awesome-dropzone-3{
+    border: 3px dashed black !important;
+    min-height: 224px !important;
+    background: #ffffff;
+}
+
+#my-active-dropzone{
+    border: 3px dashed black !important;
+    min-height: 224px !important;
+    background: #ffffff;
+}
+
+.dropzone .dz-preview .dz-details img, .dropzone-previews .dz-preview .dz-details img {
+    position: absolute;
+    top: 0px;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.dropzone .dz-preview, .dropzone-previews .dz-preview {
+    background: rgba(255,255,255,0.8);
+    position: relative;
+    display: inline-block;
+    margin: 4px;
+    vertical-align: top;
+    border: 1px solid #acacac;
+    padding: 6px 6px 6px 6px;
+}
+
+.sel2{
+    width: 100%;
+}
+
+.tab-active{
+    background: rgb(13, 103, 230) none repeat scroll 0% 0% !important;
+    color: rgb(16, 245, 182) !important;
+}
+
+.sel2{
+    width: 100%;
+}
+
+.div-border-top{
+    border: 1px solid #cccccc;
+    border-bottom: none;
+}
+
+.div-border-bottom{
+    border: 1px solid #cccccc;
+    border-top: none;
+}
+
+.div-border-bottom1{
+    border: 1px solid #000;
+    
+   
+}
+
+
+.div-border-left-right{
+    border: 1px solid #cccccc;
+    border-top: none;
+    border-bottom: none;
+}
+
+.div-border{
+    border: 1px solid #cccccc;
+}
+
+.div-color{
+    background-color: rgb(243, 242, 242);
+    //border: 1px solid rgb(204, 204, 204) !important;
+    /*border-radius: 10px !important;
+    margin-right: 0.5%;
+    margin-left: 0.5%;
+    margin-bottom: 1%;*/
+}
+
+
+@media (min-width:992px) {
+    .col-lg-3 {
+        width:24% !important;
+    }
+    /*.col-xs-6 {
+        width: 46% !important;
+    }*/
+}
+
+
+.form-control {
+    border: 1px solid #c0c0c0;
+}
+
+.brad-crum-1{
+    font-size:16px;
+    color: #3eb199;
+}
+
+.brad-crum-2{
+    font-size:16px;
+    color: #00448b;
+}
+
+.brad-crum-3{
+    font-size:16px;
+    color: #00448b;
+    font-weight:700;
+}
+
+.page-content-wrapper {
+    float: left;
+    width: 100%;
+
+
+    background-size: 16% auto !important;
+    -webkit-background-size: 20% auto !important;
+    -ms-background-size: 16% auto !important;
+    -o-background-size: 16% auto !important;
+
+
+    background-color: #0d67e6;
+    background-image: url(images/linear_bg_1.png);
+    background-repeat: repeat-y;
+    font-weight:500;
+
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a));
+
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(left, #0d67e6, #11ca9a);
+
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(left, #0d67e6, #11ca9a);
+
+    /* IE 10 */
+    background: -ms-linear-gradient(left, #0d67e6, #11ca9a);
+
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(left, #0d67e6, #11ca9a);
+}
+
+.form-wizard .steps > li > a.step .number {
+    background-color: #e2e1e1 !important;
+    color: #fff;
+    font-weight: 700;
+}
+
+.form-wizard .steps > li.active > a.step .number {
+    background-color: #00448b !important;
+    color: #fff;
+    font-weight: 700;
+}
+
+.form-wizard .steps > li > a.step .done {
+    color: #fff;
+    font-weight: 700;
+    background-color: #0d67e6;
+    background-image: url(images/linear_bg_1.png);
+    background-repeat: repeat-y;
+
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* IE 10 */
+    background: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+}
+
+
+.grey_color{
+    border: 1px solid rgb(72, 72, 72);
+    color: rgb(255, 255, 255);
+    background: rgb(72, 72, 72) none repeat scroll 0% 0%;
+    border-radius: 20px !important;
+}
+
+.done_btn{
+    color: rgb(255, 255, 255);
+    border-radius: 20px !important;
+    background-color: #0d67e6;
+    background-image: url(images/linear_bg_1.png);
+    background-repeat: repeat-y;
+
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+    background: -webkit-gradient(linear, left top, right top, from(#0d67e6), to(#11ca9a)) !important;
+
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -webkit-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -moz-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* IE 10 */
+    background: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -ms-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+    border: -o-linear-gradient(left, #0d67e6, #11ca9a) !important;
+
+}
+
+.page-header.navbar .menu-toggler {
+    background-image: url(/static/assets/layouts/layout2/img/sidebar_toggler_icon_blue.png);
+}
+
+.page-header-inner{
+    background: #f3f2f2;
+}
+
+.font-14{
+    font-size:14px;
+}
+
+.font-12{
+    font-size:12px;
+}
+
+.font-16{
+    font-size:16px;
+}
+
+.font-15{
+    font-size:15px;
+}
+
+.font-18{
+    font-size:18px;
+}
+
+.font-green{
+    color: #3eb199 !important;
+}
+
+.font-blue{
+    color: #00448b !important;
+}
+
+.font-bold{
+    font-weight:700;
+}
+
+.font-regular{
+    font-weight:500;
+}
+
+.ellipsify {
+   font-size: 13px;
+	line-height: 18px;
+	height: 80px;
+	width: 305px;
+	overflow: hidden;
+	position: relative;
+	background: #F3F2F2 none repeat scroll 0% 0%;
+}
+
+.custom-box{
+	width: 240px;
+	border-width: 0px 0px 0px;
+	border-style: solid;
+	border-color: #FFF;
+	-moz-border-top-colors: none;
+	-moz-border-right-colors: none;
+	-moz-border-bottom-colors: none;
+	-moz-border-left-colors: none;
+	border-image: none;
+	margin: 16px 13px 13px;
+	background-color: #FFF;
+	margin-left: 25px; 
+	margin-right: 0px; 
+	padding-left: 0px; 
+	padding-right: 0px;
+	height: 220px;
+}
+
+.dim
+{
+
+    filter: alpha(opacity=75); /* internet explorer */
+    -khtml-opacity: 0.75;      /* khtml, old safari */
+    -moz-opacity: 0.75;       /* mozilla, netscape */
+    opacity: 0.75;           /* fx, safari, opera */
+    background-color: #5F5D5D;
+    -webkit-user-select: none;	-khtml-user-select: none;	-moz-user-select: none;	-ms-user-select: none;	-o-user-select: none;	user-select: none;
+}
+
+.dim .msg {
+   display: inline-block;
+	position: absolute;
+	top: 125px;
+	bottom: 0px;
+	left: 50px;
+	right: 0px;
+	margin: auto;
+	font-size: 20px;
+	z-index: 9999999;
+	color: rgb(254, 254, 254);
+	font-weight: 600;
+}
+
+.dim .dmsg {
+   display: inline-block;
+	position: absolute;
+	top: 125px;
+	bottom: 0px;
+	left: 100px;
+	right: 0px;
+	margin: auto;
+	font-size: 20px;
+	z-index: 9999999;
+	color: rgb(254, 254, 254);
+	font-weight: 600;
+}
+
+.dim .msg1 {
+   display: inline-block;
+	position: absolute;
+	left: 57px;
+	right: 0px;
+	margin: auto;
+	font-size: 14px;
+	z-index: 9999999;
+	color: rgb(254, 254, 254);
+	font-weight: 600;
+	margin-top: 25px;
+}
+
+.dim .msg2 {
+   display: inline-block;
+	position: absolute;	
+	left: 25px;
+	right: 0px;
+	margin: auto;
+	font-size: 14px;
+	z-index: 9999999;
+	color: rgb(254, 254, 254);
+	font-weight: 600;
+	margin-top: 25px;
+}
+
+.custom_slider{
+	width:618px; 
+	background-color:white; 
+	height:139px; 
+	overflow:auto;
+	overflow:scroll; 
+	overflow-x: scroll; 
+	overflow-y: hidden;
+}
+
+.custom_slider1{
+	width:618px; 	
+	height:139px; 
+	overflow:auto;
+	overflow:scroll; 
+	overflow-x: scroll; 
+	overflow-y: hidden;
+	
+}
+
+
+.bl{
+	background-color: #5F5D5D !important;
+}
+
+.op{
+	opacity: 0.4;
+}
+
+.custom_blur{
+	background-color: #5F5D5D !important;
+	padding-top: 9px; 
+	padding-left: 0px;
+}
+
+<!-- -----------------------slider--------------------------------- -->
+
+.slide-wrapper {
+    position: relative
+}
+
+
+@media (min-width: 768px) { 
+    .carousel-caption {
+        text-align: left;
+        padding-right: 300px;
+    }
+    
+}
+
+/* MISC */
+#homepage-feature .item {
+    overflow: hidden;
+    height: 275px;
+    background-color: transparent;
+    background-size: cover;
+}
+#homepage-feature > .carousel-control {
+    width: 30px;
+    font-size: 40px;
+    color: #fff;
+    text-shadow: none;
+    filter: none;
+    opacity: 1;
+}
+#homepage-feature > .carousel-control span {
+    position: absolute;
+    top: 50%;
+    margin-top: -30px;
+    width: 100%;
+    text-align: center;
+    display: block;
+}
+
+.carousel-control.right1 {
+    left: auto;
+    right: 0px;
+    background-repeat: repeat-x;
+}
+
+.carousel-control.left1 {
+    background-repeat: repeat-x;
+}
+
+</style>
+
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
+<div id="processing" style="display:none;">
+    <div id="loading">
+        <img src="{% static 'assets/loading-bars.gif' %}" style="height : 100px;">
+    </div>
+</div>
+<!-- BEGIN HEADER -->
+<div class="page-header navbar navbar-fixed-top">
+    <div class="page-header-inner ">
+        <div class="page-logo">
+            <a href="index.html">
+                <img src="{% static 'assets/layouts/layout2/img/City_Hoopla_Logo.png' %}" alt="logo"
+                     class="logo-default"/> </a>
+            <div class="menu-toggler sidebar-toggler">
+            </div>
+        </div>
+        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse"
+           data-target=".navbar-collapse"> </a>
+        <div class="page-top">
+         
+            <div class="top-menu" style="display:inline-block;">
+                <ul class="nav navbar-nav pull-right">
+                    <li class="dropdown dropdown-user">
+                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
+                           data-close-others="true">
+                            <span class="username username-hide-on-mobile"> {{ username }} </span>
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-default">
+                        	<li>
+                                <a href="/edit-profile/?user_id={{request.session.login_user}}">
+                                    <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
+                            </li>
+
+                            <li>
+                                <a href="/log-out/">
+                                   <i class="icon-key" aria-hidden="true"></i> Log Out </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="page-container">
+	
+	<div class="page-sidebar-wrapper">
+                <div class="page-sidebar navbar-collapse collapse">
+                    {% include 'Admin/side-panel.html' %}
+                </div>
+            </div>
+
+
+
+    <div class="page-content-wrapper">
+        <div class="page-content">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="portlet light  ">
+                        <div class="portlet-body form">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                <div class="col-md-6" style="margin-top: 3px;">
+							                	<br>
+												<a href="/ticket-resell/ticket-resell-home/" class="brad-crum-1">Ticket Resell</a>  <i class="fa fa-angle-right"></i>  <span class="brad-crum-2">{{city_name}} Feed ({{total_ticket_list_count}})</span>  </h4>			
+											</div>    
+          
+       <input type="hidden" id="cid" value="{{city_id}}"> 
+         <div class="portlet-body">
+             <div class="portlet light " id="form_wizard_1">
+                 <div class="portlet-body form">
+                        
+                         <div class="form-wizard">
+                             <div class="form-body">
+                                                        
+			<div class="row" >
+				<div class="col-md-3 input-group " style="display: inline-block;float: left;margin-top: 28px;" >
+	               <span class="input-group-btn" style="display: inline-block;float: left;">
+	                  <span style="border-right: none !important;" class="btn btn btn-default">
+	                      <span class="fa fa-search"></span>
+	                  </span>
+	              </span>
+			        <input style="border-left: medium none !important;padding-left: 0px;width: 85%;
+    									display: inline-block;float: right;border-left: none !important; padding-left: 0px ;"
+			                 type="text" class="form-control " id="txtSearch" 
+			                 placeholder="Search" name="s">
+			   </div>
+			      
+				<!-- <div class="col-md-3">
+				{% if cat_val %}<label class="control-label " style="font-size:15px; ">Category : <b>{{cat_val}}</b></label>{% else %}<label class="control-label " style="font-size:15px; ">Category</label>{% endif %}
+					<select name="category" id="status11" class="sel2" >
+						<option value=""> Select Category</option>
+	  			   	<option value="all"> All</option>
+	  			      {% for cat in category_list %}	
+							<option value="{{cat}}">{{cat.category_name}}</option>            	                        
+						{% endfor %}		     
+	            </select>   
+	         </div>   -->    
+				<div class="col-md-3">
+				<!-- {% if tm_val %}<label class="control-label " style="font-size:15px; ">Time : <b>{{tm_val}}</b></label>{% else %}<label class="control-label " style="font-size:15px; ">Duration</label>{% endif %} -->				
+				<label class="control-label" style="font-size:15px;">Time</label> 
+					<select name="time" id="status12" class="sel2" >
+						<option value=""> Select Duration</option>
+	  			   	<option value="all"> All</option>
+	  			      <option value="today"> Today</option>
+	  			      <option value="yesterday"> Yesterday</option>  			     
+	  			      <option value="last_week"> Last Week</option>  			     
+	  			      			     
+	            </select>   
+	         </div>
+				<div class="col-md-3">
+				<!-- {% if sts_val %}<label class="control-label " style="font-size:15px; ">Status : <b>{{sts_val}}</b></label>{% else %}<label class="control-label " style="font-size:15px; ">Status</label>{% endif %} -->				
+					<label class="control-label " style="font-size:15px; ">Status</label>
+					<select name="status" id="status13" class="sel2" >
+						<option value=""> Select Status</option>
+	  			   	<option value="all"> All</option>
+	  			      <option value="unread"> Unread</option>
+	  			      <option value="appropriate"> Appropriate</option>
+	  			      <option value="inappropriate"> Inappropriate</option>
+	  			      <option value="deleted"> Deleted By User</option>
+	  			       			     
+	            </select>   
+	         </div>	
+	         <div class="col-md-3" style="margin-top: 26px;">          		 
+	 					<a style="border-radius: 10px !important;border-color: #9E9E9E;color:#323335;" onclick="search_post_result();" type="button" class="btn btn-outline" >Search</a>						
+	 					<a style="border-radius: 10px !important;border-color: #9E9E9E;color:#323335;" onclick="clear_data();" type="button" class="btn btn-outline " >Clear Results</a>						
+				</div>		
+			</div>               
+			<div class="row">
+				<div class="col-md-12">								
+					<div class="col-md-offset-3 col-md-3">			
+						{% if tm_val %}<label class="control-label " style="font-size:11px; "><b>{{tm_val}}</b></label>{% endif %}					
+					</div>
+					<div class="col-md-3">			
+						{% if sts_val %}<label class="control-label " style="font-size:11px; "><b>{{sts_val}}</b></label>{% endif %}					
+					</div>
+				</div>
+			</div>								
+			<hr style="margin-bottom: 5px;border-color: #DDD"> 									
+																																						                                                        
+	<input type="hidden" id="city_id_obj" value="{{city_id}}">
+   <div class="row">
+   	<div class="col-md-12">
+			<div class="col-md-2">
+				<div class="row">
+					<div class="col-md-12">
+						<img src="{{city_image}}" style="width: 150px;height: 135px;margin-top: 6px;margin-left: -9px;" alt="logo" class="logo-default"/>
+						<b>{{city_name}}</b><br>
+						{{country_name}}
+					</div> 	
+				</div>		
+				<div class="row">
+					<div class="col-md-12" style="text-align:center;font-size:36px;padding-top: 9px; padding-left: 0px;">   
+							{{todays_tickets_count}}
+					</div>
+					<div class="col-md-12" style="text-align:center;font-size:18px;padding-top: 9px; padding-left: 0px;">   
+							Tickets Today
+					</div>
+				</div>
+				<br>	
+				<br>	
+				<div class="row">
+					<div class="col-md-12" style="text-align:center;font-size:36px;padding-top: 9px; padding-left: 0px;">   
+							{{total_tickets_count}}
+					</div>
+					
+					<div class="col-md-12" style="text-align:center;font-size:18px;padding-top: 9px; padding-left: 0px;">   
+							Tickets Till Date
+					</div>
+				</div>	
+			</div>
+			<label class="error111" style="display:none;"></label>
+			<div class="col-md-10">
+			<div class="row">
+			<div class="col-md-12">
+			{% for d in final_list %}
+			
+				{% if d.status == 'deleted' %}
+					<div class="col-md-12 div-border-bottom1 div-color connect-star post-list dim"  id="post_{{d.post_id}}" style="margin-top: 4px;margin-bottom: 20px;">
+										
+					<div class="row">						
+						<span id="inapp_post_view_{{d.ticket_id}}" class="inapp_post_view" ><a id="{{d.ticket_id}}" onclick="view_comments(this.id);" style="margin-left: 370px;font-size:16px;color:#FFF;"><b>View</b></a></span>
+						<span id="active_post_{{d.ticket_id}}" class="activate_post" ><a id="{{d.ticket_id}}" title="Mark as Appropriate" onclick="enable_post(this.id);" style="margin-left: 10px;font-size:16px;color:#FFF;"><b><i class="fa fa-repeat" aria-hidden="true"></i></b></a></span>
+						<span id="post_msg" class="msg" hidden=""><b>Ticket/Tickets deleted by User on {{d.dact_date}}</b></span>
+							<div class="col-md-2">
+								<img src="{{d.user_pic}}" style="width: 100%;height: 75px;margin-top: 6px;margin-left: -9px;" alt="logo" class="logo-default"/>
+							</div> 		
+							<div class="col-md-3" style="font-size:13px;padding-top: 9px; padding-left: 0px;">   
+								<label class="name">{{d.user_name}}</label><br>				       									
+								<label class="time">{{d.creation_date}}</label> 
+							</div>  
+							<div class="col-md-5 custom_blur" id="el_{{d.ticket_id}}" style="background-color: #5F5D5D !important;font-size:12px;margin-top: -16px;">   
+									<label class="ename"><b>Event Name : {{d.event_name}}</b></label><br>																				
+									<label class="name">Event Date : {{d.event_start_date}} - {{d.event_start_time}}</label><br>		
+									<label class="name">Comment : {{d.comments}}</label><br>		
+									<label class="name">Activation Date : {{d.activation_date}}</label><br>			
+									<label class="name">Contact Number : {{d.contact_number}}</label>	
+							</div>
+							<div hidden="" class="col-md-2" id="st_{{d.ticket_id}}" style="text-align: center;padding-top: 9px; padding-left: 0px;font-size: 14px;">   
+								<a id="{{d.ticket_id}}" onclick="disable_post(this.id);"><b>Mark as Inappropriate</b></a>
+							</div>    
+					</div>
+					<div class="row">						
+						<div class="col-md-offset-2 col-md-6" style=" padding-left: 20px;">   
+												
+						<div class="col-md-3">
+						<b>	<i class="fa fa-eye" aria-hidden="true"></i> {{d.views}} </b>
+						</div> 
+						<div class="col-md-3">
+						<b>	<i class="fa fa-share" aria-hidden="true"></i> {{d.share}}</b>
+						</div> 
+					</div>			      		
+					</div>		
+				
+				<div class="row">					 
+					
+						<!-- <div class="col-md-offset-2 col-md-10" style="padding-top: 9px; padding-left: 0px;opacity: 0.45;">  
+						<div class="row">
+						<input type="hidden" id="img_files" value="{{d.post_file}}">
+							<input type="hidden" id="img_files_cnt" value="{{d.post_files_count}}">
+							{% if d.ticket_file_list %}
+								<div class="custom_slider" id="img_slider_{{d.ticket_id}}">
+									<div style="width: 825px; height: 125px;">								
+										{% for ifg in d.ticket_file_list %}																		
+												<img src="{{ifg}}" style="" width="200" height="125" alt="city life image" />
+										{% endfor %}						
+									</div>
+								</div>						
+							{% else %}
+								<div class="col-md-12">
+									<label class="time">No Image or Video available</label> 						
+								</div>
+							{% endif %}	
+							</div> 
+							
+						</div> -->
+						<div class="col-md-offset-2 col-md-10" style="padding-top: 9px;">   
+					<div class="row">					
+						<input type="hidden" id="img_files" value="{{d.post_file}}">
+						<input type="hidden" id="img_files_cnt" value="{{d.post_files_count}}">
+						{% if d.ticket_file_list1 %}														
+							<div class="custom_slider1" id="img_slider_{{d.ticket_id}}">
+								<div style="width: 825px; height: 125px;opacity: 0.2;background-color: #7A7A7A;">								
+									{% for ifg in d.ticket_file_list1 %}			
+										{% if d.ticket_id == ifg.ticket_id %}
+											<img src="{{ifg.img_path}}" style="" width="200" height="125" alt="city life image" />
+										{% endif %}		
+									{% endfor %}						
+								</div>
+							</div>						
+						{% else %}
+							<div class="col-md-12">
+								<label class="time">No Image or Video available</label> 						
+							</div>
+						{% endif %}	
+					</div>
+				</div>
+					
+				</div>	
+				<div class="row">
+					 
+					
+				</div>	
+				<br>
+			</div>	
+		
+				{% elif d.status == 'inappropriate' %}
+					<div class="col-md-12 div-border-bottom1 div-color connect-star post-list dim"  id="post_{{d.post_id}}" style="margin-top: 4px;margin-bottom: 20px;">
+										
+					<div class="row">						
+						<span id="inapp_post_view_{{d.ticket_id}}" class="inapp_post_view" ><a id="{{d.ticket_id}}" onclick="view_comments(this.id);" style="margin-left: 370px;font-size:16px;color:#FFF;"><b>View</b></a></span>
+						<span id="active_post_{{d.ticket_id}}" class="activate_post" ><a id="{{d.ticket_id}}" title="Mark as Appropriate" onclick="enable_post(this.id);" style="margin-left: 10px;font-size:16px;color:#FFF;"><b><i class="fa fa-repeat" aria-hidden="true"></i></b></a></span>
+						<span id="post_msg" class="msg" hidden=""><b>Ticket/Tickets marked as Inappropriate on {{d.dact_date}}</b></span>
+							<div class="col-md-2">
+								<img src="{{d.user_pic}}" style="width: 100%;height: 75px;margin-top: 6px;margin-left: -9px;" alt="logo" class="logo-default"/>
+							</div> 		
+							<div class="col-md-3" style="font-size:13px;padding-top: 9px; padding-left: 0px;">   
+								<label class="name">{{d.user_name}}</label><br>				       									
+								<label class="time">{{d.creation_date}}</label> 
+							</div>  
+							<div class="col-md-5 custom_blur" id="el_{{d.ticket_id}}" style="background-color: #5F5D5D !important;font-size:12px;margin-top: -16px;">   
+									<label class="ename"><b>Event Name : {{d.event_name}}</b></label><br>		
+									<!-- <label class="name">Event Date : {{d.event_start_date}}</label><br>	 -->	
+									<label class="name">Event Date : {{d.event_start_date}} - {{d.event_start_time}}</label><br>		
+									<label class="name">Comment : {{d.comments}}</label><br>			
+									<label class="name">Activation Date : {{d.activation_date}}</label><br>												
+							</div>
+							<div hidden="" class="col-md-2" id="st_{{d.ticket_id}}" style="text-align: center;padding-top: 9px; padding-left: 0px;font-size: 14px;">   
+								<a id="{{d.ticket_id}}" onclick="disable_post(this.id);"><b>Mark as Inappropriate</b></a>
+							</div>    
+					</div>
+					<div class="row">						
+						<div class="col-md-offset-2 col-md-6" style=" padding-left: 20px;">   
+												
+						<div class="col-md-3">
+						<b>	<i class="fa fa-eye" aria-hidden="true"></i> {{d.views}} </b>
+						</div> 
+						<div class="col-md-3">
+						<b>	<i class="fa fa-share" aria-hidden="true"></i> {{d.share}}</b>
+						</div> 
+					</div>			      		
+					</div>		
+				
+				<div class="row">					 
+					
+						<!-- <div class="col-md-offset-2 col-md-10" style="padding-top: 9px; padding-left: 0px;opacity: 0.45;">  
+						<div class="row">
+						<input type="hidden" id="img_files" value="{{d.post_file}}">
+							<input type="hidden" id="img_files_cnt" value="{{d.post_files_count}}">
+							{% if d.ticket_file_list %}
+								<div class="custom_slider" id="img_slider_{{d.ticket_id}}">
+									<div style="width: 825px; height: 125px;">								
+										{% for ifg in d.ticket_file_list %}																		
+												<img src="{{ifg}}" style="" width="200" height="125" alt="city life image" />
+										{% endfor %}						
+									</div>
+								</div>						
+							{% else %}
+								<div class="col-md-12">
+									<label class="time">No Image or Video available</label> 						
+								</div>
+							{% endif %}	
+							</div> 
+							
+						</div> -->
+						<div class="col-md-offset-2 col-md-10" style="padding-top: 9px;">   
+					<div class="row">					
+						<input type="hidden" id="img_files" value="{{d.post_file}}">
+						<input type="hidden" id="img_files_cnt" value="{{d.post_files_count}}">
+						{% if d.ticket_file_list1 %}														
+							<div class="custom_slider1" id="img_slider_{{d.ticket_id}}">
+								<div style="width: 825px; height: 125px;opacity: 0.2;background-color: #7A7A7A;">								
+									{% for ifg in d.ticket_file_list1 %}			
+										{% if d.ticket_id == ifg.ticket_id %}
+											<img src="{{ifg.img_path}}" style="" width="200" height="125" alt="city life image" />
+										{% endif %}		
+									{% endfor %}						
+								</div>
+							</div>						
+						{% else %}
+							<div class="col-md-12">
+								<label class="time">No Image or Video available</label> 						
+							</div>
+						{% endif %}	
+					</div>
+				</div>
+					
+				</div>	
+				<div class="row">
+					 
+					
+				</div>	
+				<br>
+			</div>
+			
+		{% else %}
+			<div class="col-md-12 div-border-bottom1 div-color connect-star post-list"  id="post_{{d.ticket_id}}" style="margin-top: 4px;margin-bottom: 20px;">
+					<div class="row">
+						<span id="inapp_post_view_{{d.ticket_id}}" class="inapp_post_view" hidden=""><a id="{{d.ticket_id}}" onclick="view_comments(this.id);" style="margin-left: 90px;font-size:16px;color:#FFF;"><b>View</b></a></span>
+						<span id="post_msg_{{d.ticket_id}}" class="msg" hidden="">Post marked as Inappropriate on {{d.dact_date}}</span>
+							<a id="{{d.ticket_id}}" onclick="view_comments(this.id);" style="color:black;">						
+								<div class="col-md-2">
+									<img src="{{d.user_pic}}" style="width: 100%;height: 75px;margin-top: 6px;margin-left: -9px;" alt="logo" class="logo-default"/>
+								</div> 		
+								<div class="col-md-3" style="font-size:13px;padding-top: 9px; padding-left: 0px;">   
+									<label class="name">{{d.user_name}}</label><br>				       									
+									<label class="time">{{d.creation_date}}</label> 
+								</div>  
+								<div class="col-md-5 " id="el_{{d.post_id}}" style="font-size:12px;padding-top: 9px; padding-left: 0px;">   
+									<label class="ename"><b>Event Name : {{d.event_name}}</b></label><br>		
+									<label class="name">Event Date : {{d.event_start_date}} - {{d.event_start_time}}</label><br>		
+									<label class="name">Comment : {{d.comments}}</label><br>			
+									<label class="name">Activation Date : {{d.activation_date}}</label><br>	
+									<label class="name">Contact Number : {{d.contact_number}}</label>	
+								</div>
+							</a>
+							<div class="col-md-2" id="st_{{d.ticket_id}}" style="text-align: center;padding-top: 9px; padding-left: 0px;font-size: 14px;">   
+								<b>{{d.status1}}</b>
+							</div>    
+					</div>
+					<div class="row">
+						<div class="col-md-offset-2 col-md-6" style=" padding-left: 0px;">   
+							<div class="col-md-3">
+								<b>	<i class="fa fa-eye" aria-hidden="true"></i> {{d.views}} </b> 
+							</div> 
+							<div class="col-md-3">
+								<b>	<i class="fa fa-share" aria-hidden="true"></i> {{d.share}} </b>
+							</div> 
+						</div>			      		
+					</div>		
+				<div class="row">
+					
+				</div>	
+				<div class="row">
+					 			
+
+				<div class="col-md-offset-2 col-md-10" style="padding-top: 9px;">   
+					<div class="row">					
+						<input type="hidden" id="img_files" value="{{d.post_file}}">
+						<input type="hidden" id="img_files_cnt" value="{{d.post_files_count}}">
+						{% if d.ticket_file_list1 %}														
+							<div class="custom_slider" id="img_slider_{{d.ticket_id}}">
+								<div style="width: 825px; height: 125px;">								
+									{% for ifg in d.ticket_file_list1 %}			
+										{% if d.ticket_id == ifg.ticket_id %}
+											<img src="{{ifg.img_path}}" style="" width="200" height="125" alt="city life image" />
+										{% endif %}		
+									{% endfor %}						
+								</div>
+							</div>						
+						{% else %}
+							<div class="col-md-12 ">
+								<label class="time">No Image or Video available</label> 						
+							</div>
+						{% endif %}	
+					</div>
+				</div>
+										      		
+				</div>	
+				<div class="row">
+					<!-- <a id="{{d.post_id}}" onclick="view_comments(this.id);" style="color:black;">	
+						<div class="col-md-offset-2 col-md-10" style="padding-top: 9px; padding-left: 0px;">   
+							<div class="col-md-4">
+							<b>	{{d.unread_comment_count}} Unread Comments </b>
+							</div> 
+							<div class="col-md-4">
+							<b>	{{d.total_comment_count}} Total Comments </b>
+							</div>
+						</div>
+					</a> -->
+				</div>	
+				<br>
+			</div>
+			
+		{% endif %}
+	
+	{% endfor %}
+	</div>
+	</div>
+	</div>
+   	</div>	
+   
+    </div>
+             </div>
+         </div>
+     </div>
+ </div>
+ </div>
+ </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- END FORM-->
+                            </div>
+                        </div>
+                        <!-- END PORTLET-->
+                    </div>
+                </div>
+            </div>
+            <!-- END CONTENT BODY -->
+        </div>
+        <!-- END CONTENT -->
+    </div>
+</div>
+
+
+<div class="page-footer">
+    <div class="page-footer-inner"> 2016 &copy; DigiSpace Software Private Limited
+    </div>
+    <div class="scroll-to-top">
+        <i class="icon-arrow-up"></i>
+    </div>
+</div>
+
+
+<div style="overflow-y:hidden;" id="post-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width: 900px;">
+        <div class="modal-content">
+        		<div class="modal-header">
+        			<input type="hidden" id="post_id_val" value="">
+        			 <!-- <div class="col-md-offset-7 col-md-4" id="st_{{d.post_id}}" style="text-align: right; padding-left: 0px;font-size: 14px;">   
+								<a id="{{post_id}}" onclick="disable_post(this.id);"><b>Mark as Inappropriate</b></a>
+					 </div> -->  
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+            </div>
+            <div class="modal-body" style="overflow-y:scroll;height:500px">     
+                <div class="form-body">
+                <div class="row">
+                	<div class="col-lg-12" id="cmts_data">
+                  </div>
+                </div>
+            </div>             
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div style="overflow-y:hidden;" id="delete-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;"
+                     src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+            </div>
+            <div class="modal-body">
+               
+                <div class="form-body">
+                <div class="row">
+                	<div class="col-lg-12" style="text-align:center !important;margin-top: 0px;margin-bottom: 15px;font-size: 18px;font-weight: 300;">
+   		         	Do you want to delete this Ticket?
+                  </div>
+                </div>
+            </div>
+             <div style="text-align:center !important;" class="modal-footer">
+                 <a onclick="deactivate_comment()" class="btn" style="color: #FFF;background-color: #32C5D2;border-color: #32C5D2;"  id="btn-loading-demo">Yes</a>
+                 <a class="btn " style="color: #FFF;background-color: #32C5D2;border-color: #32C5D2;" id="btn-loading-demo" data-dismiss="modal">No</a>
+             </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div style="overflow-y:hidden;" id="delete-reply-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;"
+                     src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+            </div>
+            <div class="modal-body">
+               
+                <div class="form-body">
+                <div class="row">
+                	<div class="col-lg-12" style="text-align:center !important;margin-top: 0px;margin-bottom: 15px;font-size: 18px;font-weight: 300;">
+   		         	Do you want to delete this Ticket?
+                  </div>
+                </div>
+            </div>
+             <div style="text-align:center !important;" class="modal-footer">
+                 <a onclick="deactivate_reply()" class="btn" style="color: #FFF;background-color: #32C5D2;border-color: #32C5D2;"  id="btn-loading-demo">Yes</a>
+                 <a class="btn " style="color: #FFF;background-color: #32C5D2;border-color: #32C5D2;" id="btn-loading-demo" data-dismiss="modal">No</a>
+             </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div style="overflow-y:hidden;" id="active-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;"
+                     src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+            </div>
+            <div class="modal-body">
+               
+                <div class="form-body">
+                <div class="row">
+                	<div class="col-lg-12" style="text-align:center !important;margin-top: 0px;margin-bottom: 15px;font-size: 18px;font-weight: 300;">
+   		         	Are you sure you would like to mark this ticket/tickets as Appropriate ?
+                  </div>
+                </div>
+            </div>
+             <div style="text-align:center !important;" class="modal-footer">
+                 <a onclick="activate_post()" class="btn" style="color: #FFF;background-color: #32C5D2;border-color: #32C5D2;"  id="btn-loading-demo">Yes</a>
+                 <a class="btn " style="color: #FFF;background-color: #32C5D2;border-color: #32C5D2;" id="btn-loading-demo" data-dismiss="modal">No</a>
+             </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div style="overflow-y:hidden;" id="error-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img style="width: 100px; height: 29px; margin-top: -11px; margin-left: 236px;"
+                     src="/static/assets/layouts/layout2/img/City_Hoopla_Logo.png" alt="logo" class="logo-default">
+            </div>
+            <div class="modal-body">
+               
+                <div class="form-body">
+                <div class="row">
+                	<div class="col-lg-12" style="text-align:center !important;margin-top: 0px;margin-bottom: 15px;font-size: 18px;font-weight: 300;">
+   		         	Are you sure you would like to mark this ticket/tickets as Inappropriate ?
+                  </div>
+                </div>
+            </div>
+             <div style="text-align:center !important;" class="modal-footer">
+                 <a onclick="deactivate_post()" class="btn" style="color: #FFF;background-color: #32C5D2;border-color: #32C5D2;"  id="btn-loading-demo">Yes</a>
+                 <a class="btn " style="color: #FFF;background-color: #32C5D2;border-color: #32C5D2;" id="btn-loading-demo" data-dismiss="modal">No</a>
+             </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--[if lt IE 9]>
+<script src="../assets/global/plugins/respond.min.js"></script>
+<script src="../assets/global/plugins/excanvas.min.js"></script>
+<![endif]-->
+<!-- BEGIN CORE PLUGINS -->
+         <script src="{% static 'assets/global/plugins/jquery.min.js' %}" type="text/javascript"></script>
+ 			<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+        <script src="{% static 'assets/global/plugins/bootstrap/js/bootstrap.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/js.cookie.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/jquery.blockui.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/uniform/jquery.uniform.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js' %}" type="text/javascript"></script>
+        <!-- END CORE PLUGINS -->
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <script src="{% static 'assets/global/plugins/select2/js/select2.full.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/jquery-validation/js/jquery.validate.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/jquery-validation/js/additional-methods.min.js' %}" type="text/javascript"></script>
+        <!-- <script src="{% static 'assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js' %}" type="text/javascript"></script> -->
+        <!-- <script src="{% static 'assets/global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.js' %}" type="text/javascript"></script> -->
+        <script src="{% static 'assets/global/plugins/ckeditor/ckeditor.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/bootstrap-markdown/lib/markdown.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/bootstrap-markdown/js/bootstrap-markdown.js' %}" type="text/javascript"></script>
+        <!-- END PAGE LEVEL PLUGINS -->
+         <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <script src="{% static 'assets/global/plugins/select2/js/select2.full.min.js' %}" type="text/javascript"></script>
+        <!-- END PAGE LEVEL PLUGINS -->
+        <!-- BEGIN THEME GLOBAL SCRIPTS -->
+        <script src="{% static 'assets/global/scripts/app.min.js' %}" type="text/javascript"></script>
+        <!-- END THEME GLOBAL SCRIPTS -->
+        <!-- BEGIN PAGE LEVEL SCRIPTS -->
+<!--         <script src="{% static 'assets/pages/scripts/components-select2.min.js' %}" type="text/javascript"></script> -->
+        <!-- END PAGE LEVEL SCRIPTS -->
+        <!-- END THEME GLOBAL SCRIPTS -->
+        <!-- BEGIN PAGE LEVEL SCRIPTS -->
+        <script src="{% static 'assets/pages/scripts/form-validation.min.js' %}" type="text/javascript"></script>
+        <!-- END PAGE LEVEL SCRIPTS -->
+        <!-- BEGIN THEME LAYOUT SCRIPTS -->
+        <script src="{% static 'assets/layouts/layout2/scripts/layout.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/layouts/layout2/scripts/demo.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/layouts/global/scripts/quick-sidebar.min.js' %}" type="text/javascript"></script>
+         <!-- <script src="http://maps.google.com/maps/api/js?sensor=false"></script> -->
+        <!-- <script src="{% static 'assets/custom/js/jquery.ui.addresspicker.js' %}"></script> -->
+        <script src="{% static 'assets/pages/scripts/form-wizard.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/bootstrap-wizard/jquery.bootstrap.wizard.min.js' %}" type="text/javascript"></script>
+
+        <script src="{% static 'vendor/bootstrap-fileinput/jasny-bootstrap.js' %}"></script>
+
+    		<script src="http://kendo.cdn.telerik.com/2016.2.504/js/kendo.all.min.js"></script>
+
+        <!-- END THEME LAYOUT SCRIPTS -->        
+        <!-- <script src="{% static 'ninjaVideoPlugin.js' %}"></script>
+    	  <script src="{% static 'ninja-slider.js' %}" type="text/javascript"></script> -->
+
+        <script src="{% static 'assets/pages/scripts/dropzone1.js' %}"></script>
+        <script src="{% static 'assets/bootstrap-tagsinput.js' %}" type="text/javascript"></script>
+        <script src="{% static 'assets/global/plugins/ion.rangeslider/js/ion.rangeSlider.min.js' %}" ></script>
+<script type="text/javascript">
+	
+
+	 $( ".date-picker" ).datepicker({ 
+ 				minDate: 0,
+  			   dateFormat: 'dd/mm/yy'
+			});
+			
+	$(document).ready(function() {
+        $('.sel2').select2({});
+	       
+			});
+			
+/*	function search_status_list() {
+		if ($('#status11').val()) {
+			cat_val = $('#status11').val();			
+			city_id = $('#city_id_obj').val();
+			location.href='/city-life/city-feed/?cat_val='+cat_val+'&city_id='+city_id+''
+		}
+		else if ($('#status12').val()) {
+			time_val = $('#status12').val();		
+			city_id = $('#city_id_obj').val();
+			location.href='/city-life/city-feed/?time_val='+time_val+'&city_id='+city_id+''
+		}
+		else if ($('#status13').val()) {
+			sts_val = $('#status13').val();
+			city_id = $('#city_id_obj').val();
+			location.href='/city-life/city-feed/?sts_val='+sts_val+'&city_id='+city_id+''
+		}
+		//status_val = $('#status11').val();
+		//city_id = $('#cid').val();
+		
+		//location.href='/city-star/starhome/?sts_val='+status_val+'&city_id='+city_id+''
+	}*/
+	
+		function search_post_result() {						
+			time_val = $('#status12').val();			
+			sts_val = $('#status13').val();
+			city_id = $('#city_id_obj').val();						
+			if (time_val=='' & sts_val=='') {
+				location.href=''
+			}else {
+				location.href='/ticket-resell/ticket-resell-feed/?time_val='+time_val+'&sts_val='+sts_val+'&city_id='+city_id+''	
+			}
+			
+	}
+	
+	function clear_data() {
+		city_id = $('#city_id_obj').val()
+		location.href='/ticket-resell/ticket-resell-feed/?city_id='+city_id; 
+}
+			
+	document.getElementById("txtSearch").oninput=function(){
+	 $('.error111').css("display", "none");	
+    var matcher = new RegExp(document.getElementById("txtSearch").value, "gi");
+    $('.error111').css("display", "none");	
+    for (var i=0;i<document.getElementsByClassName("connect-star").length;i++) {
+    	$('.error111').css("display", "none");	
+        if ( matcher.test(document.getElementsByClassName("ename")[i].innerHTML)
+        ) {
+        		$('.error111').css("display", "none");
+            document.getElementsByClassName("connect-star")[i].style.display="inline-block";
+            
+        } else {
+            document.getElementsByClassName("connect-star")[i].style.display="none";
+            $('.error111').css("display", "block");
+            $('.error111').text("No Data Available.");
+        }
+    }
+}
+
+var post_id;
+function view_comments(id) {	
+	ticket_id = id;
+	//$("#post-modal").modal('show');
+	
+	
+	$.ajax({
+		type	: "GET",
+      url: "/ticket-resell/view-comments/",
+      data:{'ticket_id':ticket_id},
+      success: function(response){
+      	$("#cmts_data").html('');
+      	if(response.success=='true'){
+	
+			$.each(response.final_list, function (index,item) {
+
+					if(item.status=='inappropriate'){
+        				$('#st_'+item.ticket_id).addClass('hidden');
+    				}
+    				
+ 					$("#cmts_data").append(
+ 						'<div class="row" >'+
+ 							
+					 		(item.tstatus=='inappropriate'|item.tstatus=='deleted'  ? '<div hidden="" class="col-md-offset-9 col-md-3" id=st_'+item.ticket_id+' style="text-align: right;margin-bottom: 10px; margin-top: -15px;font-size: 14px;"><a id='+item.ticket_id+' onclick="disable_post(this.id);"><b>Mark as Inappropriate</b></a></div>' : '<div class="col-md-offset-9 col-md-3" id=st_'+item.ticket_id+' style="text-align: right;margin-bottom: 10px; margin-top: -15px;font-size: 14px;"><a id='+item.ticket_id+' onclick="disable_post(this.id);"><b>Mark as Inappropriate</b></a></div>')+
+      					'<div  class="col-md-12">'+
+							'<div class="col-md-6" style="padding-top: 9px; padding-left: 5px;">'+			
+								'<label style="font-size: 12px;" class="no_latest_image" hidden> No Image Available </label>'+
+								'<div class="slide-wrapper">'+
+								  	'<div id="homepage-feature" class="carousel slide">'+
+								      '<div id="img_slide_files_'+item.ticket_id+'" class="carousel-inner">'+
+								      '</div>'+
+							      '</div>'+
+							      '<a class="left1 carousel-control" onclick="slide_images_left()" href="#homepage-feature" data-slide="prev">'+
+							       '<span class="fa fa-angle-left" style="font-size: 50px;margin-top: 137px;"></span>'+
+							      '</a>'+
+							      '<a class="right1 carousel-control" onclick="slide_images_right()" href="#homepage-feature" data-slide="next">'+
+							        '<span class="fa fa-angle-right" style="font-size: 50px;margin-top: 137px;"></span>'+
+							      '</a>'+
+					   		'</div>'+
+					   		'<br>'+				
+								'<label style="font-size: 14px;" ><b>Ticket Status :</b>'+item.ticket_status+' </label>'+										
+																
+							'</div>'+	
+							'<div class="col-md-6" style="padding-top: 9px; padding-left: 5px;">'+   
+								'<div class="col-md-2">'+
+									'<img src='+ item.user_pic +' style="width: 150%;height: 50px;margin-top: 0px;margin-left: -9px;" alt="logo" class="logo-default"/>'+
+								'</div>'+
+								'<div class="col-md-4" style="color: #3E3E40;margin-top: 0px;">'+
+	         					'<label  style="font-size: 12px;">'+item.user_name + '</label><br>'+
+	         					'<label  style="font-size: 10px;">'+item.creation_date + '</label><br>'+	         					
+	         				'</div>'+
+	         				'<div class="col-md-6" style="color: #3E3E40; font-size:10px;">'+
+	         					'<label  style="font-size: 14px;"><b>'+item.event_name + '</b></label><br>'+
+	         					'<label  style="font-size: 10px;">Event Date : '+item.event_start_date + '</label><br>'+
+	         					'<label  style="font-size: 10px;">Activation Date : '+item.activation_date + '</label><br>'+
+	         					//'<label  style="font-size: 10px;">Deactivation Date :'+item.deactivation_date + '</label><br>'+
+
+									       				
+	         				'</div>'+
+	         				'<div class="row">'+	         						
+		         				'<div class="col-md-12" style="margin-top: -19px;">'+
+										'<div class="col-md-offset-2 col-md-2" style="font-size: 11px;">'+
+											'<i class="fa fa-eye"  aria-hidden="true"></i>'+ item.views+
+										'</div>'+ 
+										'<div class="col-md-2" style="font-size: 11px;">'+
+											'<i class="fa fa-share" aria-hidden="true"></i>'+ item.share+
+										'</div>'+ 	         				
+	   	      				'</div>'+
+	   	      			'</div>'+
+	         				'<div class="row">'+	         						
+		         				'<div class="col-md-12">'+
+									'--------------------------------------------------------------------------------------'+	         				
+	   	      				'</div>'+
+	   	      			'</div>'+
+		         				//'<label style="font-size: 12px;" class="latest_comments"> Showing latest Tickets </label>'+
+		         				'<label style="font-size: 12px;" class="no_latest_comments" hidden> No ticket Available </label>'+
+		         				'<br>'+
+		         				'<br>'+
+		         				'<div id="cmtlist_data" style="margin-left: 6px;">'+
+		         				'</div>'+
+		         				'<div id="new_cmtlist_data" style="margin-left: 6px;" class="hidden">'+
+		         				'</div>'+
+									'<br>'+
+									'<div id="comment_cnt" style="margin-left: 6px;">'+		         				
+										(item.ttickets_count >2  ? '<a style="font-size:12px;" id="'+item.ticket_id+'" onclick="show_more(this.id)"> More </a>': '') +
+									'</div>'+
+									'<div id="comment_cnt_hide" style="margin-left: 6px;" class="hidden" >'+		         				
+										'<a style="font-size:12px;" id="'+item.ticket_id+'" onclick="show_less(this.id)">Less </a>' +
+									'</div>'+
+									
+							'</div>'+      		
+						'</div>'+	 					
+					'</div>'		 							 								  																										);
+					});
+					
+					if (response.ticket_file_list_count > 0) {					
+					
+						$.each(response.ticket_file_list, function (index,im) {
+		 					$('#img_slide_files_'+response.ticket_id).append(
+		 						//'<div class="item active" id="im_'+im.img_number+'" style="background-image:url('+im.img_path+')"></div>'
+								(im.img_number==1  ? '<div class="item active" id="im_'+im.img_number+'" style="background-image:url('+im.img_path+')"></div>': '<div class="item " id="im_'+im.img_number+'" style="background-image:url('+im.img_path+')"></div>')						
+								);
+							});    
+					}
+					else {				
+						$('.slide-wrapper').addClass('hidden');
+						$('.no_latest_image').removeAttr('hidden');	 							
+					}
+													
+					if (response.ttickets_count > 0) {				
+						$.each(response.tickets_list, function (index,c) {
+	 					$("#cmtlist_data").append(
+	 						(c.status_val==0  ? '<div style="pointerEvents = none;" class="row dim" id="cd_'+c.sell_ticket_id+'"><span id="comment_msg_'+c.sell_ticket_detail_id+'" class="msg1" >Ticket deleted on '+c.ddate+'</span><button type="button" class="close hidden" style="color:black;margin-top: 7px;" id="btn_'+c.sell_ticket_detail_id+'" aria-hidden="true"></button><div class="col-md-12" style="color: #9F9F9F;"><label  style="font-size: 14px;"> <b>'+c.inumber+'. Ticket Class : '+c.ticket_class + '</b></label><br><label  style="font-size: 12px;">No of Tickets : '+c.no_of_tickets + '</label><br><label  style="font-size: 12px;">Original Price : '+c.original_price + '</label><label  style="font-size: 12px;">Selling Price : '+c.asking_price + '</label><br></div></div></div></div></div>': '<div class="row" id="cd_'+c.sell_ticket_detail_id+'"><span id="comment_msg_'+c.sell_ticket_detail_id+'" class="msg1" hidden="">Ticket deleted on </span><div class="col-md-11" style="color: #3E3E40;"><label  style="font-size: 14px;"> <b>'+c.inumber+'. Ticket Class : '+c.ticket_class + '</b></label><br><label  style="font-size: 12px;">No of Tickets : '+c.no_of_tickets + '</label><br><label  style="font-size: 12px;">Original Price : '+c.original_price + '</label><label  style="margin-left:25px;font-size: 12px;">Selling Price : '+c.asking_price + '</label><br></div><div class="col-md-1"><button type="button" class="close" title="Delete Ticket" style="opacity:1;color:black;margin-top: 7px;" id="btn_'+c.sell_ticket_detail_id+'" onclick="remove_comment(this.id)" aria-hidden="true"></button> </div></div></div><label id="lbs_'+c.sell_ticket_id+'" style="text-align: center;margin-bottom: 25px;"> ><><><><><><><><><><><><><><><><><><><><><><><><>< </label></div>')+
+						'<br>'					 								  																											);																			
+						});
+					}
+					else {										
+						$('.latest_comments').addClass('hidden');
+						$('.no_latest_comments').removeAttr('hidden');	 								
+					}
+					
+      		if (response.ttickets_count > 0) {
+				$.each(response.new_tickets_list, function (index,c) {
+ 					$("#new_cmtlist_data").append(
+ 						(c.status_val==0  ? '<div style="pointerEvents = none;" class="row dim" id="cd_'+c.sell_ticket_id+'"><span id="comment_msg_'+c.sell_ticket_detail_id+'" class="msg1" >Ticket deleted on '+c.ddate+'</span><button type="button" class="close hidden" style="color:black;margin-top: 7px;" id="btn_'+c.sell_ticket_detail_id+'" aria-hidden="true"></button><div class="col-md-12" style="color: #9F9F9F;"><label  style="font-size: 14px;"> Ticket Class : '+c.ticket_class + '</label><br><label  style="font-size: 12px;">No of Tickets : '+c.no_of_tickets + '</label><br><label  style="font-size: 12px;">Original Price : '+c.original_price + '</label><label  style="font-size: 12px;">Selling Price : '+c.asking_price + '</label><br></div></div></div></div></div>': '<div class="row" id="cd_'+c.sell_ticket_detail_id+'"><span id="comment_msg_'+c.sell_ticket_detail_id+'" class="msg1" hidden="">Ticket deleted on </span><div class="col-md-11" style="color: #3E3E40;"><label  style="font-size: 14px;"> <b>'+c.inumber+'. Ticket Class : '+c.ticket_class + '</b></label><br><label  style="font-size: 12px;">No of Tickets : '+c.no_of_tickets + '</label><br><label  style="font-size: 12px;">Original Price : '+c.original_price + '</label><label  style="margin-left:25px;font-size: 12px;">Selling Price : '+c.asking_price + '</label><br></div><div class="col-md-1"><button type="button" class="close" title="Delete Ticket" style="opacity:1;color:black;margin-top: 7px;" id="btn_'+c.sell_ticket_detail_id+'" onclick="remove_comment(this.id)" aria-hidden="true"></button> </div></div></div><label id="lbs_'+c.sell_ticket_id+'" style="text-align: center;margin-bottom: 25px;"> ><><><><><><><><><><><><><><><><><><><><><><><><>< </label></div>')+
+					'<br>'							         									 								  																										);						
+					});
+					
+      	   	}
+					else {
+						$("#new_cmtlist_data").append(
+	 							'<div style="pointerEvents = none;" class="row dim" >'+	
+									'<div class="col-md-12" style="color: #9F9F9F;margin-top: 0px;">'+
+										'<label  style="font-size: 12px;">No Comment Available</label><br>'+
+									'</div>'+
+								'</div>'+	
+			      			'<br>'					 								  																											);			
+					}				
+      	
+         	$("#post-modal").modal('show');
+    		}
+      },
+   	error : function(response){
+       	alert("_Error");
+      }
+  		});
+}
+
+
+function slide_images_left() {
+	//alert('hi left');
+}
+function slide_images_right() {
+	//alert('hi right');
+}
+
+function show_more_reply(id) {	
+	var ss = id.split("_");
+	rpid = ss[1];
+	
+	//$('#rplylist_data_'+rpid).addClass('hidden').html();  	
+	$('#new_rplylist_data_'+rpid).removeClass( "hidden" );
+    $('#new_rplylist_data_'+rpid).css("border-top","0px");
+    $('#rplylist_data_'+rpid).css("border-bottom","0px");
+	$('#show_reply_cnt_'+rpid).addClass('hidden').html();  	
+	$('#hide_reply_cnt_'+rpid).removeClass( "hidden" );
+}
+
+function show_less_reply(id) {	
+	var ss = id.split("_");
+	rpid = ss[1];
+	
+	$('#new_rplylist_data_'+rpid).addClass('hidden').html();
+	//$('#rplylist_data_'+rpid).removeClass( "hidden" );
+    $('#new_rplylist_data_'+rpid).css("border-top","1px solid #3E3E40");
+    $('#rplylist_data_'+rpid).css("border-bottom","1px solid #3E3E40");
+	$('#hide_reply_cnt_'+rpid).addClass('hidden').html();  	
+	$('#show_reply_cnt_'+rpid).removeClass( "hidden" );
+}
+
+
+function show_less() {	
+	//$('#cmtlist_data').removeClass( "hidden" );
+	$('#new_cmtlist_data').addClass('hidden').html();  	
+	$('#comment_cnt').removeClass( "hidden" );
+	$('#comment_cnt_hide').addClass('hidden').html();  
+}
+
+function show_more() {	
+	//$('#cmtlist_data').addClass('hidden').html();  	
+	$('#comment_cnt').addClass('hidden').html();  	
+	$('#new_cmtlist_data').removeClass( "hidden" );
+	$('#comment_cnt_hide').removeClass( "hidden" );
+}
+
+
+var cmid;
+function remove_comment(id) {	
+
+	var id=id;
+	var ss = id.split("_");
+	cmid = ss[1];
+	$("#delete-modal").modal('show');		
+}
+
+function deactivate_comment() {		
+		$.ajax({
+		type	: "GET",
+      url: "/ticket-resell/deactivate-ticket/",
+      data:{'ticket_id':cmid},
+      success: function(response){
+      	if(response.success=='true'){
+         $("#delete-modal").modal('hide');	
+         	var id = response.ticket_id; 
+        		var d = response.d_date;
+        		$('#cd_'+id).addClass('dim').html();
+        		document.getElementById('cd_'+id).style.pointerEvents = 'none';
+      		$('#rplylist_data_'+id).addClass('hidden').html();  		
+      		$('#rplys_data_'+id).addClass('hidden').html();  		
+      		$('#show_reply_cnt_'+id).addClass('hidden').html();  	
+      		$('#hide_reply_cnt_'+id).addClass('hidden').html(); 	
+      		$('#btn_'+id).addClass('hidden').html(); 	
+      		//$('#lbs_'+id).addAttr('hidden').html(); 	
+      		$('#new_rplylist_data_'+id).addClass('hidden').html();     		        		        		
+      		$('#comment_msg_'+id).removeClass( "hidden" );     		        		        		
+        		$('#comment_msg_'+id).text('Ticket deleted on '+d);
+    		}
+      },
+   	error : function(response){
+       	alert("_Error");
+      }
+  		});
+}
+
+
+function myFunction1(id) {	
+
+	var id=id;
+	var ss = id.split("_");
+	$('#reply_box_'+ss[2]).removeAttr("hidden");
+	
+}
+
+var cstarid ;
+function act_date(id) {	
+	cstarid = id;
+	$("#error-modal").modal('show');
+}
+var pid;
+function disable_post(id) {
+	pid = id;
+	//alert(pid);
+	//$('#post_id_val').val(pid);
+	$("#error-modal").modal('show');
+}
+
+var eid;
+function enable_post(id) {
+	eid = id;
+	$("#active-modal").modal('show');
+}
+
+function activate_post() {	
+		$.ajax({
+		type	: "GET",
+      url: "/ticket-resell/re-activate-ticket-event/",
+      data:{'ticket_event_id':eid},
+      success: function(response){
+      	if(response.success=='true'){         	
+        		location.reload();    		
+    		}
+      },
+   	error : function(response){
+       	alert("_Error");
+      }
+  		});
+}
+
+
+function deactivate_post() {	
+		pid = pid;
+		$.ajax({
+		type	: "GET",
+      url: "/ticket-resell/deactivate-ticket-event/",
+      data:{'ticket_event_id':pid},
+      success: function(response){
+      	if(response.success=='true'){         	
+			location.reload();    		
+    		}
+      },
+   	error : function(response){
+       	alert("_Error");
+      }
+  		});
+}
+
+</script>
+
+
+</body>
+
+</html>

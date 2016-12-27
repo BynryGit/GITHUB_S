@@ -7,7 +7,7 @@
 <head>
     <head>
         <meta charset="utf-8"/>
-        <title>City Hoopla | Dashboard </title>
+        <title>CityHoopla | Dashboard </title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta content="width=device-width, initial-scale=1" name="viewport"/>
         <meta content="" name="description"/>
@@ -545,7 +545,7 @@ hr {
     width: 100%;
 }
 
-    </style>
+</style>
 
     <!-- END HEAD -->
 
@@ -588,6 +588,10 @@ hr {
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-default">
+                        <li>
+                                <a href="/edit-profile/?user_id={{request.session.login_user}}">
+                                    <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
+                            </li>
                             <li>
                                 <a href="/log-out/">
                                     <i class="icon-key"></i> Log Out </a>
@@ -670,8 +674,8 @@ hr {
                                 <div class="col-lg-3" id="week" style="font-size: 12px; margin-top: -4px;">
                                     <select class="form-control sel2" onchange="change_data1();">
 
-                                        <option value="week">Current Week</option>
-                                        <option value="month">Current Month</option>
+                                        <option value="week">Last 7 Days</option>
+                                        <option value="month">Last 30 Days</option>
 
                                     </select>
                                 </div>
@@ -762,10 +766,10 @@ hr {
                             <div class="row">
                                 <div class="col-lg-12">
 
-                                    <div class="col-md-6 col-sm-6" style="width: 500px;">
+                                    <div class="col-md-6 col-sm-6" style="width: 500px;height:290px;">
 
                                         <div class="portlet light "
-                                             style="border:1px solid #cccccc; box-shadow: 2px 2px 5px #bdbcbc;">
+                                             style="border:1px solid #cccccc; box-shadow: 2px 2px 5px #bdbcbc;height:392px;">
                                             <div class="portlet-title">
 
                                                 <div class="col-lg-6">
@@ -801,7 +805,7 @@ hr {
 
                                     </div>
 
-                                    <div class="col-md-6 col-sm-6" style="width: 500px;padding-left: 0px;">
+                                    <div class="col-md-6 col-sm-6" style="width: 500px;padding-left: 0px;" >
                                         <!-- BEGIN PORTLET-->
                                         <div class="portlet light "
                                              style="border:1px solid #cccccc; box-shadow: 2px 2px 5px #bdbcbc;">
@@ -832,10 +836,11 @@ hr {
                                                 </div>
 
                                             </div>
-                                            <div class="portlet-body">
-                                                <div class="portlet-body">
+                                            <div class="portlet-body" >
+                                                <div class="portlet-body" >
                                                     <div id="total_subscription" style="height:290px;"></div>
                                                 </div>
+
                                             </div>
                                         </div>
                                         <!-- END PORTLET-->
@@ -1013,6 +1018,55 @@ hr {
 <script src="{% static 'assets/global/plugins/select2/js/select2.full.min.js' %}" type="text/javascript"></script>
 <!-- END THEME LAYOUT SCRIPTS -->
 
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+
+    function change_data_login(){
+        citys_var = $('#citys_login :selected').val();
+        if (citys_var){
+            $("#linechart_material").css('display','block');
+            $.ajax({
+                type  : "GET",
+                url   : '/get-login-graph-data/',
+                data : {'citys_var':citys_var},
+                success: function (response) {
+                    google.charts.load('current', {'packages':['line']});
+                    google.charts.setOnLoadCallback(drawChart);
+
+                    function drawChart() {      
+                        var data = new google.visualization.DataTable();
+                        data.addColumn('string', 'Hour');
+                        data.addColumn('number', 'Register User(s)');
+                        data.addColumn('number', 'Guest Uers(s)');
+                        data.addRows(response.list);
+                        var options = {
+                            chart: {
+                                //title: 'Box Office Earnings in First Two Weeks of Opening',
+                                //subtitle: 'in millions of dollars (USD)'
+                            },
+                            //width: 500,
+                            //height: 500
+                            //axes: {
+                              //x: {
+                                //0: {side: 'top'}
+                              //}
+                            //}
+                        };
+                        var chart = new google.charts.Line(document.getElementById('linechart_material'));
+                        chart.draw(data, options);
+                    }
+                },
+                error : function(response){
+                    alert("_Error");
+                },
+            });
+        }
+        else{
+            $("#linechart_material").css('display','none');
+        }
+    }
+</script>	
+
 <script type="text/javascript">
 
 $("#dashboard_anchor").addClass("tab-active");
@@ -1040,39 +1094,59 @@ citys_var = $('#citys_sub :selected').val();
           url   : '/get-subscription-graph/',
             data : {'citys_var':citys_var},
 
-
      success: function (response) {
          console.log(response);
-	      
-	         google.charts.load('current', {'packages':['bar']});
-			   google.charts.setOnLoadCallback(drawStuff);
+
+	   //google.charts.load('current', {'packages':['bar']});
+	   google.load("visualization", "1", {  packages: ["corechart"]});
+		google.charts.setOnLoadCallback(drawStuff);
 			
-			   function drawStuff() {
-			     var data = new google.visualization.arrayToDataTable(response.final_list);
-				
+
+     function drawStuff() {
+			   
+			     var data=[];
+			     var Header= ['Category', 'Count'];
+			     data.push(Header);
+			     for (var i = 0; i < response.final_list.length; i++) {
+			     var temp=[];
+			      //temp.push(final_list[i].MonthValue);
+			      // temp.push(final_list[i].CountValue);
+			      
+			     temp = [response.final_list[i].cat_name,response.final_list[i].count]
+			     
+			      //console.log(temp);
+			      data.push(temp);
+
+			     }
+
+			 var data = new google.visualization.arrayToDataTable(data);
+
 				var options = {
-						textStyle : {color: 'black', fontSize: 1},
-					   hAxis: {
-					
-					//   viewWindowMode : 'explicit',
-					//   titleTextStyle : {color: 'black', fontSize: 1},
-					   textPosition:'out',
-					       format: 'long',
-					       title: "Month",
-					       slantedText: true,  /* Enable slantedText for horizontal axis */
-					       slantedTextAngle: 90 /* Define slant Angle */
-					   },
-					
-					};
 
-
-          var chart = new google.charts.Bar(document.getElementById('total_subscription'));
+				};
+				          
+		    var chart = new google.charts.Bar(document.getElementById('total_subscription'));
           chart.draw(data, options);
          };
+         
+			
 
+   // Rotate vAxis labels.
+    var array = $('#chart g');
+    alert(array.length)
+    for(var i = 0; i < array.length; i++) {
 
-
-
+        var logicalname = array[i].logicalname;
+        var text = $(array[i].children[0]);    
+        if(logicalname != null &&
+           logicalname.indexOf("vAxis") == 0 &&
+           logicalname.indexOf("label") > 0) {
+            
+            text.attr("transform", 
+                      "rotate(-30 "+$(text[0]).attr('x')+" "+$(text[0]).attr('y')+")");
+            
+        }
+        }
         },
           error : function(response){
                 alert("_Error");
@@ -1738,48 +1812,7 @@ var chart = AmCharts.makeChart( "Payment_Collection2", {
 
 </script>
 
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
 
-    function change_data_login(){
-        citys_var = $('#citys_login :selected').val();
-        $.ajax({
-            type  : "GET",
-            url   : '/get-login-graph-data/',
-            data : {'citys_var':citys_var},
-            success: function (response) {
-                google.charts.load('current', {'packages':['line']});
-                google.charts.setOnLoadCallback(drawChart);
-
-                function drawChart() {
-                    var data = new google.visualization.DataTable();
-                    data.addColumn('string', 'Hour');
-                    data.addColumn('number', 'Register User(s)');
-                    data.addColumn('number', 'Guest Uers(s)');
-                    data.addRows(response.list);
-                    var options = {
-                        chart: {
-                            //title: 'Box Office Earnings in First Two Weeks of Opening',
-                            //subtitle: 'in millions of dollars (USD)'
-                        },
-                        //width: 500,
-                        //height: 500
-                        //axes: {
-                          //x: {
-                            //0: {side: 'top'}
-                          //}
-                        //}
-                    };
-                    var chart = new google.charts.Line(document.getElementById('linechart_material'));
-                    chart.draw(data, options);
-                }
-            },
-            error : function(response){
-                alert("_Error");
-            },
-        });
-    }
-</script>
 
 </body>
 </html>

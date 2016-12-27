@@ -39,7 +39,7 @@ import urllib2
 
 # SERVER_URL = "http://192.168.0.180:9888"   
 
-SERVER_URL = "http://52.66.169.65"
+SERVER_URL = "http://52.66.133.35"
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -47,7 +47,7 @@ def add_rate_card(request):
     if not request.user.is_authenticated():
         return redirect('backoffice')
     else:
-        rate_card_obj = RateCard.objects.filter(rate_card_status='1')
+        rate_card_obj = RateCard.objects.all()
         city_list = City_Place.objects.all().exclude(city_place_id__in=[rate_card.city_place_id.city_place_id for rate_card in rate_card_obj])
         data = {'username': request.session['login_user'], 'city_list': city_list}
         return render(request, 'Admin/add_rate_card.html', data)
@@ -66,7 +66,7 @@ def edit_rate_card(request):
         cat_city_obj = CategoryCityMap.objects.filter(city_place_id=city_id)
         for objs in cat_city_obj:
             cat_obj = Category.objects.get(category_id=str(objs.category_id))
-            if cat_obj.category_name != 'Ticket Resell':
+            if cat_obj.category_name != 'Event Ticket Resale':
                 cat_data = {'cat_id': str(cat_obj.category_id), 'cat_name': cat_obj.category_name}
                 cat_list.append(cat_data)
         rate_card_obj = RateCard.objects.filter(city_place_id=city_id, rate_card_status='1')
@@ -262,9 +262,41 @@ def delete_rate_card(request):
         for cat_rate in cat_rate_obj:
             cat_rate.rate_card_status = '0'
             cat_rate.save()
+        cat_rate_obj = TelephoneEnquiryRateCard.objects.filter(city_place_id=city_id, rate_card_status='1')
+        for cat_rate in cat_rate_obj:
+            cat_rate.rate_card_status = '0'
+            cat_rate.save()
         data = {
             'success': 'true',
-            'message': "Rate card for "+city_obj.city_id.city_name+" deleted successfully"
+            'message': "Rate card for "+city_obj.city_id.city_name+" deactivated successfully"
+        }
+    except Exception, e:
+        print e
+        data = {
+            'success': 'false',
+            'message': e
+        }
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def activate_rate_card(request):
+    try:
+        city_id = request.GET.get('city_id')
+        city_obj = City_Place.objects.get(city_place_id = city_id)
+        rate_card_obj = RateCard.objects.filter(city_place_id=city_id,rate_card_status='0')
+        for rate_card in rate_card_obj:
+            rate_card.rate_card_status = '1'
+            rate_card.save()
+        cat_rate_obj = CategoryWiseRateCard.objects.filter(city_place_id=city_id,rate_card_status='0')
+        for cat_rate in cat_rate_obj:
+            cat_rate.rate_card_status = '1'
+            cat_rate.save()
+        cat_rate_obj = TelephoneEnquiryRateCard.objects.filter(city_place_id=city_id, rate_card_status='0')
+        for cat_rate in cat_rate_obj:
+            cat_rate.rate_card_status = '1'
+            cat_rate.save()
+        data = {
+            'success': 'true',
+            'message': "Rate card for "+city_obj.city_id.city_name+" activated successfully"
         }
     except Exception, e:
         print e
@@ -280,7 +312,7 @@ def get_city_category_list(request):
         cat_city_obj = CategoryCityMap.objects.filter(city_place_id=request.GET.get('city_id'))
         for objs in cat_city_obj:
             cat_obj = Category.objects.get(category_id=str(objs.category_id))
-            if cat_obj.category_name != 'Ticket Resell':
+            if cat_obj.category_name != 'Event Ticket Resale':
                 cat_data = {'cat_id': str(cat_obj.category_id), 'cat_name': cat_obj.category_name}
                 cat_list.append(cat_data)
         data = {
@@ -349,7 +381,7 @@ def get_city_ratecard(request):
         cat_city_obj = CategoryCityMap.objects.filter(city_place_id=request.GET.get('city_id'))
         for objs in cat_city_obj:
             cat_obj = Category.objects.get(category_id=str(objs.category_id))
-            if cat_obj.category_name != 'Ticket Resell':
+            if cat_obj.category_name != 'Event Ticket Resale':
                 cat_data = {'cat_id': str(cat_obj.category_id), 'cat_name': cat_obj.category_name}
                 cat_list.append(cat_data)
 
@@ -1056,8 +1088,8 @@ def delete_service(request):
         service_obj = ServiceRateCard.objects.get(service_rate_card_id=request.POST.get('service_id'))
         service_obj.service_rate_card_status = '0'
         service_obj.save()
-        delete_service_sms(service_obj)
-        rate_card_delete_mail(service_obj)
+        #delete_service_sms(service_obj)
+        #rate_card_delete_mail(service_obj)
         data = {'message': 'Service Inactivated Successfully', 'success': 'true'}
 
     except IntegrityError as e:

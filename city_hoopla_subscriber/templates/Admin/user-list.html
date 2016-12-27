@@ -8,7 +8,7 @@
     <head>
     <head>
     <meta charset="utf-8"/>
-    <title>City Hoopla | User List </title>
+    <title>CityHoopla | User List </title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
     <meta content="" name="description"/>
@@ -599,6 +599,10 @@ hr {
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-default">
+                        <li>
+                                <a href="/edit-profile/?user_id={{request.session.login_user}}">
+                                    <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
+                            </li>
                             <li>
                                 <a href="/log-out/">
                                     <i class="icon-key"></i> Log Out </a>
@@ -732,6 +736,7 @@ hr {
                                                 <th  class="text-center"> Username / Email </th>
                                                 <th > Contact No </th>
                                                 <th > Role </th>
+                                                <th > City </th>
                                                 <th > Status </th>
                                                 <th  class="text-center" > Action </th>
                                             </tr>
@@ -1260,12 +1265,18 @@ $(".sel2").select2({
          "iDisplayLength": 20,
       	//"sScrollY":"380px",
       	'bScrollCollapse':true,
+      	
+             //  "sPaginationType":"full_numbers",
+             // "iDisplayLength": 10,
+       
+       
            "ajax": "/view-user-list/",
             "columns": [
           {"data": "user_name","sClass": "text-left"},
           {"data": "usre_email_id"},
           {"data": "user_contact_no"},
           {"data": "role_id"},
+          {"data": "city"},
           {"data": "status"},
           {"data": "actions","sClass": "text-center"},
             ],
@@ -1288,7 +1299,6 @@ function change_data(){
         $('#user_table').dataTable({
             "bDestroy" : true,
           
-
             "order": [
                 [0, 'asc']
             ],
@@ -1301,13 +1311,9 @@ function change_data(){
                 {"data": "role_id"},
                 {"data": "status"},
                 {"data": "actions","sClass": "text-center"},
-		            ],
-
-           
+		            ],           
         });
 }
-
-
 
 	var xyz;
     function delete_user_detail(id,name) {
@@ -1349,7 +1355,6 @@ function checkUserName(username){
    return false; 
    }
 }
-
 
 function checkContactNo(contact_no){
 	
@@ -1642,8 +1647,6 @@ function inactive_user() {
         return true;
     }
 
-    
 </script> 
-      
- </body>
+</body>
 </html>

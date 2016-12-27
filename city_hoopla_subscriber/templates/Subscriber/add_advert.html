@@ -1889,18 +1889,20 @@ License: You must have a valid license purchased only from themeforest(the above
        
         country_id = $('#country1 :selected').val();
 
-        if (country_id) {-
+        if (country_id) {
             $.ajax({
                 type: 'GET',
                 url: '/get-state/',
                 data: {'country_id': country_id},
                 success: function (response) {
+                    $('#statec1').html('');
                 	  $("#statec1").append("<option value=''>Select State</option>");        
                     $('#statec1').val("").change();
-                    $('#statec1').html('');
+                    
+                    $('#city1').html('');
                     $("#city1").append("<option value=''>Select City</option>");        
         				  $('#city1').val("").change();
-        				  $('#city1').html('');                  
+        				                    
                     $.each(response.state_list, function (index, item) {
                         $('#statec1').append(item);
                     });
@@ -1927,14 +1929,14 @@ License: You must have a valid license purchased only from themeforest(the above
                 url: '/get-city-place/',
                 data: {'state_id': state_id},
                 success: function (response) {
-                    //alert('success');
+                    $('#city1').html('');
                     $("#city1").append("<option value=''>Select City</option>");        
         				  $('#city1').val("").change();
-        				  $('#city1').html('');
         				  
+        				  $('#sub_category').html('');
                     $("#sub_category").append("<option value=''>Select Category</option>");        
         				  $('#sub_category').val("").change();        				  
-                    $('#sub_category').html('');
+                    
                     $.each(response.city_list, function (index, item) {
                         $('#city1').append(item);
                     });
@@ -1962,10 +1964,10 @@ License: You must have a valid license purchased only from themeforest(the above
                 url: '/get-categories/',
                 data: {'city_place_id': city_place_id},
                 success: function (response) {
-                    //alert('success');
+                    $('#sub_category').html('');
                     $("#sub_category").append("<option value=''>Select Category</option>");        
         				  $('#sub_category').val("").change();
-                    $('#sub_category').html('');
+                    
                     $.each(response.cat_list, function (index, item) {
                         $('#sub_category').append(item);
                     });
@@ -2026,7 +2028,70 @@ License: You must have a valid license purchased only from themeforest(the above
     var has_value = ''
 
     function check_cat(lvl,this_val){
+
+        $("#subscription_div").css("display","none");
+        $("#duration_list").val("").change();
+
         main_category_id =  $("#sub_category").val();
+        $("#property_desc").hide();
+           if($('#sub_category option:selected').text().trim() == "Real Estate"){
+
+                            if($('#llvl1 option:selected').text().trim() == "Realtors"){
+
+                                          $("#property_desc").hide();
+                                $("#cat_desc").hide();
+                            }else{
+
+                                    $("#property_desc").show();
+                                $("#cat_desc").hide();
+                            }
+                        }
+
+
+         if(
+            $('#sub_category :selected').text().trim()=="Fashion & LifeStyle" || $('#sub_category :selected').text().trim()=="Travel" || $('#sub_category :selected').text().trim()=="Electronics"
+        ){
+            $("#cat_desc").show();
+            $("#speciality_textarea").show();
+
+            $("#happy_textarea").hide();
+            $("#academics_textarea").hide();
+        }
+        else if($('#sub_category :selected').text().trim()=="Health"){
+            $("#facility_textarea").show();
+            $("#cat_desc").show();
+            $("#speciality_textarea").show();
+
+            $("#happy_textarea").hide();
+            $("#academics_textarea").hide();
+        }
+        else if( $('#sub_category :selected').text().trim()=="Food & Restaurants"){
+            $("#happy_textarea").show();
+            $("#facility_textarea").show();
+            $("#cat_desc").show();
+            $("#speciality_textarea").show();
+
+            $("#academics_textarea").hide();
+        }
+        else if( $('#sub_category :selected').text().trim()=="Academics"){
+            $("#academics_textarea").show();
+            $("#happy_textarea").hide();
+            $("#facility_textarea").hide();
+            $("#cat_desc").show();
+            $("#speciality_textarea").hide();
+
+
+        }
+        else{
+            $("#facility_textarea").hide();
+
+            $("#speciality_textarea").hide();
+            $("#happy_textarea").hide();
+            $("#cat_desc").hide();
+            $("#academics_textarea").hide();
+        }
+
+
         if($(this_val).attr('data-level')=="0"){
             clear_subcat();
         }
@@ -2035,6 +2100,8 @@ License: You must have a valid license purchased only from themeforest(the above
             $("#subscription_div").css("display","none");
             return false;
         }
+        $('#sub_category_lebel_'+lvl).css('display','none');
+        
         $.ajax({
             type    : "POST",
             url : '/subscriber-portal/check-category-supplier/',
@@ -2300,6 +2367,7 @@ License: You must have a valid license purchased only from themeforest(the above
     {
         var check_id = id;
         duration = $("#duration_list").val();
+
         if(document.getElementById('check_'+id).checked) {
             $('#day_'+id).prop("disabled", false);
             service_name = $('#check_'+id).val();
@@ -2354,7 +2422,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             no4_ranges = response.booked_date_list;
                         }
                         if(id == 5){
-                            no5_ranges = response.date_list;
+                            no5_ranges = response.booked_date_list;
                         }
                     }
                     if (response.success == "false") {
@@ -2377,6 +2445,7 @@ License: You must have a valid license purchased only from themeforest(the above
             });
 
         } else {
+    
             $('#day_'+id).prop("disabled", true);
             $('#start_'+id).prop("disabled", true);
             $('#start_'+id).val('');
@@ -2569,10 +2638,10 @@ License: You must have a valid license purchased only from themeforest(the above
         var startDate = new Date(from[2], from[1] - 1, from[0]);
         var from = $("#dt2").val().split("/");
         var endDate = new Date(from[2], from[1] - 1, from[0]);
-        $( "#start_"+id ).val('');
-        $( "#end_"+id ).val('');
-        $( "#start_"+id ).prop("disabled", false);
-        $( "#start_"+id ).datepicker( "destroy" );
+        $("#start_"+id ).val('');
+        $("#end_"+id ).val('');
+        $("#start_"+id ).prop("disabled", false);
+        $("#start_"+id ).datepicker("destroy" );
         ranges = '';
         if(id == 1){
             ranges1 = no1_ranges;
@@ -2670,7 +2739,8 @@ License: You must have a valid license purchased only from themeforest(the above
                 numberOfMonths: 1,
                 beforeShowDay: function(date) {
                     for(var i=0; i<ranges5.length; i++) {
-                        if(date >= new Date(ranges5[i].start_date) && date <= new Date(ranges5[i].end_date)) return [false, ''];
+           
+                        if(date >= new Date(ranges5[i]) && date <= new Date(ranges5[i])) return [false, ''];
                     }
                     return [true, ''];
                 },

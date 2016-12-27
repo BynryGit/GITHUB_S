@@ -38,7 +38,7 @@ from django.views.decorators.cache import cache_control
 import ast
 import urllib2
 
-SERVER_URL = "http://52.66.169.65"
+SERVER_URL = "http://52.66.133.35"
 #SERVER_URL = "http://192.168.0.151:9090"
 
 
@@ -278,13 +278,15 @@ def save_category(request):
                         'success': 'false',
                         'message': e,
                     }
+            add_category_mail(cat_obj)
+            add_category_sms(cat_obj)
             data = {
                 'success': 'true',
                 'message': "Category added successfully",
             }
             category_obj = Category.objects.get(category_name=request.POST.get('cat_name'))
 
-            add_category_sms(category_obj)
+            
 
     except Exception as e:
         print e
@@ -294,7 +296,7 @@ def add_category_sms(category_obj):
 
     authkey = "118994AIG5vJOpg157989f23"
     #mobiles = "7507542642"
-    mobiles = "+919403884595"
+    mobiles = "+919028527219"
 
     category_name= category_obj.category_name
     print '....................category_name.......',category_name
@@ -655,7 +657,7 @@ def delete_category_sms(cat_obj):
     
     category_name= cat_obj.category_name
     authkey = "118994AIG5vJOpg157989f23"
-    mobiles = "+919403884595"
+    mobiles = "+919028527219"
     message = "Hi Admin,"+'\n'+"Category "+category_name+" has been deactivated successfully "
     sender = "CTHPLA"
     route = "4"
@@ -685,18 +687,23 @@ def delete_sub_category(request):
         obj_list = []
         if level_name == 'level_1':
             cat_obj = CategoryLevel1.objects.get(category_id=cat_id)
+            Advert.objects.filter(category_level_1 = cat_id).delete()
             cat_obj.delete()
         if level_name == 'level_2':
             cat_obj = CategoryLevel2.objects.get(category_id=cat_id)
+            Advert.objects.filter(category_level_2 = cat_id).delete()
             cat_obj.delete()
         if level_name == 'level_3':
             cat_obj = CategoryLevel3.objects.get(category_id=cat_id)
+            Advert.objects.filter(category_level_3 = cat_id).delete()
             cat_obj.delete()
         if level_name == 'level_4':
             cat_obj = CategoryLevel4.objects.get(category_id=cat_id)
+            Advert.objects.filter(category_level_4 = cat_id).delete()
             cat_obj.delete()
         if level_name == 'level_5':
             cat_obj = CategoryLevel5.objects.get(category_id=cat_id)
+            Advert.objects.filter(category_level_5 = cat_id).delete()
             cat_obj.delete()
         data = {'message': 'User Role De-activeted Successfully', 'success': 'true'}
 
@@ -746,21 +753,18 @@ def edit_category(request):
                 category_id = str(category.category_id)
                 category_name = str(category.category_name)
                 city_name = CategoryCityMap.objects.get(category_id=category)
-                print '---------city name-------',city_name
-
-
+                
                 city_obj = str(city_name.city_place_id.city_id)
+                ct_id = str(city_name.city_place_id)
                 state_obj = str(city_name.city_place_id.state_id)
                 country_obj = city_name.city_place_id.country_id
                 seq_obj = str(city_name.sequence)
-                print '---------state_obj name-------',state_obj
-                print '---------country_obj name-------',country_obj
-
+                
                 country_list = Country.objects.all()
                 state_list = State.objects.filter(country_id = str(city_name.city_place_id.country_id.country_id))
-                print '----state list-----',state_list
+                
                 city_list = City_Place.objects.filter(state_id = str(city_name.city_place_id.state_id.state_id))
-                print '-------city_list-----',city_list
+                
 
                 active_advert = 'No'
 
@@ -776,9 +780,7 @@ def edit_category(request):
                     if int(date_gap.days) >= 0:
                         active_advert = 'Yes'
 
-                print "=====active_advert=====",active_advert
-
-                print '=====category=======', category
+                
                 sub_category1 = CategoryLevel1.objects.filter(parent_category_id=category)
                 if sub_category1:
                     for cat in sub_category1:
@@ -787,16 +789,31 @@ def edit_category(request):
                             has_subcategory = 'Yes'
                         else:
                             has_subcategory = 'No'
+                        active_advert = 'No'
+
+                        advert_obj_list = Advert.objects.filter(category_level_1 = cat.category_id)
+                        for advert_obj in advert_obj_list:
+                            advert_id = str(advert_obj.advert_id)
+                            pre_date = datetime.now().strftime("%d/%m/%Y")
+                            pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
+                            advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=advert_id)
+                            end_date = advert_sub_obj.business_id.end_date
+                            end_date = datetime.strptime(end_date, "%d/%m/%Y")
+                            date_gap = end_date - pre_date
+                            if int(date_gap.days) >= 0:
+                                active_advert = 'Yes'
+
                         category1_list = {
                                             'category_id':str(cat.category_id),
                                             'category_name': cat.category_name,
                                             'parent_category_id':str(cat.parent_category_id),
-                                            'has_subcategory':has_subcategory
+                                            'has_subcategory':has_subcategory,
+                                            'active_advert':active_advert
                                           }
 
                         sub_category1_list.append(category1_list)
                 length1 = len(sub_category1_list)
-                print '=====category1=======',sub_category1
+                
                 sub_category2 = CategoryLevel2.objects.filter(parent_category_id__in=sub_category1)
                 if sub_category2:
                     for cat in sub_category2:
@@ -805,15 +822,31 @@ def edit_category(request):
                             has_subcategory = 'Yes'
                         else:
                             has_subcategory = 'No'
+
+                        active_advert = 'No'
+
+                        advert_obj_list = Advert.objects.filter(category_level_2 = cat.category_id)
+                        for advert_obj in advert_obj_list:
+                            advert_id = str(advert_obj.advert_id)
+                            pre_date = datetime.now().strftime("%d/%m/%Y")
+                            pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
+                            advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=advert_id)
+                            end_date = advert_sub_obj.business_id.end_date
+                            end_date = datetime.strptime(end_date, "%d/%m/%Y")
+                            date_gap = end_date - pre_date
+                            if int(date_gap.days) >= 0:
+                                active_advert = 'Yes'
+
                         category2_list = {
                                             'category_id':str(cat.category_id),
                                             'category_name': cat.category_name,
                                             'parent_category_id':str(cat.parent_category_id),
-                                            'has_subcategory': has_subcategory
+                                            'has_subcategory': has_subcategory,
+                                            'active_advert':active_advert
                                           }
                         sub_category2_list.append(category2_list)
                 length2 = len(sub_category2_list)
-                print '=====category2======='
+                
                 sub_category3 = CategoryLevel3.objects.filter(parent_category_id__in=sub_category2)
                 if sub_category3:
                     for cat in sub_category3:
@@ -822,15 +855,31 @@ def edit_category(request):
                             has_subcategory = 'Yes'
                         else:
                             has_subcategory = 'No'
+
+                        active_advert = 'No'
+
+                        advert_obj_list = Advert.objects.filter(category_level_3 = cat.category_id)
+                        for advert_obj in advert_obj_list:
+                            advert_id = str(advert_obj.advert_id)
+                            pre_date = datetime.now().strftime("%d/%m/%Y")
+                            pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
+                            advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=advert_id)
+                            end_date = advert_sub_obj.business_id.end_date
+                            end_date = datetime.strptime(end_date, "%d/%m/%Y")
+                            date_gap = end_date - pre_date
+                            if int(date_gap.days) >= 0:
+                                active_advert = 'Yes'
+
                         category3_list = {
                                             'category_id':str(cat.category_id),
                                             'category_name': cat.category_name,
                                             'parent_category_id':str(cat.parent_category_id),
-                                            'has_subcategory':has_subcategory
+                                            'has_subcategory':has_subcategory,
+                                            'active_advert':active_advert
                                           }
                         sub_category3_list.append(category3_list)
                 length3 = len(sub_category3_list)
-                print '=====category3======='
+                
                 sub_category4 = CategoryLevel4.objects.filter(parent_category_id__in=sub_category3)
                 if sub_category4:
                     for cat in sub_category4:
@@ -839,28 +888,59 @@ def edit_category(request):
                             has_subcategory = 'Yes'
                         else:
                             has_subcategory = 'No'
+
+                        active_advert = 'No'
+
+                        advert_obj_list = Advert.objects.filter(category_level_4 = cat.category_id)
+                        for advert_obj in advert_obj_list:
+                            advert_id = str(advert_obj.advert_id)
+                            pre_date = datetime.now().strftime("%d/%m/%Y")
+                            pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
+                            advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=advert_id)
+                            end_date = advert_sub_obj.business_id.end_date
+                            end_date = datetime.strptime(end_date, "%d/%m/%Y")
+                            date_gap = end_date - pre_date
+                            if int(date_gap.days) >= 0:
+                                active_advert = 'Yes'
+
                         category4_list = {
                                             'category_id':str(cat.category_id),
                                             'category_name': cat.category_name,
                                             'parent_category_id':str(cat.parent_category_id),
-                                            'has_subcategory':has_subcategory
+                                            'has_subcategory':has_subcategory,
+                                            'active_advert':active_advert
                                           }
                         sub_category4_list.append(category4_list)
                 length4 = len(sub_category4_list)
-                print '=====category4======='
+                
                 sub_category5 = CategoryLevel5.objects.filter(parent_category_id__in=sub_category4)
                 if sub_category5:
                     for cat in sub_category5:
+                        active_advert = 'No'
+
+                        advert_obj_list = Advert.objects.filter(category_level_5 = cat.category_id)
+                        for advert_obj in advert_obj_list:
+                            advert_id = str(advert_obj.advert_id)
+                            pre_date = datetime.now().strftime("%d/%m/%Y")
+                            pre_date = datetime.strptime(pre_date, "%d/%m/%Y")
+                            advert_sub_obj = AdvertSubscriptionMap.objects.get(advert_id=advert_id)
+                            end_date = advert_sub_obj.business_id.end_date
+                            end_date = datetime.strptime(end_date, "%d/%m/%Y")
+                            date_gap = end_date - pre_date
+                            if int(date_gap.days) >= 0:
+                                active_advert = 'Yes'
+
                         category5_list = {
                                             'category_id':str(cat.category_id),
                                             'category_name': cat.category_name,
-                                            'parent_category_id':str(cat.parent_category_id)
+                                            'parent_category_id':str(cat.parent_category_id),
+                                            'active_advert':active_advert
                                           }
                         sub_category5_list.append(category5_list)
                 length5 = len(sub_category5_list)
-                print '=====category5======='
+                
 
-                data = {'username': request.session['login_user'], 'length5': length5,
+                data = {'username': request.session['login_user'], 'length5': length5,'ct_id':ct_id,
                         'length4': length4, 'length3': length3, 'length2': length2, 'length1': length1,
                         'category_id': category_id, 'city_list': city_list, 'state_list': state_list, 'country_list': country_list,
                         'city_id': city_obj, 'state_id': state_obj, 'country_id': country_obj, 'city_sequence': seq_obj,
@@ -1036,7 +1116,7 @@ def update_category(request):
 def edit_category_sms(cat_obj):
 
     authkey = "118994AIG5vJOpg157989f23"
-    mobiles = "+919403884595"
+    mobiles = "+919028527219"
 
     category_name= cat_obj.category_name
     print '....................category_name.......',category_name
@@ -1066,20 +1146,21 @@ def edit_category_sms(cat_obj):
 
 
 def add_category_mail(cat_obj):
-    gmail_user = "cityhoopla2016"
-    gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = ['cityhoopla2016@gmail.com']
     # pdb.set_trace()
     try:
         TEXT = "Hi Admin,\nCategory " + str(
             cat_obj.category_name) + " " + "has been added successfully." + "\nTo view complete details visit portal and follow - Reference Data -> Category" + "\n\nThank You," + '\n' + "CityHoopla Team"
         SUBJECT = "Category Added Successfully!"
-        # server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        #server = smtplib.SMTP_SSL()
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
         server.sendmail(FROM, TO, message)
@@ -1090,20 +1171,21 @@ def add_category_mail(cat_obj):
 
 
 def edit_category_mail(cat_obj):
-    gmail_user = "cityhoopla2016"
-    gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = ['cityhoopla2016@gmail.com']
     # pdb.set_trace()
     try:
         TEXT = "Hi Admin,\nCategory " + str(
             cat_obj.category_name) + " " + "has been updated successfully." + "\nTo view complete details visit portal and follow - Reference Data -> Category" + "\n\nThank You," + '\n' + "CityHoopla Team"
         SUBJECT = "Category Updated Successfully!"
-        # server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        #server = smtplib.SMTP_SSL()
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
         server.sendmail(FROM, TO, message)
@@ -1114,20 +1196,21 @@ def edit_category_mail(cat_obj):
 
 
 def inactive_category_mail(cat_obj):
-    gmail_user = "cityhoopla2016"
-    gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = ['cityhoopla2016@gmail.com']
     # pdb.set_trace()
     try:
         TEXT = "Hi Admin,\nCategory " + str(
             cat_obj.category_name) + " " + "has been deactivated successfully." + "\n\nThank You," + '\n' + "CityHoopla Team"
         SUBJECT = "Category Deactivated Successfully!"
-        # server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        #server = smtplib.SMTP_SSL()
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
         server.sendmail(FROM, TO, message)
@@ -1156,20 +1239,21 @@ def active_category(request):
 
 
 def category_active_mail(cat_obj):
-    gmail_user = "cityhoopla2016"
-    gmail_pwd = "cityhoopla@2016"
-    FROM = 'CityHoopla Admin <cityhoopla2016@gmail.com>'
+    gmail_user = "donotreply@city-hoopla.com"# "cityhoopla2016"
+    gmail_pwd =  "Hoopla123#"#"cityhoopla@2016"
+    FROM = 'Team CityHoopla<donotreply@city-hoopla.com>'
     TO = ['cityhoopla2016@gmail.com']
     # pdb.set_trace()
     try:
         TEXT = "Hi Admin,\nCategory " + str(
             cat_obj.category_name) + " " + " has been activated successfully.\nTo view complete details visit portal and follow - Reference Data -> Category\n\n Thank You," + '\n' + "CityHoopla Team"
         SUBJECT = "Category Activated Successfully!"
-        # server = smtplib.SMTP_SSL()
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        #server = smtplib.SMTP_SSL()
+        #server = smtplib.SMTP("smtp.gmail.com", 587) 
+        server = smtplib.SMTP("smtpout.asia.secureserver.net", 80)
+        #server = smtplib.SMTP_TSL('smtpout.secureserver.net', 465)
         server.ehlo()
-        server.starttls()
-
+        #server.starttls()
         server.login(gmail_user, gmail_pwd)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
         server.sendmail(FROM, TO, message)

@@ -6,7 +6,7 @@
 {% load staticfiles %}
 <head>
     <meta charset="utf-8"/>
-    <title>City Hoopla | Advert Stats</title>
+    <title>CityHoopla | Advert Stats</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
     <meta content="" name="description"/>
@@ -544,6 +544,10 @@ hr {
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-default">
+                        <li>
+                                <a href="/edit-profile/?user_id={{request.session.login_user}}">
+                                    <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
+                            </li>
                               <li>
                                 <a href="/log-out/">
                                     <i class="icon-key"></i> Log Out </a>
@@ -587,7 +591,16 @@ hr {
                         <div style="margin-bottom: 15px;">
                          	<a href="/view-subscriber-list/" class="brad-crum-1">{{business_name}}</a>
                             <i class="fa fa-angle-right"></i>
-                            <a href="/advert-management/?subscriber_id={{ supplier_id }}" class="brad-crum-1">{{advert_nm}}</a>
+                            
+                            
+									  {% if search_flag == '1'%}
+                                  <a href="/search-advert/" class="brad-crum-1">{{advert_nm}}</a>
+                             {% else %}
+                                  <a href="/advert-management/?subscriber_id={{ supplier_id }}" class="brad-crum-1">{{advert_nm}}</a>
+                             {% endif %}
+                                     
+                                     
+                                                                 
                             <i class="fa fa-angle-right"></i>
                             <span class="brad-crum-2">Advert Stats</span>
                         </div>

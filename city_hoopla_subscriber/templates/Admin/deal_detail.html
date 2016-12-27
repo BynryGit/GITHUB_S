@@ -263,7 +263,10 @@ div.dataTables_filter label {
                                     <i class="fa fa-angle-down"></i>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-default">
-                                    
+                                    <li>
+                                <a href="/edit-profile/?user_id={{request.session.login_user}}">
+                                    <i class="fa fa-user" aria-hidden="true"></i> My Profile </a>
+                            </li>
                                     <li>
                                         <a href="/log-out/">
                                             <i class="icon-key"></i> Log Out </a>

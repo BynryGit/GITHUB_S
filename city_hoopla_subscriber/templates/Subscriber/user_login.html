@@ -364,10 +364,14 @@
             url : '/subscriber-portal/signin/',
             data : $("#login_form").serialize(),
             success: function(response) {
-                if(response.success=='true'){	
+                if(response.success=='true'){
 						
                     location.href="/subscriber-portal/subscriber-dashboard/"
                 }
+                if(response.success=='redirect'){	
+						
+                    location.href="/subscriber-portal/select-subscriber/"
+                }                
                 if(response.success=='false'){
                     $("#login_modal").modal('show');
                     captcha_reload()
